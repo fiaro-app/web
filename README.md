@@ -4,6 +4,8 @@ Panel web para Owners y Lenders de Fiaro: gestión de cartera, cobradores y clie
 
 Repo privado. Software propietario — ver [LICENSE](./LICENSE).
 
+Documento de dominio y producto (entidades, multi-tenancy, suscripciones, roadmap): [api/PRODUCT.md](https://github.com/fiaro-app/api/blob/dev/PRODUCT.md).
+
 ## Stack
 
 Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · pnpm · Vercel
