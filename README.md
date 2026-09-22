@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Fiaro — Web
 
-## Getting Started
+Panel web para Owners y Lenders de Fiaro: gestión de cartera, cobradores y clientes, con visibilidad de mora en tiempo real y efectividad de cobro por cobrador. Consume la [API de Fiaro](https://github.com/fiaro-app/api).
 
-First, run the development server:
+Repo privado. Software propietario — ver [LICENSE](./LICENSE).
+
+## Stack
+
+Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · pnpm · Vercel
+
+> Este proyecto corre sobre una versión de Next.js más reciente que la del entrenamiento de cualquier LLM que lo edite — antes de escribir código, revisar `node_modules/next/dist/docs/` para convenciones/breaking changes (ver `AGENTS.md`).
+
+## Requisitos
+
+- Node 24
+- pnpm 11 (`corepack enable` si no lo tienes activado)
+
+## Empezar
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Comando | Qué hace |
+|---|---|
+| `pnpm dev` | Servidor de desarrollo |
+| `pnpm lint` | ESLint |
+| `pnpm typecheck` | Genera tipos de rutas (`next typegen`) + `tsc --noEmit` |
+| `pnpm test` | Tests (Vitest + Testing Library) |
+| `pnpm build` | Build de producción |
+| `pnpm docs` | Genera documentación (TypeDoc) de `src/lib` en `docs/` |
 
-## Learn More
+El pipeline de CI (`.github/workflows/ci.yml`) corre lint → typecheck → test → build → docs → análisis de Sonar en cada PR y en cada push a `dev`.
 
-To learn more about Next.js, take a look at the following resources:
+## Estructura
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+  app/      # Rutas (App Router) — cada archivo es una pantalla, layout.tsx define el shell
+  lib/       # Utilidades puras, testeadas con Vitest
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Ramas y flujo de trabajo
 
-## Deploy on Vercel
+- `dev` es la rama de integración y la rama por defecto — todo PR apunta aquí.
+- `main` es producción — se actualiza vía PR desde `dev` cuando está estable.
+- Merge siempre por squash; la rama de origen se borra automáticamente al mergear.
+- Sin protección de rama activa (equipo de una persona por ahora).
+- Sin despliegue configurado todavía (Vercel se conecta cuando el proyecto esté listo para eso).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Repos relacionados
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Repo | Contenido |
+|---|---|
+| [fiaro-app/api](https://github.com/fiaro-app/api) | Backend (NestJS) |
+| [fiaro-app/mobile](https://github.com/fiaro-app/mobile) | App del Collector (Expo) |
+| [fiaro-app/contracts](https://github.com/fiaro-app/contracts) | Schemas de Zod compartidos (`@fiaro-app/contracts`) |

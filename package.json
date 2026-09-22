@@ -1,7 +1,25 @@
 {
   "name": "web",
   "version": "0.1.0",
+  "description": "Panel web de Fiaro para Owners y Lenders — gestión de cartera, cobradores y mora en tiempo real.",
+  "author": "Alejo Zuleta <valenciazuletaj@gmail.com>",
+  "license": "UNLICENSED",
   "private": true,
+  "homepage": "https://github.com/fiaro-app/web#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiaro-app/web.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fiaro-app/web/issues"
+  },
+  "keywords": [
+    "fiaro",
+    "nextjs",
+    "panel",
+    "prestamos",
+    "fintech"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
