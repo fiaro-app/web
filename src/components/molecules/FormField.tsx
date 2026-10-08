@@ -30,7 +30,12 @@ export interface FormFieldProps {
  */
 export function FormField({ label, error, hint, required, children }: Readonly<FormFieldProps>) {
   const id = useId();
-  const describedBy = error ? `${id}-error` : hint ? `${id}-hint` : undefined;
+  let describedBy: string | undefined;
+  if (error) {
+    describedBy = `${id}-error`;
+  } else if (hint) {
+    describedBy = `${id}-hint`;
+  }
 
   return (
     <div className="flex flex-col gap-1.5">
