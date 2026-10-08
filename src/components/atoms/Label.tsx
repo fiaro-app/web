@@ -6,7 +6,7 @@ export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
 }
 
 /** A form field's caption. `required` adds a visual `*`, not a validation rule. */
-export function Label({ required = false, className, children, ...props }: LabelProps) {
+export function Label({ required = false, className, children, ...props }: Readonly<LabelProps>) {
   return (
     <label className={cn('text-sm font-medium text-foreground', className)} {...props}>
       {children}

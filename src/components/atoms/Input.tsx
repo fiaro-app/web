@@ -8,7 +8,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 /** A single-line text field. Pair with `Label` and an error message via `FormField` (molecules). */
-export function Input({ ref, invalid = false, className, ...props }: InputProps) {
+export function Input({ ref, invalid = false, className, ...props }: Readonly<InputProps>) {
   return (
     <input
       ref={ref}

@@ -47,7 +47,7 @@ export function Button({
   className,
   children,
   ...props
-}: ButtonProps) {
+}: Readonly<ButtonProps>) {
   return (
     <button
       ref={ref}
