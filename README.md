@@ -43,9 +43,21 @@ El pipeline de CI (`.github/workflows/ci.yml`) corre lint → typecheck → test
 
 ```
 src/
-  app/      # Rutas (App Router) — cada archivo es una pantalla, layout.tsx define el shell
-  lib/       # Utilidades puras, testeadas con Vitest
+  app/              # Rutas (App Router) — cada archivo es una pantalla, layout.tsx define el shell
+  components/
+    atoms/          # Lo más chico: Button, Input, Label, Spinner — no conocen la API ni el negocio
+    molecules/      # Átomos combinados con un propósito (FormField = Label + Input + error)
+    organisms/       # Piezas de pantalla completas (Navbar, Sidebar, LoginForm)
+    templates/       # El layout de una pantalla sin datos reales (dónde va cada organism)
+  stores/            # Estado global con Zustand (p. ej. useThemeStore)
+  lib/               # Utilidades puras, testeadas con Vitest
 ```
+
+**Diseño de componentes:** Atomic Design (átomos → moléculas → organismos → templates); las
+pantallas reales son las de `app/`, no hace falta una carpeta `pages/` aparte. Los colores salen
+de variables CSS (`globals.css`, `@theme inline` de Tailwind 4) en vez de clases fijas como
+`bg-teal-700`: así `useThemeStore` puede cambiar el color de marca del Lender en tiempo de
+ejecución sin tocar ningún componente.
 
 ## Ramas y flujo de trabajo
 

@@ -3,11 +3,54 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Color de marca del Lender (D-102 del backend: todavía no hay un campo para esto en la API,
+     así que por ahora es un valor por defecto fijo). `useThemeStore` lo sobreescribe en
+     tiempo de ejecución con `document.documentElement.style.setProperty`, nunca editando este
+     archivo: por eso cada variable vive sola, sin derivarse de otra con `color-mix` aquí mismo. */
+  --primary: #0f766e;
+  --primary-hover: #0d6a63;
+  --primary-foreground: #ffffff;
+
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+
+  --muted: #f8fafc;
+  --muted-foreground: #64748b;
+
+  --border: #e2e8f0;
+  --ring: #0f766e;
+
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+
+  --success: #16a34a;
+  --warning: #d97706;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -16,6 +59,14 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    --secondary: #1e293b;
+    --secondary-foreground: #f1f5f9;
+
+    --muted: #18181b;
+    --muted-foreground: #a1a1aa;
+
+    --border: #27272a;
   }
 }
 
