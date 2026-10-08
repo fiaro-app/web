@@ -34,4 +34,15 @@ describe('Button', () => {
 
     expect(screen.getByRole('button', { name: 'Guardar' })).toBeDisabled();
   });
+
+  it('caps the loading spinner at size "md" even on a "lg" button', () => {
+    render(
+      <Button loading size="lg">
+        Guardar
+      </Button>,
+    );
+
+    const spinner = screen.getByRole('button', { name: 'Guardar' }).querySelector('span');
+    expect(spinner).toHaveClass('size-5');
+  });
 });

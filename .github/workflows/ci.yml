@@ -29,8 +29,8 @@ jobs:
       - name: Typecheck
         run: pnpm run typecheck
 
-      - name: Test
-        run: pnpm run test
+      - name: Tests with coverage
+        run: pnpm run test:cov
 
       - name: Build
         run: pnpm run build

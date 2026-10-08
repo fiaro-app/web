@@ -14,5 +14,13 @@ export default defineConfig({
     globals: true,
     include: ['src/**/*.test.{ts,tsx}'],
     setupFiles: ['./vitest.setup.ts'],
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/**/*.test.{ts,tsx}'],
+      // lcovonly es el formato que lee SonarCloud, sin el reporte HTML que trae "lcov"; text lo
+      // muestra en la terminal.
+      reporter: ['text', 'lcovonly'],
+    },
   },
 });
