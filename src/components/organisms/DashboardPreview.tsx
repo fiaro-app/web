@@ -1,4 +1,4 @@
-import { Text } from '@/components/atoms/Text';
+import { KpiTile } from '@/components/molecules/KpiTile';
 import { cn } from '@/lib/cn';
 
 export interface PreviewKpi {
@@ -46,12 +46,7 @@ export function DashboardPreview({ kpis, chartTitle, bars, className }: Readonly
       <div aria-hidden="true" className="flex flex-col gap-3.5 p-6">
         <div className="grid grid-cols-3 gap-2.5">
           {kpis.map((kpi) => (
-            <div key={kpi.label} className="flex flex-col gap-1 rounded-sm bg-background p-3">
-              <span className="text-[10px] text-foreground/60">{kpi.label}</span>
-              <Text variant="body" as="span" weight="semibold" className={cn('font-display', kpi.valueClassName)}>
-                {kpi.value}
-              </Text>
-            </div>
+            <KpiTile key={kpi.label} {...kpi} />
           ))}
         </div>
         <div className="flex flex-col gap-2.5 rounded-sm bg-background p-4">
