@@ -8,6 +8,7 @@ const { useMarkNotificationRead } = vi.hoisted(() => ({ useMarkNotificationRead:
 vi.mock('@/features/notifications/use-mark-notification-read', () => ({ useMarkNotificationRead }));
 
 const markRead = vi.fn();
+const markAllRead = vi.fn();
 const item = (id: string, title: string): NotificationItem => ({
   id,
   tone: 'info',
@@ -20,7 +21,7 @@ const item = (id: string, title: string): NotificationItem => ({
 
 beforeEach(() => {
   vi.clearAllMocks();
-  useMarkNotificationRead.mockReturnValue({ pendingId: null, error: null, markRead });
+  useMarkNotificationRead.mockReturnValue({ pendingId: null, error: null, isMarkingAll: false, markRead, markAllRead });
 });
 
 describe('NotificationList', () => {
@@ -41,5 +42,20 @@ describe('NotificationList', () => {
     render(<NotificationList items={[item('n1', 'Primera')]} />);
     expect(screen.getByText('No se pudo')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Marcar como leída' })).toBeDisabled();
+  });
+
+  it('marks every unread notification of the page with one button', async () => {
+    const read = { ...item('n3', 'Leída'), read: true };
+    render(<NotificationList items={[item('n1', 'Primera'), read, item('n2', 'Segunda')]} />);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Marcar todas como leídas' }));
+
+    expect(markAllRead).toHaveBeenCalledWith(['n1', 'n2']);
+  });
+
+  it('offers no bulk action when everything is already read', () => {
+    render(<NotificationList items={[{ ...item('n1', 'Leída'), read: true }]} />);
+
+    expect(screen.queryByRole('button', { name: 'Marcar todas como leídas' })).not.toBeInTheDocument();
   });
 });

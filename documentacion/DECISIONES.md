@@ -73,6 +73,7 @@ se agrega la nueva.
 | W-66 | El detalle del préstamo muestra el historial de cobros (`GET /loans/:loanId/collection-visits`) y deja revertir un pago con su motivo (`POST /payments/:id/reversals`). Se ofrece «Revertir» en todo pago vigente y la API decide el permiso (`FORBIDDEN` → mensaje) | La web no conoce el rol exacto de la persona; la API es la autoridad. El pago revertido se muestra tachado, no se borra |
 | W-67 | El logo se sube directo al almacenamiento con la URL firmada de `POST /lender/logo-upload-url` y luego se guarda con `PATCH /lender { logoUrl }`. El origen del almacenamiento viene de `STORAGE_ORIGIN` (solo http/https, sin ruta) y se agrega a `img-src` y `connect-src` de la CSP; sin él la pantalla explica que la subida no está configurada | El archivo no pasa por la API ni por la web (D-102). Es la única excepción a `connect-src 'self'` y solo existe si alguien la configura |
 | W-68 | La landing suma preguntas frecuentes (`<details>` nativo, con marcado `FAQPage` que coincide con lo que se ve), planes de igual altura con el botón abajo y títulos con `text-balance`. «Contacto» y «Contactar ventas» abren un `mailto:` si `NEXT_PUBLIC_CONTACT_EMAIL` está definido y, si no, llevan a las preguntas | No había página `/contacto` y un enlace roto resta confianza; el correo comercial es un dato que decide el negocio, no el código |
+| W-69 | «Marcar todas como leídas» marca las no leídas de la página visible con una llamada a `POST /notifications/:id/read` por cada una (máximo 20), sigue si una falla y avisa cuántas no se pudieron marcar | La API no tiene un endpoint de «todas»; hasta que lo tenga, esto cumple el diseño sin inventar contratos |
 
 ## Pendientes conocidos
 
@@ -80,6 +81,6 @@ se agrega la nueva.
 - Préstamos: registrar pagos y ver el calendario de cuotas (módulo de cobros pendiente); mostrar el cobrador en la lista (hoy solo en el detalle).
 - API: pedir saldo y mora dentro de `QUERY /clients` y `QUERY /loans` para no consultar fila por fila.
 - Estadísticas: el botón de exportar no se ha probado con un PDF real (solo con respuestas simuladas).
-- Notificaciones: notificaciones push (tokens de dispositivo).
+- Notificaciones: endpoint «marcar todas» en la API y notificaciones push (tokens de dispositivo).
 - Subir el logo del prestamista desde Configuración: el endpoint está declarado, falta la subida directa (PUT a la URL firmada), que exige permitir ese host en la CSP (`connect-src` e `img-src`) una vez se conozca el almacenamiento.
 - Configuración: eliminar carteras y fechas puntuales sin cobro (`NonWorkingDay`) cuando la API los exponga.
