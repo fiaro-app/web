@@ -1,7 +1,8 @@
+import { contractMessage } from '@fiaro-app/contracts';
 import { CLIENT_ERROR_CODES, isApiRequestError } from '@/lib/api';
 
 /** Campo del formulario al que pertenece un error de la API, si lo hay. */
-export type AuthErrorField = 'phone' | 'password';
+export type AuthErrorField = 'phone' | 'password' | 'nationalId' | 'fullName' | 'contactEmail' | 'businessName';
 
 export interface AuthErrorView {
   readonly message: string;
@@ -55,4 +56,25 @@ export function describeAuthError(error: unknown): AuthErrorView {
     default:
       return { message: GENERIC_MESSAGE, field: null };
   }
+}
+
+const SERVER_FIELDS: readonly AuthErrorField[] = ['phone', 'password', 'nationalId', 'fullName', 'contactEmail', 'businessName'];
+
+/**
+ * Errores de campo que trae un `VALIDATION_FAILED` de la API (`issues[].path[0]`). La API es la
+ * última palabra en validación: si algo se le escapa a la web, sale aquí en el campo correcto, con
+ * el texto del contrato traducido (`contractMessage`) o el genérico si no se conoce.
+ */
+export function issueFieldErrors(error: unknown): Partial<Record<AuthErrorField, string>> {
+  if (!isApiRequestError(error) || error.code !== 'VALIDATION_FAILED') return {};
+
+  const errors: Partial<Record<AuthErrorField, string>> = {};
+  for (const issue of error.issues) {
+    const field = issue.path[0];
+    const known = SERVER_FIELDS.find((candidate) => candidate === field);
+    if (known && errors[known] === undefined) {
+      errors[known] = contractMessage('es', issue.message);
+    }
+  }
+  return errors;
 }

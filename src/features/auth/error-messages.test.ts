@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ApiRequestError, CLIENT_ERROR_CODES } from '@/lib/api';
-import { describeAuthError } from './error-messages';
+import { describeAuthError, issueFieldErrors } from './error-messages';
 
 function errorWith(code: string, retryAfterSeconds?: number) {
   return new ApiRequestError({ statusCode: 400, code, message: 'texto del servidor', retryAfterSeconds });
@@ -52,5 +52,32 @@ describe('describeAuthError', () => {
       expect(view.message).toContain('No pudimos completar la solicitud');
       expect(view.message).not.toContain('texto del servidor');
     }
+  });
+});
+
+describe('issueFieldErrors', () => {
+  it('maps the issues of a VALIDATION_FAILED to the fields, translating contract messages', () => {
+    const error = new ApiRequestError({
+      statusCode: 400,
+      code: 'VALIDATION_FAILED',
+      message: 'x',
+      issues: [
+        { path: ['phone'], message: 'contracts.phone.invalid_mobile' },
+        { path: ['phone'], message: 'segundo mensaje, se ignora' },
+        { path: ['nationalId'], message: 'Cédula inválida.' },
+        { path: ['campoDesconocido'], message: 'se ignora' },
+        { path: [], message: 'sin campo' },
+      ],
+    });
+
+    expect(issueFieldErrors(error)).toEqual({
+      phone: 'Ingresa un celular colombiano válido de 10 dígitos.',
+      nationalId: 'Cédula inválida.',
+    });
+  });
+
+  it('returns nothing for other errors', () => {
+    expect(issueFieldErrors(errorWith('PASSWORD_TOO_WEAK'))).toEqual({});
+    expect(issueFieldErrors(new Error('x'))).toEqual({});
   });
 });

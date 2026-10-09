@@ -21,4 +21,10 @@ describe('Stepper', () => {
     expect(screen.getByText('2')).toHaveClass('bg-primary');
     expect(screen.getByText('3')).not.toHaveClass('bg-primary');
   });
+
+  it('has a compact size for forms', () => {
+    render(<Stepper steps={STEPS} current={0} size="sm" />);
+
+    expect(screen.getByText('1')).toHaveClass('size-6');
+  });
 });
