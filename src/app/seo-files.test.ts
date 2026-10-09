@@ -13,10 +13,10 @@ describe('robots.txt', () => {
 });
 
 describe('sitemap.xml', () => {
-  it('lists only the public home page', () => {
+  it('lists only the public pages: the home and the sales contact', () => {
     const urls = sitemap().map((entry) => new URL(entry.url).pathname);
 
-    expect(urls).toEqual(['/']);
+    expect(urls).toEqual(['/', '/contacto']);
   });
 });
 

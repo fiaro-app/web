@@ -22,6 +22,14 @@ describe('Landing (Home)', () => {
     }
   });
 
+  it('sends "Contacto" and "Contactar ventas" to the contact page', () => {
+    render(<Home />);
+
+    for (const link of screen.getAllByRole('link', { name: /^Contacto$|^Contactar ventas$/ })) {
+      expect(link).toHaveAttribute('href', '/contacto');
+    }
+  });
+
   it('points every "Comenzar gratis" at the signup route', () => {
     render(<Home />);
 
