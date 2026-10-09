@@ -12,7 +12,7 @@ export interface AppNavItem {
  */
 export const APP_NAV_ITEMS: readonly AppNavItem[] = [
   { label: 'Resumen', href: '/resumen', available: true },
-  { label: 'Cobradores', href: '/cobradores', available: false },
+  { label: 'Cobradores', href: '/cobradores', available: true },
   { label: 'Clientes', href: '/clientes', available: false },
   { label: 'Préstamos', href: '/prestamos', available: false },
   { label: 'Cuadres', href: '/cuadres', available: false },
