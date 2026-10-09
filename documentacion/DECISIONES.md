@@ -86,6 +86,7 @@ se agrega la nueva.
 | W-79 | Estadísticas muestra tendencias frente al período anterior de la misma duración (`includePrevious`, D-111) con flecha, magnitud y un texto para lectores de pantalla; el Resumen acepta un período (`?desde&hasta`) para lo cobrado y la efectividad. «Mejora» depende del indicador (la mora baja es buena, la cobranza alta es buena, la cartera total no juzga) | La API ya reconstruye la cartera histórica; la web solo pinta el cambio |
 | W-80 | «Contacto» y «Contactar ventas» llevan a la nueva página pública `/contacto` (D-114, `POST /leads`), con campo señuelo contra robots y el aviso del límite por IP; reemplaza al `mailto:` de W-68 y la variable `NEXT_PUBLIC_CONTACT_EMAIL` ya no se usa | Un formulario deja el contacto guardado y medible, sin depender de que la persona tenga un cliente de correo |
 | W-81 | El panel avisa del plan (D-115) cuando la prueba termina en 7 días o menos, está en gracia o en solo lectura, y Configuración suma «Tu plan» con vencimiento y uso de cobradores. Solo informa: ni la web ni la API bloquean nada todavía | La API aún no aplica el solo lectura; avisar primero deja decidir después qué se bloquea |
+| W-82 | `@fiaro-app/contracts` (paquete propio) queda excluido de la edad mínima de publicación de pnpm (`minimumReleaseAgeExclude` en `pnpm-workspace.yaml`); los paquetes de terceros siguen sujetos a esa regla | Una versión nueva del contrato debe poder instalarse el mismo día que se publica; la protección contra paquetes recién publicados es para código ajeno |
 
 ## Pendientes conocidos
 
@@ -96,5 +97,4 @@ se agrega la nueva.
 - Subir el logo del prestamista desde Configuración: el endpoint está declarado, falta la subida directa (PUT a la URL firmada), que exige permitir ese host en la CSP (`connect-src` e `img-src`) una vez se conozca el almacenamiento.
 - Configuración: fechas puntuales sin cobro (`NonWorkingDay`) cuando la API las exponga.
 - Migrar a `@fiaro-app/contracts` los endpoints (método y ruta) de D-103 a D-115 cuando se publiquen; hoy solo están sus schemas (W-70).
-- Quitar `minimumReleaseAgeExclude` de `pnpm-workspace.yaml` cuando `@fiaro-app/contracts@0.7.0` tenga más de un día (la exclusión solo evita que pnpm bloquee una versión recién publicada).
 - Planes y precios: cuando se definan, mostrar el cambio de plan y aplicar el solo lectura (hoy solo se informa, W-81).
