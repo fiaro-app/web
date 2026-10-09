@@ -2,11 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { revokeAllSessions, revokeOtherSessions } from '@/features/account/account-api';
+import { revokeAllSessions, revokeOtherSessions, revokeSession } from '@/features/account/account-api';
 import { describeAccountError } from '@/features/account/error-messages';
 
 /**
- * Lógica de cerrar sesiones desde la cuenta: las demás (la de este navegador sigue) o todas (esta
+ * Lógica de cerrar sesiones desde la cuenta: una en concreto, las demás (la de este navegador sigue) o todas (esta
  * incluida, y se vuelve al inicio de sesión). Sin diseño.
  */
 export function useSessionActions() {
@@ -31,12 +31,24 @@ export function useSessionActions() {
     setIsBusy(false);
   };
 
-  const closeOthers = () => run(revokeOtherSessions, () => setNotice('Cerramos tus otras sesiones.'));
+  const closeOne = (id: string) =>
+    run(
+      () => revokeSession(id),
+      () => {
+        setNotice('Cerramos esa sesión.');
+        router.refresh();
+      },
+    );
+  const closeOthers = () =>
+    run(revokeOtherSessions, () => {
+      setNotice('Cerramos tus otras sesiones.');
+      router.refresh();
+    });
   const closeAll = () =>
     run(revokeAllSessions, () => {
       router.replace('/login');
       router.refresh();
     });
 
-  return { isBusy, error, notice, closeOthers, closeAll };
+  return { isBusy, error, notice, closeOne, closeOthers, closeAll };
 }

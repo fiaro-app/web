@@ -4,7 +4,7 @@ const { callEndpoint } = vi.hoisted(() => ({ callEndpoint: vi.fn() }));
 vi.mock('@/lib/api', () => ({ callEndpoint }));
 
 import { accountEndpoints } from './endpoints';
-import { deactivateAccount, requestContactEmailVerification, revokeAllSessions, revokeOtherSessions, updateProfile, verifyContactEmail } from './account-api';
+import { deactivateAccount, requestContactEmailVerification, revokeAllSessions, revokeOtherSessions, revokeSession, updateProfile, verifyContactEmail } from './account-api';
 
 beforeEach(() => {
   callEndpoint.mockReset();
@@ -19,6 +19,7 @@ describe('account api', () => {
     await deactivateAccount('clave');
     await revokeOtherSessions();
     await revokeAllSessions();
+    await revokeSession('s1');
 
     expect(callEndpoint.mock.calls.map((call) => [call[0], call[1]])).toEqual([
       [accountEndpoints.updateProfile, { body: { fullName: 'Ana' } }],
@@ -27,6 +28,7 @@ describe('account api', () => {
       [accountEndpoints.deactivate, { body: { password: 'clave' } }],
       [accountEndpoints.revokeOtherSessions, {}],
       [accountEndpoints.revokeSessions, {}],
+      [accountEndpoints.revokeSession, { params: { id: 's1' } }],
     ]);
   });
 

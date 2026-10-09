@@ -30,3 +30,8 @@ export function revokeOtherSessions() {
 export function revokeAllSessions() {
   return callEndpoint(accountEndpoints.revokeSessions, {});
 }
+
+/** Cierra una sesión puntual de la persona (distinta de la actual). */
+export function revokeSession(id: string) {
+  return callEndpoint(accountEndpoints.revokeSession, { params: { id } });
+}

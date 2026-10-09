@@ -6,16 +6,19 @@ import { AccountProfileForm } from '@/components/organisms/AccountProfileForm';
 import { AccountSessions } from '@/components/organisms/AccountSessions';
 import { EmailVerificationForm } from '@/components/organisms/EmailVerificationForm';
 import { ACCOUNT_TEXT } from '@/content/account';
+import type { SessionRow } from '@/features/account/sessions-view-model';
 
 export interface AccountViewProps {
   readonly fullName: string;
   readonly phoneNumber: string;
   readonly contactEmail: string | null;
   readonly contactEmailVerified: boolean;
+  /** Sesiones abiertas de la persona; vacío si no se pudieron traer. */
+  readonly sessions?: readonly SessionRow[];
 }
 
 /** «Mi cuenta»: datos, verificación del correo, contraseña, sesiones y desactivar la cuenta. Solo presentación. */
-export function AccountView({ fullName, phoneNumber, contactEmail, contactEmailVerified }: Readonly<AccountViewProps>) {
+export function AccountView({ fullName, phoneNumber, contactEmail, contactEmailVerified, sessions = [] }: Readonly<AccountViewProps>) {
   const text = ACCOUNT_TEXT;
   return (
     <>
@@ -31,7 +34,7 @@ export function AccountView({ fullName, phoneNumber, contactEmail, contactEmailV
         <AccountPasswordForm />
       </SettingsSection>
       <SettingsSection title={text.sessions.title} description={text.sessions.description}>
-        <AccountSessions />
+        <AccountSessions sessions={sessions} />
       </SettingsSection>
       <SettingsSection title={text.danger.title} description={text.danger.description}>
         <AccountDeactivate />
