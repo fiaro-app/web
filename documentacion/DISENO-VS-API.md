@@ -31,6 +31,8 @@ Estados de la columna **Penpot**: ✅ ya corregido · ⏳ por corregir · 🆕 n
 | Préstamo creado | Pantalla de confirmación | Se vuelve a la lista (el tablero se marcó «Fuera de alcance» en Penpot) | ✅ |
 | Cuadres (lista) | Filtros de estado y mes, búsqueda por cobrador | Filtro por estado; sin mes ni búsqueda | ✅ |
 | Detalle de cuadre | Montos por medio de pago, **historial de visitas**, nota, aprobar/rechazar | Montos por medio de pago, notas y revisión con comentario; el historial de visitas es por préstamo, no por cuadre | ✅ |
+| Ficha del cliente | — | Datos del cliente, sus préstamos y acciones (nuevo préstamo, editar). Tablero «Ficha del cliente» | ✅ |
+| Detalle de préstamo | — | Resumen, estado, cobrador asignado, asignar cobrador y anular. Tablero «Detalle de préstamo» | ✅ |
 | Notificaciones | «Marcar todas como leídas» | Marcar de una en una; la API no tiene «todas». Filtro «No leídas» | ✅ |
 | Estadísticas | Tendencias (↑ 4 %), **efectividad general**, periodo «Este mes» | 3 indicadores sin tendencias; periodo con fechas desde/hasta; exportar PDF | ✅ |
 | Configuración | Pestañas General / Facturación / Seguridad; logo, nombre y **correo de contacto** | Nombre, días sin cobro y carteras. Sin logo (falta la subida), pestañas ni correo (el correo es de la persona, no del negocio) | ✅ |
@@ -40,7 +42,7 @@ Estados de la columna **Penpot**: ✅ ya corregido · ⏳ por corregir · 🆕 n
 1. ✅ (hecho) Agregar «Notificaciones» a la barra lateral de todas las pantallas del panel.
 2. ✅ (hecho) Cobradores: quitar cédula y efectividad de la tabla, cambiar «Editar» por «Gestionar», y rediseñar «Editar cobrador» como pantalla de gestión.
 3. ✅ (hecho) Registrar cobrador: mostrar la contraseña temporal en la confirmación (una sola vez), no «enviada por correo».
-4. Clientes y Préstamos: columnas ✅ (hecho). Falta diseñar la ficha del cliente con sus préstamos y la asignación de cobrador en el detalle del préstamo.
+4. ✅ (hecho) Clientes y Préstamos: columnas, y diseñado la ficha del cliente con sus préstamos y la asignación de cobrador en el detalle del préstamo.
 5. ✅ (hecho) Nuevo préstamo: cobrador opcional, y los cuatro montos tal como los pide la API.
 6. ✅ (hecho) Cuadres, Notificaciones, Estadísticas y Configuración: alinear los filtros y las secciones con lo implementado.
 7. ✅ (hecho) Diseñar las pantallas de recuperar contraseña y de cambio obligatorio.
