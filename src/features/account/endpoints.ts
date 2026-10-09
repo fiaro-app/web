@@ -1,4 +1,7 @@
-import { defineEndpoint } from '@fiaro-app/contracts';
+import { AccountSessionSchema, defineEndpoint } from '@fiaro-app/contracts';
+
+// Sesión abierta de la persona (D-112): vive en `@fiaro-app/contracts`.
+export { AccountSessionSchema, type AccountSession } from '@fiaro-app/contracts';
 import { z } from 'zod';
 import { PASSWORD_MAX_LENGTH, VERIFICATION_CODE_LENGTH } from '@/features/auth/password-policy';
 
@@ -21,20 +24,6 @@ export const ProfileSchema = z.object({
   contactEmailVerified: z.boolean(),
 });
 export type Profile = z.infer<typeof ProfileSchema>;
-
-/** Una sesión abierta de la persona (`GET /account/sessions`); nunca trae el token. */
-export const AccountSessionSchema = z.object({
-  id: z.uuid(),
-  /** Es la sesión desde la que se hizo la consulta. */
-  isCurrent: z.boolean(),
-  device: z.object({ client: z.string().nullable(), os: z.string().nullable(), label: z.string() }),
-  ipAddress: z.string().nullable(),
-  createdAt: z.iso.datetime({ offset: true }),
-  /** Último uso, con precisión de un día. */
-  lastUsedAt: z.iso.datetime({ offset: true }),
-  expiresAt: z.iso.datetime({ offset: true }),
-});
-export type AccountSession = z.infer<typeof AccountSessionSchema>;
 
 /**
  * Endpoints de la cuenta de la persona (perfil, correo de contacto y sesiones). `@fiaro-app/contracts`

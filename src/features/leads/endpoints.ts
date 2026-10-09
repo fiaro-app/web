@@ -1,18 +1,7 @@
-import { defineEndpoint } from '@fiaro-app/contracts';
-import { z } from 'zod';
+import { CreateLeadRequestSchema, LeadReceivedSchema, defineEndpoint } from '@fiaro-app/contracts';
 
-/**
- * Cuerpo de `POST /leads` (D-114): `phone` o `email` (al menos uno) y un campo señuelo `website`
- * que debe viajar vacío; si trae algo, la API descarta el contacto en silencio.
- */
-export const CreateLeadBodySchema = z.strictObject({
-  name: z.string().min(1),
-  phone: z.string().min(1).optional(),
-  email: z.string().min(1).optional(),
-  message: z.string().min(1),
-  website: z.string().optional(),
-});
-export type CreateLeadBody = z.infer<typeof CreateLeadBodySchema>;
+// Cuerpo de `POST /leads` (D-114, `phone` o `email` y un campo señuelo `website`): vive en `@fiaro-app/contracts`.
+export { CreateLeadRequestSchema as CreateLeadBodySchema, type CreateLeadRequest as CreateLeadBody } from '@fiaro-app/contracts';
 
 /**
  * Contacto de ventas: ruta **pública** (sin sesión), con un límite propio de 5 por hora por IP.
@@ -23,7 +12,7 @@ export const leadEndpoints = {
     method: 'POST',
     path: '/leads',
     summary: 'Deja un contacto de ventas (público, limitado por IP).',
-    body: CreateLeadBodySchema,
-    response: z.object({ received: z.literal(true) }),
+    body: CreateLeadRequestSchema,
+    response: LeadReceivedSchema,
   }),
 } as const;

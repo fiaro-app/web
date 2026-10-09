@@ -1,22 +1,12 @@
-import { ClientSchema, IdSchema, defineEndpoint, paginated, PageQuerySchema, PhoneSchema } from '@fiaro-app/contracts';
+import { ClientListItemSchema, ClientSchema, IdSchema, defineEndpoint, paginated, PageQuerySchema, PhoneSchema } from '@fiaro-app/contracts';
 import { z } from 'zod';
 
 /** Cliente tal como lo devuelve la API: el contrato sin `updatedAt`, que la respuesta no incluye. */
 export const ClientResponseSchema = ClientSchema.omit({ updatedAt: true });
 export type ClientResponse = z.infer<typeof ClientResponseSchema>;
 
-/**
- * Fila de `QUERY /clients`: el cliente más lo que debe hoy, sumado sobre sus préstamos activos con
- * el mismo cálculo que el saldo de cada préstamo (D-113). Los campos nuevos son aditivos.
- */
-export const ClientListItemSchema = ClientResponseSchema.extend({
-  balance: z.int().nonnegative(),
-  overdueAmount: z.int().nonnegative(),
-  /** El mayor atraso entre sus préstamos activos; cero si está al día. */
-  overdueDays: z.int().nonnegative(),
-  activeLoans: z.int().nonnegative(),
-});
-export type ClientListItem = z.infer<typeof ClientListItemSchema>;
+// Fila de la lista con saldo y mora (D-113): vive en `@fiaro-app/contracts`.
+export { ClientListItemSchema, type ClientListItem } from '@fiaro-app/contracts';
 
 /** Cuerpo de `POST /clients`: la API valida y normaliza cédula y textos. */
 export const CreateClientBodySchema = z.strictObject({

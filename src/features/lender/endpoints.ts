@@ -1,14 +1,9 @@
-import { BusinessNameSchema, IdSchema, LenderSchema, PortfolioSchema, WeekdaySchema, defineEndpoint } from '@fiaro-app/contracts';
+import { BrandColorSchema, BusinessNameSchema, IdSchema, LenderSchema, PortfolioSchema, WeekdaySchema, defineEndpoint } from '@fiaro-app/contracts';
 import { z } from 'zod';
 
-/** Color de marca: `#RRGGBB` (la API lo guarda siempre en mayúsculas). */
-export const BrandColorSchema = z.string().regex(/^#[0-9a-fA-F]{6}$/);
-
-/**
- * Prestamista tal como lo devuelve la API: el contrato más `brandColor` (D-110), que `LenderSchema`
- * de `@fiaro-app/contracts` 0.6.0 aún no conoce. `null` o ausente es el color de Fiaro.
- */
-export const LenderResponseSchema = LenderSchema.extend({ brandColor: BrandColorSchema.nullable().optional() });
+// El prestamista ya trae `brandColor` (D-110) en `LenderSchema` de `@fiaro-app/contracts`.
+export { BrandColorSchema } from '@fiaro-app/contracts';
+export const LenderResponseSchema = LenderSchema;
 export type LenderResponse = z.infer<typeof LenderResponseSchema>;
 
 /** Cuerpo de `PATCH /lender`: un campo ausente no se toca y debe venir al menos uno. */
