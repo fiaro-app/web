@@ -17,6 +17,7 @@ export const BRAND_PALETTE: readonly BrandSwatch[] = [
   { value: '#0F766E', label: 'Verde azulado' },
   { value: '#B45309', label: 'Cobre' },
   { value: '#9F1239', label: 'Vino' },
+  { value: '#1C1B2E', label: 'Negro' },
 ];
 
 /** ¿Es este color uno de la gama (sin importar mayúsculas)? */

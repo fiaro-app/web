@@ -3,8 +3,8 @@ import { contrastWithWhite, MIN_BRAND_CONTRAST } from '@/lib/color';
 import { BRAND_PALETTE, DEFAULT_BRAND_COLOR, isPaletteColor, swatchesFor } from './brand-palette';
 
 describe('BRAND_PALETTE', () => {
-  it('has five colors that keep the white button text readable', () => {
-    expect(BRAND_PALETTE).toHaveLength(5);
+  it('has six colors that keep the white button text readable', () => {
+    expect(BRAND_PALETTE).toHaveLength(6);
     for (const swatch of BRAND_PALETTE) expect(contrastWithWhite(swatch.value)).toBeGreaterThanOrEqual(MIN_BRAND_CONTRAST);
   });
 
@@ -22,7 +22,7 @@ describe('swatchesFor', () => {
 
   it('keeps a previously saved color that is no longer in the palette', () => {
     const swatches = swatchesFor('#123456', 'Color actual');
-    expect(swatches).toHaveLength(6);
+    expect(swatches).toHaveLength(7);
     expect(swatches.at(-1)).toEqual({ value: '#123456', label: 'Color actual' });
   });
 });
