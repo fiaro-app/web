@@ -1,0 +1,41 @@
+import { Text } from '@/components/atoms/Text';
+import { SettingsSection } from '@/components/molecules/SettingsSection';
+import { AccountDeactivate } from '@/components/organisms/AccountDeactivate';
+import { AccountPasswordForm } from '@/components/organisms/AccountPasswordForm';
+import { AccountProfileForm } from '@/components/organisms/AccountProfileForm';
+import { AccountSessions } from '@/components/organisms/AccountSessions';
+import { EmailVerificationForm } from '@/components/organisms/EmailVerificationForm';
+import { ACCOUNT_TEXT } from '@/content/account';
+
+export interface AccountViewProps {
+  readonly fullName: string;
+  readonly phoneNumber: string;
+  readonly contactEmail: string | null;
+  readonly contactEmailVerified: boolean;
+}
+
+/** «Mi cuenta»: datos, verificación del correo, contraseña, sesiones y desactivar la cuenta. Solo presentación. */
+export function AccountView({ fullName, phoneNumber, contactEmail, contactEmailVerified }: Readonly<AccountViewProps>) {
+  const text = ACCOUNT_TEXT;
+  return (
+    <>
+      <Text variant="title" as="h1" weight="bold" className="text-foreground">
+        {text.title}
+      </Text>
+      <SettingsSection title={text.profile.title} description={text.profile.description}>
+        <AccountProfileForm key={`${fullName}|${contactEmail ?? ''}`} fullName={fullName} phoneNumber={phoneNumber} contactEmail={contactEmail} />
+        {contactEmail && contactEmailVerified && <p className="text-small font-semibold text-success">{text.verification.verified}</p>}
+        {contactEmail && !contactEmailVerified && <EmailVerificationForm email={contactEmail} />}
+      </SettingsSection>
+      <SettingsSection title={text.password.title} description={text.password.description}>
+        <AccountPasswordForm />
+      </SettingsSection>
+      <SettingsSection title={text.sessions.title} description={text.sessions.description}>
+        <AccountSessions />
+      </SettingsSection>
+      <SettingsSection title={text.danger.title} description={text.danger.description}>
+        <AccountDeactivate />
+      </SettingsSection>
+    </>
+  );
+}

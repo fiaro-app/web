@@ -1,3 +1,4 @@
+import NextLink from 'next/link';
 import type { ReactNode } from 'react';
 import { Avatar } from '@/components/atoms/Avatar';
 import { Divider } from '@/components/atoms/Divider';
@@ -20,6 +21,8 @@ export interface SidebarProps {
   readonly userName: string;
   /** Rol de la persona bajo su nombre; se omite si no se sabe. */
   readonly roleLabel?: string | null;
+  /** A dónde lleva el bloque del perfil («Mi cuenta»); sin él no es un enlace. */
+  readonly accountHref?: string;
   /** Acciones bajo el perfil (cerrar sesión). */
   readonly actions?: ReactNode;
   readonly brandName?: string;
@@ -32,10 +35,32 @@ export function Sidebar({
   items,
   userName,
   roleLabel,
+  accountHref,
   actions,
   brandName = 'Fiaro',
   className,
 }: Readonly<SidebarProps>) {
+  const profile = (
+    <>
+      <Avatar name={userName} size="base" />
+      <div className="flex min-w-0 flex-col">
+        <span className="truncate text-small font-semibold">{userName}</span>
+        {roleLabel && <span className="text-[11px] text-foreground/70">{roleLabel}</span>}
+      </div>
+    </>
+  );
+  const accountLink = accountHref ? (
+    <NextLink
+      href={accountHref}
+      aria-label={`Mi cuenta, ${userName}`}
+      className="flex items-center gap-2.5 rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+    >
+      {profile}
+    </NextLink>
+  ) : (
+    <div className="flex items-center gap-2.5">{profile}</div>
+  );
+
   return (
     <aside className={cn('flex w-65 shrink-0 flex-col justify-between gap-8 bg-surface px-6 py-8', className)}>
       <div className="flex flex-col gap-7">
@@ -55,13 +80,7 @@ export function Sidebar({
       </div>
       <div className="flex flex-col gap-3">
         <Divider decorative />
-        <div className="flex items-center gap-2.5">
-          <Avatar name={userName} size="base" />
-          <div className="flex min-w-0 flex-col">
-            <span className="truncate text-small font-semibold">{userName}</span>
-            {roleLabel && <span className="text-[11px] text-foreground/70">{roleLabel}</span>}
-          </div>
-        </div>
+        {accountLink}
         {actions}
       </div>
     </aside>
