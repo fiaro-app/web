@@ -7,6 +7,11 @@ export function updateBusinessName(name: string) {
   return callEndpoint(lenderEndpoints.update, { body: { name } });
 }
 
+/** Cambia el color de marca (`#RRGGBB`); `null` vuelve al color de Fiaro. */
+export function updateBrandColor(brandColor: string | null) {
+  return callEndpoint(lenderEndpoints.update, { body: { brandColor } });
+}
+
 /** Cambia los días sin cobro y si los festivos nacionales cuentan. */
 export function updateCollectionDays(nonWorkingWeekdays: readonly Weekday[], skipNationalHolidays: boolean) {
   return callEndpoint(lenderEndpoints.update, { body: { nonWorkingWeekdays: [...nonWorkingWeekdays], skipNationalHolidays } });

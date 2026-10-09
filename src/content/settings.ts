@@ -25,6 +25,14 @@ export const SETTINGS_TEXT = {
     remove: 'Quitar logo',
     unavailable: 'La subida de logos no está configurada en este entorno.',
   },
+  brand: {
+    title: 'Color de marca',
+    description: 'El color de los botones y los detalles de tu panel. Se ve así en todos tus dispositivos.',
+    colorLabel: 'Color',
+    preview: 'Así se verá un botón',
+    save: 'Guardar color',
+    reset: 'Volver al color de Fiaro',
+  },
   days: {
     title: 'Días sin cobro',
     description: 'Los días en que tus cobradores no salen a cobrar. Las cuotas que caigan en uno pasan al siguiente día de cobro.',

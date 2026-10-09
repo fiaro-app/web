@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BusinessFormSchema, PortfolioFormSchema, WEEKDAYS, sameWeekdays, toggleWeekday } from './settings-schemas';
+import { BrandColorFormSchema, BusinessFormSchema, PortfolioFormSchema, WEEKDAYS, sameWeekdays, toggleWeekday } from './settings-schemas';
 
 describe('BusinessFormSchema / PortfolioFormSchema', () => {
   it('trims and validates the business name', () => {
@@ -42,5 +42,20 @@ describe('sameWeekdays', () => {
   it('detects different lists', () => {
     expect(sameWeekdays(['SUNDAY'], ['SUNDAY', 'MONDAY'])).toBe(false);
     expect(sameWeekdays(['SUNDAY'], ['MONDAY'])).toBe(false);
+  });
+});
+
+describe('BrandColorFormSchema', () => {
+  it('accepts a #RRGGBB color dark enough for white text', () => {
+    expect(BrandColorFormSchema.safeParse({ color: '#0f766e' }).success).toBe(true);
+  });
+
+  it('rejects anything that is not a hex color', () => {
+    expect(BrandColorFormSchema.safeParse({ color: 'rojo' }).error?.issues[0]?.message).toBe('Elige un color válido.');
+    expect(BrandColorFormSchema.safeParse({ color: '#fff' }).success).toBe(false);
+  });
+
+  it('rejects a color too light for the white text of the buttons', () => {
+    expect(BrandColorFormSchema.safeParse({ color: '#ffe08a' }).error?.issues[0]?.message).toMatch(/más oscuro/);
   });
 });

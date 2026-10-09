@@ -30,6 +30,15 @@ describe('AppLayout', () => {
     expect(redirect).not.toHaveBeenCalled();
   });
 
+  it('tints the panel with the brand color of the business', async () => {
+    requireUser.mockResolvedValue(USER);
+    getShellContext.mockResolvedValue({ businessName: 'Buen Vecino', roleLabel: 'Administrador', brandColor: '#0F766E' });
+
+    const { container } = render(await AppLayout({ children: <p>contenido</p> }));
+
+    expect(container.firstElementChild).toHaveStyle({ '--primary': '#0F766E' });
+  });
+
   it('sends a person who signed in with a temporary password to change it, before loading anything else', async () => {
     requireUser.mockResolvedValue({ ...USER, mustChangePassword: true });
     await expect(AppLayout({ children: <p>contenido</p> })).rejects.toThrow('NEXT_REDIRECT:/cambiar-contrasena');

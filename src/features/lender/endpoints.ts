@@ -1,6 +1,16 @@
 import { BusinessNameSchema, IdSchema, LenderSchema, PortfolioSchema, WeekdaySchema, defineEndpoint } from '@fiaro-app/contracts';
 import { z } from 'zod';
 
+/** Color de marca: `#RRGGBB` (la API lo guarda siempre en mayúsculas). */
+export const BrandColorSchema = z.string().regex(/^#[0-9a-fA-F]{6}$/);
+
+/**
+ * Prestamista tal como lo devuelve la API: el contrato más `brandColor` (D-110), que `LenderSchema`
+ * de `@fiaro-app/contracts` 0.6.0 aún no conoce. `null` o ausente es el color de Fiaro.
+ */
+export const LenderResponseSchema = LenderSchema.extend({ brandColor: BrandColorSchema.nullable().optional() });
+export type LenderResponse = z.infer<typeof LenderResponseSchema>;
+
 /** Cuerpo de `PATCH /lender`: un campo ausente no se toca y debe venir al menos uno. */
 export const UpdateLenderBodySchema = z
   .strictObject({
@@ -8,6 +18,7 @@ export const UpdateLenderBodySchema = z
     logoUrl: z.url().nullable().optional(),
     nonWorkingWeekdays: z.array(WeekdaySchema).optional(),
     skipNationalHolidays: z.boolean().optional(),
+    brandColor: BrandColorSchema.nullable().optional(),
   })
   .refine((body) => Object.values(body).some((value) => value !== undefined), {
     message: 'Debes enviar al menos un campo para actualizar.',
@@ -40,15 +51,15 @@ export const lenderEndpoints = {
   get: defineEndpoint({
     method: 'GET',
     path: '/lender',
-    summary: 'Datos públicos del prestamista de la sesión (nombre, logo, días sin cobro).',
-    response: LenderSchema,
+    summary: 'Datos públicos del prestamista de la sesión (nombre, logo, color de marca, días sin cobro).',
+    response: LenderResponseSchema,
   }),
   update: defineEndpoint({
     method: 'PATCH',
     path: '/lender',
     summary: 'Actualiza los campos enviados del prestamista (solo Owner y Lender).',
     body: UpdateLenderBodySchema,
-    response: LenderSchema,
+    response: LenderResponseSchema,
   }),
   logoUploadUrl: defineEndpoint({
     method: 'POST',

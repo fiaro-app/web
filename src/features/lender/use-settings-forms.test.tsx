@@ -2,15 +2,16 @@ import { act, renderHook } from '@testing-library/react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiRequestError } from '@/lib/api';
-import { createPortfolio, updateBusinessName, updateCollectionDays } from './lender-api';
-import { useBusinessForm, useCollectionDaysForm, usePortfolioForm } from './use-settings-forms';
+import { createPortfolio, updateBrandColor, updateBusinessName, updateCollectionDays } from './lender-api';
+import { DEFAULT_BRAND_COLOR, useBrandColorForm, useBusinessForm, useCollectionDaysForm, usePortfolioForm } from './use-settings-forms';
 
 const refresh = vi.fn();
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh }) }));
-vi.mock('./lender-api', () => ({ updateBusinessName: vi.fn(), updateCollectionDays: vi.fn(), createPortfolio: vi.fn() }));
+vi.mock('./lender-api', () => ({ updateBusinessName: vi.fn(), updateCollectionDays: vi.fn(), createPortfolio: vi.fn(), updateBrandColor: vi.fn() }));
 const updateName = vi.mocked(updateBusinessName);
 const updateDays = vi.mocked(updateCollectionDays);
 const create = vi.mocked(createPortfolio);
+const updateColor = vi.mocked(updateBrandColor);
 
 const typed = (value: string) => ({ target: { value } }) as ChangeEvent<HTMLInputElement>;
 const checked = (value: boolean) => ({ target: { checked: value } }) as ChangeEvent<HTMLInputElement>;
@@ -21,6 +22,7 @@ beforeEach(() => {
   updateName.mockResolvedValue({} as never);
   updateDays.mockResolvedValue({} as never);
   create.mockResolvedValue({} as never);
+  updateColor.mockResolvedValue({} as never);
 });
 
 describe('useBusinessForm', () => {
@@ -130,5 +132,49 @@ describe('usePortfolioForm', () => {
     await act(() => result.current.submit(submitEvent()));
     expect(result.current.error).toBe('Ya tienes una cartera con ese nombre.');
     expect(result.current.name).toBe('General');
+  });
+});
+
+describe('useBrandColorForm', () => {
+  const setup = (brandColor: string | null = null) => renderHook(() => useBrandColorForm({ brandColor })).result;
+
+  it('starts with the saved color, or the Fiaro one when there is none', () => {
+    expect(setup('#0F766E').current).toMatchObject({ color: '#0F766E', isCustom: true });
+    expect(setup().current).toMatchObject({ color: DEFAULT_BRAND_COLOR, isCustom: false });
+  });
+
+  it('saves the new color in uppercase and refreshes', async () => {
+    const result = setup();
+    act(() => result.current.changeColor(typed('#0f766e')));
+    await act(() => result.current.submit(submitEvent()));
+
+    expect(updateColor).toHaveBeenCalledWith('#0F766E');
+    expect(result.current.notice).toBe('Color actualizado.');
+    expect(refresh).toHaveBeenCalled();
+  });
+
+  it('does not call the API when the color did not change', async () => {
+    const result = setup('#0F766E');
+    await act(() => result.current.submit(submitEvent()));
+
+    expect(updateColor).not.toHaveBeenCalled();
+    expect(result.current.notice).toBe('No hay cambios para guardar.');
+  });
+
+  it('refuses a color too light for the buttons', async () => {
+    const result = setup();
+    act(() => result.current.changeColor(typed('#ffe08a')));
+    await act(() => result.current.submit(submitEvent()));
+
+    expect(result.current.fieldError).toMatch(/más oscuro/);
+    expect(updateColor).not.toHaveBeenCalled();
+  });
+
+  it('goes back to the Fiaro color by saving null', async () => {
+    const result = setup('#0F766E');
+    await act(() => result.current.reset());
+
+    expect(updateColor).toHaveBeenCalledWith(null);
+    expect(result.current.color).toBe(DEFAULT_BRAND_COLOR);
   });
 });

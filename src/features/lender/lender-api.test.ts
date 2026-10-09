@@ -6,7 +6,7 @@ import { lenderEndpoints } from './endpoints';
 const { callEndpoint } = vi.hoisted(() => ({ callEndpoint: vi.fn() }));
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<typeof import('@/lib/api')>()), callEndpoint }));
 
-import { createPortfolio, deletePortfolio, renamePortfolio, updateBusinessName, updateCollectionDays } from './lender-api';
+import { createPortfolio, deletePortfolio, updateBrandColor, renamePortfolio, updateBusinessName, updateCollectionDays } from './lender-api';
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -74,5 +74,21 @@ describe('describePortfolioDeleteError', () => {
   it('says the portfolio is gone on 404 and falls back to the general messages', () => {
     expect(describePortfolioDeleteError(apiError(404, 'NOT_FOUND')).message).toMatch(/ya no existe/);
     expect(describePortfolioDeleteError(apiError(403, 'FORBIDDEN')).message).toMatch(/No tienes permiso/);
+  });
+});
+
+describe('brand color', () => {
+  it('saves the color and null to go back to the default', async () => {
+    await updateBrandColor('#0F766E');
+    await updateBrandColor(null);
+
+    expect(callEndpoint).toHaveBeenNthCalledWith(1, lenderEndpoints.update, { body: { brandColor: '#0F766E' } });
+    expect(callEndpoint).toHaveBeenNthCalledWith(2, lenderEndpoints.update, { body: { brandColor: null } });
+  });
+
+  it('only accepts #RRGGBB in the update body and reads the color from the lender', () => {
+    expect(lenderEndpoints.update.body.safeParse({ brandColor: '#0f766e' }).success).toBe(true);
+    expect(lenderEndpoints.update.body.safeParse({ brandColor: 'rojo' }).success).toBe(false);
+    expect(lenderEndpoints.get.response.shape.brandColor.safeParse(undefined).success).toBe(true);
   });
 });

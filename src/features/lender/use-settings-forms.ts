@@ -4,8 +4,14 @@ import { useRouter } from 'next/navigation';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import type { Weekday } from '@fiaro-app/contracts';
 import { describeSettingsError } from '@/features/lender/error-messages';
-import { createPortfolio, updateBusinessName, updateCollectionDays } from '@/features/lender/lender-api';
-import { BusinessFormSchema, PortfolioFormSchema, sameWeekdays, toggleWeekday } from '@/features/lender/settings-schemas';
+import { createPortfolio, updateBrandColor, updateBusinessName, updateCollectionDays } from '@/features/lender/lender-api';
+import {
+  BrandColorFormSchema,
+  BusinessFormSchema,
+  PortfolioFormSchema,
+  sameWeekdays,
+  toggleWeekday,
+} from '@/features/lender/settings-schemas';
 
 /** Estado común de un formulario de configuración que guarda y refresca la página. */
 function useSaveState() {
@@ -66,7 +72,10 @@ export function useBusinessForm(current: { readonly name: string }) {
 }
 
 /** Lógica de "Días sin cobro" (días de la semana y festivos), sin diseño. */
-export function useCollectionDaysForm(current: { readonly nonWorkingWeekdays: readonly Weekday[]; readonly skipNationalHolidays: boolean }) {
+export function useCollectionDaysForm(current: {
+  readonly nonWorkingWeekdays: readonly Weekday[];
+  readonly skipNationalHolidays: boolean;
+}) {
   const [weekdays, setWeekdays] = useState<readonly Weekday[]>(current.nonWorkingWeekdays);
   const [skipHolidays, setSkipHolidays] = useState(current.skipNationalHolidays);
   const { isSubmitting, error, notice, setNotice, save } = useSaveState();
@@ -117,4 +126,44 @@ export function usePortfolioForm() {
   };
 
   return { name, fieldError, isSubmitting, error, notice, changeName, submit };
+}
+
+/** Color de Fiaro con el que arranca todo negocio nuevo (igual al de `globals.css`). */
+export const DEFAULT_BRAND_COLOR = '#3b3382';
+
+/** Lógica de "Color de marca", sin diseño. `brandColor` es el guardado (`null`: el de Fiaro). */
+export function useBrandColorForm(current: { readonly brandColor: string | null }) {
+  const [color, setColor] = useState(current.brandColor ?? DEFAULT_BRAND_COLOR);
+  const [fieldError, setFieldError] = useState<string | undefined>();
+  const { isSubmitting, error, notice, setNotice, save } = useSaveState();
+
+  const changeColor = (event: ChangeEvent<HTMLInputElement>) => {
+    setColor(event.target.value);
+    setFieldError(undefined);
+    setNotice(null);
+  };
+
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isSubmitting) return;
+    const parsed = BrandColorFormSchema.safeParse({ color });
+    if (!parsed.success) {
+      setFieldError(parsed.error.issues[0]?.message);
+      return;
+    }
+    const next = parsed.data.color.toUpperCase();
+    if (next === (current.brandColor ?? DEFAULT_BRAND_COLOR).toUpperCase()) {
+      setNotice('No hay cambios para guardar.');
+      return;
+    }
+    await save(() => updateBrandColor(next), 'Color actualizado.');
+  };
+
+  /** Vuelve al color de Fiaro (guarda `null`). */
+  const reset = async () => {
+    if (isSubmitting) return;
+    if (await save(() => updateBrandColor(null), 'Volvimos al color de Fiaro.')) setColor(DEFAULT_BRAND_COLOR);
+  };
+
+  return { color, fieldError, isSubmitting, error, notice, isCustom: current.brandColor !== null, changeColor, submit, reset };
 }

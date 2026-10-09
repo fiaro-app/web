@@ -12,6 +12,8 @@ import { callEndpointAsUser } from '@/lib/api/server-call';
 export interface SettingsView {
   readonly name: string;
   readonly logoUrl: string | null;
+  /** Color de marca (`#RRGGBB`); `null` es el de Fiaro. */
+  readonly brandColor: string | null;
   readonly nonWorkingWeekdays: readonly Weekday[];
   readonly skipNationalHolidays: boolean;
   readonly portfolios: readonly Pick<Portfolio, 'id' | 'name' | 'isDefault'>[];
@@ -43,6 +45,7 @@ export async function getSettings(): Promise<SettingsResult> {
       settings: {
         name: lender.name,
         logoUrl: lender.logoUrl,
+        brandColor: lender.brandColor ?? null,
         nonWorkingWeekdays: lender.nonWorkingWeekdays,
         skipNationalHolidays: lender.skipNationalHolidays,
         portfolios: portfolios.map(({ id, name, isDefault }) => ({ id, name, isDefault })),

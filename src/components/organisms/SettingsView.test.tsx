@@ -10,12 +10,14 @@ vi.mock('@/features/lender/use-logo-form', () => ({
 vi.mock('@/features/lender/use-settings-forms', () => ({
   useBusinessForm: () => ({ name: 'Buen Vecino', fieldError: undefined, isSubmitting: false, error: null, notice: null, changeName: vi.fn(), submit: vi.fn() }),
   useCollectionDaysForm: () => ({ weekdays: [], skipHolidays: false, isSubmitting: false, error: null, notice: null, toggleDay: () => vi.fn(), toggleHolidays: vi.fn(), submit: vi.fn() }),
+  useBrandColorForm: () => ({ color: '#3B3382', fieldError: undefined, isSubmitting: false, error: null, notice: null, isCustom: false, changeColor: vi.fn(), submit: vi.fn(), reset: vi.fn() }),
   usePortfolioForm: () => ({ name: '', fieldError: undefined, isSubmitting: false, error: null, notice: null, changeName: vi.fn(), submit: vi.fn() }),
 }));
 
 const SETTINGS: SettingsData = {
   name: 'Buen Vecino',
   logoUrl: null,
+  brandColor: null,
   nonWorkingWeekdays: [],
   skipNationalHolidays: false,
   portfolios: [{ id: 'p1', name: 'General', isDefault: true }],
@@ -27,7 +29,7 @@ describe('SettingsView', () => {
   it('shows the sections under the page title', () => {
     render(<SettingsView settings={SETTINGS} />);
     expect(screen.getByRole('heading', { level: 1, name: 'Configuración' })).toBeInTheDocument();
-    for (const title of ['Datos del negocio', 'Logo del negocio', 'Días sin cobro', 'Carteras']) {
+    for (const title of ['Datos del negocio', 'Logo del negocio', 'Color de marca', 'Días sin cobro', 'Carteras']) {
       expect(screen.getByRole('heading', { level: 2, name: title })).toBeInTheDocument();
     }
   });

@@ -1,11 +1,20 @@
 import { BusinessNameSchema, WeekdaySchema, type Weekday } from '@fiaro-app/contracts';
 import { z } from 'zod';
+import { contrastWithWhite, MIN_BRAND_CONTRAST } from '@/lib/color';
 
 /** Formulario "Datos del negocio": solo el nombre (el logo se sube aparte). */
 export const BusinessFormSchema = z.object({
   name: z.string().trim().min(2, 'Escribe el nombre de tu financiera.').max(120, 'El nombre es demasiado largo.').pipe(BusinessNameSchema),
 });
 export type BusinessField = 'name';
+
+/** Formulario "Color de marca": un `#RRGGBB` con contraste suficiente para el texto blanco de los botones. */
+export const BrandColorFormSchema = z.object({
+  color: z
+    .string()
+    .regex(/^#[0-9a-fA-F]{6}$/, 'Elige un color válido.')
+    .refine((hex) => contrastWithWhite(hex) >= MIN_BRAND_CONTRAST, 'Elige un color más oscuro para que el texto blanco se lea bien.'),
+});
 
 /** Formulario "Días sin cobro": qué días de la semana no se cobra y si los festivos cuentan. */
 export const CollectionDaysFormSchema = z.object({
