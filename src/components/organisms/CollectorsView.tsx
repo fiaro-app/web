@@ -1,8 +1,10 @@
 import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { Text } from '@/components/atoms/Text';
 import { EmptyState } from '@/components/molecules/EmptyState';
+import { PaginationNav } from '@/components/molecules/PaginationNav';
 import { CollectorsTable } from '@/components/organisms/CollectorsTable';
 import { COLLECTORS_TEXT } from '@/content/collectors';
+import { pageHref } from '@/lib/pagination';
 import type { CollectorsViewModel } from '@/features/collectors/collectors-view-model';
 
 export interface CollectorsViewProps {
@@ -33,21 +35,14 @@ export function CollectorsView({ collectors }: Readonly<CollectorsViewProps>) {
       ) : (
         <>
           <CollectorsTable rows={rows} />
-          <nav aria-label="Paginación" className="flex flex-wrap items-center justify-between gap-3 text-label text-foreground/70">
-            <span>{COLLECTORS_TEXT.pagination.summary(page, pages, total)}</span>
-            <span className="flex gap-3">
-              {page > 1 && (
-                <ButtonLink variant="outline" size="sm" href={`/cobradores?pagina=${String(page - 1)}`}>
-                  {COLLECTORS_TEXT.pagination.previous}
-                </ButtonLink>
-              )}
-              {page < pages && (
-                <ButtonLink variant="outline" size="sm" href={`/cobradores?pagina=${String(page + 1)}`}>
-                  {COLLECTORS_TEXT.pagination.next}
-                </ButtonLink>
-              )}
-            </span>
-          </nav>
+          <PaginationNav
+            page={page}
+            pages={pages}
+            summary={COLLECTORS_TEXT.pagination.summary(page, pages, total)}
+            hrefFor={(target) => pageHref('/cobradores', target)}
+            previousLabel={COLLECTORS_TEXT.pagination.previous}
+            nextLabel={COLLECTORS_TEXT.pagination.next}
+          />
         </>
       )}
     </>

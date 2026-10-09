@@ -34,7 +34,7 @@ describe('CollectorsView', () => {
 
   it('offers both directions in the middle and only previous on the last page', () => {
     const { rerender } = render(<CollectorsView collectors={view({ total: 45, page: 2 })} />);
-    expect(screen.getByRole('link', { name: 'Anterior' })).toHaveAttribute('href', '/cobradores?pagina=1');
+    expect(screen.getByRole('link', { name: 'Anterior' })).toHaveAttribute('href', '/cobradores');
     expect(screen.getByRole('link', { name: 'Siguiente' })).toBeInTheDocument();
     rerender(<CollectorsView collectors={view({ total: 45, page: 3 })} />);
     expect(screen.queryByRole('link', { name: 'Siguiente' })).not.toBeInTheDocument();

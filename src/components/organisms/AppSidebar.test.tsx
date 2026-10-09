@@ -22,6 +22,6 @@ describe('AppSidebar', () => {
     render(<AppSidebar businessName="Buen Vecino" userName="Ana Pérez" roleLabel={null} />);
 
     expect(screen.getByRole('link', { name: 'Resumen' })).not.toHaveAttribute('aria-current');
-    expect(screen.getByText('Clientes')).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByText('Préstamos')).toHaveAttribute('aria-disabled', 'true');
   });
 });
