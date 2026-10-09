@@ -22,12 +22,13 @@ export function VisitReportFilters({ filters, collectors }: Readonly<VisitReport
   const isFiltered = JSON.stringify(filters) !== JSON.stringify(EMPTY_VISIT_REPORT_FILTERS);
 
   return (
-    <FilterForm action="/cobros" aria-label={text.label} className="flex flex-col gap-2">
+    <FilterForm action="/cobros" aria-label={text.label} className="flex flex-col gap-4">
+      {/* Arriba la búsqueda; abajo las opciones con «Aplicar» (un solo botón para todo el filtro). */}
+      <label className="flex max-w-xl flex-col gap-1.5 text-label font-medium">
+        {text.search}
+        <SearchInput name="q" defaultValue={filters.search} placeholder={text.searchPlaceholder} />
+      </label>
       <div className="flex flex-wrap items-end gap-4">
-        <label className="flex min-w-56 flex-1 flex-col gap-1.5 text-label font-medium">
-          {text.search}
-          <SearchInput name="q" defaultValue={filters.search} placeholder={text.searchPlaceholder} />
-        </label>
         <FilterDateRange from={filters.from} to={filters.to} fromLabel={text.from} toLabel={text.to} />
         <FilterSelectField
           name="cobrador"
