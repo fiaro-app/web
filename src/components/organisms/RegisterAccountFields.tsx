@@ -9,19 +9,19 @@ type RegisterState = ReturnType<typeof useRegisterForm>;
 export function RegisterAccountFields({ values, fieldErrors, setField }: Readonly<Pick<RegisterState, 'values' | 'fieldErrors' | 'setField'>>) {
   return (
     <FormFieldset>
-      <FormField label="Nombre completo" required error={fieldErrors.fullName}>
+      <FormField label="Nombre completo" error={fieldErrors.fullName}>
         <Input name="fullName" autoComplete="name" placeholder="Ej: Daniel Rojas" value={values.fullName} onChange={setField('fullName')} />
       </FormField>
-      <FormField label="Celular" required hint="Con este celular iniciarás sesión." error={fieldErrors.phone}>
+      <FormField label="Celular" hint="Con este celular iniciarás sesión." error={fieldErrors.phone}>
         <Input name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="300 123 4567" value={values.phone} onChange={setField('phone')} />
       </FormField>
-      <FormField label="Cédula de ciudadanía" required hint="Solo números, sin puntos." error={fieldErrors.nationalId}>
+      <FormField label="Cédula de ciudadanía" hint="Solo números, sin puntos." error={fieldErrors.nationalId}>
         <Input name="nationalId" inputMode="numeric" autoComplete="off" placeholder="Ej: 1020304050" value={values.nationalId} onChange={setField('nationalId')} />
       </FormField>
       <FormField label="Correo electrónico (opcional)" hint="Sirve para recuperar tu contraseña." error={fieldErrors.contactEmail}>
         <Input name="contactEmail" type="email" inputMode="email" autoComplete="email" placeholder="tu@correo.com" value={values.contactEmail} onChange={setField('contactEmail')} />
       </FormField>
-      <FormField label="Contraseña" required hint="Mínimo 8 caracteres." error={fieldErrors.password}>
+      <FormField label="Contraseña" hint="Mínimo 8 caracteres." error={fieldErrors.password}>
         <Input name="password" type="password" autoComplete="new-password" placeholder="••••••••" value={values.password} onChange={setField('password')} />
       </FormField>
     </FormFieldset>

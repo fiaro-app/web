@@ -9,7 +9,7 @@ type RegisterState = ReturnType<typeof useRegisterForm>;
 export function RegisterCompanyFields({ values, fieldErrors, setField }: Readonly<Pick<RegisterState, 'values' | 'fieldErrors' | 'setField'>>) {
   return (
     <FormFieldset>
-      <FormField label="Nombre de la financiera" required error={fieldErrors.businessName}>
+      <FormField label="Nombre de la financiera" error={fieldErrors.businessName}>
         <Input name="businessName" autoComplete="organization" placeholder="Ej: Financiera Buen Vecino" value={values.businessName} onChange={setField('businessName')} />
       </FormField>
     </FormFieldset>

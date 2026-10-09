@@ -20,7 +20,7 @@ export function AuthPreviewCard({ kpis, activity, className }: Readonly<AuthPrev
     >
       <div className="grid grid-cols-3 gap-2">
         {kpis.map((kpi) => (
-          <KpiTile key={kpi.label} {...kpi} />
+          <KpiTile key={kpi.label} compact {...kpi} />
         ))}
       </div>
       <ActivityItem text={activity} />
