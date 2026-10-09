@@ -22,7 +22,9 @@ function readOptions(children: ReactNode): OptionItem[] {
   return Children.toArray(children).flatMap((child) => {
     if (!isValidElement(child) || child.type !== 'option') return [];
     const option = child as ReactElement<{ value?: string | number; disabled?: boolean; children?: ReactNode }>;
-    const label = Children.toArray(option.props.children).join('');
+    const label = Children.toArray(option.props.children)
+      .filter((part): part is string | number => typeof part === 'string' || typeof part === 'number')
+      .join('');
     return [{ value: String(option.props.value ?? label), label, disabled: option.props.disabled === true }];
   });
 }
@@ -153,28 +155,29 @@ export function Select({
         </svg>
       </button>
       {open && (
-        <ul
+        <div
           id={listId}
           role="listbox"
           aria-label={ariaLabel}
-          className="absolute top-full right-0 left-0 z-30 mt-1.5 max-h-64 overflow-auto rounded-md border border-foreground/12 bg-surface p-1.5 shadow-[0_12px_32px_-4px_rgb(28_27_46/0.2)]"
+          className="absolute top-full right-0 left-0 z-30 mt-1.5 flex max-h-64 flex-col gap-0.5 overflow-auto rounded-md border border-foreground/12 bg-surface p-1.5 shadow-[0_12px_32px_-4px_rgb(28_27_46/0.2)]"
         >
           {options.map((option, index) => {
             const selected = index === selectedIndex;
             return (
-              <li
+              <button
                 key={option.value}
                 id={optionId(index)}
+                type="button"
                 role="option"
+                tabIndex={-1}
                 aria-selected={selected}
-                aria-disabled={option.disabled || undefined}
+                disabled={option.disabled}
                 onPointerEnter={() => setActive(index)}
                 onClick={() => choose(index)}
                 className={cn(
-                  'flex min-h-10 cursor-pointer items-center justify-between gap-3 rounded-sm px-3 text-label text-foreground',
+                  'flex min-h-10 w-full cursor-pointer items-center justify-between gap-3 rounded-sm px-3 text-left text-label text-foreground disabled:cursor-not-allowed disabled:opacity-40',
                   index === active && 'bg-foreground/5',
                   selected && 'bg-primary/10 font-semibold text-primary',
-                  option.disabled && 'cursor-not-allowed opacity-40',
                 )}
               >
                 <span className="truncate">{option.label}</span>
@@ -183,10 +186,10 @@ export function Select({
                     <path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 )}
-              </li>
+              </button>
             );
           })}
-        </ul>
+        </div>
       )}
     </span>
   );

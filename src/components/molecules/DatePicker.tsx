@@ -118,11 +118,11 @@ export function DatePicker({ name, value, defaultValue = '', onValueChange, id, 
         </svg>
       </button>
       {open && (
-        <div
+        <dialog
+          open
           id={dialogId}
-          role="dialog"
           aria-label={text.choose}
-          className="absolute top-full left-0 z-30 mt-1.5 w-[19.5rem] max-w-[calc(100vw-2rem)] rounded-lg border border-foreground/12 bg-surface p-4 shadow-[0_12px_32px_-4px_rgb(28_27_46/0.2)]"
+          className="absolute top-full left-0 z-30 m-0 mt-1.5 block w-[19.5rem] text-foreground max-w-[calc(100vw-2rem)] rounded-lg border border-foreground/12 bg-surface p-4 shadow-[0_12px_32px_-4px_rgb(28_27_46/0.2)]"
         >
           <div className="mb-3 flex items-center justify-between">
             <span aria-live="polite" className="font-semibold text-foreground">
@@ -187,7 +187,7 @@ export function DatePicker({ name, value, defaultValue = '', onValueChange, id, 
               {text.today}
             </button>
           </div>
-        </div>
+        </dialog>
       )}
     </span>
   );
