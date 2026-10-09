@@ -14,10 +14,10 @@ export default async function EditClientPage({ params }: PageProps<'/clientes/[i
   const result = await getClient(id);
 
   if (result.status === 'forbidden') {
-    return <EmptyState className="max-w-md" icon="!" {...CLIENTS_TEXT.forbidden} />;
+    return <EmptyState icon="!" {...CLIENTS_TEXT.forbidden} />;
   }
   if (result.status === 'not-found') {
-    return <EmptyState className="max-w-md" icon="?" {...CLIENTS_TEXT.notFound} />;
+    return <EmptyState icon="?" {...CLIENTS_TEXT.notFound} />;
   }
   const loans = await getClientLoans(result.client.id, result.client.fullName);
   return (

@@ -12,10 +12,10 @@ export default async function SettlementPage({ params }: PageProps<'/cuadres/[id
   const result = await getSettlement(id);
 
   if (result.status === 'forbidden') {
-    return <EmptyState className="max-w-md" icon="!" {...SETTLEMENTS_TEXT.forbidden} />;
+    return <EmptyState icon="!" {...SETTLEMENTS_TEXT.forbidden} />;
   }
   if (result.status === 'not-found') {
-    return <EmptyState className="max-w-md" icon="?" {...SETTLEMENTS_TEXT.notFound} />;
+    return <EmptyState icon="?" {...SETTLEMENTS_TEXT.notFound} />;
   }
   return <SettlementDetail settlement={result.settlement} />;
 }

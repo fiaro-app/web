@@ -13,7 +13,7 @@ export interface SidebarNavItemProps {
 }
 
 const MAX_BADGE = 99;
-const BASE = 'flex items-center justify-between gap-2 rounded-sm px-3 py-2.5 text-label';
+const BASE = 'flex items-center justify-between gap-2 rounded-sm px-3 py-[8.5px] text-label';
 
 /** Una opción de la barra lateral (14px): activa, normal o apagada si el módulo todavía no existe. */
 export function SidebarNavItem({ label, href, active = false, disabled = false, badge = 0 }: Readonly<SidebarNavItemProps>) {

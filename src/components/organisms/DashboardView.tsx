@@ -21,7 +21,6 @@ export function DashboardView({ dashboard }: Readonly<DashboardViewProps>) {
 
       {isEmpty ? (
         <EmptyState
-          className="max-w-md"
           icon="◔"
           title="Todavía no hay movimiento"
           description="Cuando registres cobradores, clientes y préstamos, aquí verás tu cartera, la mora y el cuadre del día."

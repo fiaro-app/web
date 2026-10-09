@@ -12,7 +12,6 @@ export default async function SummaryPage() {
   if (result.status === 'no-business') {
     return (
       <EmptyState
-        className="max-w-md"
         icon="!"
         title="Tu cuenta no tiene un negocio activo"
         description="Pídele al administrador de tu financiera que active tu acceso."

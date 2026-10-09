@@ -27,7 +27,6 @@ export function CollectorsView({ collectors }: Readonly<CollectorsViewProps>) {
 
       {rows.length === 0 ? (
         <EmptyState
-          className="max-w-md"
           icon="◔"
           title={COLLECTORS_TEXT.empty.title}
           description={COLLECTORS_TEXT.empty.description}

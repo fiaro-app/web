@@ -33,7 +33,6 @@ export function LoanForm({ clients, collectors, initialClientId }: Readonly<Loan
   if (clients.length === 0) {
     return (
       <EmptyState
-        className="max-w-md"
         icon="!"
         title={text.noClients.title}
         description={text.noClients.description}

@@ -1,4 +1,4 @@
-import { Link } from '@/components/atoms/Link';
+import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { cn } from '@/lib/cn';
 import { FIGURE_TEXT_CLASSES } from '@/lib/tone';
 import type { PendingSettlementView } from '@/features/dashboard/dashboard-view-model';
@@ -41,10 +41,10 @@ export function PendingSettlementsTable({ settlements, className }: Readonly<Pen
               <td className={cn('px-5 py-5', settlement.difference && `font-semibold ${FIGURE_TEXT_CLASSES[settlement.differenceTone]}`)}>
                 {settlement.difference ?? '—'}
               </td>
-              <td className="px-5 py-5 text-right">
-                <Link href={`/cuadres/${settlement.id}`} aria-label={`Revisar cuadre de ${settlement.collectorName}`}>
+              <td className="px-5 py-3.5 text-right">
+                <ButtonLink variant="outline" href={`/cuadres/${settlement.id}`} aria-label={`Revisar cuadre de ${settlement.collectorName}`}>
                   Revisar
-                </Link>
+                </ButtonLink>
               </td>
             </tr>
           ))}

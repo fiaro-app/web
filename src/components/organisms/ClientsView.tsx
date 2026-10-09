@@ -45,7 +45,6 @@ export function ClientsView({ clients }: Readonly<ClientsViewProps>) {
 
       {rows.length === 0 ? (
         <EmptyState
-          className="max-w-md"
           icon="◔"
           {...(hasSearch ? CLIENTS_TEXT.noResults(search) : CLIENTS_TEXT.empty)}
         />

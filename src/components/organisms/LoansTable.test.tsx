@@ -27,8 +27,8 @@ describe('LoansTable', () => {
 
   it('colors the status by tone without relying on color alone', () => {
     render(<LoansTable rows={[ROW, { ...ROW, id: 'l2', status: 'Anulado', statusTone: 'muted' }]} />);
-    expect(screen.getByText('Pagado')).toHaveClass('text-success');
-    expect(screen.getByText('Anulado')).toHaveClass('text-foreground/60');
+    expect(screen.getByText('Pagado')).toHaveClass('text-primary');
+    expect(screen.getByText('Anulado')).toHaveClass('text-foreground/70');
   });
 
   it('links each row to its detail with a descriptive name', () => {

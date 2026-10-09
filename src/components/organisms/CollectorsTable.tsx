@@ -1,4 +1,5 @@
-import { Link } from '@/components/atoms/Link';
+import { ButtonLink } from '@/components/atoms/ButtonLink';
+import { StatePill } from '@/components/atoms/StatePill';
 import { cn } from '@/lib/cn';
 import { COLLECTORS_TEXT } from '@/content/collectors';
 import type { CollectorRow } from '@/features/collectors/collectors-view-model';
@@ -34,13 +35,19 @@ export function CollectorsTable({ rows, className }: Readonly<CollectorsTablePro
               </th>
               <td className="px-5 py-5">{row.phone}</td>
               <td className="px-5 py-5">{row.portfolioName}</td>
-              <td className={cn('px-5 py-5 font-semibold', row.active ? 'text-success' : 'text-foreground/60')}>
-                {row.active ? COLLECTORS_TEXT.active : COLLECTORS_TEXT.inactive}
+              <td className="px-5 py-5">
+                <StatePill tone={row.active ? 'success' : 'muted'}>
+                  {row.active ? COLLECTORS_TEXT.active : COLLECTORS_TEXT.inactive}
+                </StatePill>
               </td>
-              <td className="px-5 py-5 text-right">
-                <Link href={`/cobradores/${row.id}`} aria-label={`${COLLECTORS_TEXT.manage.manage} ${row.fullName}`}>
+              <td className="px-5 py-3.5 text-right">
+                <ButtonLink
+                  variant="outline"
+                  href={`/cobradores/${row.id}`}
+                  aria-label={`${COLLECTORS_TEXT.manage.manage} ${row.fullName}`}
+                >
                   {COLLECTORS_TEXT.manage.manage}
-                </Link>
+                </ButtonLink>
               </td>
             </tr>
           ))}

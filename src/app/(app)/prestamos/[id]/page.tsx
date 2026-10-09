@@ -12,10 +12,10 @@ export default async function LoanPage({ params }: PageProps<'/prestamos/[id]'>)
   const result = await getLoan(id);
 
   if (result.status === 'forbidden') {
-    return <EmptyState className="max-w-md" icon="!" {...LOANS_TEXT.forbidden} />;
+    return <EmptyState icon="!" {...LOANS_TEXT.forbidden} />;
   }
   if (result.status === 'not-found') {
-    return <EmptyState className="max-w-md" icon="?" {...LOANS_TEXT.notFound} />;
+    return <EmptyState icon="?" {...LOANS_TEXT.notFound} />;
   }
   return <LoanDetail loan={result.loan} collectors={result.collectorOptions} />;
 }

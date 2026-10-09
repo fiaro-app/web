@@ -42,7 +42,7 @@ export function LoansView({ loans }: Readonly<LoansViewProps>) {
       </nav>
 
       {rows.length === 0 ? (
-        <EmptyState className="max-w-md" icon="◔" {...(status === null ? LOANS_TEXT.empty : LOANS_TEXT.emptyFiltered)} />
+        <EmptyState icon="◔" {...(status === null ? LOANS_TEXT.empty : LOANS_TEXT.emptyFiltered)} />
       ) : (
         <>
           <LoansTable rows={rows} />

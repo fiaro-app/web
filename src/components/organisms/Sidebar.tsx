@@ -38,9 +38,9 @@ export function Sidebar({
 }: Readonly<SidebarProps>) {
   return (
     <aside className={cn('flex w-65 shrink-0 flex-col justify-between gap-8 bg-surface px-6 py-8', className)}>
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-7">
         <div className="flex flex-col gap-1">
-          <span className="font-display text-[24px] font-bold text-primary">{brandName}</span>
+          <span className="font-display text-[22px] font-bold text-primary">{brandName}</span>
           <span className="text-caption text-foreground/70">{businessName}</span>
         </div>
         <nav aria-label="Principal">
