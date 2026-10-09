@@ -29,6 +29,10 @@ se agrega la nueva.
 | W-22 | "Editar cobrador" es una pantalla de gestión: cambiar cartera, restablecer contraseña y desactivar | La API no permite editar nombre, cédula ni celular de un colaborador; solo roles/cartera y estado |
 | W-23 | El cambio de cartera reenvía los roles que ya tenía la persona | `PATCH /memberships/:id/roles` reemplaza todos los roles; mandar solo `COLLECTOR` quitaría otros |
 | W-24 | El detalle de un cobrador se busca en el listado (`getCollector`) | No existe `GET /memberships/:id`; si se publica, se cambia solo esa función |
+| W-25 | Los endpoints de clientes se declaran en la web (respuesta = `ClientSchema` sin `updatedAt`) | Mismo plan de migración que W-13: `contracts` publica el schema pero no los endpoints |
+| W-26 | El teléfono del cliente acepta celular o fijo (`PhoneSchema`); el de las cuentas sigue siendo celular | Un cliente puede tener solo un fijo; la API lo permite |
+| W-27 | La edición de cliente manda a la API solo los campos que cambiaron (`toClientChanges`) | `PATCH` deja intacto lo ausente y rechaza un cuerpo vacío |
+| W-28 | La búsqueda de clientes es un formulario GET (`?q=`) validado en el servidor | Funciona sin JavaScript, la URL es compartible y la entrada se acota (`parseSearchParam`) |
 
 ## Pendientes conocidos
 
