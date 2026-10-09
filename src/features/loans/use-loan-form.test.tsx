@@ -35,6 +35,11 @@ beforeEach(() => {
 const setup = () => renderHook(() => useLoanForm()).result;
 
 describe('useLoanForm', () => {
+  it('starts with the preselected client', () => {
+    expect(renderHook(() => useLoanForm({ initialClientId: CLIENT_ID })).result.current.values.clientId).toBe(CLIENT_ID);
+    expect(setup().current.values.clientId).toBe('');
+  });
+
   it('starts with today as the start date', () => {
     expect(setup().current.values.startDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });

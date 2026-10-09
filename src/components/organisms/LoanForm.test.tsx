@@ -75,4 +75,9 @@ describe('LoanForm', () => {
     expect(screen.getByRole('link', { name: 'Ver el préstamo creado' })).toHaveAttribute('href', '/prestamos/l9');
     expect(screen.queryByRole('button', { name: 'Registrar préstamo' })).not.toBeInTheDocument();
   });
+
+  it('passes the preselected client to the hook', () => {
+    render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} initialClientId="c1" />);
+    expect(useLoanForm).toHaveBeenCalledWith({ initialClientId: 'c1' });
+  });
 });

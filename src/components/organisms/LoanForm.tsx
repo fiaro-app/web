@@ -22,10 +22,12 @@ const FREQUENCIES = LoanFrequencySchema.options;
 export interface LoanFormProps {
   readonly clients: readonly ClientOption[];
   readonly collectors: readonly CollectorOption[];
+  /** Cliente que arranca elegido (viene de la ficha del cliente); vacío si ninguno. */
+  readonly initialClientId?: string;
 }
 
-export function LoanForm({ clients, collectors }: Readonly<LoanFormProps>) {
-  const { values, fieldErrors, formError, isSubmitting, createdLoanId, setText, setAmount, setTotalPayable, submit } = useLoanForm();
+export function LoanForm({ clients, collectors, initialClientId }: Readonly<LoanFormProps>) {
+  const { values, fieldErrors, formError, isSubmitting, createdLoanId, setText, setAmount, setTotalPayable, submit } = useLoanForm({ initialClientId });
   const text = LOANS_TEXT.form;
 
   if (clients.length === 0) {

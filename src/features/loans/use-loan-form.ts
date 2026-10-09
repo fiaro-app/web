@@ -11,9 +11,9 @@ import { toFieldErrors, type FieldErrors } from '@/lib/forms';
 
 const FIELDS: readonly LoanField[] = ['clientId', 'principalAmount', 'installmentCount', 'installmentValue', 'totalPayable', 'frequency', 'startDate', 'collectorId'];
 
-function emptyValues(): LoanFormInput {
+function emptyValues(initialClientId: string): LoanFormInput {
   return {
-    clientId: '',
+    clientId: initialClientId,
     principalAmount: null,
     installmentCount: '',
     installmentValue: null,
@@ -29,9 +29,9 @@ function emptyValues(): LoanFormInput {
  * mientras la persona no lo haya tocado; en cuanto lo edita, se respeta lo que pactó. Al salir
  * bien sigue a `/prestamos`.
  */
-export function useLoanForm() {
+export function useLoanForm({ initialClientId = '' }: { readonly initialClientId?: string } = {}) {
   const router = useRouter();
-  const [values, setValues] = useState<LoanFormInput>(emptyValues);
+  const [values, setValues] = useState<LoanFormInput>(() => emptyValues(initialClientId));
   const [totalEdited, setTotalEdited] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors<LoanField>>({});
   const [formError, setFormError] = useState<string | null>(null);

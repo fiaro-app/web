@@ -18,6 +18,14 @@ export const CLIENTS_TEXT = {
     title: 'No tienes acceso a esta sección',
     description: 'Tu cuenta no tiene un negocio activo desde el que ver clientes.',
   },
+  loans: {
+    title: 'Préstamos del cliente',
+    listLabel: 'Préstamos del cliente',
+    empty: 'Este cliente todavía no tiene préstamos.',
+    newLoan: '+ Nuevo préstamo',
+    view: 'Ver',
+    line: (installments: string, balance: string) => `${installments} · saldo ${balance}`,
+  },
   notFound: { title: 'No encontramos al cliente', description: 'Puede que ya no exista. Vuelve a la lista y elige otro.' },
   pagination: {
     summary: (page: number, pages: number, total: number) =>

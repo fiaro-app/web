@@ -5,6 +5,7 @@ vi.mock('server-only', () => ({}));
 const { callEndpointAsUser } = vi.hoisted(() => ({ callEndpointAsUser: vi.fn() }));
 vi.mock('@/lib/api/server-call', () => ({ callEndpointAsUser }));
 
+import { getClientLoans } from './get-client-loans.server';
 import { getLoanBalance, getLoanBalances } from './get-balances.server';
 import { getClientNames, getClientOptions } from './get-client-names.server';
 import { getLoan } from './get-loan.server';
@@ -154,5 +155,21 @@ describe('getLoanBalance / getLoanBalances', () => {
     ] as never);
     expect(callEndpointAsUser).toHaveBeenCalledTimes(1);
     expect([...balances.keys()]).toEqual(['l1']);
+  });
+});
+
+describe('getClientLoans', () => {
+  it('returns the rows of one client, filtered in the API, with their balance', async () => {
+    routeApi({ '/loans': { data: [LOAN], meta: { page: 1, pageSize: 20, total: 1 } }, '/loans/:loanId/balance': BALANCE });
+    const rows = await getClientLoans('c1', 'Carlos Gómez');
+    expect(rows[0]).toMatchObject({ clientName: 'Carlos Gómez', balance: '$380.000' });
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/loans' }), { body: { page: 1, pageSize: 20, clientId: 'c1' } });
+  });
+
+  it('is empty when the API fails, and propagates unknown failures', async () => {
+    routeApi({ '/loans': apiError(500, 'INTERNAL_ERROR') });
+    expect(await getClientLoans('c1', 'Carlos')).toEqual([]);
+    callEndpointAsUser.mockRejectedValueOnce(new Error('boom'));
+    await expect(getClientLoans('c1', 'Carlos')).rejects.toThrow('boom');
   });
 });
