@@ -7,6 +7,7 @@
   --background: #f6f5fb;
   --surface: #ffffff;
   --surface-2: #f1f0f8;
+  --surface-3: #e9e7f2;
   --foreground: #1c1b2e;
   --skeleton: #d9d6e4;
 
@@ -36,6 +37,7 @@
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
   --color-foreground: var(--foreground);
   --color-skeleton: var(--skeleton);
 
@@ -76,6 +78,17 @@
   --text-body--line-height: 1.5;
   --text-label: 14px;
   --text-label--line-height: 1.43;
+  /* Escalas de la landing de marketing (Fraunces 44/32/30) y de texto auxiliar (15/13). */
+  --text-hero: 44px;
+  --text-hero--line-height: 1.2;
+  --text-section: 32px;
+  --text-section--line-height: 1.2;
+  --text-price: 30px;
+  --text-price--line-height: 1.2;
+  --text-lead: 15px;
+  --text-lead--line-height: 1.5;
+  --text-small: 13px;
+  --text-small--line-height: 1.5;
   --text-caption: 12px;
   --text-caption--line-height: 1.33;
 }

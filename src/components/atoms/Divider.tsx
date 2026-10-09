@@ -4,6 +4,8 @@ export interface DividerProps {
   readonly orientation?: 'horizontal' | 'vertical';
   /** Solo decorativo: lo saca del árbol de accesibilidad en vez de anunciarlo como separador. */
   readonly decorative?: boolean;
+  /** Para fondos de marca: línea blanca al 20% en lugar de tinta. */
+  readonly inverse?: boolean;
   readonly className?: string;
 }
 
@@ -11,6 +13,7 @@ export interface DividerProps {
 export function Divider({
   orientation = 'horizontal',
   decorative = false,
+  inverse = false,
   className,
 }: Readonly<DividerProps>) {
   return (
@@ -18,7 +21,8 @@ export function Divider({
       role={decorative ? 'none' : undefined}
       aria-orientation={decorative ? undefined : orientation}
       className={cn(
-        'm-0 shrink-0 border-0 bg-foreground/12',
+        'm-0 shrink-0 border-0',
+        inverse ? 'bg-primary-foreground/20' : 'bg-foreground/12',
         orientation === 'horizontal' ? 'h-px w-full' : 'w-px self-stretch',
         className,
       )}

@@ -22,4 +22,14 @@ describe('NavLink', () => {
     expect(link).not.toHaveAttribute('aria-current');
     expect(link).toHaveClass('text-foreground/65');
   });
+
+  it('can be full ink instead of muted', () => {
+    render(
+      <NavLink href="/precios" muted={false}>
+        Precios
+      </NavLink>,
+    );
+
+    expect(screen.getByRole('link', { name: 'Precios' })).toHaveClass('text-foreground');
+  });
 });
