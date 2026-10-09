@@ -27,6 +27,7 @@ describe('PendingSettlementsTable', () => {
       'Esperado',
       'Cobrado',
       'Diferencia',
+      'Acciones',
     ]);
   });
 
@@ -46,5 +47,11 @@ describe('PendingSettlementsTable', () => {
 
     expect(screen.getByText('-$30.000')).toHaveClass('text-destructive', 'font-semibold');
     expect(within(screen.getByRole('row', { name: /María Torres/ })).getByText('—')).not.toHaveClass('font-semibold');
+  });
+
+  it('links each settlement to its review page', () => {
+    render(<PendingSettlementsTable settlements={[ROW]} />);
+
+    expect(screen.getByRole('link', { name: 'Revisar cuadre de Alejo Zuleta' })).toHaveAttribute('href', '/cuadres/1');
   });
 });
