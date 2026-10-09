@@ -1,5 +1,6 @@
 import 'server-only';
 import { MAX_PAGE_SIZE } from '@fiaro-app/contracts';
+import { cache } from 'react';
 import { roleLabel, COLLECTOR_LABEL } from '@/features/app-shell/role-label';
 import type { AuthUser } from '@/features/auth/endpoints';
 import { lenderEndpoints } from '@/features/lender/endpoints';
@@ -43,9 +44,10 @@ async function loadBusinessName(): Promise<string> {
 /**
  * Lo que necesita la barra lateral además de la persona: el nombre del negocio y su rol. Es un
  * adorno de la pantalla: si la API falla al traerlos, el panel abre con valores de respaldo en vez
- * de quedar inservible.
+ * de quedar inservible. Se memoiza por petición (con la misma `user` que devuelve `requireUser`)
+ * para que el layout y una página que también necesite el rol no repitan las consultas.
  */
-export async function getShellContext(user: AuthUser): Promise<ShellContext> {
+export const getShellContext = cache(async (user: AuthUser): Promise<ShellContext> => {
   const [businessName, role] = await Promise.all([loadBusinessName(), loadRoleLabel(user)]);
   return { businessName, roleLabel: role };
-}
+});
