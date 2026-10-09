@@ -56,7 +56,7 @@ export function ClientsView({ clients }: Readonly<ClientsViewProps>) {
             page={page}
             pages={pages}
             summary={CLIENTS_TEXT.pagination.summary(page, pages, total)}
-            hrefFor={(target) => pageHref('/clientes', target, search)}
+            hrefFor={(target) => pageHref('/clientes', target, { q: search })}
           />
         </>
       )}
