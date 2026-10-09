@@ -35,19 +35,11 @@ export interface FilterBarProps {
 export function FilterBar({ search, pills, selects, className }: Readonly<FilterBarProps>) {
   return (
     <div className={cn('flex flex-col gap-3', className)}>
-      <SearchInput
-        value={search.value}
-        placeholder={search.placeholder}
-        onChange={(event) => search.onChange(event.target.value)}
-      />
+      <SearchInput value={search.value} placeholder={search.placeholder} onChange={(event) => search.onChange(event.target.value)} />
       {pills && (
         <div className="flex flex-wrap gap-2" role="group" aria-label="Estado">
           {pills.options.map((option) => (
-            <FilterPill
-              key={option.value}
-              selected={pills.value === option.value}
-              onClick={() => pills.onChange(option.value)}
-            >
+            <FilterPill key={option.value} selected={pills.value === option.value} onClick={() => pills.onChange(option.value)}>
               {option.label}
             </FilterPill>
           ))}

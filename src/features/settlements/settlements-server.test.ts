@@ -56,6 +56,33 @@ describe('getSettlements', () => {
     });
   });
 
+  it('sends the date range, collector and portfolio filters and offers them as options', async () => {
+    routeApi({
+      '/daily-settlements': { data: [SETTLEMENT], meta: { page: 1, pageSize: 20, total: 1 } },
+      '/memberships': { data: [COLLECTOR] },
+      '/portfolios': [{ id: 'p1', name: 'Zona Norte' }],
+    });
+    const filters = { from: '2026-10-01', to: '2026-10-09', collectorId: 'm1', portfolioId: 'p1' };
+
+    const result = await getSettlements(1, 'APPROVED', filters);
+
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/daily-settlements' }), {
+      body: {
+        page: 1,
+        pageSize: 20,
+        status: 'APPROVED',
+        dateRange: { from: '2026-10-01', to: '2026-10-09' },
+        collectorMembershipId: 'm1',
+        portfolioId: 'p1',
+      },
+    });
+    expect(result).toMatchObject({
+      status: 'ok',
+      settlements: { filters },
+      options: { collectors: [{ id: 'm1', name: 'Luis Gómez' }], portfolios: [{ id: 'p1', name: 'Zona Norte' }] },
+    });
+  });
+
   it('reports forbidden on 403', async () => {
     routeApi({ '/daily-settlements': apiError(403, 'FORBIDDEN'), '/memberships': { data: [] }, '/portfolios': [] });
     expect(await getSettlements(1, null)).toEqual({ status: 'forbidden' });

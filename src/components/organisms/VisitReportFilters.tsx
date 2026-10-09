@@ -1,15 +1,9 @@
-import { Button } from '@/components/atoms/Button';
-import { ButtonLink } from '@/components/atoms/ButtonLink';
-import { Input } from '@/components/atoms/Input';
-import { Select } from '@/components/atoms/Select';
-import { FormField } from '@/components/molecules/FormField';
+import { FilterActions } from '@/components/molecules/FilterActions';
+import { FilterDateRange } from '@/components/molecules/FilterDateRange';
+import { FilterSelectField } from '@/components/molecules/FilterSelectField';
 import { VISITS_TEXT } from '@/content/visits';
 import type { VisitReportCollectorOption } from '@/features/visits/get-visit-report.server';
-import {
-  EMPTY_VISIT_REPORT_FILTERS,
-  VISIT_OUTCOME_FILTERS,
-  type VisitReportFilters as Filters,
-} from '@/features/visits/visit-report-filters';
+import { EMPTY_VISIT_REPORT_FILTERS, VISIT_OUTCOME_FILTERS, type VisitReportFilters as Filters } from '@/features/visits/visit-report-filters';
 
 export interface VisitReportFiltersProps {
   readonly filters: Filters;
@@ -28,50 +22,22 @@ export function VisitReportFilters({ filters, collectors }: Readonly<VisitReport
   return (
     <form action="/cobros" aria-label={text.label} className="flex flex-col gap-2">
       <div className="flex flex-wrap items-end gap-4">
-        <div className="w-44">
-          <FormField label={text.from}>
-            <Input name="desde" type="date" defaultValue={filters.from} />
-          </FormField>
-        </div>
-        <div className="w-44">
-          <FormField label={text.to}>
-            <Input name="hasta" type="date" defaultValue={filters.to} />
-          </FormField>
-        </div>
-        <div className="w-56">
-          <FormField label={text.collector}>
-            <Select name="cobrador" defaultValue={filters.collectorId}>
-              <option value="">{text.allCollectors}</option>
-              {collectors.map((collector) => (
-                <option key={collector.id} value={collector.id}>
-                  {collector.name}
-                </option>
-              ))}
-            </Select>
-          </FormField>
-        </div>
-        <div className="w-56">
-          <FormField label={text.outcome}>
-            <Select name="resultado" defaultValue={filters.outcome}>
-              <option value="">{text.allOutcomes}</option>
-              {VISIT_OUTCOME_FILTERS.map((outcome) => (
-                <option key={outcome} value={outcome}>
-                  {VISITS_TEXT.outcome[outcome]}
-                </option>
-              ))}
-            </Select>
-          </FormField>
-        </div>
-        <div className="flex gap-3">
-          <Button type="submit" variant="outline" size="sm" className="h-11">
-            {text.apply}
-          </Button>
-          {isFiltered && (
-            <ButtonLink href="/cobros" variant="text" size="sm" className="h-11">
-              {text.clear}
-            </ButtonLink>
-          )}
-        </div>
+        <FilterDateRange from={filters.from} to={filters.to} fromLabel={text.from} toLabel={text.to} />
+        <FilterSelectField
+          name="cobrador"
+          label={text.collector}
+          defaultValue={filters.collectorId}
+          allLabel={text.allCollectors}
+          options={collectors.map((collector) => ({ value: collector.id, label: collector.name }))}
+        />
+        <FilterSelectField
+          name="resultado"
+          label={text.outcome}
+          defaultValue={filters.outcome}
+          allLabel={text.allOutcomes}
+          options={VISIT_OUTCOME_FILTERS.map((outcome) => ({ value: outcome, label: VISITS_TEXT.outcome[outcome] }))}
+        />
+        <FilterActions applyLabel={text.apply} clearLabel={text.clear} clearHref="/cobros" isFiltered={isFiltered} />
       </div>
       <p className="text-caption text-foreground/70">{text.periodHint}</p>
     </form>

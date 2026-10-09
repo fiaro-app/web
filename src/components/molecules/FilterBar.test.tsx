@@ -27,12 +27,7 @@ describe('FilterBar', () => {
 
   it('marks the selected pill and reports a new choice', async () => {
     const onChange = vi.fn();
-    render(
-      <FilterBar
-        search={{ value: '', onChange: () => {} }}
-        pills={{ options: OPTIONS, value: 'all', onChange }}
-      />,
-    );
+    render(<FilterBar search={{ value: '', onChange: () => {} }} pills={{ options: OPTIONS, value: 'all', onChange }} />);
 
     expect(screen.getByRole('button', { name: 'Todos' })).toHaveAttribute('aria-pressed', 'true');
     await userEvent.click(screen.getByRole('button', { name: 'Atraso' }));
