@@ -1,5 +1,6 @@
 import type { NextConfig } from 'next';
 import { resolveApiUrl } from './src/lib/api-url';
+import { NO_STORE_HEADER, NO_STORE_SOURCES, buildSecurityHeaders } from './src/lib/security-headers';
 
 /**
  * Origen de la API. Las llamadas del navegador van a `/api/*` de esta misma web y Next las
@@ -9,9 +10,19 @@ import { resolveApiUrl } from './src/lib/api-url';
  */
 const API_URL = resolveApiUrl();
 
+const securityHeaders = buildSecurityHeaders({ isDevelopment: process.env.NODE_ENV !== 'production' });
+
 const nextConfig: NextConfig = {
+  // No anunciar la tecnología del servidor.
+  poweredByHeader: false,
   async rewrites() {
     return [{ source: '/api/:path*', destination: `${API_URL}/:path*` }];
+  },
+  async headers() {
+    return [
+      { source: '/:path*', headers: [...securityHeaders] },
+      ...NO_STORE_SOURCES.map((source) => ({ source, headers: [NO_STORE_HEADER] })),
+    ];
   },
 };
 
