@@ -1,31 +1,18 @@
 import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react';
 import { cn } from '@/lib/cn';
-import { Spinner } from '@/components/atoms/Spinner';
+import { LoadingDots } from '@/components/atoms/LoadingDots';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'destructive' | 'ghost';
-export type ButtonSize = 'sm' | 'md' | 'lg';
+export type ButtonVariant = 'primary' | 'outline' | 'text';
 
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary:
-    'bg-primary text-primary-foreground hover:bg-primary-hover disabled:hover:bg-primary',
-  secondary:
-    'bg-secondary text-secondary-foreground hover:bg-border disabled:hover:bg-secondary',
-  destructive:
-    'bg-destructive text-destructive-foreground hover:opacity-90 disabled:hover:opacity-100',
-  ghost:
-    'bg-transparent text-foreground hover:bg-secondary disabled:hover:bg-transparent',
-};
-
-const SIZE_CLASSES: Record<ButtonSize, string> = {
-  sm: 'h-8 px-3 text-sm gap-1.5',
-  md: 'h-10 px-4 text-sm gap-2',
-  lg: 'h-12 px-6 text-base gap-2',
+  primary: 'bg-primary text-primary-foreground',
+  outline: 'border-[1.5px] border-primary bg-surface text-primary',
+  text: 'bg-transparent text-primary',
 };
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly variant?: ButtonVariant;
-  readonly size?: ButtonSize;
-  /** Shows a spinner in place of the icon slots and disables the button, without layout shift. */
+  /** Reemplaza el contenido por tres puntos y deshabilita el botón, sin cambiar su tamaño. */
   readonly loading?: boolean;
   readonly leftIcon?: ReactNode;
   readonly rightIcon?: ReactNode;
@@ -33,15 +20,17 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 /**
- * The base clickable action, covering every interactive state a design system needs: hover,
- * focus-visible (keyboard-only ring), active (press), disabled, and loading.
+ * La acción principal del producto, en los tres estilos del diseño (`primary`, `outline`,
+ * `text`) y sus cuatro estados: reposo, hover/pressed (opacidad), disabled (40%) y loading
+ * (puntos). El hover usa opacidad y no un color derivado, así sigue al color de marca que
+ * `useThemeStore` cambie en tiempo de ejecución.
  */
 export function Button({
   ref,
+  type = 'button',
   variant = 'primary',
-  size = 'md',
   loading = false,
-  disabled,
+  disabled = false,
   leftIcon,
   rightIcon,
   className,
@@ -51,22 +40,30 @@ export function Button({
   return (
     <button
       ref={ref}
-      disabled={disabled ?? loading}
+      type={type}
+      disabled={disabled || loading}
+      aria-busy={loading}
       className={cn(
-        'inline-flex items-center justify-center rounded-md font-medium transition-colors',
+        'relative inline-flex h-12 items-center justify-center rounded-md px-6 text-label font-medium transition-opacity',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-        'disabled:cursor-not-allowed disabled:opacity-60',
-        'active:scale-[0.98]',
+        'enabled:hover:opacity-85 enabled:active:opacity-70',
+        loading ? 'cursor-wait' : 'disabled:cursor-not-allowed disabled:opacity-40',
         VARIANT_CLASSES[variant],
-        SIZE_CLASSES[size],
         className,
       )}
-      aria-busy={loading}
       {...props}
     >
-      {loading ? <Spinner decorative size={size === 'lg' ? 'md' : 'sm'} /> : leftIcon}
-      {children}
-      {!loading && rightIcon}
+      {/* El contenido sigue ocupando su espacio (solo se oculta) para que `loading` no cambie el ancho. */}
+      <span className={cn('inline-flex items-center gap-2', loading && 'opacity-0')}>
+        {leftIcon}
+        {children}
+        {rightIcon}
+      </span>
+      {loading && (
+        <span className="absolute inset-0 grid place-items-center">
+          <LoadingDots />
+        </span>
+      )}
     </button>
   );
 }

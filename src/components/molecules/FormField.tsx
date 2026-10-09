@@ -44,12 +44,12 @@ export function FormField({ label, error, hint, required, children }: Readonly<F
       </Label>
       {cloneElement(children, { id, invalid: Boolean(error), 'aria-describedby': describedBy })}
       {error && (
-        <p id={`${id}-error`} role="alert" className="text-sm text-destructive">
+        <p id={`${id}-error`} role="alert" className="text-caption text-destructive">
           {error}
         </p>
       )}
       {!error && hint && (
-        <p id={`${id}-hint`} className="text-sm text-muted-foreground">
+        <p id={`${id}-hint`} className="text-caption text-foreground/70">
           {hint}
         </p>
       )}
