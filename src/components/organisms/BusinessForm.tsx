@@ -16,7 +16,7 @@ export function BusinessForm({ name, canEdit }: Readonly<{ name: string; canEdit
   return (
     <SettingsSection title={text.title} description={text.description}>
       <form onSubmit={form.submit} noValidate aria-label={text.title} className="flex flex-col gap-4">
-        <FormField label={text.nameLabel} required error={form.fieldError}>
+        <FormField label={text.nameLabel} error={form.fieldError}>
           <Input name="name" autoComplete="organization" placeholder={text.namePlaceholder} value={form.name} onChange={form.changeName} disabled={!canEdit} />
         </FormField>
         {form.error && <Alert tone="error">{form.error}</Alert>}

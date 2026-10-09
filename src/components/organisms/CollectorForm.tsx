@@ -36,19 +36,19 @@ export function CollectorForm({ form, portfolios }: Readonly<CollectorFormProps>
       </div>
 
       <FormFieldset>
-        <FormField label={text.fullName.label} required error={fieldErrors.fullName}>
+        <FormField label={text.fullName.label} error={fieldErrors.fullName}>
           <Input name="fullName" autoComplete="off" placeholder={text.fullName.placeholder} value={values.fullName} onChange={setField('fullName')} />
         </FormField>
-        <FormField label={text.nationalId.label} required hint={text.nationalId.hint} error={fieldErrors.nationalId}>
+        <FormField label={text.nationalId.label} hint={text.nationalId.hint} error={fieldErrors.nationalId}>
           <Input name="nationalId" inputMode="numeric" autoComplete="off" placeholder={text.nationalId.placeholder} value={values.nationalId} onChange={setField('nationalId')} />
         </FormField>
-        <FormField label={text.phone.label} required hint={text.phone.hint} error={fieldErrors.phone}>
+        <FormField label={text.phone.label} hint={text.phone.hint} error={fieldErrors.phone}>
           <Input name="phone" type="tel" inputMode="tel" autoComplete="off" placeholder={text.phone.placeholder} value={values.phone} onChange={setField('phone')} />
         </FormField>
         <FormField label={text.contactEmail.label} hint={text.contactEmail.hint} error={fieldErrors.contactEmail}>
           <Input name="contactEmail" type="email" inputMode="email" autoComplete="off" placeholder={text.contactEmail.placeholder} value={values.contactEmail} onChange={setField('contactEmail')} />
         </FormField>
-        <FormField label={text.portfolio.label} required error={fieldErrors.portfolioId}>
+        <FormField label={text.portfolio.label} error={fieldErrors.portfolioId}>
           <Select name="portfolioId" value={values.portfolioId} onChange={setField('portfolioId')}>
             <option value="">{text.portfolio.placeholder}</option>
             {portfolios.map((portfolio) => (

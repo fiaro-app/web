@@ -29,19 +29,19 @@ export function ClientForm({ client }: Readonly<{ client?: ClientResponse }>) {
       </div>
 
       <FormFieldset>
-        <FormField label={text.fullName.label} required error={fieldErrors.fullName}>
+        <FormField label={text.fullName.label} error={fieldErrors.fullName}>
           <Input name="fullName" autoComplete="off" placeholder={text.fullName.placeholder} value={values.fullName} onChange={setField('fullName')} />
         </FormField>
-        <FormField label={text.nationalId.label} required hint={text.nationalId.hint} error={fieldErrors.nationalId}>
+        <FormField label={text.nationalId.label} hint={text.nationalId.hint} error={fieldErrors.nationalId}>
           <Input name="nationalId" inputMode="numeric" autoComplete="off" placeholder={text.nationalId.placeholder} value={values.nationalId} onChange={setField('nationalId')} />
         </FormField>
-        <FormField label={text.phone.label} required hint={text.phone.hint} error={fieldErrors.phone}>
+        <FormField label={text.phone.label} hint={text.phone.hint} error={fieldErrors.phone}>
           <Input name="phone" type="tel" inputMode="tel" autoComplete="off" placeholder={text.phone.placeholder} value={values.phone} onChange={setField('phone')} />
         </FormField>
-        <FormField label={text.occupation.label} required error={fieldErrors.occupation}>
+        <FormField label={text.occupation.label} error={fieldErrors.occupation}>
           <Input name="occupation" autoComplete="off" placeholder={text.occupation.placeholder} value={values.occupation} onChange={setField('occupation')} />
         </FormField>
-        <FormField label={text.address.label} required hint={text.address.hint} error={fieldErrors.address}>
+        <FormField label={text.address.label} hint={text.address.hint} error={fieldErrors.address}>
           <Input name="address" autoComplete="off" placeholder={text.address.placeholder} value={values.address} onChange={setField('address')} />
         </FormField>
       </FormFieldset>

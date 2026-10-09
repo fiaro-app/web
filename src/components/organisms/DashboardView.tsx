@@ -27,7 +27,7 @@ export function DashboardView({ dashboard }: Readonly<DashboardViewProps>) {
         />
       ) : (
         <>
-          <section aria-label="Indicadores" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+          <section aria-label="Indicadores" className="grid grid-cols-2 gap-4 xl:grid-cols-5">
             {kpis.map((kpi) => (
               <StatTile key={kpi.id} label={kpi.label} value={kpi.value} tone={kpi.tone} />
             ))}
