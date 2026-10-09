@@ -5,6 +5,19 @@ import { z } from 'zod';
 export const ClientResponseSchema = ClientSchema.omit({ updatedAt: true });
 export type ClientResponse = z.infer<typeof ClientResponseSchema>;
 
+/**
+ * Fila de `QUERY /clients`: el cliente más lo que debe hoy, sumado sobre sus préstamos activos con
+ * el mismo cálculo que el saldo de cada préstamo (D-113). Los campos nuevos son aditivos.
+ */
+export const ClientListItemSchema = ClientResponseSchema.extend({
+  balance: z.int().nonnegative(),
+  overdueAmount: z.int().nonnegative(),
+  /** El mayor atraso entre sus préstamos activos; cero si está al día. */
+  overdueDays: z.int().nonnegative(),
+  activeLoans: z.int().nonnegative(),
+});
+export type ClientListItem = z.infer<typeof ClientListItemSchema>;
+
 /** Cuerpo de `POST /clients`: la API valida y normaliza cédula y textos. */
 export const CreateClientBodySchema = z.strictObject({
   nationalId: z.string().min(1),
@@ -49,9 +62,9 @@ export const clientEndpoints = {
   list: defineEndpoint({
     method: 'QUERY',
     path: '/clients',
-    summary: 'Lista paginada de clientes, con búsqueda por nombre o cédula.',
+    summary: 'Lista paginada de clientes con saldo y mora, con búsqueda por nombre o cédula.',
     body: ListClientsBodySchema,
-    response: paginated(ClientResponseSchema),
+    response: paginated(ClientListItemSchema),
   }),
   update: defineEndpoint({
     method: 'PATCH',

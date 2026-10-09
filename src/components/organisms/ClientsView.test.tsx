@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import type { ClientsViewModel } from '@/features/clients/clients-view-model';
 import { ClientsView } from './ClientsView';
 
-const ROW = { id: 'c1', fullName: 'Carlos Gómez', nationalId: '1020304050', phone: '+573001234567', occupation: 'Vendedor' };
+const ROW = { id: 'c1', fullName: 'Carlos Gómez', nationalId: '1020304050', phone: '+573001234567', occupation: 'Vendedor', activeLoans: '1', balance: '$380.000', overdue: 'Al día', overdueAmount: null, isOverdue: false };
 const view = (overrides: Partial<ClientsViewModel> = {}): ClientsViewModel => ({
   rows: [ROW],
   total: 1,

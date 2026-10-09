@@ -6,6 +6,11 @@ import { LoansView } from './LoansView';
 const ROW = {
   id: 'l1',
   clientName: 'Carlos Gómez',
+  collectorName: 'Luis Pérez',
+  overdue: 'Al día',
+  overdueAmount: null,
+  isOverdue: false,
+  nextDue: '10/10/2026',
   principal: '$500.000',
   installments: '20 × $30.000',
   balance: '$380.000',
