@@ -17,5 +17,5 @@ export default async function LoanPage({ params }: PageProps<'/prestamos/[id]'>)
   if (result.status === 'not-found') {
     return <EmptyState className="max-w-md" icon="?" {...LOANS_TEXT.notFound} />;
   }
-  return <LoanDetail loan={result.loan} />;
+  return <LoanDetail loan={result.loan} collectors={result.collectorOptions} />;
 }

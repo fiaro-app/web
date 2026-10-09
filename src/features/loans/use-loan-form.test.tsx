@@ -2,14 +2,15 @@ import { act, renderHook } from '@testing-library/react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiRequestError } from '@/lib/api';
-import { createLoan } from './loans-api';
+import { assignCollector, createLoan } from './loans-api';
 import { useLoanForm } from './use-loan-form';
 
 const replace = vi.fn();
 const refresh = vi.fn();
 vi.mock('next/navigation', () => ({ useRouter: () => ({ replace, refresh }) }));
-vi.mock('./loans-api', () => ({ createLoan: vi.fn() }));
+vi.mock('./loans-api', () => ({ createLoan: vi.fn(), assignCollector: vi.fn() }));
 const create = vi.mocked(createLoan);
+const assign = vi.mocked(assignCollector);
 
 const change = (value: string) => ({ target: { value } }) as ChangeEvent<HTMLInputElement>;
 const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as FormEvent<HTMLFormElement>;
@@ -27,7 +28,8 @@ function fill(result: Hook) {
 
 beforeEach(() => {
   vi.clearAllMocks();
-  create.mockResolvedValue({} as never);
+  create.mockResolvedValue({ id: 'new-loan' } as never);
+  assign.mockResolvedValue({} as never);
 });
 
 const setup = () => renderHook(() => useLoanForm()).result;
@@ -90,5 +92,35 @@ describe('useLoanForm', () => {
     expect(result.current.fieldErrors.startDate).toBe('Fecha inválida');
     act(() => result.current.setText('startDate')(change('2026-10-02')));
     expect(result.current.fieldErrors.startDate).toBeUndefined();
+  });
+
+  it('does not send the collector in the loan body and assigns it after creating', async () => {
+    const result = setup();
+    fill(result);
+    act(() => result.current.setText('collectorId')(change('0192f0a4-7c3e-7000-8000-0000000000aa')));
+    await act(() => result.current.submit(submitEvent()));
+    expect(create.mock.calls[0]?.[0]).not.toHaveProperty('collectorId');
+    expect(assign).toHaveBeenCalledWith('new-loan', '0192f0a4-7c3e-7000-8000-0000000000aa');
+    expect(replace).toHaveBeenCalledWith('/prestamos');
+  });
+
+  it('does not try to assign when no collector was chosen', async () => {
+    const result = setup();
+    fill(result);
+    await act(() => result.current.submit(submitEvent()));
+    expect(assign).not.toHaveBeenCalled();
+  });
+
+  it('warns when the loan was created but the collector could not be assigned, and blocks a second loan', async () => {
+    assign.mockRejectedValue(new ApiRequestError({ statusCode: 403, code: 'FORBIDDEN', message: 'x' }));
+    const result = setup();
+    fill(result);
+    act(() => result.current.setText('collectorId')(change('0192f0a4-7c3e-7000-8000-0000000000aa')));
+    await act(() => result.current.submit(submitEvent()));
+    expect(result.current.createdLoanId).toBe('new-loan');
+    expect(result.current.formError).toMatch(/El préstamo se creó/);
+    expect(replace).not.toHaveBeenCalled();
+    await act(() => result.current.submit(submitEvent()));
+    expect(create).toHaveBeenCalledTimes(1);
   });
 });

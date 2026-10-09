@@ -11,11 +11,13 @@ const valid = {
   totalPayable: 600_000,
   frequency: 'DAILY',
   startDate: '2026-10-01',
+  collectorId: '',
 };
 
 describe('LoanFormSchema', () => {
   it('parses a valid form into the API body shape', () => {
-    const values = LoanFormSchema.parse(valid);
+    const { collectorId, ...values } = LoanFormSchema.parse(valid);
+    expect(collectorId).toBe('');
     expect(values.installmentCount).toBe(20);
     expect(CreateLoanBodySchema.safeParse(values).success).toBe(true);
   });
@@ -29,10 +31,16 @@ describe('LoanFormSchema', () => {
       totalPayable: null,
       frequency: '',
       startDate: '',
+      collectorId: '',
     });
     expect(result.success).toBe(false);
-    expect(new Set(result.error?.issues.map((issue) => issue.path[0]))).toEqual(new Set(Object.keys(valid)));
+    expect(new Set(result.error?.issues.map((issue) => issue.path[0]))).toEqual(new Set(Object.keys(valid).filter((field) => field !== 'collectorId')));
     expect(result.error?.issues.find((issue) => issue.path[0] === 'principalAmount')?.message).toBe('Escribe el monto prestado.');
+  });
+
+  it('accepts a collector or none, and rejects an id that is not a UUID', () => {
+    expect(LoanFormSchema.safeParse({ ...valid, collectorId: '0192f0a4-7c3e-7000-8000-000000000001' }).success).toBe(true);
+    expect(LoanFormSchema.safeParse({ ...valid, collectorId: 'luis' }).success).toBe(false);
   });
 
   it.each(['0', '1001', '2.5', '-3', 'abc'])('rejects %s installments', (installmentCount) => {

@@ -8,6 +8,8 @@ const ROW = {
   clientName: 'Carlos Gómez',
   principal: '$500.000',
   installments: '20 × $30.000',
+  balance: '$380.000',
+  paid: '7/20',
   frequency: 'Diaria',
   startDate: '01/10/2026',
   status: 'Activo',

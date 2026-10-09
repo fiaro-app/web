@@ -13,7 +13,7 @@ export interface LoansTableProps {
 export function LoansTable({ rows, className }: Readonly<LoansTableProps>) {
   return (
     <div className={cn('overflow-x-auto rounded-md bg-surface', className)}>
-      <table className="w-full min-w-190 border-collapse text-left text-label">
+      <table className="w-full min-w-210 border-collapse text-left text-label">
         <caption className="sr-only">{LOANS_TEXT.tableCaption}</caption>
         <thead>
           <tr className="border-b border-foreground/8">
@@ -35,7 +35,8 @@ export function LoansTable({ rows, className }: Readonly<LoansTableProps>) {
               </th>
               <td className="px-5 py-5">{row.principal}</td>
               <td className="px-5 py-5">{row.installments}</td>
-              <td className="px-5 py-5">{row.frequency}</td>
+              <td className="px-5 py-5">{row.paid}</td>
+              <td className="px-5 py-5">{row.balance}</td>
               <td className="px-5 py-5">{row.startDate}</td>
               <td className={cn('px-5 py-5 font-semibold', LOAN_STATUS_CLASSES[row.statusTone])}>{row.status}</td>
               <td className="px-5 py-5 text-right">

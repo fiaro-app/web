@@ -12,14 +12,20 @@ import { FormField } from '@/components/molecules/FormField';
 import { FormFieldset } from '@/components/molecules/FormFieldset';
 import { LOANS_TEXT } from '@/content/loans';
 import type { ClientOption } from '@/features/loans/get-client-names.server';
+import type { CollectorOption } from '@/features/loans/get-loan.server';
 import { useLoanForm } from '@/features/loans/use-loan-form';
 import { LoanFrequencySchema } from '@fiaro-app/contracts';
 
 const FREQUENCIES = LoanFrequencySchema.options;
 
 /** Formulario "Registrar préstamo". Solo diseño: la lógica vive en `useLoanForm`. */
-export function LoanForm({ clients }: Readonly<{ clients: readonly ClientOption[] }>) {
-  const { values, fieldErrors, formError, isSubmitting, setText, setAmount, setTotalPayable, submit } = useLoanForm();
+export interface LoanFormProps {
+  readonly clients: readonly ClientOption[];
+  readonly collectors: readonly CollectorOption[];
+}
+
+export function LoanForm({ clients, collectors }: Readonly<LoanFormProps>) {
+  const { values, fieldErrors, formError, isSubmitting, createdLoanId, setText, setAmount, setTotalPayable, submit } = useLoanForm();
   const text = LOANS_TEXT.form;
 
   if (clients.length === 0) {
@@ -81,6 +87,18 @@ export function LoanForm({ clients }: Readonly<{ clients: readonly ClientOption[
         <FormField label={text.startDate.label} required error={fieldErrors.startDate}>
           <Input name="startDate" type="date" value={values.startDate} onChange={setText('startDate')} />
         </FormField>
+        {collectors.length > 0 && (
+          <FormField label={text.collector.label} hint={text.collector.hint} error={fieldErrors.collectorId}>
+            <Select name="collectorId" value={values.collectorId} onChange={setText('collectorId')}>
+              <option value="">{text.collector.placeholder}</option>
+              {collectors.map((collector) => (
+                <option key={collector.id} value={collector.id}>
+                  {collector.name}
+                </option>
+              ))}
+            </Select>
+          </FormField>
+        )}
       </FormFieldset>
 
       {formError && <Alert tone="error">{formError}</Alert>}
@@ -89,9 +107,15 @@ export function LoanForm({ clients }: Readonly<{ clients: readonly ClientOption[
         <ButtonLink variant="outline" href="/prestamos" className="flex-1">
           {text.cancel}
         </ButtonLink>
-        <Button type="submit" loading={isSubmitting} className="flex-1">
-          {text.submit}
-        </Button>
+        {createdLoanId ? (
+          <ButtonLink href={`/prestamos/${createdLoanId}`} className="flex-1">
+            {text.viewCreated}
+          </ButtonLink>
+        ) : (
+          <Button type="submit" loading={isSubmitting} className="flex-1">
+            {text.submit}
+          </Button>
+        )}
       </div>
     </form>
   );
