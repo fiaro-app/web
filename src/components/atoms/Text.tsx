@@ -3,6 +3,7 @@ import { cn } from '@/lib/cn';
 
 export type TextVariant =
   | 'hero'
+  | 'title'
   | 'section'
   | 'price'
   | 'display'
@@ -20,6 +21,7 @@ export type TextElement = 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span' | 'div' | 'st
 /** Familia + tamaño de cada escala tipográfica (`font.*` y `size.*` del diseño). */
 const VARIANT_CLASSES: Record<TextVariant, string> = {
   hero: 'font-display text-hero',
+  title: 'font-display text-title',
   section: 'font-display text-section',
   price: 'font-display text-price',
   display: 'font-display text-display',
@@ -35,6 +37,7 @@ const VARIANT_CLASSES: Record<TextVariant, string> = {
 
 const DEFAULT_ELEMENT: Record<TextVariant, TextElement> = {
   hero: 'h1',
+  title: 'h1',
   section: 'h2',
   price: 'span',
   display: 'h1',
@@ -51,6 +54,7 @@ const DEFAULT_ELEMENT: Record<TextVariant, TextElement> = {
 /** Los títulos de marketing van en bold, los demás títulos en semibold y el resto en regular. */
 const DEFAULT_WEIGHT: Record<TextVariant, TextWeight> = {
   hero: 'bold',
+  title: 'semibold',
   section: 'bold',
   price: 'bold',
   display: 'semibold',

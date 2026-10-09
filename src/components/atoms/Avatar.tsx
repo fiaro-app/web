@@ -2,11 +2,12 @@ import { cn } from '@/lib/cn';
 import { getInitials } from '@/lib/initials';
 import { Skeleton } from '@/components/atoms/Skeleton';
 
-export type AvatarSize = 'md' | 'sm';
+export type AvatarSize = 'md' | 'base' | 'sm';
 
-/** `md` = 40px (listas); `sm` = 32px (barra superior). */
+/** `md` = 40px (listas); `base` = 36px (perfil de la barra lateral); `sm` = 32px (barra superior). */
 const SIZE_CLASSES: Record<AvatarSize, { readonly box: string; readonly text: string }> = {
   md: { box: 'size-10', text: 'text-label' },
+  base: { box: 'size-9', text: 'text-small' },
   sm: { box: 'size-8', text: 'text-caption' },
 };
 

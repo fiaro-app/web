@@ -23,6 +23,9 @@ describe('Avatar sizes', () => {
     const { rerender } = render(<Avatar name="Marta Gómez" />);
     expect(screen.getByRole('img')).toHaveClass('size-10');
 
+    rerender(<Avatar name="Marta Gómez" size="base" />);
+    expect(screen.getByRole('img')).toHaveClass('size-9');
+
     rerender(<Avatar name="Marta Gómez" size="sm" />);
     expect(screen.getByRole('img')).toHaveClass('size-8');
   });
