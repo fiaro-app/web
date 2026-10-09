@@ -1,11 +1,12 @@
-import { ButtonLink } from '@/components/atoms/ButtonLink';
-import { Text } from '@/components/atoms/Text';
-import { EmptyState } from '@/components/molecules/EmptyState';
-import { PaginationNav } from '@/components/molecules/PaginationNav';
-import { CollectorsTable } from '@/components/organisms/CollectorsTable';
-import { COLLECTORS_TEXT } from '@/content/collectors';
-import { pageHref } from '@/lib/pagination';
-import type { CollectorsViewModel } from '@/features/collectors/collectors-view-model';
+import { StateIcon } from "@/components/atoms/StateIcon";
+import { ButtonLink } from "@/components/atoms/ButtonLink";
+import { Text } from "@/components/atoms/Text";
+import { EmptyState } from "@/components/molecules/EmptyState";
+import { PaginationNav } from "@/components/molecules/PaginationNav";
+import { CollectorsTable } from "@/components/organisms/CollectorsTable";
+import { COLLECTORS_TEXT } from "@/content/collectors";
+import { pageHref } from "@/lib/pagination";
+import type { CollectorsViewModel } from "@/features/collectors/collectors-view-model";
 
 export interface CollectorsViewProps {
   readonly collectors: CollectorsViewModel;
@@ -22,14 +23,21 @@ export function CollectorsView({ collectors }: Readonly<CollectorsViewProps>) {
         <Text variant="title" as="h1" weight="bold" className="text-foreground">
           {COLLECTORS_TEXT.title}
         </Text>
-        <ButtonLink href="/cobradores/nuevo">{COLLECTORS_TEXT.newCollector}</ButtonLink>
+        <ButtonLink href="/cobradores/nuevo">
+          {COLLECTORS_TEXT.newCollector}
+        </ButtonLink>
       </header>
 
       {rows.length === 0 ? (
         <EmptyState
-          icon="◔"
+          icon={<StateIcon name="users" />}
           title={COLLECTORS_TEXT.empty.title}
           description={COLLECTORS_TEXT.empty.description}
+          action={
+            <ButtonLink href="/cobradores/nuevo">
+              {COLLECTORS_TEXT.form.submit}
+            </ButtonLink>
+          }
         />
       ) : (
         <>
@@ -38,7 +46,7 @@ export function CollectorsView({ collectors }: Readonly<CollectorsViewProps>) {
             page={page}
             pages={pages}
             summary={COLLECTORS_TEXT.pagination.summary(page, pages, total)}
-            hrefFor={(target) => pageHref('/cobradores', target)}
+            hrefFor={(target) => pageHref("/cobradores", target)}
             previousLabel={COLLECTORS_TEXT.pagination.previous}
             nextLabel={COLLECTORS_TEXT.pagination.next}
           />

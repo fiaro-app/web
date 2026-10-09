@@ -1,19 +1,23 @@
-import { FilterPillLink } from '@/components/atoms/FilterPillLink';
-import { Text } from '@/components/atoms/Text';
-import { EmptyState } from '@/components/molecules/EmptyState';
-import { PaginationNav } from '@/components/molecules/PaginationNav';
-import { SettlementsTable } from '@/components/organisms/SettlementsTable';
-import { SETTLEMENTS_TEXT } from '@/content/settlements';
-import { SETTLEMENT_STATUS_FILTERS } from '@/features/settlements/status-filter';
-import type { SettlementsViewModel } from '@/features/settlements/settlements-view-model';
-import { pageHref } from '@/lib/pagination';
+import { ButtonLink } from "@/components/atoms/ButtonLink";
+import { StateIcon } from "@/components/atoms/StateIcon";
+import { FilterPillLink } from "@/components/atoms/FilterPillLink";
+import { Text } from "@/components/atoms/Text";
+import { EmptyState } from "@/components/molecules/EmptyState";
+import { PaginationNav } from "@/components/molecules/PaginationNav";
+import { SettlementsTable } from "@/components/organisms/SettlementsTable";
+import { SETTLEMENTS_TEXT } from "@/content/settlements";
+import { SETTLEMENT_STATUS_FILTERS } from "@/features/settlements/status-filter";
+import type { SettlementsViewModel } from "@/features/settlements/settlements-view-model";
+import { pageHref } from "@/lib/pagination";
 
 export interface SettlementsViewProps {
   readonly settlements: SettlementsViewModel;
 }
 
 /** Cuadres: título, filtro por estado (enlaces `?estado=`) y tabla. Solo presentación. */
-export function SettlementsView({ settlements }: Readonly<SettlementsViewProps>) {
+export function SettlementsView({
+  settlements,
+}: Readonly<SettlementsViewProps>) {
   const { rows, total, page, pageSize, status } = settlements;
   const pages = Math.max(1, Math.ceil(total / pageSize));
 
@@ -23,19 +27,38 @@ export function SettlementsView({ settlements }: Readonly<SettlementsViewProps>)
         {SETTLEMENTS_TEXT.title}
       </Text>
 
-      <nav aria-label={SETTLEMENTS_TEXT.filters.label} className="flex flex-wrap gap-2">
+      <nav
+        aria-label={SETTLEMENTS_TEXT.filters.label}
+        className="flex flex-wrap gap-2"
+      >
         <FilterPillLink href="/cuadres" selected={status === null}>
           {SETTLEMENTS_TEXT.filters.all}
         </FilterPillLink>
         {SETTLEMENT_STATUS_FILTERS.map((filter) => (
-          <FilterPillLink key={filter} href={pageHref('/cuadres', 1, { estado: filter })} selected={status === filter}>
+          <FilterPillLink
+            key={filter}
+            href={pageHref("/cuadres", 1, { estado: filter })}
+            selected={status === filter}
+          >
             {SETTLEMENTS_TEXT.status[filter]}
           </FilterPillLink>
         ))}
       </nav>
 
       {rows.length === 0 ? (
-        <EmptyState icon="◔" {...(status === null ? SETTLEMENTS_TEXT.empty : SETTLEMENTS_TEXT.emptyFiltered)} />
+        <EmptyState
+          icon={<StateIcon name={status === null ? "clipboard" : "search"} />}
+          {...(status === null
+            ? SETTLEMENTS_TEXT.empty
+            : SETTLEMENTS_TEXT.emptyFiltered)}
+          action={
+            status === null ? undefined : (
+              <ButtonLink href="/cuadres" variant="outline">
+                {SETTLEMENTS_TEXT.filters.all}
+              </ButtonLink>
+            )
+          }
+        />
       ) : (
         <>
           <SettlementsTable rows={rows} />
@@ -43,7 +66,9 @@ export function SettlementsView({ settlements }: Readonly<SettlementsViewProps>)
             page={page}
             pages={pages}
             summary={SETTLEMENTS_TEXT.pagination.summary(page, pages, total)}
-            hrefFor={(target) => pageHref('/cuadres', target, { estado: status ?? undefined })}
+            hrefFor={(target) =>
+              pageHref("/cuadres", target, { estado: status ?? undefined })
+            }
           />
         </>
       )}

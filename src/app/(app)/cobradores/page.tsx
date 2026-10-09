@@ -1,3 +1,4 @@
+import { StateIcon } from '@/components/atoms/StateIcon';
 import type { Metadata } from 'next';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { CollectorsView } from '@/components/organisms/CollectorsView';
@@ -13,7 +14,7 @@ export default async function CollectorsPage({ searchParams }: PageProps<'/cobra
   const result = await getCollectors(parsePageParam(pagina));
 
   if (result.status === 'forbidden') {
-    return <EmptyState icon="!" {...COLLECTORS_TEXT.forbidden} />;
+    return <EmptyState icon={<StateIcon name="lock" />} {...COLLECTORS_TEXT.forbidden} />;
   }
   return <CollectorsView collectors={result.collectors} />;
 }

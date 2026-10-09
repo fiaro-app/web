@@ -1,3 +1,4 @@
+import { StateIcon } from '@/components/atoms/StateIcon';
 import type { Metadata } from 'next';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { LoanDetail } from '@/components/organisms/LoanDetail';
@@ -14,10 +15,10 @@ export default async function LoanPage({ params }: PageProps<'/prestamos/[id]'>)
   const result = await getLoan(id);
 
   if (result.status === 'forbidden') {
-    return <EmptyState icon="!" {...LOANS_TEXT.forbidden} />;
+    return <EmptyState icon={<StateIcon name="lock" />} {...LOANS_TEXT.forbidden} />;
   }
   if (result.status === 'not-found') {
-    return <EmptyState icon="?" {...LOANS_TEXT.notFound} />;
+    return <EmptyState icon={<StateIcon name="search" />} {...LOANS_TEXT.notFound} />;
   }
   const visits = await getLoanVisits(id);
   return (
