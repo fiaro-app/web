@@ -66,6 +66,11 @@ const LEVEL_TONE: Record<EffectivenessLevel, FigureTone> = {
   none: 'neutral',
 };
 
+/** Tono con el que se pinta una efectividad: bien, aceptable (ámbar), baja (grana) o sin dato. */
+export function effectivenessTone(ratio: number | null): FigureTone {
+  return LEVEL_TONE[effectivenessLevel(ratio)];
+}
+
 function toSettlementView(settlement: DashboardSettlement, lookup: SettlementLookup): PendingSettlementView {
   const difference = describeDifference(settlement.expectedAmount, settlement.collectedAmount);
   const id = settlement.collectorMembershipId;
@@ -101,7 +106,7 @@ export function toDashboardViewModel(dashboard: LenderDashboard, lookup: Settlem
         id: 'effectiveness',
         label: 'Efectividad de hoy',
         value: formatPercent(dashboard.effectivenessToday),
-        tone: LEVEL_TONE[effectivenessLevel(dashboard.effectivenessToday)],
+        tone: effectivenessTone(dashboard.effectivenessToday),
       },
       {
         id: 'clientsInArrears',
