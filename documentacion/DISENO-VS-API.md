@@ -29,11 +29,11 @@ Estados de la columna **Penpot**: ✅ ya corregido · ⏳ por corregir · 🆕 n
 | Préstamos (lista) | Cliente, **cobrador**, valor, cuotas «14/24», saldo, estado; búsqueda por cliente o cobrador | Cliente, monto, cuotas, pagadas, saldo, inicio, estado; filtro por estado. Sin cobrador (solo en el detalle) ni búsqueda; el mockup ya refleja esto | ✅ |
 | Nuevo préstamo | Cobrador obligatorio; «valor de cuota» calculado automáticamente | Cobrador **opcional**; Fiaro no calcula intereses: se escriben monto, cuotas, valor de cuota y total (el total se sugiere) | ✅ |
 | Préstamo creado | Pantalla de confirmación | Se vuelve a la lista (el tablero se marcó «Fuera de alcance» en Penpot) | ✅ |
-| Cuadres (lista) | Filtros de estado y mes, búsqueda por cobrador | Filtro por estado; sin mes ni búsqueda | ⏳ |
-| Detalle de cuadre | Montos por medio de pago, **historial de visitas**, nota, aprobar/rechazar | Montos por medio de pago, notas y revisión con comentario; el historial de visitas es por préstamo, no por cuadre | ⏳ |
-| Notificaciones | «Marcar todas como leídas» | Marcar de una en una; la API no tiene «todas». Filtro «No leídas» | ⏳ |
-| Estadísticas | Tendencias (↑ 4 %), **efectividad general**, periodo «Este mes» | 3 indicadores sin tendencias; periodo con fechas desde/hasta; exportar PDF | ⏳ |
-| Configuración | Pestañas General / Facturación / Seguridad; logo, nombre y **correo de contacto** | Nombre, días sin cobro y carteras. Sin logo (falta la subida), pestañas ni correo (el correo es de la persona, no del negocio) | ⏳ |
+| Cuadres (lista) | Filtros de estado y mes, búsqueda por cobrador | Filtro por estado; sin mes ni búsqueda | ✅ |
+| Detalle de cuadre | Montos por medio de pago, **historial de visitas**, nota, aprobar/rechazar | Montos por medio de pago, notas y revisión con comentario; el historial de visitas es por préstamo, no por cuadre | ✅ |
+| Notificaciones | «Marcar todas como leídas» | Marcar de una en una; la API no tiene «todas». Filtro «No leídas» | ✅ |
+| Estadísticas | Tendencias (↑ 4 %), **efectividad general**, periodo «Este mes» | 3 indicadores sin tendencias; periodo con fechas desde/hasta; exportar PDF | ✅ |
+| Configuración | Pestañas General / Facturación / Seguridad; logo, nombre y **correo de contacto** | Nombre, días sin cobro y carteras. Sin logo (falta la subida), pestañas ni correo (el correo es de la persona, no del negocio) | ✅ |
 
 ## Qué hacer en Penpot
 
@@ -42,7 +42,7 @@ Estados de la columna **Penpot**: ✅ ya corregido · ⏳ por corregir · 🆕 n
 3. ✅ (hecho) Registrar cobrador: mostrar la contraseña temporal en la confirmación (una sola vez), no «enviada por correo».
 4. Clientes y Préstamos: columnas ✅ (hecho). Falta diseñar la ficha del cliente con sus préstamos y la asignación de cobrador en el detalle del préstamo.
 5. ✅ (hecho) Nuevo préstamo: cobrador opcional, y los cuatro montos tal como los pide la API.
-6. Cuadres, Notificaciones, Estadísticas y Configuración: alinear los filtros y las secciones con lo implementado.
+6. ✅ (hecho) Cuadres, Notificaciones, Estadísticas y Configuración: alinear los filtros y las secciones con lo implementado.
 7. Diseñar las pantallas de recuperar contraseña y de cambio obligatorio.
 
 ## Pendientes que sí caben en la API (sin mockup nuevo)
