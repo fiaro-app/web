@@ -34,7 +34,7 @@ const SELECT_STATES = [
   { state: 'deshabilitado', props: { disabled: true } },
 ];
 
-export const metadata: Metadata = { title: 'Sistema de diseño · Fiaro' };
+export const metadata: Metadata = { title: 'Sistema de diseño' };
 
 /**
  * Catálogo de átomos con todos sus estados, para revisarlos contra el diseño sin armar una
