@@ -37,6 +37,24 @@ Estados de la columna **Penpot**: ✅ ya corregido · ⏳ por corregir · 🆕 n
 | Estadísticas | Tendencias (↑ 4 %), **efectividad general**, periodo «Este mes» | 3 indicadores sin tendencias; periodo con fechas desde/hasta; exportar PDF | ✅ |
 | Configuración | Pestañas General / Facturación / Seguridad; logo, nombre y **correo de contacto** | Nombre, días sin cobro y carteras. Sin logo (falta la subida), pestañas ni correo (el correo es de la persona, no del negocio) | ✅ |
 
+## Estados, diálogos y propuestas (Penpot)
+
+Tableros nuevos en la página «4 · Web · Lender». Los estados vacíos son **grandes** (ocupan todo el área de contenido, con un círculo de 160px), no un recuadro pequeño:
+
+| Grupo | Tableros | En la web |
+|---|---|---|
+| Estados | `Estado — …`: Cobradores vacío, Clientes vacío, Clientes sin resultados, Préstamos vacío, Préstamos sin resultados, Cuadres vacío, Notificaciones vacío, Estadísticas sin datos, Sin acceso, No encontrado, Error de carga, Cargando lista | ✅ `EmptyState` (grande), `ErrorState`, `loading.tsx` con `ListSkeleton` (W-63) |
+| Diálogos | `Diálogo — …`: Restablecer contraseña, Contraseña temporal nueva, Desactivar cobrador, Anular préstamo | ✅ ya existían en la web |
+| Propuestas sin API | `[Propuesta, la API aún no lo tiene] Cobros del día`, `… Calendario de cuotas`, `… Notificaciones — Marcar todas`; `[Propuesta, falta el host de almacenamiento] Configuración — Logo` | ⏳ solo diseño |
+
+## Responsive (Penpot)
+
+Móvil de 390px (cabecera con menú; las tablas pasan a tarjetas; acciones principales a ancho completo) y tableta de 820px (cabecera con menú y tablas compactas):
+
+- Móvil: `Mobile / Menú`, `Resumen`, `Cobradores`, `Clientes`, `Préstamos`, `Cuadres`, `Detalle de cuadre` (barra fija de aprobar/rechazar), `Notificaciones`, `Estadísticas`, `Configuración`, `Login`, `Registro — Cuenta`, `Registrar cobrador`, `Estado — Clientes vacío`, `Diálogo — Desactivar cobrador` (hoja inferior).
+- Tableta: `Tablet / Resumen`, `Cobradores`, `Préstamos`, `Detalle de cuadre`.
+- Pendiente de implementar en la web: menú móvil/drawer, tablas → tarjetas y barra fija del detalle de cuadre.
+
 ## Qué hacer en Penpot
 
 1. ✅ (hecho) Agregar «Notificaciones» a la barra lateral de todas las pantallas del panel.
