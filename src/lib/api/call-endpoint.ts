@@ -33,6 +33,8 @@ export type CallEndpointInput<TEndpoint extends EndpointDefinition> = OptionalWh
     readonly signal?: AbortSignal;
     /** Origen de la API; por defecto {@link API_BASE_PATH}. Un componente de servidor pasa la URL absoluta. */
     readonly baseUrl?: string;
+    /** Cabeceras extra; un componente de servidor reenvía aquí la cookie de la persona (`Cookie`). */
+    readonly headers?: Readonly<Record<string, string>>;
   };
 
 function parseRetryAfter(header: string | null): number | null {
@@ -82,11 +84,12 @@ export async function callEndpoint<const TEndpoint extends EndpointDefinition>(
   endpoint: TEndpoint,
   input: CallEndpointInput<TEndpoint>,
 ): Promise<EndpointResponse<TEndpoint>> {
-  const { params, body, signal, baseUrl = API_BASE_PATH } = input as {
+  const { params, body, signal, baseUrl = API_BASE_PATH, headers } = input as {
     params?: Record<string, string>;
     body?: unknown;
     signal?: AbortSignal;
     baseUrl?: string;
+    headers?: Record<string, string>;
   };
   const hasBody = body !== undefined;
 
@@ -99,6 +102,7 @@ export async function callEndpoint<const TEndpoint extends EndpointDefinition>(
         'Accept-Language': API_LANGUAGE,
         'API-Version': API_VERSION,
         ...(hasBody && { 'Content-Type': 'application/json' }),
+        ...headers,
       },
       body: hasBody ? JSON.stringify(body) : undefined,
       credentials: 'same-origin',

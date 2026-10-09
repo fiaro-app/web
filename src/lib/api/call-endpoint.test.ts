@@ -83,6 +83,17 @@ describe('callEndpoint', () => {
     expect(fetchMock.mock.calls[0]![0]).toBe('https://api.fiaro.co/things/1');
   });
 
+  it('adds the extra headers, for example the forwarded session cookie', async () => {
+    fetchMock.mockResolvedValue(jsonResponse({ name: 'x' }));
+
+    await callEndpoint(getThing, { params: { id: '1' }, headers: { Cookie: 'fiaro.session_token=abc' } });
+
+    expect(fetchMock.mock.calls[0]![1]?.headers).toMatchObject({
+      Cookie: 'fiaro.session_token=abc',
+      Accept: 'application/json',
+    });
+  });
+
   it('turns an ApiError body into an ApiRequestError with its code, issues and Retry-After', async () => {
     fetchMock.mockResolvedValue(
       jsonResponse(
