@@ -35,6 +35,7 @@ Estados de la columna **Penpot**: ✅ ya corregido · ⏳ por corregir · 🆕 n
 | Detalle de préstamo | — | Resumen, estado, cobrador asignado, asignar cobrador y anular. Tablero «Detalle de préstamo» | ✅ |
 | Notificaciones | «Marcar todas como leídas» | Marcar de una en una; la API no tiene «todas». Filtro «No leídas» | ✅ |
 | Estadísticas | Tendencias (↑ 4 %), **efectividad general**, periodo «Este mes» | 3 indicadores sin tendencias; periodo con fechas desde/hasta; exportar PDF | ✅ |
+| Mi cuenta | Pestaña «Seguridad» dentro de Configuración (sin detalle) | Pantalla propia `/cuenta` (tablero «Mi cuenta»): datos de la persona, correo verificable, contraseña, sesiones y desactivar. Se entra desde el perfil de la barra lateral | ✅ |
 | Configuración | Pestañas General / Facturación / Seguridad; logo, nombre y **correo de contacto** | Nombre, días sin cobro y carteras. Sin logo (falta la subida), pestañas ni correo (el correo es de la persona, no del negocio) | ✅ |
 
 ## Estados, diálogos y propuestas (Penpot)
