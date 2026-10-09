@@ -6,7 +6,7 @@ import { ApiRequestError } from '@/lib/api';
 const { callEndpoint } = vi.hoisted(() => ({ callEndpoint: vi.fn() }));
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<typeof import('@/lib/api')>()), callEndpoint }));
 
-import { cancelLoan, createLoan } from './loans-api';
+import { assignCollector, cancelLoan, createLoan } from './loans-api';
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -31,6 +31,17 @@ describe('loans api', () => {
   it('cancels by id', async () => {
     await cancelLoan('l1');
     expect(callEndpoint).toHaveBeenCalledWith(loanEndpoints.cancel, { params: { id: 'l1' } });
+  });
+});
+
+describe('assignCollector', () => {
+  it('assigns permanently from today (Colombian date)', async () => {
+    await assignCollector('l1', 'm1');
+    expect(callEndpoint).toHaveBeenCalledWith(loanEndpoints.assign, {
+      params: { loanId: 'l1' },
+      body: { collectorMembershipId: 'm1', effectiveFrom: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/) },
+    });
+    expect(callEndpoint.mock.calls[0]?.[1]).not.toHaveProperty('body.effectiveTo');
   });
 });
 

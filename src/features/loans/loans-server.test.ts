@@ -5,6 +5,8 @@ vi.mock('server-only', () => ({}));
 const { callEndpointAsUser } = vi.hoisted(() => ({ callEndpointAsUser: vi.fn() }));
 vi.mock('@/lib/api/server-call', () => ({ callEndpointAsUser }));
 
+import { getClientLoans } from './get-client-loans.server';
+import { getLoanBalance, getLoanBalances } from './get-balances.server';
 import { getClientNames, getClientOptions } from './get-client-names.server';
 import { getLoan } from './get-loan.server';
 import { getLoans } from './get-loans.server';
@@ -24,6 +26,17 @@ const LOAN = {
   createdAt: '2026-10-01T10:00:00.000Z',
   closedAt: null,
 };
+const BALANCE = {
+  loanId: 'l1',
+  asOf: '2026-10-09',
+  balance: 380_000,
+  totalExpectedToDate: 0,
+  overdueAmount: 0,
+  overdueDays: 0,
+  nextDueDate: null,
+  firstOverdueDate: null,
+};
+const COLLECTOR = { id: 'm1', fullName: 'Luis Gómez', portfolioId: null };
 const apiError = (statusCode: number, code: string) => new ApiRequestError({ statusCode, code, message: 'x' } as never);
 
 function routeApi(routes: Record<string, unknown>) {
@@ -55,7 +68,11 @@ describe('getClientNames / getClientOptions', () => {
 
 describe('getLoans', () => {
   it('returns rows with client names and sends the status filter only when set', async () => {
-    routeApi({ '/loans': { data: [LOAN], meta: { page: 1, pageSize: 20, total: 1 } }, '/clients': { data: [CLIENT] } });
+    routeApi({
+      '/loans': { data: [LOAN], meta: { page: 1, pageSize: 20, total: 1 } },
+      '/clients': { data: [CLIENT] },
+      '/loans/:loanId/balance': BALANCE,
+    });
     const result = await getLoans(1, 'ACTIVE');
     expect(result.status === 'ok' && result.loans.rows[0]?.clientName).toBe('Carlos Gómez');
     expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/loans' }), {
@@ -69,21 +86,90 @@ describe('getLoans', () => {
     routeApi({ '/loans': apiError(403, 'FORBIDDEN'), '/clients': { data: [] } });
     expect(await getLoans(1, null)).toEqual({ status: 'forbidden' });
   });
+
+  it('shows the balance in each active row', async () => {
+    routeApi({
+      '/loans': { data: [LOAN], meta: { page: 1, pageSize: 20, total: 1 } },
+      '/clients': { data: [CLIENT] },
+      '/loans/:loanId/balance': BALANCE,
+    });
+    const result = await getLoans(1, null);
+    expect(result.status === 'ok' && result.loans.rows[0]).toMatchObject({ balance: '$380.000', paid: '7/20' });
+  });
 });
 
 describe('getLoan', () => {
-  it('returns the detail view', async () => {
-    routeApi({ '/loans/:id': LOAN, '/clients': { data: [CLIENT] } });
+  const base = {
+    '/loans/:id': LOAN,
+    '/clients': { data: [CLIENT] },
+    '/loans/:loanId/balance': BALANCE,
+    '/loans/:loanId/collection-assignments': [
+      { id: 'a1', loanId: 'l1', collectorMembershipId: 'm1', effectiveFrom: '2000-01-01', effectiveTo: null, createdAt: '2026-10-01T10:00:00.000Z' },
+    ],
+    '/memberships': { data: [COLLECTOR] },
+    '/portfolios': [],
+  };
+
+  it('returns the detail with balance, collector of today and the collectors to assign', async () => {
+    routeApi(base);
     const result = await getLoan('l1');
-    expect(result.status === 'ok' && result.loan).toMatchObject({ clientName: 'Carlos Gómez', cancelable: true });
+    expect(result.status === 'ok' && result.loan).toMatchObject({
+      clientName: 'Carlos Gómez',
+      cancelable: true,
+      balance: '$380.000',
+      collector: { name: 'Luis Gómez' },
+    });
+    expect(result.status === 'ok' && result.collectorOptions).toEqual([{ id: 'm1', name: 'Luis Gómez' }]);
+  });
+
+  it('still shows the loan when the balance and the assignments fail', async () => {
+    routeApi({ ...base, '/loans/:loanId/balance': apiError(500, 'INTERNAL_ERROR'), '/loans/:loanId/collection-assignments': apiError(500, 'INTERNAL_ERROR') });
+    const result = await getLoan('l1');
+    expect(result.status === 'ok' && result.loan).toMatchObject({ balance: null, collector: null });
   });
 
   it('maps 404 and 403 to screen states and propagates the rest', async () => {
-    routeApi({ '/loans/:id': apiError(404, 'NOT_FOUND'), '/clients': { data: [] } });
+    routeApi({ ...base, '/loans/:id': apiError(404, 'NOT_FOUND') });
     expect(await getLoan('l1')).toEqual({ status: 'not-found' });
-    routeApi({ '/loans/:id': apiError(403, 'FORBIDDEN'), '/clients': { data: [] } });
+    routeApi({ ...base, '/loans/:id': apiError(403, 'FORBIDDEN') });
     expect(await getLoan('l1')).toEqual({ status: 'forbidden' });
-    routeApi({ '/loans/:id': apiError(500, 'INTERNAL_ERROR'), '/clients': { data: [] } });
+    routeApi({ ...base, '/loans/:id': apiError(500, 'INTERNAL_ERROR') });
     await expect(getLoan('l1')).rejects.toBeInstanceOf(ApiRequestError);
+  });
+});
+
+describe('getLoanBalance / getLoanBalances', () => {
+  it('returns null when the API refuses and propagates unknown failures', async () => {
+    routeApi({ '/loans/:loanId/balance': apiError(404, 'NOT_FOUND') });
+    expect(await getLoanBalance('l1')).toBeNull();
+    callEndpointAsUser.mockRejectedValueOnce(new Error('boom'));
+    await expect(getLoanBalance('l1')).rejects.toThrow('boom');
+  });
+
+  it('only asks for active loans and skips the ones that fail', async () => {
+    routeApi({ '/loans/:loanId/balance': BALANCE });
+    const balances = await getLoanBalances([
+      { ...LOAN, id: 'l1' },
+      { ...LOAN, id: 'l2', status: 'PAID_OFF' },
+      { ...LOAN, id: 'l3', status: 'CANCELED' },
+    ] as never);
+    expect(callEndpointAsUser).toHaveBeenCalledTimes(1);
+    expect([...balances.keys()]).toEqual(['l1']);
+  });
+});
+
+describe('getClientLoans', () => {
+  it('returns the rows of one client, filtered in the API, with their balance', async () => {
+    routeApi({ '/loans': { data: [LOAN], meta: { page: 1, pageSize: 20, total: 1 } }, '/loans/:loanId/balance': BALANCE });
+    const rows = await getClientLoans('c1', 'Carlos Gómez');
+    expect(rows[0]).toMatchObject({ clientName: 'Carlos Gómez', balance: '$380.000' });
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/loans' }), { body: { page: 1, pageSize: 20, clientId: 'c1' } });
+  });
+
+  it('is empty when the API fails, and propagates unknown failures', async () => {
+    routeApi({ '/loans': apiError(500, 'INTERNAL_ERROR') });
+    expect(await getClientLoans('c1', 'Carlos')).toEqual([]);
+    callEndpointAsUser.mockRejectedValueOnce(new Error('boom'));
+    await expect(getClientLoans('c1', 'Carlos')).rejects.toThrow('boom');
   });
 });

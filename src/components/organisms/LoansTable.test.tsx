@@ -7,6 +7,8 @@ const ROW = {
   clientName: 'Carlos Gómez',
   principal: '$500.000',
   installments: '20 × $30.000',
+  balance: '$380.000',
+  paid: '7/20',
   frequency: 'Diaria',
   startDate: '01/10/2026',
   status: 'Pagado',
@@ -18,7 +20,7 @@ describe('LoansTable', () => {
     render(<LoansTable rows={[ROW]} />);
     const row = screen.getByRole('row', { name: /Carlos Gómez/ });
     expect(within(row).getByRole('rowheader', { name: 'Carlos Gómez' })).toBeInTheDocument();
-    for (const text of ['$500.000', '20 × $30.000', 'Diaria', '01/10/2026', 'Pagado']) {
+    for (const text of ['$500.000', '20 × $30.000', '7/20', '$380.000', '01/10/2026', 'Pagado']) {
       expect(within(row).getByText(text)).toBeInTheDocument();
     }
   });

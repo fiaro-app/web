@@ -26,6 +26,8 @@ export const LoanFormSchema = z.object({
   totalPayable: amount('Escribe el total a pagar.'),
   frequency: z.string().min(1, 'Elige cada cuánto se cobra.').pipe(LoanFrequencySchema),
   startDate: z.string().min(1, 'Elige la fecha de inicio.').pipe(BusinessDateSchema),
+  /** Opcional: el cobrador que cobrará el préstamo. No es parte del cuerpo de `POST /loans`: se asigna después. */
+  collectorId: z.union([z.literal(''), IdSchema]),
 });
 
 export type LoanFormInput = {
@@ -36,6 +38,10 @@ export type LoanFormInput = {
   readonly totalPayable: number | null;
   readonly frequency: string;
   readonly startDate: string;
+  readonly collectorId: string;
 };
 export type LoanField = keyof LoanFormInput;
 export type LoanValues = z.output<typeof LoanFormSchema>;
+
+/** Lo que se envía a `POST /loans`: los valores del formulario sin el cobrador, que se asigna aparte. */
+export type LoanBodyValues = Omit<LoanValues, 'collectorId'>;

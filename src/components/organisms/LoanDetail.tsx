@@ -8,13 +8,20 @@ import { Alert } from '@/components/molecules/Alert';
 import { ConfirmDialog } from '@/components/molecules/ConfirmDialog';
 import { InfoRow } from '@/components/molecules/InfoRow';
 import { LOAN_STATUS_CLASSES } from '@/components/organisms/loan-status-classes';
+import { AssignCollectorForm } from '@/components/organisms/AssignCollectorForm';
 import { LOANS_TEXT } from '@/content/loans';
+import type { CollectorOption } from '@/features/loans/get-loan.server';
 import type { LoanDetailView } from '@/features/loans/loans-view-model';
 import { useCancelLoan } from '@/features/loans/use-cancel-loan';
 import { cn } from '@/lib/cn';
 
-/** Detalle de un préstamo, con la opción de anularlo mientras siga activo. */
-export function LoanDetail({ loan }: Readonly<{ loan: LoanDetailView }>) {
+export interface LoanDetailProps {
+  readonly loan: LoanDetailView;
+  readonly collectors: readonly CollectorOption[];
+}
+
+/** Detalle de un préstamo: saldo, mora, cobrador (con su asignación) y la opción de anularlo mientras siga activo. */
+export function LoanDetail({ loan, collectors }: Readonly<LoanDetailProps>) {
   const text = LOANS_TEXT.detail;
   const { isCanceling, error, cancel } = useCancelLoan(loan.id);
   const [confirming, setConfirming] = useState(false);
@@ -35,13 +42,39 @@ export function LoanDetail({ loan }: Readonly<{ loan: LoanDetailView }>) {
         <InfoRow label={text.rows.principalAmount} value={loan.principal} />
         <InfoRow label={text.rows.installments} value={loan.installments} />
         <InfoRow label={text.rows.totalPayable} value={loan.totalPayable} />
+        {loan.balance !== null && <InfoRow label={text.rows.balance} value={loan.balance} />}
+        {loan.paidInstallments !== null && <InfoRow label={text.rows.paid} value={loan.paidInstallments} />}
+        {loan.nextDueDate !== null && <InfoRow label={text.rows.nextDue} value={loan.nextDueDate} />}
         <InfoRow label={text.rows.frequency} value={loan.frequency} />
         <InfoRow label={text.rows.startDate} value={loan.startDate} />
         <InfoRow label={text.rows.status} value={<span className={cn('font-semibold', LOAN_STATUS_CLASSES[loan.statusTone])}>{loan.status}</span>} />
         {loan.closedAt !== null && <InfoRow label={text.rows.closedAt} value={loan.closedAt} />}
+        <InfoRow
+          label={text.rows.collector}
+          value={
+            loan.collector ? (
+              <span>
+                {loan.collector.name}{' '}
+                <span className="font-normal text-foreground/60">
+                  {loan.collector.until ? `${text.collectorSince(loan.collector.since)} ${text.collectorUntil(loan.collector.until)}` : text.collectorSince(loan.collector.since)}
+                </span>
+              </span>
+            ) : (
+              text.noCollector
+            )
+          }
+        />
       </div>
 
+      {loan.overdue && (
+        <Alert tone="warning">
+          {text.rows.overdue}: {loan.overdue.amount} · {loan.overdue.days}
+        </Alert>
+      )}
+
       {error && <Alert tone="error">{error}</Alert>}
+
+      {loan.assignable && <AssignCollectorForm loanId={loan.id} collectors={collectors} />}
 
       {loan.cancelable && (
         <>

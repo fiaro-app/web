@@ -33,6 +33,42 @@ export const ListLoansBodySchema = PageQuerySchema.extend({
 });
 
 const LoanParamsSchema = z.object({ id: IdSchema });
+const LoanIdParamsSchema = z.object({ loanId: IdSchema });
+
+/** Saldo de un préstamo al día de hoy (`GET /loans/:loanId/balance`). */
+export const LoanBalanceSchema = z.object({
+  loanId: IdSchema,
+  asOf: z.iso.date(),
+  /** Lo pactado menos lo pagado; nunca baja de cero. */
+  balance: z.int().nonnegative(),
+  totalExpectedToDate: z.int().nonnegative(),
+  /** Lo esperado hasta hoy que sigue sin pagar; cero si está al día. */
+  overdueAmount: z.int().nonnegative(),
+  /** Días desde la cuota impaga más antigua; cero si está al día o ya cerró. */
+  overdueDays: z.int().nonnegative(),
+  nextDueDate: z.iso.date().nullable(),
+  firstOverdueDate: z.iso.date().nullable(),
+});
+export type LoanBalance = z.infer<typeof LoanBalanceSchema>;
+
+/** Quién cobra un préstamo y durante qué fechas (`/loans/:loanId/collection-assignments`). */
+export const CollectionAssignmentSchema = z.object({
+  id: IdSchema,
+  loanId: IdSchema,
+  collectorMembershipId: IdSchema,
+  effectiveFrom: z.iso.date(),
+  /** `null`: sin fecha de fin. Igual a `effectiveFrom`: reemplazo de un solo día. */
+  effectiveTo: z.iso.date().nullable(),
+  createdAt: z.iso.datetime({ offset: true }),
+});
+export type CollectionAssignment = z.infer<typeof CollectionAssignmentSchema>;
+
+/** Cuerpo de `POST /loans/:loanId/collection-assignments`: sin `effectiveTo` es permanente. */
+export const CreateAssignmentBodySchema = z.strictObject({
+  collectorMembershipId: IdSchema,
+  effectiveFrom: BusinessDateSchema,
+  effectiveTo: BusinessDateSchema.nullable().optional(),
+});
 
 /**
  * Préstamos del prestamista. `@fiaro-app/contracts` publica `LoanSchema` pero no los endpoints:
@@ -66,5 +102,27 @@ export const loanEndpoints = {
     summary: 'Anula un préstamo ACTIVE (error de registro, antes de recibir pagos).',
     params: LoanParamsSchema,
     response: LoanResponseSchema,
+  }),
+  balance: defineEndpoint({
+    method: 'GET',
+    path: '/loans/:loanId/balance',
+    summary: 'Saldo, mora y próxima cuota de un préstamo, al día de hoy.',
+    params: LoanIdParamsSchema,
+    response: LoanBalanceSchema,
+  }),
+  assignments: defineEndpoint({
+    method: 'GET',
+    path: '/loans/:loanId/collection-assignments',
+    summary: 'Historial de cobradores asignados a un préstamo.',
+    params: LoanIdParamsSchema,
+    response: z.array(CollectionAssignmentSchema),
+  }),
+  assign: defineEndpoint({
+    method: 'POST',
+    path: '/loans/:loanId/collection-assignments',
+    summary: 'Asigna un cobrador a un préstamo (solo Owner y Lender).',
+    params: LoanIdParamsSchema,
+    body: CreateAssignmentBodySchema,
+    response: CollectionAssignmentSchema,
   }),
 } as const;

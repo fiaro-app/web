@@ -6,20 +6,21 @@ import { issueFieldErrors } from '@/features/auth/error-messages';
 import { suggestTotalPayable, todayBusinessDate } from '@/features/loans/loan-calculations';
 import { LoanFormSchema, type LoanField, type LoanFormInput } from '@/features/loans/loan-schemas';
 import { describeLoanError } from '@/features/loans/error-messages';
-import { createLoan } from '@/features/loans/loans-api';
+import { assignCollector, createLoan } from '@/features/loans/loans-api';
 import { toFieldErrors, type FieldErrors } from '@/lib/forms';
 
-const FIELDS: readonly LoanField[] = ['clientId', 'principalAmount', 'installmentCount', 'installmentValue', 'totalPayable', 'frequency', 'startDate'];
+const FIELDS: readonly LoanField[] = ['clientId', 'principalAmount', 'installmentCount', 'installmentValue', 'totalPayable', 'frequency', 'startDate', 'collectorId'];
 
-function emptyValues(): LoanFormInput {
+function emptyValues(initialClientId: string): LoanFormInput {
   return {
-    clientId: '',
+    clientId: initialClientId,
     principalAmount: null,
     installmentCount: '',
     installmentValue: null,
     totalPayable: null,
     frequency: '',
     startDate: todayBusinessDate(),
+    collectorId: '',
   };
 }
 
@@ -28,13 +29,15 @@ function emptyValues(): LoanFormInput {
  * mientras la persona no lo haya tocado; en cuanto lo edita, se respeta lo que pactó. Al salir
  * bien sigue a `/prestamos`.
  */
-export function useLoanForm() {
+export function useLoanForm({ initialClientId = '' }: { readonly initialClientId?: string } = {}) {
   const router = useRouter();
-  const [values, setValues] = useState<LoanFormInput>(emptyValues);
+  const [values, setValues] = useState<LoanFormInput>(() => emptyValues(initialClientId));
   const [totalEdited, setTotalEdited] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors<LoanField>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  /** Id del préstamo ya creado cuando falló asignar el cobrador: no se puede crear otro por error. */
+  const [createdLoanId, setCreatedLoanId] = useState<string | null>(null);
 
   const clearError = (field: LoanField) => setFieldErrors((current) => ({ ...current, [field]: undefined }));
 
@@ -49,7 +52,7 @@ export function useLoanForm() {
     clearError(field);
   };
 
-  const setText = (field: 'clientId' | 'installmentCount' | 'frequency' | 'startDate') => (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+  const setText = (field: 'clientId' | 'installmentCount' | 'frequency' | 'startDate' | 'collectorId') => (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     update(field, { [field]: event.target.value });
 
   const setAmount = (field: 'principalAmount' | 'installmentValue') => (value: number | null) => update(field, { [field]: value });
@@ -73,7 +76,7 @@ export function useLoanForm() {
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isSubmitting) return;
+    if (isSubmitting || createdLoanId !== null) return;
 
     const parsed = LoanFormSchema.safeParse(values);
     if (!parsed.success) {
@@ -85,15 +88,28 @@ export function useLoanForm() {
     setIsSubmitting(true);
     setFieldErrors({});
     setFormError(null);
+    const { collectorId, ...loanValues } = parsed.data;
+    let loan;
     try {
-      await createLoan(parsed.data);
+      loan = await createLoan(loanValues);
     } catch (error) {
       fail(error);
       return;
+    }
+    if (collectorId !== '') {
+      try {
+        await assignCollector(loan.id, collectorId);
+      } catch {
+        // El préstamo ya existe: se avisa y se deja asignar desde su detalle, sin permitir crear otro.
+        setCreatedLoanId(loan.id);
+        setFormError('El préstamo se creó, pero no pudimos asignarle el cobrador. Asígnalo desde el detalle del préstamo.');
+        setIsSubmitting(false);
+        return;
+      }
     }
     router.replace('/prestamos');
     router.refresh();
   };
 
-  return { values, fieldErrors, formError, isSubmitting, setText, setAmount, setTotalPayable, submit };
+  return { values, fieldErrors, formError, isSubmitting, createdLoanId, setText, setAmount, setTotalPayable, submit };
 }

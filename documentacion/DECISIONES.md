@@ -56,11 +56,18 @@ se agrega la nueva.
 | W-49 | Los filtros de Estadísticas (período, cobrador, cartera) son un formulario GET (`?desde=&hasta=&cobrador=&cartera=`) validado en el servidor (`parseStatsFilters`) | Compartible y sin JavaScript; un período solo vale con las dos fechas reales y en orden, y los ids deben ser UUID |
 | W-50 | El PDF se pide con `callEndpointForFile` (variante de `callEndpoint` para archivos) y se descarga con `saveFile`; el nombre lo sugiere la API | La respuesta no es JSON; se reutilizan cabeceras, errores y la misma ruta `/api` |
 | W-51 | El desempeño por cobrador toma la cartera de `getSettlementLookup` | La API de estadísticas trae el nombre pero no la cartera del cobrador |
+| W-52 | Las cuotas pagadas se derivan del saldo: `floor((total − saldo) / valor de la cuota)`, sin pasar del total | La API entrega el saldo, no cuántas cuotas se completaron; un pago parcial no cuenta como cuota |
+| W-53 | El listado de préstamos pide el saldo de los activos de la página (hasta 20 consultas en paralelo); pagado = $0 sin consultar; si una falla, la fila muestra "—" | No existe un endpoint de saldos en lote; el saldo es dato de apoyo y no debe romper la lista |
+| W-54 | La asignación vigente es la que rige hoy; un reemplazo de un solo día gana a la permanente, y entre iguales la que empezó más tarde | Coincide con cómo la API compone el historial de asignaciones |
+| W-55 | Asignar cobrador es permanente desde hoy (sin `effectiveTo`); el reemplazo de un día no está en la UI | La asignación anterior se cierra sola y queda el historial; los reemplazos puntuales quedan para después |
+| W-56 | Al crear un préstamo con cobrador se crea primero el préstamo y luego se asigna; si la asignación falla, se avisa, se bloquea crear otro y se enlaza al detalle | Evita duplicar préstamos por reintentar; no hay un endpoint que haga las dos cosas |
+| W-57 | La ficha del cliente muestra sus préstamos y un atajo `?cliente=` para registrarle uno; la lista de clientes no muestra saldo ni mora | Saldo y mora por cliente exigirían una consulta por cliente; se necesita un campo en `QUERY /clients` (propuesto a la API) |
 
 ## Pendientes conocidos
 
 - Migrar a `@fiaro-app/contracts`: endpoints de auth/registro y política de contraseña (W-13, W-14).
-- Préstamos: registrar pagos y ver el calendario de cuotas (módulo de cobros pendiente).
+- Préstamos: registrar pagos y ver el calendario de cuotas (módulo de cobros pendiente); mostrar el cobrador en la lista (hoy solo en el detalle).
+- API: pedir saldo y mora dentro de `QUERY /clients` y `QUERY /loans` para no consultar fila por fila.
 - Estadísticas: el botón de exportar no se ha probado con un PDF real (solo con respuestas simuladas).
 - Notificaciones: contador de no leídas en la barra lateral y notificaciones push (tokens de dispositivo).
 - Recuperar contraseña (la API ya tiene `request-password-reset` y `reset-password`).

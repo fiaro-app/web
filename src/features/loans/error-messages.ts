@@ -15,7 +15,7 @@ export function describeLoanError(error: unknown): AuthErrorView {
       case 'SUBSCRIPTION_READ_ONLY':
         return { message: 'Tu suscripción está en modo de solo lectura. Renuévala para hacer cambios.', field: null };
       case 'NOT_FOUND':
-        return { message: 'Ese préstamo o su cliente ya no existe. Actualiza la lista.', field: null };
+        return { message: 'Ese préstamo, su cliente o el cobrador ya no existe. Actualiza la página.', field: null };
       default:
         break;
     }
