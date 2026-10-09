@@ -44,11 +44,16 @@ se agrega la nueva.
 | W-37 | Aprobar y rechazar comparten un comentario opcional; un comentario vacío no se envía | La API lo trata como `reviewNote` ausente y el rechazo no exige motivo |
 | W-38 | `businessDateOf` (hora de Colombia) vive en `lib/dates` y lo usan préstamos y cuadres | Un instante a las 9 pm hora local ya es el día siguiente en UTC |
 | W-39 | La diferencia de un cuadre y el lookup de nombres de cobradores se comparten entre Resumen y Cuadres | Una sola regla para el tono (falta = grana, sobra = ámbar) y una sola consulta |
+| W-40 | "Notificaciones" se agrega a la barra lateral entre Cuadres y Estadísticas | Es una pantalla propia en la web; el orden del diseño no la incluía y debe verificarse contra Penpot |
+| W-41 | Las notificaciones son de la persona (todos sus negocios), no de un negocio; no hay estado "sin acceso" | `QUERY /notifications` filtra por el usuario de la sesión |
+| W-42 | Cada notificación lleva a su entidad solo si el id tiene forma de UUID y la pantalla existe (`notificationHref`); las de suscripción no llevan a ninguna parte | El id viene de la API y termina en una ruta; no se arma una dirección con un valor raro |
+| W-43 | El filtro "no leídas" es una URL (`?filtro=no-leidas`) y las no leídas se marcan con texto ("Sin leer") y título en negrita, no solo con color | Compartible, sin JS y accesible |
 
 ## Pendientes conocidos
 
 - Migrar a `@fiaro-app/contracts`: endpoints de auth/registro y política de contraseña (W-13, W-14).
 - Préstamos: registrar pagos y ver el calendario de cuotas (módulo de cobros pendiente).
+- Notificaciones: contador de no leídas en la barra lateral y notificaciones push (tokens de dispositivo).
 - Recuperar contraseña (la API ya tiene `request-password-reset` y `reset-password`).
 - Cambio de contraseña obligatorio (`mustChangePassword`) para cuentas con contraseña temporal.
 - Subir el logo del prestamista desde Configuración (`POST /lender/logo-upload-url`).
