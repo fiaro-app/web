@@ -16,7 +16,7 @@ describe('saveFile', () => {
 
     expect(create).toHaveBeenCalledTimes(1);
     expect(click).toHaveBeenCalledTimes(1);
-    const clicked = click.mock.contexts[0];
+    const clicked = click.mock.contexts[0] as HTMLAnchorElement;
     expect(clicked.download).toBe('reporte.pdf');
     expect(clicked.getAttribute('href')).toBe('blob:fiaro/1');
     expect(revoke).toHaveBeenCalledWith('blob:fiaro/1');
