@@ -18,17 +18,45 @@ const STATS: LenderStats = {
   ],
   topArrears: [{ clientId: ID, clientFullName: 'María Gómez', overdueDays: 32, overdueAmount: 900_000 }],
   collectorPerformance: [{ collectorMembershipId: ID, fullName: 'Alejo Zuleta', effectiveness: 0.92, overdueAmount: 300_000 }],
+  expectedAmount: 5_000_000,
+  collectedAmount: 4_000_000,
+  effectiveness: 0.8,
+  previous: null,
+};
+const PREVIOUS = {
+  from: '2026-09-22',
+  to: '2026-09-30',
+  totalPortfolio: 17_000_000,
+  portfolioAtRisk: 5_000_000,
+  arrearsRate: 0.29,
+  expectedAmount: 4_500_000,
+  collectedAmount: 3_000_000,
+  effectiveness: 0.67,
 };
 const LOOKUP: SettlementLookup = { collectorNames: new Map(), collectorPortfolioNames: new Map([[ID, 'Zona Norte']]) };
 
 describe('toStatsViewModel', () => {
-  it('formats the period and the three KPIs with their tones', () => {
+  it('formats the period and the KPIs with their tones, without trends when there is no previous period', () => {
     const view = toStatsViewModel(STATS, LOOKUP);
     expect(view.period).toBe('01/10/2026 – 09/10/2026');
     expect(view.kpis).toEqual([
-      { id: 'portfolio', label: 'Cartera total', value: '$18.4M', tone: 'neutral' },
-      { id: 'atRisk', label: 'Cartera en riesgo', value: '$7.1M', tone: 'bad' },
-      { id: 'arrearsRate', label: '% en mora', value: '18 %', tone: 'warning' },
+      { id: 'portfolio', label: 'Cartera total', value: '$18.4M', tone: 'neutral', trend: null },
+      { id: 'atRisk', label: 'Cartera en riesgo', value: '$7.1M', tone: 'bad', trend: null },
+      { id: 'arrearsRate', label: '% en mora', value: '18 %', tone: 'warning', trend: null },
+      { id: 'collected', label: 'Cobrado en el período', value: '$4M', tone: 'good', trend: null },
+      { id: 'effectiveness', label: 'Efectividad', value: '80 %', tone: 'warning', trend: null },
+    ]);
+  });
+
+  it('adds the trend against the previous period, judged by what is good for each indicator', () => {
+    const kpis = toStatsViewModel({ ...STATS, previous: PREVIOUS }).kpis;
+
+    expect(kpis.map((kpi) => [kpi.id, kpi.trend?.label, kpi.trend?.tone])).toEqual([
+      ['portfolio', '↑ 8 %', 'neutral'],
+      ['atRisk', '↑ 41 %', 'bad'],
+      ['arrearsRate', '↓ 11 pts', 'good'],
+      ['collected', '↑ 33 %', 'good'],
+      ['effectiveness', '↑ 13 pts', 'good'],
     ]);
   });
 

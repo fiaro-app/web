@@ -18,6 +18,10 @@ const STATS = {
   arrearsByAge: ['0-7', '8-15', '16-30', '30+'].map((label) => ({ label, amount: 0, clientsCount: 0 })),
   topArrears: [],
   collectorPerformance: [{ collectorMembershipId: ID, fullName: 'Luis Gómez', effectiveness: 0.9, overdueAmount: 0 }],
+  expectedAmount: 500_000,
+  collectedAmount: 450_000,
+  effectiveness: 0.9,
+  previous: null,
 };
 const COLLECTOR = { id: ID, fullName: 'Luis Gómez', portfolioId: 'p1' };
 
@@ -42,13 +46,13 @@ describe('getStats', () => {
       collectors: [{ id: ID, name: 'Luis Gómez' }],
       portfolios: [{ id: 'p1', name: 'Zona Norte' }],
     });
-    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/lenders/me/stats' }), { body: { portfolioId: ID } });
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/lenders/me/stats' }), { body: { portfolioId: ID, includePrevious: true } });
   });
 
   it('sends an empty body without filters', async () => {
     routeApi({ '/lenders/me/stats': STATS, '/memberships': { data: [] }, '/portfolios': [] });
     await getStats(EMPTY_STATS_FILTERS);
-    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/lenders/me/stats' }), { body: {} });
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/lenders/me/stats' }), { body: { includePrevious: true } });
   });
 
   it('reports forbidden on 403 and propagates other failures', async () => {
