@@ -1,5 +1,32 @@
-import { LenderSchema, PortfolioSchema, defineEndpoint } from '@fiaro-app/contracts';
+import { BusinessNameSchema, LenderSchema, PortfolioSchema, WeekdaySchema, defineEndpoint } from '@fiaro-app/contracts';
 import { z } from 'zod';
+
+/** Cuerpo de `PATCH /lender`: un campo ausente no se toca y debe venir al menos uno. */
+export const UpdateLenderBodySchema = z
+  .strictObject({
+    name: BusinessNameSchema.optional(),
+    logoUrl: z.url().nullable().optional(),
+    nonWorkingWeekdays: z.array(WeekdaySchema).optional(),
+    skipNationalHolidays: z.boolean().optional(),
+  })
+  .refine((body) => Object.values(body).some((value) => value !== undefined), {
+    message: 'Debes enviar al menos un campo para actualizar.',
+  });
+
+/** Cuerpo de `POST /lender/logo-upload-url`: el logo solo puede ser PNG o JPEG. */
+export const LogoUploadUrlBodySchema = z.strictObject({
+  contentType: z.enum(['image/png', 'image/jpeg']),
+});
+
+/** Respuesta de `POST /lender/logo-upload-url`: a dónde subir el archivo y cuál será su URL pública. */
+export const LogoUploadUrlSchema = z.object({
+  uploadUrl: z.url(),
+  publicUrl: z.url(),
+  expiresAt: z.iso.datetime({ offset: true }),
+});
+
+/** Cuerpo de `POST /portfolios`: el nombre es único dentro del prestamista. */
+export const CreatePortfolioBodySchema = z.strictObject({ name: BusinessNameSchema });
 
 /**
  * Datos del prestamista de la sesión. `@fiaro-app/contracts` 0.6.0 publica los schemas
@@ -13,10 +40,31 @@ export const lenderEndpoints = {
     summary: 'Datos públicos del prestamista de la sesión (nombre, logo, días sin cobro).',
     response: LenderSchema,
   }),
+  update: defineEndpoint({
+    method: 'PATCH',
+    path: '/lender',
+    summary: 'Actualiza los campos enviados del prestamista (solo Owner y Lender).',
+    body: UpdateLenderBodySchema,
+    response: LenderSchema,
+  }),
+  logoUploadUrl: defineEndpoint({
+    method: 'POST',
+    path: '/lender/logo-upload-url',
+    summary: 'URL firmada para subir el logo directo al almacenamiento (solo Owner y Lender).',
+    body: LogoUploadUrlBodySchema,
+    response: LogoUploadUrlSchema,
+  }),
   portfolios: defineEndpoint({
     method: 'GET',
     path: '/portfolios',
     summary: 'Todas las carteras del prestamista, sin paginar.',
     response: z.array(PortfolioSchema),
+  }),
+  createPortfolio: defineEndpoint({
+    method: 'POST',
+    path: '/portfolios',
+    summary: 'Crea una cartera (solo Owner y Lender); el nombre no puede repetirse.',
+    body: CreatePortfolioBodySchema,
+    response: PortfolioSchema,
   }),
 } as const;

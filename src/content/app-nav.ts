@@ -18,7 +18,7 @@ export const APP_NAV_ITEMS: readonly AppNavItem[] = [
   { label: 'Cuadres', href: '/cuadres', available: true },
   { label: 'Notificaciones', href: '/notificaciones', available: true },
   { label: 'Estadísticas', href: '/estadisticas', available: false },
-  { label: 'Configuración', href: '/configuracion', available: false },
+  { label: 'Configuración', href: '/configuracion', available: true },
 ];
 
 /** ¿La ruta actual es la de esta opción o una de sus subrutas (`/clientes/123`)? */
