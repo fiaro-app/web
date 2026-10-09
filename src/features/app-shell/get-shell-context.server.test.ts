@@ -23,11 +23,11 @@ const membership = (userId: string, roles: string[]) => ({
   phone: '+573001234567',
 });
 
-const NO_UNREAD = { data: [], meta: { page: 1, pageSize: 1, total: 0 } };
+const NO_UNREAD = { count: 0 };
 
 function routeApi(responses: Record<string, unknown>) {
   callEndpointAsUser.mockImplementation(async (endpoint: { path: string }) => {
-    const response = { '/notifications': NO_UNREAD, ...responses }[endpoint.path];
+    const response = { '/notifications/unread-count': NO_UNREAD, ...responses }[endpoint.path];
     if (response instanceof Error) throw response;
     return response;
   });
@@ -48,7 +48,7 @@ describe('getShellContext', () => {
   });
 
   it('reports the unread notifications for the sidebar badge', async () => {
-    routeApi({ '/lender': LENDER, '/memberships': api(403, 'FORBIDDEN'), '/notifications': { data: [], meta: { page: 1, pageSize: 1, total: 4 } } });
+    routeApi({ '/lender': LENDER, '/memberships': api(403, 'FORBIDDEN'), '/notifications/unread-count': { count: 4 } });
 
     expect((await getShellContext(USER)).unreadNotifications).toBe(4);
   });

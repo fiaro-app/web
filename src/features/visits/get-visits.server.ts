@@ -12,10 +12,7 @@ import { callEndpointAsUser } from '@/lib/api/server-call';
  */
 export async function getLoanVisits(loanId: string): Promise<readonly VisitRow[]> {
   try {
-    const [visits, lookup] = await Promise.all([
-      callEndpointAsUser(visitEndpoints.list, { params: { loanId } }),
-      getSettlementLookup(),
-    ]);
+    const [visits, lookup] = await Promise.all([callEndpointAsUser(visitEndpoints.list, { params: { loanId } }), getSettlementLookup()]);
     return toVisitRows(visits, lookup.collectorNames);
   } catch (error) {
     if (isApiRequestError(error)) return [];

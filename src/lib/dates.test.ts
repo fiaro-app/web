@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatBusinessDate, formatInstantDate } from './dates';
+import { formatBusinessDate, formatInstantDate, formatInstantTime } from './dates';
 
 describe('formatBusinessDate', () => {
   it('writes the day first, as in Colombia', () => {
@@ -22,5 +22,11 @@ describe('formatInstantDate', () => {
     // 02:00 UTC del 10 es todavía el 9 en Colombia (UTC-5).
     expect(formatInstantDate('2026-10-10T02:00:00.000Z')).toBe('09/10/2026');
     expect(formatInstantDate('2026-10-10T06:00:00.000Z')).toBe('10/10/2026');
+  });
+});
+
+describe('formatInstantTime', () => {
+  it('reads the hour in Bogotá, not in UTC', () => {
+    expect(formatInstantTime('2026-10-01T20:05:00.000Z')).toMatch(/^0?3:05\s?p\.\s?m\.$/i);
   });
 });
