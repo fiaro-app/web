@@ -1,9 +1,11 @@
 import { StateIcon } from '@/components/atoms/StateIcon';
+import { Button } from '@/components/atoms/Button';
 import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { FilterPillLink } from '@/components/atoms/FilterPillLink';
 import { Text } from '@/components/atoms/Text';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { PaginationNav } from '@/components/molecules/PaginationNav';
+import { SearchInput } from '@/components/molecules/SearchInput';
 import { LoansTable } from '@/components/organisms/LoansTable';
 import { LOANS_TEXT } from '@/content/loans';
 import { LOAN_STATUS_FILTERS } from '@/features/loans/status-filter';
@@ -15,12 +17,13 @@ export interface LoansViewProps {
 }
 
 /**
- * Préstamos: título, acción de registrar, filtro por estado (enlaces `?estado=`) y tabla.
- * Solo presentación.
+ * Préstamos: título, acción de registrar, búsqueda por cliente (formulario GET `?q=`), filtro por
+ * estado (enlaces `?estado=`) y tabla. Solo presentación.
  */
 export function LoansView({ loans }: Readonly<LoansViewProps>) {
-  const { rows, total, page, pageSize, status } = loans;
+  const { rows, total, page, pageSize, status, search } = loans;
   const pages = Math.max(1, Math.ceil(total / pageSize));
+  const hasSearch = search !== '';
 
   return (
     <>
@@ -31,12 +34,25 @@ export function LoansView({ loans }: Readonly<LoansViewProps>) {
         <ButtonLink href="/prestamos/nuevo">{LOANS_TEXT.newLoan}</ButtonLink>
       </header>
 
+      <form action="/prestamos" role="search" aria-label={LOANS_TEXT.search.label} className="flex max-w-xl gap-3">
+        {status !== null && <input type="hidden" name="estado" value={status} />}
+        <SearchInput name="q" defaultValue={search} placeholder={LOANS_TEXT.search.placeholder} className="flex-1" />
+        <Button type="submit" variant="outline" size="sm" className="h-11">
+          {LOANS_TEXT.search.submit}
+        </Button>
+        {hasSearch && (
+          <ButtonLink href={pageHref('/prestamos', 1, { estado: status ?? undefined })} variant="text" size="sm" className="h-11">
+            {LOANS_TEXT.search.clear}
+          </ButtonLink>
+        )}
+      </form>
+
       <nav aria-label={LOANS_TEXT.filters.label} className="flex flex-wrap gap-2">
-        <FilterPillLink href="/prestamos" selected={status === null}>
+        <FilterPillLink href={pageHref('/prestamos', 1, { q: search })} selected={status === null}>
           {LOANS_TEXT.filters.all}
         </FilterPillLink>
         {LOAN_STATUS_FILTERS.map((filter) => (
-          <FilterPillLink key={filter} href={pageHref('/prestamos', 1, { estado: filter })} selected={status === filter}>
+          <FilterPillLink key={filter} href={pageHref('/prestamos', 1, { estado: filter, q: search })} selected={status === filter}>
             {LOANS_TEXT.status[filter]}
           </FilterPillLink>
         ))}
@@ -44,14 +60,14 @@ export function LoansView({ loans }: Readonly<LoansViewProps>) {
 
       {rows.length === 0 ? (
         <EmptyState
-          icon={<StateIcon name={status === null ? 'wallet' : 'search'} />}
-          {...(status === null ? LOANS_TEXT.empty : LOANS_TEXT.emptyFiltered)}
+          icon={<StateIcon name={status === null && !hasSearch ? 'wallet' : 'search'} />}
+          {...(hasSearch ? LOANS_TEXT.noResults(search) : status === null ? LOANS_TEXT.empty : LOANS_TEXT.emptyFiltered)}
           action={
-            status === null ? (
+            status === null && !hasSearch ? (
               <ButtonLink href="/prestamos/nuevo">{LOANS_TEXT.newLoan}</ButtonLink>
             ) : (
               <ButtonLink href="/prestamos" variant="outline">
-                {LOANS_TEXT.filters.all}
+                {hasSearch ? LOANS_TEXT.search.clear : LOANS_TEXT.filters.all}
               </ButtonLink>
             )
           }
@@ -63,7 +79,7 @@ export function LoansView({ loans }: Readonly<LoansViewProps>) {
             page={page}
             pages={pages}
             summary={LOANS_TEXT.pagination.summary(page, pages, total)}
-            hrefFor={(target) => pageHref('/prestamos', target, { estado: status ?? undefined })}
+            hrefFor={(target) => pageHref('/prestamos', target, { estado: status ?? undefined, q: search })}
           />
         </>
       )}

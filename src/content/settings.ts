@@ -30,8 +30,9 @@ export const SETTINGS_TEXT = {
   },
   brand: {
     title: 'Color de marca',
-    description: 'El color de los botones y los detalles de tu panel. Se ve así en todos tus dispositivos.',
+    description: 'Elige el color de los botones y los detalles de tu panel entre estos. Se ve así en todos tus dispositivos.',
     colorLabel: 'Color',
+    currentColor: 'Color actual',
     preview: 'Así se verá un botón',
     save: 'Guardar color',
     reset: 'Volver al color de Fiaro',

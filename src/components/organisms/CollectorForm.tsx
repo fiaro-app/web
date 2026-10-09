@@ -1,5 +1,7 @@
 'use client';
 
+import { ConfirmForm } from '@/components/molecules/ConfirmForm';
+import { COMMON_TEXT } from '@/content/common';
 import { Button } from '@/components/atoms/Button';
 import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { Input } from '@/components/atoms/Input';
@@ -25,7 +27,8 @@ export function CollectorForm({ form, portfolios }: Readonly<CollectorFormProps>
   const text = COLLECTORS_TEXT.form;
 
   return (
-    <form onSubmit={submit} noValidate aria-label={text.title} className="flex max-w-lg flex-col gap-5">
+    <ConfirmForm
+      confirmation={COMMON_TEXT.confirm.create} onSubmit={submit} noValidate aria-label={text.title} className="flex max-w-lg flex-col gap-5">
       <div className="flex flex-col gap-1">
         <Text variant="title" as="h1" weight="bold" className="text-foreground">
           {text.title}
@@ -70,6 +73,6 @@ export function CollectorForm({ form, portfolios }: Readonly<CollectorFormProps>
           {text.submit}
         </Button>
       </div>
-    </form>
+    </ConfirmForm>
   );
 }

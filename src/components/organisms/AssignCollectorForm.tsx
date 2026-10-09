@@ -1,5 +1,7 @@
 'use client';
 
+import { ConfirmForm } from '@/components/molecules/ConfirmForm';
+import { COMMON_TEXT } from '@/content/common';
 import { Button } from '@/components/atoms/Button';
 import { Select } from '@/components/atoms/Select';
 import { Alert } from '@/components/molecules/Alert';
@@ -23,7 +25,8 @@ export function AssignCollectorForm({ loanId, collectors }: Readonly<AssignColle
   }
 
   return (
-    <form onSubmit={form.submit} noValidate aria-label={text.title} className="flex flex-col gap-3 rounded-md bg-surface p-5">
+    <ConfirmForm
+      confirmation={COMMON_TEXT.confirm.save} onSubmit={form.submit} noValidate aria-label={text.title} className="flex flex-col gap-3 rounded-md bg-surface p-5">
       <FormField label={text.label} hint={text.hint}>
         <Select name="collectorId" value={form.collectorId} onChange={form.changeCollector}>
           <option value="">{text.placeholder}</option>
@@ -39,6 +42,6 @@ export function AssignCollectorForm({ loanId, collectors }: Readonly<AssignColle
       <Button type="submit" variant="outline" loading={form.isSubmitting}>
         {text.submit}
       </Button>
-    </form>
+    </ConfirmForm>
   );
 }

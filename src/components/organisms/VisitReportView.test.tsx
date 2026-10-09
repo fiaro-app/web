@@ -18,7 +18,7 @@ const ROW: VisitReportRow = {
   reverted: false,
   note: null,
 };
-const REPORT: VisitReportViewModel = { rows: [ROW], total: 45, page: 1, pageSize: 20, rangeFrom: '09/10/2026', rangeTo: '09/10/2026' };
+const REPORT: VisitReportViewModel = { rows: [ROW], total: 45, page: 1, pageSize: 20, rangeFrom: '09/10/2026', rangeTo: '09/10/2026', searchTruncated: false };
 const COLLECTORS = [{ id: 'c1', name: 'Luis Pérez' }];
 
 describe('VisitReportView', () => {
@@ -68,5 +68,11 @@ describe('VisitReportView', () => {
 
     rerender(<VisitReportView report={empty} filters={{ ...EMPTY_VISIT_REPORT_FILTERS, collectorId: 'c1' }} collectors={COLLECTORS} />);
     expect(screen.getByRole('heading', { name: 'No hay cobros con esos filtros' })).toBeInTheDocument();
+  });
+
+  it('has a search box and warns when the search could not cover every visit', () => {
+    render(<VisitReportView report={{ ...REPORT, searchTruncated: true }} filters={{ ...EMPTY_VISIT_REPORT_FILTERS, search: 'ana' }} collectors={COLLECTORS} />);
+    expect(screen.getByRole('searchbox')).toHaveValue('ana');
+    expect(screen.getByText(/más visitas en este período/)).toBeInTheDocument();
   });
 });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { EMPTY_VISIT_REPORT_FILTERS, parseVisitReportFilters, toVisitReportBody } from './visit-report-filters';
+import { EMPTY_VISIT_REPORT_FILTERS, parseVisitReportFilters, searchVisitReport, toVisitReportBody } from './visit-report-filters';
 
 const ID = '0190f7a0-0000-7000-8000-000000000001';
 
@@ -14,6 +14,7 @@ describe('parseVisitReportFilters', () => {
       to: '2026-10-09',
       collectorId: ID,
       outcome: 'PAID',
+      search: '',
     });
   });
 
@@ -37,7 +38,7 @@ describe('toVisitReportBody', () => {
   });
 
   it('sends the filters that are set', () => {
-    const body = toVisitReportBody({ from: '2026-10-01', to: '2026-10-09', collectorId: ID, outcome: 'REFUSED' }, 1, 20);
+    const body = toVisitReportBody({ from: '2026-10-01', to: '2026-10-09', collectorId: ID, outcome: 'REFUSED', search: '' }, 1, 20);
 
     expect(body).toEqual({
       page: 1,
@@ -46,5 +47,27 @@ describe('toVisitReportBody', () => {
       collectorMembershipId: ID,
       outcome: 'REFUSED',
     });
+  });
+});
+
+describe('search', () => {
+  it('reads the search text from ?q=', () => {
+    expect(parseVisitReportFilters({ q: '  Ana  ' })).toMatchObject({ search: 'Ana' });
+  });
+
+  it('keeps only the visits whose client or collector matches, ignoring accents', () => {
+    const entry = (client: string, collector: string) => ({ client: { id: 'c', fullName: client }, collector: { membershipId: 'm', fullName: collector } });
+    const report = { data: [entry('Ana Gómez', 'Luis Pérez'), entry('Carlos Ruiz', 'María López')], meta: { page: 1, pageSize: 100, total: 2 } } as never;
+
+    const byClient = searchVisitReport(report, 'gomez');
+    expect(byClient.report.data).toHaveLength(1);
+    expect(byClient.report.meta.total).toBe(1);
+    expect(byClient.truncated).toBe(false);
+    expect(searchVisitReport(report, 'maria').report.data).toHaveLength(1);
+  });
+
+  it('warns when the range has more visits than were scanned', () => {
+    const report = { data: [], meta: { page: 1, pageSize: 100, total: 250 } } as never;
+    expect(searchVisitReport(report, 'x').truncated).toBe(true);
   });
 });

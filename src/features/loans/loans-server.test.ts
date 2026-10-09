@@ -86,6 +86,22 @@ describe('getLoans', () => {
     expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/loans' }), { body: { page: 2, pageSize: 20 } });
   });
 
+  it('searches by client: finds the matching clients first, then their loans', async () => {
+    routeApi({ '/loans': { data: [LIST_ITEM], meta: { page: 1, pageSize: 100, total: 1 } }, '/clients': { data: [CLIENT] } });
+    const result = await getLoans(3, 'ACTIVE', 'carlos');
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/clients' }), { body: { page: 1, pageSize: 10, search: 'carlos' } });
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/loans' }), {
+      body: { page: 1, pageSize: 100, clientId: 'c1', status: 'ACTIVE' },
+    });
+    expect(result.status === 'ok' && result.loans).toMatchObject({ total: 1, page: 1, search: 'carlos' });
+  });
+
+  it('returns no rows when no client matches the search', async () => {
+    routeApi({ '/clients': { data: [] } });
+    const result = await getLoans(1, null, 'zzz');
+    expect(result.status === 'ok' && result.loans.rows).toEqual([]);
+  });
+
   it('reports forbidden on 403', async () => {
     routeApi({ '/loans': apiError(403, 'FORBIDDEN'), '/clients': { data: [] } });
     expect(await getLoans(1, null)).toEqual({ status: 'forbidden' });

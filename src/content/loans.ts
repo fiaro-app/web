@@ -20,6 +20,16 @@ export const LOANS_TEXT = {
     PAID_OFF: 'Pagado',
     CANCELED: 'Anulado',
   } satisfies Record<LoanStatus, string>,
+  search: {
+    placeholder: 'Buscar por nombre o cédula del cliente...',
+    submit: 'Buscar',
+    clear: 'Limpiar búsqueda',
+    label: 'Buscar préstamos',
+  },
+  noResults: (search: string) => ({
+    title: 'Sin resultados',
+    description: `No encontramos préstamos de clientes que coincidan con «${search}». Revisa el nombre o la cédula.`,
+  }),
   filters: { all: 'Todos', label: 'Filtrar por estado' },
   unknownClient: 'Cliente no disponible',
   empty: {

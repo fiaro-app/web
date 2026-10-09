@@ -19,14 +19,22 @@ export function SettingsView({ settings }: Readonly<{ settings: SettingsData }>)
         {SETTINGS_TEXT.title}
       </Text>
       {!canEdit && <Alert tone="info">{SETTINGS_TEXT.readOnly}</Alert>}
-      {/* Dos columnas desde `xl`: cada bloque queda al lado del otro en vez de apilarse. */}
-      <div className="grid items-start gap-7 xl:grid-cols-2 *:max-w-none">
-        {subscription && <PlanPanel subscription={subscription} />}
-        <BusinessForm name={name} canEdit={canEdit} />
-        <LogoForm businessName={name} logoUrl={logoUrl} canEdit={canEdit} uploadAvailable={logoUploadAvailable} />
-        <BrandColorForm brandColor={brandColor} canEdit={canEdit} />
-        <CollectionDaysForm nonWorkingWeekdays={nonWorkingWeekdays} skipNationalHolidays={skipNationalHolidays} canEdit={canEdit} />
-        <PortfoliosPanel portfolios={portfolios} canEdit={canEdit} />
+      {subscription && (
+        <div className="*:max-w-none">
+          <PlanPanel subscription={subscription} />
+        </div>
+      )}
+      {/* Dos columnas desde `xl`: «Tu negocio» a la izquierda y «Cómo cobras» a la derecha; en pantallas angostas se apilan. */}
+      <div className="grid items-start gap-7 xl:grid-cols-2 *:*:max-w-none">
+        <div className="flex flex-col gap-7">
+          <BusinessForm name={name} canEdit={canEdit} />
+          <LogoForm businessName={name} logoUrl={logoUrl} canEdit={canEdit} uploadAvailable={logoUploadAvailable} />
+          <BrandColorForm brandColor={brandColor} canEdit={canEdit} />
+        </div>
+        <div className="flex flex-col gap-7">
+          <CollectionDaysForm nonWorkingWeekdays={nonWorkingWeekdays} skipNationalHolidays={skipNationalHolidays} canEdit={canEdit} />
+          <PortfoliosPanel portfolios={portfolios} canEdit={canEdit} />
+        </div>
       </div>
     </>
   );

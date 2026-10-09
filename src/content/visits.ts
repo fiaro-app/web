@@ -44,6 +44,8 @@ export const VISITS_TEXT = {
       allOutcomes: 'Todos los resultados',
       apply: 'Aplicar',
       clear: 'Limpiar filtros',
+      search: 'Cliente o cobrador',
+      searchPlaceholder: 'Buscar por nombre...',
       periodHint: 'Sin fechas se muestra solo hoy. Con una sola fecha, ese día.',
     },
     empty: {
@@ -54,6 +56,7 @@ export const VISITS_TEXT = {
       title: 'No hay cobros con esos filtros',
       description: 'Prueba con otro día o quita algún filtro para ver más visitas.',
     },
+    searchTruncated: 'Hay más visitas en este período de las que se pueden revisar al buscar. Acota las fechas para ver todas las coincidencias.',
     forbidden: {
       title: 'No tienes acceso a esta sección',
       description: 'Solo quienes administran el negocio pueden ver los cobros de todo el equipo. Tu ruta del día está en la app móvil.',

@@ -46,6 +46,7 @@ describe('CollectorForm', () => {
     const form = buildForm();
     render(<CollectorForm form={form} portfolios={PORTFOLIOS} />);
     await userEvent.click(screen.getByRole('button', { name: 'Registrar cobrador' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Registrar' }));
     expect(form.submit).toHaveBeenCalledTimes(1);
     expect(screen.getByRole('link', { name: 'Cancelar' })).toHaveAttribute('href', '/cobradores');
   });

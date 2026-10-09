@@ -3,7 +3,8 @@ import type { ChangeEvent, FormEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiRequestError } from '@/lib/api';
 import { createPortfolio, updateBrandColor, updateBusinessName, updateCollectionDays } from './lender-api';
-import { DEFAULT_BRAND_COLOR, useBrandColorForm, useBusinessForm, useCollectionDaysForm, usePortfolioForm } from './use-settings-forms';
+import { DEFAULT_BRAND_COLOR } from './brand-palette';
+import { useBrandColorForm, useBusinessForm, useCollectionDaysForm, usePortfolioForm } from './use-settings-forms';
 
 const refresh = vi.fn();
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh }) }));
@@ -145,12 +146,20 @@ describe('useBrandColorForm', () => {
 
   it('saves the new color in uppercase and refreshes', async () => {
     const result = setup();
-    act(() => result.current.changeColor(typed('#0f766e')));
+    act(() => result.current.chooseColor('#0f766e'));
     await act(() => result.current.submit(submitEvent()));
 
     expect(updateColor).toHaveBeenCalledWith('#0F766E');
     expect(result.current.notice).toBe('Color actualizado.');
     expect(refresh).toHaveBeenCalled();
+  });
+
+  it('saves null when the Fiaro color is chosen again, instead of the same hex', async () => {
+    const result = setup('#0F766E');
+    act(() => result.current.chooseColor(DEFAULT_BRAND_COLOR));
+    await act(() => result.current.submit(submitEvent()));
+
+    expect(updateColor).toHaveBeenCalledWith(null);
   });
 
   it('does not call the API when the color did not change', async () => {
@@ -163,7 +172,7 @@ describe('useBrandColorForm', () => {
 
   it('refuses a color too light for the buttons', async () => {
     const result = setup();
-    act(() => result.current.changeColor(typed('#ffe08a')));
+    act(() => result.current.chooseColor('#ffe08a'));
     await act(() => result.current.submit(submitEvent()));
 
     expect(result.current.fieldError).toMatch(/más oscuro/);

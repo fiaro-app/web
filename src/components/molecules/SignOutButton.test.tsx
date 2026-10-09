@@ -15,9 +15,11 @@ describe('SignOutButton', () => {
     render(<SignOutButton />);
 
     await userEvent.click(screen.getByRole('button', { name: 'Cerrar sesión' }));
+    expect(vi.mocked(signOut)).not.toHaveBeenCalled();
+    await userEvent.click(screen.getAllByRole('button', { name: 'Cerrar sesión' }).at(-1)!);
 
     await waitFor(() => expect(replace).toHaveBeenCalledWith('/login'));
     expect(vi.mocked(signOut)).toHaveBeenCalledOnce();
-    expect(screen.getByRole('button', { name: 'Cerrar sesión' })).toBeDisabled();
+    expect(screen.getAllByRole('button', { name: 'Cerrar sesión' })[0]).toBeDisabled();
   });
 });

@@ -1,10 +1,13 @@
 'use client';
 
+import { ConfirmForm } from '@/components/molecules/ConfirmForm';
+import { COMMON_TEXT } from '@/content/common';
 import { Button } from '@/components/atoms/Button';
 import { Alert } from '@/components/molecules/Alert';
 import { FormField } from '@/components/molecules/FormField';
 import { SettingsSection } from '@/components/molecules/SettingsSection';
 import { SETTINGS_TEXT } from '@/content/settings';
+import { swatchesFor } from '@/features/lender/brand-palette';
 import { useBrandColorForm } from '@/features/lender/use-settings-forms';
 
 export interface BrandColorFormProps {
@@ -13,23 +16,37 @@ export interface BrandColorFormProps {
   readonly canEdit: boolean;
 }
 
-/** "Color de marca": elegir el color del panel, con una vista previa. Solo diseño; la lógica vive en `useBrandColorForm`. */
+/** "Color de marca": elegir el color del panel entre una gama corta, con una vista previa. Solo diseño; la lógica vive en `useBrandColorForm`. */
 export function BrandColorForm({ brandColor, canEdit }: Readonly<BrandColorFormProps>) {
   const form = useBrandColorForm({ brandColor });
   const text = SETTINGS_TEXT.brand;
 
   return (
     <SettingsSection title={text.title} description={text.description}>
-      <form onSubmit={form.submit} noValidate aria-label={text.title} className="flex flex-col gap-4">
+      <ConfirmForm
+        confirmation={COMMON_TEXT.confirm.save} onSubmit={form.submit} noValidate aria-label={text.title} className="flex flex-col gap-4">
         <FormField label={text.colorLabel} error={form.fieldError}>
-          <input
-            name="brandColor"
-            type="color"
-            value={form.color}
-            onChange={form.changeColor}
-            disabled={!canEdit}
-            className="h-11 w-24 cursor-pointer rounded-sm border border-foreground/12 bg-surface p-1 disabled:cursor-not-allowed disabled:opacity-60"
-          />
+          <fieldset className="flex flex-wrap gap-3" disabled={!canEdit}>
+            <legend className="sr-only">{text.colorLabel}</legend>
+            {swatchesFor(brandColor, text.currentColor).map((swatch) => (
+              <label key={swatch.value} className="flex cursor-pointer flex-col items-center gap-1.5 text-caption has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60">
+                <input
+                  type="radio"
+                  name="brandColor"
+                  value={swatch.value}
+                  checked={form.color.toUpperCase() === swatch.value.toUpperCase()}
+                  onChange={() => form.chooseColor(swatch.value)}
+                  className="peer sr-only"
+                />
+                <span
+                  aria-hidden="true"
+                  style={{ backgroundColor: swatch.value }}
+                  className="size-11 rounded-full border-2 border-surface ring-2 ring-foreground/15 transition peer-checked:ring-4 peer-checked:ring-primary peer-focus-visible:ring-4 peer-focus-visible:ring-ring"
+                />
+                <span className="text-foreground/80 peer-checked:font-semibold peer-checked:text-foreground">{swatch.label}</span>
+              </label>
+            ))}
+          </fieldset>
         </FormField>
         <div className="flex items-center gap-3">
           <span className="text-small text-foreground/70">{text.preview}</span>
@@ -55,7 +72,7 @@ export function BrandColorForm({ brandColor, canEdit }: Readonly<BrandColorFormP
             )}
           </div>
         )}
-      </form>
+      </ConfirmForm>
     </SettingsSection>
   );
 }

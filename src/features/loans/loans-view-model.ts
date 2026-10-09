@@ -52,6 +52,8 @@ export interface LoansViewModel {
   readonly pageSize: number;
   /** Estado por el que se filtra, o `null` para ver todos. */
   readonly status: LoanStatus | null;
+  /** Texto buscado (nombre del cliente); `''` si no se busca. */
+  readonly search: string;
 }
 
 /** "20 × $30.000". */
@@ -75,6 +77,7 @@ export function toLoansViewModel(
     readonly pageSize: number;
   },
   status: LoanStatus | null,
+  search = '',
 ): LoansViewModel {
   const rows = loans.map<LoanRow>((loan) => {
     const hasBalance = loan.status !== 'CANCELED';
@@ -99,7 +102,7 @@ export function toLoansViewModel(
       statusTone: STATUS_TONE[loan.status],
     };
   });
-  return { rows, ...pageInfo, status };
+  return { rows, ...pageInfo, status, search };
 }
 
 /** Quién cobra el préstamo hoy y desde cuándo. */

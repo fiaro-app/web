@@ -50,6 +50,7 @@ describe('ClientForm', () => {
   it('submits through the hook and can be cancelled', async () => {
     render(<ClientForm />);
     await userEvent.click(screen.getByRole('button', { name: 'Registrar cliente' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Registrar' }));
     expect(submit).toHaveBeenCalledTimes(1);
     expect(screen.getByRole('link', { name: 'Cancelar' })).toHaveAttribute('href', '/clientes');
   });

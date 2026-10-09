@@ -1,5 +1,7 @@
 'use client';
 
+import { ConfirmForm } from '@/components/molecules/ConfirmForm';
+import { COMMON_TEXT } from '@/content/common';
 import { Button } from '@/components/atoms/Button';
 import { Input } from '@/components/atoms/Input';
 import { Alert } from '@/components/molecules/Alert';
@@ -22,7 +24,8 @@ export function PortfolioItem({ portfolio, canEdit }: Readonly<PortfolioItemProp
   return (
     <li className="flex flex-col gap-3 px-4 py-3 text-body">
       {actions.isEditing ? (
-        <form onSubmit={actions.submitRename} noValidate aria-label={text.rename.actionFor(portfolio.name)} className="flex flex-col gap-3">
+        <ConfirmForm
+          confirmation={COMMON_TEXT.confirm.save} onSubmit={actions.submitRename} noValidate aria-label={text.rename.actionFor(portfolio.name)} className="flex flex-col gap-3">
           <FormField label={text.rename.label} error={actions.fieldError}>
             <Input name="name" autoComplete="off" value={actions.name} onChange={actions.changeName} />
           </FormField>
@@ -34,7 +37,7 @@ export function PortfolioItem({ portfolio, canEdit }: Readonly<PortfolioItemProp
               {text.rename.cancel}
             </Button>
           </div>
-        </form>
+        </ConfirmForm>
       ) : (
         <div className="flex flex-wrap items-center justify-between gap-3">
           <span className="flex items-center gap-2">

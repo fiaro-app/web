@@ -1,7 +1,7 @@
 import 'server-only';
 import { getSettlementLookup } from '@/features/settlements/get-settlement-lookup.server';
 import { visitEndpoints } from '@/features/visits/endpoints';
-import { toVisitReportBody, type VisitReportFilters } from '@/features/visits/visit-report-filters';
+import { SEARCH_SCAN_SIZE, searchVisitReport, toVisitReportBody, type VisitReportFilters } from '@/features/visits/visit-report-filters';
 import { toVisitReportViewModel, type VisitReportViewModel } from '@/features/visits/visits-view-model';
 import { isApiRequestError } from '@/lib/api';
 import { callEndpointAsUser } from '@/lib/api/server-call';
@@ -25,13 +25,18 @@ const PAGE_SIZE = 20;
  */
 export async function getVisitReport(filters: VisitReportFilters, page: number): Promise<VisitReportResult> {
   try {
-    const [report, lookup] = await Promise.all([
-      callEndpointAsUser(visitEndpoints.report, { body: toVisitReportBody(filters, page, PAGE_SIZE) }),
+    // La API no busca por texto: con búsqueda se trae la primera página más grande y se filtra aquí.
+    const searching = filters.search !== '';
+    const [fetched, lookup] = await Promise.all([
+      callEndpointAsUser(visitEndpoints.report, {
+        body: searching ? toVisitReportBody(filters, 1, SEARCH_SCAN_SIZE) : toVisitReportBody(filters, page, PAGE_SIZE),
+      }),
       getSettlementLookup(),
     ]);
+    const { report, truncated } = searching ? searchVisitReport(fetched, filters.search) : { report: fetched, truncated: false };
     return {
       status: 'ok',
-      report: toVisitReportViewModel(report),
+      report: toVisitReportViewModel(report, truncated),
       collectors: [...lookup.collectorNames].map(([id, name]) => ({ id, name })),
     };
   } catch (error) {

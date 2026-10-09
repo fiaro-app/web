@@ -1,5 +1,7 @@
 'use client';
 
+import { ConfirmForm } from '@/components/molecules/ConfirmForm';
+import { COMMON_TEXT } from '@/content/common';
 import { Button } from '@/components/atoms/Button';
 import { Input } from '@/components/atoms/Input';
 import { Alert } from '@/components/molecules/Alert';
@@ -15,7 +17,8 @@ export function BusinessForm({ name, canEdit }: Readonly<{ name: string; canEdit
 
   return (
     <SettingsSection title={text.title} description={text.description}>
-      <form onSubmit={form.submit} noValidate aria-label={text.title} className="flex flex-col gap-4">
+      <ConfirmForm
+        confirmation={COMMON_TEXT.confirm.save} onSubmit={form.submit} noValidate aria-label={text.title} className="flex flex-col gap-4">
         <FormField label={text.nameLabel} error={form.fieldError}>
           <Input name="name" autoComplete="organization" placeholder={text.namePlaceholder} value={form.name} onChange={form.changeName} disabled={!canEdit} />
         </FormField>
@@ -26,7 +29,7 @@ export function BusinessForm({ name, canEdit }: Readonly<{ name: string; canEdit
             {text.save}
           </Button>
         )}
-      </form>
+      </ConfirmForm>
     </SettingsSection>
   );
 }

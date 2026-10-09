@@ -1,5 +1,7 @@
 'use client';
 
+import { ConfirmForm } from '@/components/molecules/ConfirmForm';
+import { COMMON_TEXT } from '@/content/common';
 import { Button } from '@/components/atoms/Button';
 import { Input } from '@/components/atoms/Input';
 import { Alert } from '@/components/molecules/Alert';
@@ -31,7 +33,8 @@ export function PortfoliosPanel({ portfolios, canEdit }: Readonly<PortfoliosPane
         ))}
       </ul>
       {canEdit && (
-        <form onSubmit={form.submit} noValidate aria-label={text.create} className="flex flex-col gap-4">
+        <ConfirmForm
+          confirmation={COMMON_TEXT.confirm.create} onSubmit={form.submit} noValidate aria-label={text.create} className="flex flex-col gap-4">
           <FormField label={text.nameLabel} error={form.fieldError}>
             <Input name="name" autoComplete="off" placeholder={text.namePlaceholder} value={form.name} onChange={form.changeName} />
           </FormField>
@@ -40,7 +43,7 @@ export function PortfoliosPanel({ portfolios, canEdit }: Readonly<PortfoliosPane
           <Button type="submit" variant="outline" loading={form.isSubmitting}>
             {text.create}
           </Button>
-        </form>
+        </ConfirmForm>
       )}
     </SettingsSection>
   );
