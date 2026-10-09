@@ -24,7 +24,7 @@ export function ClientsView({ clients }: Readonly<ClientsViewProps>) {
 
   return (
     <>
-      <header className="flex flex-wrap items-center justify-between gap-3">
+      <header className="flex flex-wrap items-center justify-between gap-3 max-sm:flex-col max-sm:items-stretch max-sm:[&>a]:w-full">
         <Text variant="title" as="h1" weight="bold" className="text-foreground">
           {CLIENTS_TEXT.title}
         </Text>

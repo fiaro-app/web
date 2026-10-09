@@ -68,6 +68,7 @@ se agrega la nueva.
 | W-61 | La insignia de no leídas de la barra lateral sale de `QUERY /notifications` con `unreadOnly` y `pageSize: 1` (se lee `meta.total`); si la API falla, no se muestra | Una sola consulta barata por petición (memoizada en el contexto del panel); es un adorno y no debe tumbar el panel. Al marcar una como leída, `router.refresh()` la actualiza |
 | W-62 | `Link` recibe `size` (`label`/`small`/`caption`) en vez de un `className` con `text-*`; el registro quita los asteriscos de «obligatorio» y la tarjeta de marca usa `KpiTile compact` | `cn` no resuelve choques de clases de Tailwind: dos `text-*` en un mismo elemento se decidían por el orden del CSS y el login mostraba 14px donde el diseño pide 12–13px |
 | W-63 | Los estados vacíos, de error, sin acceso y «no encontrado» del panel ocupan toda el área de contenido (`EmptyState` `size="page"`); `compact` queda para la 404 y el catálogo. Hay `loading.tsx` genérico con `ListSkeleton`. Las tablas usan `StatePill` y botón de contorno en la acción | Es lo que pide el diseño (`Estado — …` en Penpot): un estado vacío no es un recuadro pequeño dentro de la pantalla |
+| W-64 | En pantallas angostas (`< lg`) el panel muestra una cabecera con botón de menú y la barra lateral va en un menú deslizable (`MobileNav` + `useMobileMenu`); desde `md` abajo las tablas se ven como tarjetas (`RESPONSIVE_TABLE`, cada celda con `data-label`) | Es el diseño `Mobile / …` de Penpot; con CSS puro no se duplica el marcado de las tablas y se mantiene la semántica de tabla |
 
 ## Pendientes conocidos
 

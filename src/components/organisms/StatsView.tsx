@@ -34,7 +34,7 @@ function Section({ id, title, children }: Readonly<{ id: string; title: string; 
 export function StatsView({ stats, filters, options }: Readonly<StatsViewProps>) {
   return (
     <>
-      <header className="flex flex-wrap items-center justify-between gap-3">
+      <header className="flex flex-wrap items-center justify-between gap-3 max-sm:flex-col max-sm:items-stretch max-sm:[&>a]:w-full">
         <div className="flex flex-col gap-1">
           <Text variant="title" as="h1" weight="bold" className="text-foreground">
             {STATS_TEXT.title}

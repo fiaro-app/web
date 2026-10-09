@@ -1,5 +1,6 @@
 import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { StatePill } from '@/components/atoms/StatePill';
+import { RESPONSIVE_TABLE } from '@/components/organisms/responsive-table';
 import { cn } from '@/lib/cn';
 import { COLLECTORS_TEXT } from '@/content/collectors';
 import type { CollectorRow } from '@/features/collectors/collectors-view-model';
@@ -12,10 +13,10 @@ export interface CollectorsTableProps {
 /** Tabla de cobradores (nombre, teléfono, cartera y estado). Solo presentación. */
 export function CollectorsTable({ rows, className }: Readonly<CollectorsTableProps>) {
   return (
-    <div className={cn('overflow-x-auto rounded-md bg-surface', className)}>
-      <table className="w-full min-w-150 border-collapse text-left text-label">
+    <div className={cn(RESPONSIVE_TABLE.wrapper, className)}>
+      <table className={cn(RESPONSIVE_TABLE.table, 'md:min-w-150')}>
         <caption className="sr-only">{COLLECTORS_TEXT.tableCaption}</caption>
-        <thead>
+        <thead className={RESPONSIVE_TABLE.head}>
           <tr className="border-b border-foreground/8">
             {COLLECTORS_TEXT.headers.map((header) => (
               <th key={header} scope="col" className="px-5 py-3.5 text-caption font-semibold text-foreground/60">
@@ -27,20 +28,20 @@ export function CollectorsTable({ rows, className }: Readonly<CollectorsTablePro
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-foreground/8">
+        <tbody className={RESPONSIVE_TABLE.body}>
           {rows.map((row) => (
-            <tr key={row.id}>
-              <th scope="row" className="px-5 py-5 font-normal">
+            <tr key={row.id} className={RESPONSIVE_TABLE.row}>
+              <th scope="row" className={RESPONSIVE_TABLE.rowHeader}>
                 {row.fullName}
               </th>
-              <td className="px-5 py-5">{row.phone}</td>
-              <td className="px-5 py-5">{row.portfolioName}</td>
-              <td className="px-5 py-5">
+              <td className={RESPONSIVE_TABLE.cell} data-label={COLLECTORS_TEXT.headers[1]}>{row.phone}</td>
+              <td className={RESPONSIVE_TABLE.cell} data-label={COLLECTORS_TEXT.headers[2]}>{row.portfolioName}</td>
+              <td className={RESPONSIVE_TABLE.cell} data-label={COLLECTORS_TEXT.headers[3]}>
                 <StatePill tone={row.active ? 'success' : 'muted'}>
                   {row.active ? COLLECTORS_TEXT.active : COLLECTORS_TEXT.inactive}
                 </StatePill>
               </td>
-              <td className="px-5 py-3.5 text-right">
+              <td className={RESPONSIVE_TABLE.action}>
                 <ButtonLink
                   variant="outline"
                   href={`/cobradores/${row.id}`}

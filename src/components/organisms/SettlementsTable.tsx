@@ -2,6 +2,7 @@ import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { StatePill, type StatePillTone } from '@/components/atoms/StatePill';
 import { SETTLEMENTS_TEXT } from '@/content/settlements';
 import type { SettlementRow } from '@/features/settlements/settlements-view-model';
+import { RESPONSIVE_TABLE } from '@/components/organisms/responsive-table';
 import { cn } from '@/lib/cn';
 import { FIGURE_TEXT_CLASSES, type FigureTone } from '@/lib/tone';
 
@@ -16,10 +17,10 @@ export interface SettlementsTableProps {
 /** Tabla de cuadres (cobrador, cartera, fecha, montos, diferencia y estado). Solo presentación. */
 export function SettlementsTable({ rows, className }: Readonly<SettlementsTableProps>) {
   return (
-    <div className={cn('overflow-x-auto rounded-md bg-surface', className)}>
-      <table className="w-full min-w-215 border-collapse text-left text-label">
+    <div className={cn(RESPONSIVE_TABLE.wrapper, className)}>
+      <table className={cn(RESPONSIVE_TABLE.table, 'md:min-w-215')}>
         <caption className="sr-only">{SETTLEMENTS_TEXT.tableCaption}</caption>
-        <thead>
+        <thead className={RESPONSIVE_TABLE.head}>
           <tr className="border-b border-foreground/8">
             {SETTLEMENTS_TEXT.headers.map((header) => (
               <th key={header} scope="col" className="px-5 py-3.5 text-caption font-semibold text-foreground/60">
@@ -31,23 +32,23 @@ export function SettlementsTable({ rows, className }: Readonly<SettlementsTableP
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-foreground/8">
+        <tbody className={RESPONSIVE_TABLE.body}>
           {rows.map((row) => (
-            <tr key={row.id}>
-              <th scope="row" className="px-5 py-5 font-normal">
+            <tr key={row.id} className={RESPONSIVE_TABLE.row}>
+              <th scope="row" className={RESPONSIVE_TABLE.rowHeader}>
                 {row.collectorName}
               </th>
-              <td className="px-5 py-5">{row.portfolioName}</td>
-              <td className="px-5 py-5">{row.date}</td>
-              <td className="px-5 py-5">{row.expected}</td>
-              <td className="px-5 py-5">{row.collected}</td>
-              <td className={cn('px-5 py-5', row.difference && `font-semibold ${FIGURE_TEXT_CLASSES[row.differenceTone]}`)}>
+              <td className={RESPONSIVE_TABLE.cell} data-label={SETTLEMENTS_TEXT.headers[1]}>{row.portfolioName}</td>
+              <td className={RESPONSIVE_TABLE.cell} data-label={SETTLEMENTS_TEXT.headers[2]}>{row.date}</td>
+              <td className={RESPONSIVE_TABLE.cell} data-label={SETTLEMENTS_TEXT.headers[3]}>{row.expected}</td>
+              <td className={RESPONSIVE_TABLE.cell} data-label={SETTLEMENTS_TEXT.headers[4]}>{row.collected}</td>
+              <td className={cn(RESPONSIVE_TABLE.cell, row.difference && `font-semibold ${FIGURE_TEXT_CLASSES[row.differenceTone]}`)} data-label={SETTLEMENTS_TEXT.headers[5]}>
                 {row.difference ?? '—'}
               </td>
-              <td className="px-5 py-5">
+              <td className={RESPONSIVE_TABLE.cell} data-label={SETTLEMENTS_TEXT.headers[6]}>
                 <StatePill tone={PILL_TONE[row.statusTone]}>{row.status}</StatePill>
               </td>
-              <td className="px-5 py-3.5 text-right">
+              <td className={RESPONSIVE_TABLE.action}>
                 <ButtonLink
                   variant="outline"
                   href={`/cuadres/${row.id}`}

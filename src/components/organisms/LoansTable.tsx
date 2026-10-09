@@ -2,6 +2,7 @@ import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { StatePill, type StatePillTone } from '@/components/atoms/StatePill';
 import { LOANS_TEXT } from '@/content/loans';
 import type { LoanRow, LoanStatusTone } from '@/features/loans/loans-view-model';
+import { RESPONSIVE_TABLE } from '@/components/organisms/responsive-table';
 import { cn } from '@/lib/cn';
 
 /** Activo en verde, pagado en anil y anulado atenuado. */
@@ -15,10 +16,10 @@ export interface LoansTableProps {
 /** Tabla de préstamos (cliente, monto, cuotas, frecuencia, inicio y estado). Solo presentación. */
 export function LoansTable({ rows, className }: Readonly<LoansTableProps>) {
   return (
-    <div className={cn('overflow-x-auto rounded-md bg-surface', className)}>
-      <table className="w-full min-w-210 border-collapse text-left text-label">
+    <div className={cn(RESPONSIVE_TABLE.wrapper, className)}>
+      <table className={cn(RESPONSIVE_TABLE.table, 'md:min-w-210')}>
         <caption className="sr-only">{LOANS_TEXT.tableCaption}</caption>
-        <thead>
+        <thead className={RESPONSIVE_TABLE.head}>
           <tr className="border-b border-foreground/8">
             {LOANS_TEXT.headers.map((header) => (
               <th key={header} scope="col" className="px-5 py-3.5 text-caption font-semibold text-foreground/60">
@@ -30,21 +31,21 @@ export function LoansTable({ rows, className }: Readonly<LoansTableProps>) {
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-foreground/8">
+        <tbody className={RESPONSIVE_TABLE.body}>
           {rows.map((row) => (
-            <tr key={row.id}>
-              <th scope="row" className="px-5 py-5 font-normal">
+            <tr key={row.id} className={RESPONSIVE_TABLE.row}>
+              <th scope="row" className={RESPONSIVE_TABLE.rowHeader}>
                 {row.clientName}
               </th>
-              <td className="px-5 py-5">{row.principal}</td>
-              <td className="px-5 py-5">{row.installments}</td>
-              <td className="px-5 py-5">{row.paid}</td>
-              <td className="px-5 py-5">{row.balance}</td>
-              <td className="px-5 py-5">{row.startDate}</td>
-              <td className="px-5 py-5">
+              <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[1]}>{row.principal}</td>
+              <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[2]}>{row.installments}</td>
+              <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[3]}>{row.paid}</td>
+              <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[4]}>{row.balance}</td>
+              <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[5]}>{row.startDate}</td>
+              <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[6]}>
                 <StatePill tone={PILL_TONE[row.statusTone]}>{row.status}</StatePill>
               </td>
-              <td className="px-5 py-3.5 text-right">
+              <td className={RESPONSIVE_TABLE.action}>
                 <ButtonLink variant="outline" href={`/prestamos/${row.id}`} aria-label={`${LOANS_TEXT.view} préstamo de ${row.clientName}`}>
                   {LOANS_TEXT.view}
                 </ButtonLink>
