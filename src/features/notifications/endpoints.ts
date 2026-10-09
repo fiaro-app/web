@@ -1,7 +1,9 @@
 import {
   IdSchema,
+  MarkAllReadResultSchema,
   NotificationSchema,
   PageQuerySchema,
+  UnreadCountSchema,
   defineEndpoint,
   paginated,
 } from '@fiaro-app/contracts';
@@ -49,12 +51,12 @@ export const notificationEndpoints = {
     path: '/notifications/read-all',
     summary: 'Marca como leídas, en una sola operación, todas las notificaciones sin leer de la persona.',
     body: MarkAllReadBodySchema,
-    response: z.object({ marked: z.int().nonnegative() }),
+    response: MarkAllReadResultSchema,
   }),
   unreadCount: defineEndpoint({
     method: 'GET',
     path: '/notifications/unread-count',
     summary: 'Cuántas notificaciones sin leer tiene la persona de todos sus negocios (para la insignia).',
-    response: z.object({ count: z.int().nonnegative() }),
+    response: UnreadCountSchema,
   }),
 } as const;

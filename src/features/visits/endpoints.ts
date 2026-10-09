@@ -2,10 +2,10 @@ import {
   DateRangeSchema,
   IdSchema,
   PageQuerySchema,
+  CollectionVisitReportSchema,
   PaymentMethodSchema,
   VisitOutcomeSchema,
   defineEndpoint,
-  paginated,
 } from '@fiaro-app/contracts';
 import { z } from 'zod';
 
@@ -46,20 +46,6 @@ export const CollectionVisitSchema = z.object({
 });
 export type CollectionVisit = z.infer<typeof CollectionVisitSchema>;
 
-/** Una visita del reporte «Cobros del día»: con el cliente, el cobrador y el pago, ya resueltos por la API. */
-export const VisitReportEntrySchema = z.object({
-  visitId: IdSchema,
-  occurredAt: InstantSchema,
-  outcome: VisitOutcomeSchema,
-  expectedAmount: z.int(),
-  promisedDate: z.iso.date().nullable(),
-  loan: z.object({ id: IdSchema }),
-  client: z.object({ id: IdSchema, fullName: z.string() }),
-  collector: z.object({ membershipId: IdSchema, fullName: z.string() }),
-  payment: z.object({ id: IdSchema, amount: z.int(), method: PaymentMethodSchema, reversed: z.boolean() }).nullable(),
-});
-export type VisitReportEntry = z.infer<typeof VisitReportEntrySchema>;
-
 /** Cuerpo de `QUERY /collection-visits`: sin `dateRange` la API entrega solo hoy. */
 export const VisitReportBodySchema = PageQuerySchema.extend({
   dateRange: DateRangeSchema.optional(),
@@ -69,11 +55,13 @@ export const VisitReportBodySchema = PageQuerySchema.extend({
 });
 export type VisitReportBody = z.infer<typeof VisitReportBodySchema>;
 
-/** Respuesta del reporte: la página de visitas y el rango que la API resolvió. */
-export const VisitReportSchema = paginated(VisitReportEntrySchema).extend({
-  range: z.object({ from: z.iso.date(), to: z.iso.date() }),
-});
-export type VisitReport = z.infer<typeof VisitReportSchema>;
+// Entrada y página del reporte «Cobros del día» (D-105): viven en `@fiaro-app/contracts`.
+export {
+  CollectionVisitReportEntrySchema as VisitReportEntrySchema,
+  CollectionVisitReportSchema as VisitReportSchema,
+  type CollectionVisitReport as VisitReport,
+  type CollectionVisitReportEntry as VisitReportEntry,
+} from '@fiaro-app/contracts';
 
 /**
  * Visitas de cobro y reversión de pagos. `@fiaro-app/contracts` publica los schemas base pero no
@@ -92,7 +80,7 @@ export const visitEndpoints = {
     path: '/collection-visits',
     summary: 'Cobros del día: las visitas de todo el negocio, con filtros (solo Owner y Lender).',
     body: VisitReportBodySchema,
-    response: VisitReportSchema,
+    response: CollectionVisitReportSchema,
   }),
   reversePayment: defineEndpoint({
     method: 'POST',

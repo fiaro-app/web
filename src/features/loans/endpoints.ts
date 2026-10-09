@@ -1,6 +1,8 @@
 import {
   BusinessDateSchema,
   IdSchema,
+  LoanInstallmentsSchema,
+  LoanListItemSchema,
   LoanFrequencySchema,
   LoanSchema,
   LoanStatusSchema,
@@ -11,25 +13,20 @@ import {
 } from '@fiaro-app/contracts';
 import { z } from 'zod';
 
+// Schemas del calendario y de la lista con saldo y mora (D-103, D-113): viven en `@fiaro-app/contracts`.
+export {
+  InstallmentStatusSchema,
+  LoanInstallmentSchema,
+  LoanInstallmentsSchema,
+  LoanListItemSchema,
+  type InstallmentStatus,
+  type LoanInstallment,
+  type LoanListItem,
+} from '@fiaro-app/contracts';
+
 /** Préstamo tal como lo devuelve la API: coincide con `LoanSchema` del contrato. */
 export const LoanResponseSchema = LoanSchema;
 export type LoanResponse = z.infer<typeof LoanResponseSchema>;
-
-/**
- * Fila de `QUERY /loans`: el préstamo más su saldo y mora, calculados por la API con el mismo motor
- * que `GET /loans/:loanId/balance` (D-113). Los campos nuevos son aditivos.
- */
-export const LoanListItemSchema = LoanSchema.extend({
-  balance: z.int().nonnegative(),
-  /** Lo esperado hasta hoy que sigue sin pagar; cero si está al día o el préstamo cerró. */
-  overdueAmount: z.int().nonnegative(),
-  overdueDays: z.int().nonnegative(),
-  /** Próxima fecha de pago; `null` si el préstamo cerró o no le quedan cuotas. */
-  nextDueDate: z.iso.date().nullable(),
-  /** Quien lo cobra hoy, o `null` si ninguno lo tiene asignado. */
-  collector: z.object({ membershipId: IdSchema, fullName: z.string() }).nullable(),
-});
-export type LoanListItem = z.infer<typeof LoanListItemSchema>;
 
 /** Cuerpo de `POST /loans`. Fiaro no calcula intereses: todos los montos los ingresa el prestamista. */
 export const CreateLoanBodySchema = z.strictObject({
@@ -66,27 +63,6 @@ export const LoanBalanceSchema = z.object({
   firstOverdueDate: z.iso.date().nullable(),
 });
 export type LoanBalance = z.infer<typeof LoanBalanceSchema>;
-
-/** Estado de una cuota del calendario (`GET /loans/:loanId/installments`). */
-export const InstallmentStatusSchema = z.enum(['PAID', 'PARTIAL', 'OVERDUE', 'PENDING']);
-export type InstallmentStatus = z.infer<typeof InstallmentStatusSchema>;
-
-/** Una cuota del calendario: lo esperado, lo imputado de los pagos y su estado al día de hoy. */
-export const LoanInstallmentSchema = z.object({
-  number: z.int().positive(),
-  dueDate: z.iso.date(),
-  expectedAmount: z.int().positive(),
-  paidAmount: z.int().nonnegative(),
-  status: InstallmentStatusSchema,
-});
-export type LoanInstallment = z.infer<typeof LoanInstallmentSchema>;
-
-/** Calendario de cuotas de un préstamo; sale del mismo motor que el saldo y la mora. */
-export const LoanInstallmentsSchema = z.object({
-  loanId: IdSchema,
-  asOf: z.iso.date(),
-  installments: z.array(LoanInstallmentSchema),
-});
 
 /** Quién cobra un préstamo y durante qué fechas (`/loans/:loanId/collection-assignments`). */
 export const CollectionAssignmentSchema = z.object({

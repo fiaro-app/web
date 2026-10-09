@@ -86,9 +86,9 @@ describe('brand color', () => {
     expect(callEndpoint).toHaveBeenNthCalledWith(2, lenderEndpoints.update, { body: { brandColor: null } });
   });
 
-  it('only accepts #RRGGBB in the update body and reads the color from the lender', () => {
+  it('only accepts #RRGGBB in the update body and reads the color from the lender (null is the Fiaro color)', () => {
     expect(lenderEndpoints.update.body.safeParse({ brandColor: '#0f766e' }).success).toBe(true);
     expect(lenderEndpoints.update.body.safeParse({ brandColor: 'rojo' }).success).toBe(false);
-    expect(lenderEndpoints.get.response.shape.brandColor.safeParse(undefined).success).toBe(true);
+    expect(lenderEndpoints.get.response.shape.brandColor.safeParse(null).success).toBe(true);
   });
 });

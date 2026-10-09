@@ -69,6 +69,7 @@ describe('stats endpoint', () => {
       expectedAmount: 0,
       collectedAmount: 0,
       effectiveness: null,
+      previous: null,
     };
     const buckets = ['0-7', '8-15', '16-30', '30+'].map((label) => ({ label, amount: 0, clientsCount: 0 }));
     expect(statsEndpoints.get.response.safeParse({ ...base, arrearsByAge: buckets }).success).toBe(true);
