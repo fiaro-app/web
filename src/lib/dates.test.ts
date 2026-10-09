@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatBusinessDate } from './dates';
+import { businessDateOf, formatBusinessDate } from './dates';
 
 describe('formatBusinessDate', () => {
   it('writes the day first, as in Colombia', () => {
@@ -14,5 +14,12 @@ describe('formatBusinessDate', () => {
   it('returns anything that is not a calendar date untouched', () => {
     expect(formatBusinessDate('ayer')).toBe('ayer');
     expect(formatBusinessDate('2026-09-22T10:00:00Z')).toBe('2026-09-22T10:00:00Z');
+  });
+});
+
+describe('businessDateOf', () => {
+  it('reads the Colombian calendar day, not UTC', () => {
+    expect(businessDateOf(new Date('2026-10-10T02:00:00Z'))).toBe('2026-10-09');
+    expect(businessDateOf(new Date('2026-10-10T06:00:00Z'))).toBe('2026-10-10');
   });
 });
