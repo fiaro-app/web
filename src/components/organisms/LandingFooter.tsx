@@ -15,7 +15,7 @@ export function LandingFooter({ links, copyright, brandName = 'Fiaro' }: Readonl
       <nav aria-label="Pie de página" className="flex items-center gap-6">
         {links.map((link) => (
           <NextLink
-            key={link.href}
+            key={link.label}
             href={link.href}
             className="rounded-sm text-small text-foreground/70 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >

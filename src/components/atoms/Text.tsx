@@ -20,12 +20,12 @@ export type TextElement = 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span' | 'div' | 'st
 
 /** Familia + tamaño de cada escala tipográfica (`font.*` y `size.*` del diseño). */
 const VARIANT_CLASSES: Record<TextVariant, string> = {
-  hero: 'font-display text-hero',
-  title: 'font-display text-title',
-  section: 'font-display text-section',
+  hero: 'font-display text-hero text-balance',
+  title: 'font-display text-title text-balance',
+  section: 'font-display text-section text-balance',
   price: 'font-display text-price',
-  display: 'font-display text-display',
-  h2: 'font-display text-h2',
+  display: 'font-display text-display text-balance',
+  h2: 'font-display text-h2 text-balance',
   h3: 'font-display text-h3',
   lead: 'font-sans text-lead',
   body: 'font-sans text-body',

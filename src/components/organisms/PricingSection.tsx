@@ -9,7 +9,7 @@ export interface PricingSectionProps {
   readonly plans: readonly PlanCardProps[];
 }
 
-/** Sección de precios: título, nota aclaratoria y una `PlanCard` por plan (alineadas arriba). */
+/** Sección de precios: título, nota aclaratoria y una `PlanCard` por plan, todas de la misma altura con el botón alineado abajo. */
 export function PricingSection({ id, eyebrow, title, note, plans }: Readonly<PricingSectionProps>) {
   const headingId = `${id}-title`;
 
@@ -24,7 +24,7 @@ export function PricingSection({ id, eyebrow, title, note, plans }: Readonly<Pri
       <Text variant="small" className="text-center text-foreground/60">
         {note}
       </Text>
-      <div className="mt-6 grid w-full items-start gap-6 lg:grid-cols-3">
+      <div className="mt-6 grid w-full items-stretch gap-6 lg:grid-cols-3">
         {plans.map((plan) => (
           <PlanCard key={plan.name} {...plan} />
         ))}

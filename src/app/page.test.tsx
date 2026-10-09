@@ -38,7 +38,19 @@ describe('Landing structured data', () => {
     const script = container.querySelector('script[type="application/ld+json"]');
     const nodes = JSON.parse(script?.textContent ?? '[]') as { '@type': string; offers?: unknown[] }[];
 
-    expect(nodes.map((node) => node['@type'])).toEqual(['Organization', 'SoftwareApplication']);
+    expect(nodes.map((node) => node['@type'])).toEqual(['Organization', 'SoftwareApplication', 'FAQPage']);
     expect(nodes[1]?.offers).toHaveLength(2);
+  });
+
+  it('marks up the same questions the page shows', () => {
+    const { container } = render(<Home />);
+    const nodes = JSON.parse(container.querySelector('script[type="application/ld+json"]')?.textContent ?? '[]') as {
+      '@type': string;
+      mainEntity?: { name: string }[];
+    }[];
+    const questions = nodes.find((node) => node['@type'] === 'FAQPage')?.mainEntity?.map((entry) => entry.name) ?? [];
+
+    expect(questions.length).toBeGreaterThan(0);
+    for (const question of questions) expect(container).toHaveTextContent(question);
   });
 });

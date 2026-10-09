@@ -3,25 +3,37 @@ import type { PreviewBar, PreviewKpi } from '@/components/organisms/DashboardPre
 import type { FeatureItem } from '@/components/organisms/FeaturesSection';
 import type { StepItem } from '@/components/organisms/HowItWorksSection';
 import type { PlanCardProps } from '@/components/molecules/PlanCard';
-
-/** Rutas a las que apunta la landing (las pantallas de registro e inicio de sesión llegan después). */
-export const LANDING_ROUTES = {
-  login: '/login',
-  signup: '/registro',
-  contact: '/contacto',
-} as const;
+import type { FaqItem } from '@/components/organisms/FaqSection';
 
 /** Ids de las secciones, usados como ancla por la navegación. */
 export const LANDING_SECTION_IDS = {
   product: 'producto',
   howItWorks: 'como-funciona',
   pricing: 'precios',
+  faq: 'preguntas',
+} as const;
+
+/**
+ * A dónde lleva «Contacto»: un `mailto:` si `NEXT_PUBLIC_CONTACT_EMAIL` está configurado; si no, a
+ * las preguntas frecuentes (no hay página de contacto todavía y un enlace roto cuesta confianza).
+ */
+export function resolveContactHref(email: string | undefined = process.env.NEXT_PUBLIC_CONTACT_EMAIL): string {
+  const clean = email?.trim();
+  return clean && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean) ? `mailto:${clean}` : `#${LANDING_SECTION_IDS.faq}`;
+}
+
+/** Rutas a las que apunta la landing. */
+export const LANDING_ROUTES = {
+  login: '/login',
+  signup: '/registro',
+  contact: resolveContactHref(),
 } as const;
 
 export const NAV_LINKS: readonly LandingNavLink[] = [
   { label: 'Producto', href: `#${LANDING_SECTION_IDS.product}` },
   { label: 'Cómo funciona', href: `#${LANDING_SECTION_IDS.howItWorks}` },
   { label: 'Precios', href: `#${LANDING_SECTION_IDS.pricing}` },
+  { label: 'Preguntas', href: `#${LANDING_SECTION_IDS.faq}` },
 ];
 
 export const FOOTER_LINKS: readonly LandingNavLink[] = [
@@ -100,7 +112,7 @@ export const HOW_IT_WORKS = {
     {
       title: 'Da de alta a tus cobradores',
       description:
-        'Cada cobrador recibe su acceso por correo y empieza a usar la app desde el celular.',
+        'Cada cobrador recibe una contraseña temporal que tú le entregas y empieza a cobrar desde el celular.',
     },
     {
       title: 'Ve tu cartera en tiempo real',
@@ -162,3 +174,34 @@ export const CTA_BAND = {
   ctaLabel: 'Comenzar gratis',
   ctaHref: LANDING_ROUTES.signup,
 } as const;
+
+export const FAQ = {
+  eyebrow: 'Preguntas frecuentes',
+  title: 'Lo que suelen preguntarnos antes de empezar',
+  items: [
+    {
+      question: '¿Fiaro presta dinero o cobra a mis clientes?',
+      answer:
+        'No. Fiaro es el software con el que controlas tu cartera: tú prestas, tus cobradores cobran y Fiaro te muestra la mora, la efectividad y el cuadre del día.',
+    },
+    {
+      question: '¿Necesito tarjeta de crédito para empezar?',
+      answer: 'No. Creas tu cuenta y configuras tu financiera en unos 5 minutos, sin tarjeta.',
+    },
+    {
+      question: '¿Cómo entran mis cobradores?',
+      answer:
+        'Desde Fiaro les das de alta con su celular y recibes una contraseña temporal que tú les entregas. La cambian al ingresar por primera vez y cobran desde su celular.',
+    },
+    {
+      question: '¿Puedo saber qué cobrador no ha salido a cobrar?',
+      answer:
+        'Sí. Recibes alertas en tu panel, ves el cuadre de cada día para aprobarlo o rechazarlo y revisas la efectividad de cada cobrador.',
+    },
+    {
+      question: '¿Mis datos y los de mis clientes están separados de los de otros negocios?',
+      answer:
+        'Sí. Cada financiera ve únicamente su propia cartera, y la información viaja por conexiones cifradas.',
+    },
+  ],
+} satisfies { eyebrow: string; title: string; items: readonly FaqItem[] };

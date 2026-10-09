@@ -27,7 +27,7 @@ export function LandingNav({ links, loginHref, signupHref, brandName = 'Fiaro' }
       </NextLink>
       <nav aria-label="Secciones" className="hidden items-center gap-8 md:flex">
         {links.map((link) => (
-          <NavLink key={link.href} href={link.href} muted={false}>
+          <NavLink key={link.label} href={link.href} muted={false}>
             {link.label}
           </NavLink>
         ))}

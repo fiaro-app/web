@@ -1,6 +1,7 @@
 import { JsonLd } from '@/components/atoms/JsonLd';
 import { CtaBand } from '@/components/organisms/CtaBand';
 import { DashboardPreview } from '@/components/organisms/DashboardPreview';
+import { FaqSection } from '@/components/organisms/FaqSection';
 import { FeaturesSection } from '@/components/organisms/FeaturesSection';
 import { HeroSection } from '@/components/organisms/HeroSection';
 import { HowItWorksSection } from '@/components/organisms/HowItWorksSection';
@@ -8,9 +9,10 @@ import { LandingFooter } from '@/components/organisms/LandingFooter';
 import { LandingNav } from '@/components/organisms/LandingNav';
 import { PricingSection } from '@/components/organisms/PricingSection';
 import { LandingTemplate } from '@/components/templates/LandingTemplate';
-import { organizationJsonLd, softwareApplicationJsonLd } from '@/lib/seo/json-ld';
+import { faqJsonLd, organizationJsonLd, softwareApplicationJsonLd } from '@/lib/seo/json-ld';
 import {
   CTA_BAND,
+  FAQ,
   FEATURES,
   FOOTER_LINKS,
   HERO,
@@ -28,7 +30,7 @@ import {
 export default function Home() {
   return (
     <>
-      <JsonLd data={[organizationJsonLd(), softwareApplicationJsonLd(PRICING.plans)]} />
+      <JsonLd data={[organizationJsonLd(), softwareApplicationJsonLd(PRICING.plans), faqJsonLd(FAQ.items)]} />
       <LandingTemplate
         nav={<LandingNav links={NAV_LINKS} loginHref={LANDING_ROUTES.login} signupHref={LANDING_ROUTES.signup} />}
         footer={
@@ -45,6 +47,7 @@ export default function Home() {
         <FeaturesSection id={LANDING_SECTION_IDS.product} title={FEATURES.title} subtitle={FEATURES.subtitle} features={FEATURES.items} />
         <HowItWorksSection id={LANDING_SECTION_IDS.howItWorks} {...HOW_IT_WORKS} />
         <PricingSection id={LANDING_SECTION_IDS.pricing} {...PRICING} />
+        <FaqSection id={LANDING_SECTION_IDS.faq} {...FAQ} />
         <CtaBand {...CTA_BAND} />
       </LandingTemplate>
     </>

@@ -49,6 +49,25 @@ export function softwareApplicationJsonLd(plans: readonly PricedPlan[]): JsonLdN
   };
 }
 
+/** Una pregunta frecuente con su respuesta. */
+export interface FaqEntry {
+  readonly question: string;
+  readonly answer: string;
+}
+
+/** Preguntas frecuentes (`FAQPage`): debe contener exactamente lo que se muestra en la sección. */
+export function faqJsonLd(entries: readonly FaqEntry[]): JsonLdNode {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: entries.map((entry) => ({
+      '@type': 'Question',
+      name: entry.question,
+      acceptedAnswer: { '@type': 'Answer', text: entry.answer },
+    })),
+  };
+}
+
 /**
  * Serializa para incrustarlo en un `<script type="application/ld+json">`. Escapa `<` (y los
  * separadores de línea de Unicode) para que un texto con `</script>` no pueda cerrar la etiqueta.
