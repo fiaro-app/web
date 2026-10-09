@@ -21,4 +21,17 @@ describe('Link', () => {
 
     expect(screen.getByRole('link')).toHaveClass('extra', 'text-primary');
   });
+
+  it('is 14px by default and takes the size it is given', () => {
+    const { rerender } = render(<Link href="/">Inicio</Link>);
+    expect(screen.getByRole('link')).toHaveClass('text-label');
+
+    rerender(
+      <Link href="/" size="caption">
+        Inicio
+      </Link>,
+    );
+    expect(screen.getByRole('link')).toHaveClass('text-caption');
+    expect(screen.getByRole('link')).not.toHaveClass('text-label');
+  });
 });

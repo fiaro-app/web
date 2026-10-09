@@ -20,7 +20,7 @@ export function AuthBrandPanel({ eyebrow, title, description, children }: Readon
       <Text variant="price" as="p" className="max-w-150">
         {title}
       </Text>
-      <Text variant="label" className="max-w-150 text-primary-foreground/85">
+      <Text variant="label" className="max-w-152 text-primary-foreground/85">
         {description}
       </Text>
       {children}

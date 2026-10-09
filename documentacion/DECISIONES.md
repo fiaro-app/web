@@ -66,6 +66,7 @@ se agrega la nueva.
 | W-59 | Quien entra con una contraseña temporal (`mustChangePassword`) es llevado a `/cambiar-contrasena` desde el layout del panel, antes de cargar nada; esa pantalla manda al panel a quien ya la cambió | La API también exige el cambio (`PASSWORD_CHANGE_REQUIRED`); la web evita mostrar un panel que fallaría en cada llamada |
 | W-60 | Estas dos pantallas reutilizan la plantilla y el estilo de Login; ya tienen mockup en Penpot (recuperar contraseña y cambio obligatorio) | Mantener ambos alineados |
 | W-61 | La insignia de no leídas de la barra lateral sale de `QUERY /notifications` con `unreadOnly` y `pageSize: 1` (se lee `meta.total`); si la API falla, no se muestra | Una sola consulta barata por petición (memoizada en el contexto del panel); es un adorno y no debe tumbar el panel. Al marcar una como leída, `router.refresh()` la actualiza |
+| W-62 | `Link` recibe `size` (`label`/`small`/`caption`) en vez de un `className` con `text-*`; el registro quita los asteriscos de «obligatorio» y la tarjeta de marca usa `KpiTile compact` | `cn` no resuelve choques de clases de Tailwind: dos `text-*` en un mismo elemento se decidían por el orden del CSS y el login mostraba 14px donde el diseño pide 12–13px |
 
 ## Pendientes conocidos
 
