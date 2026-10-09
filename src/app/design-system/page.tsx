@@ -158,6 +158,7 @@ export default function DesignSystemPage() {
           <Toast message="Guardado, pendiente de sync" />
         </div>
         <EmptyState
+          size="compact"
           className="max-w-xs"
           title="Sin clientes asignados hoy"
           description="Cuando tu Lender te asigne una ruta, aparecerá aquí."

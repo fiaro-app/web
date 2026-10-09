@@ -14,7 +14,7 @@ export default async function SettlementsPage({ searchParams }: PageProps<'/cuad
   const result = await getSettlements(parsePageParam(pagina), parseSettlementStatusParam(estado));
 
   if (result.status === 'forbidden') {
-    return <EmptyState className="max-w-md" icon="!" {...SETTLEMENTS_TEXT.forbidden} />;
+    return <EmptyState icon="!" {...SETTLEMENTS_TEXT.forbidden} />;
   }
   return <SettlementsView settlements={result.settlements} />;
 }

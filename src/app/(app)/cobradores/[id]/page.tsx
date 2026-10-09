@@ -13,10 +13,10 @@ export default async function ManageCollectorPage({ params }: PageProps<'/cobrad
   const [result, portfolios] = await Promise.all([getCollector(id), getPortfolioOptions()]);
 
   if (result.status === 'forbidden') {
-    return <EmptyState className="max-w-md" icon="!" {...COLLECTORS_TEXT.forbidden} />;
+    return <EmptyState icon="!" {...COLLECTORS_TEXT.forbidden} />;
   }
   if (result.status === 'not-found') {
-    return <EmptyState className="max-w-md" icon="?" {...COLLECTORS_TEXT.manage.notFound} />;
+    return <EmptyState icon="?" {...COLLECTORS_TEXT.manage.notFound} />;
   }
   return <CollectorManage collector={result.collector} portfolios={portfolios} />;
 }

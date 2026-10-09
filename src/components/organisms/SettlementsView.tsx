@@ -35,7 +35,7 @@ export function SettlementsView({ settlements }: Readonly<SettlementsViewProps>)
       </nav>
 
       {rows.length === 0 ? (
-        <EmptyState className="max-w-md" icon="◔" {...(status === null ? SETTLEMENTS_TEXT.empty : SETTLEMENTS_TEXT.emptyFiltered)} />
+        <EmptyState icon="◔" {...(status === null ? SETTLEMENTS_TEXT.empty : SETTLEMENTS_TEXT.emptyFiltered)} />
       ) : (
         <>
           <SettlementsTable rows={rows} />

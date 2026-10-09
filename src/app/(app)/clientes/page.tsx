@@ -13,7 +13,7 @@ export default async function ClientsPage({ searchParams }: PageProps<'/clientes
   const result = await getClients(parsePageParam(pagina), parseSearchParam(q));
 
   if (result.status === 'forbidden') {
-    return <EmptyState className="max-w-md" icon="!" {...CLIENTS_TEXT.forbidden} />;
+    return <EmptyState icon="!" {...CLIENTS_TEXT.forbidden} />;
   }
   return <ClientsView clients={result.clients} />;
 }

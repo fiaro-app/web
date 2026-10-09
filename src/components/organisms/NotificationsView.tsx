@@ -33,7 +33,7 @@ export function NotificationsView({ notifications }: Readonly<NotificationsViewP
       </nav>
 
       {items.length === 0 ? (
-        <EmptyState className="max-w-md" icon="◔" {...(unreadOnly ? NOTIFICATIONS_TEXT.emptyUnread : NOTIFICATIONS_TEXT.empty)} />
+        <EmptyState icon="◔" {...(unreadOnly ? NOTIFICATIONS_TEXT.emptyUnread : NOTIFICATIONS_TEXT.empty)} />
       ) : (
         <>
           <NotificationList items={items} />

@@ -1,4 +1,4 @@
-import { Link } from '@/components/atoms/Link';
+import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { CLIENTS_TEXT } from '@/content/clients';
 import type { ClientRow } from '@/features/clients/clients-view-model';
 import { cn } from '@/lib/cn';
@@ -35,10 +35,10 @@ export function ClientsTable({ rows, className }: Readonly<ClientsTableProps>) {
               <td className="px-5 py-5">{row.nationalId}</td>
               <td className="px-5 py-5">{row.phone}</td>
               <td className="px-5 py-5">{row.occupation}</td>
-              <td className="px-5 py-5 text-right">
-                <Link href={`/clientes/${row.id}`} aria-label={`${CLIENTS_TEXT.edit} ${row.fullName}`}>
+              <td className="px-5 py-3.5 text-right">
+                <ButtonLink variant="outline" href={`/clientes/${row.id}`} aria-label={`${CLIENTS_TEXT.edit} ${row.fullName}`}>
                   {CLIENTS_TEXT.edit}
-                </Link>
+                </ButtonLink>
               </td>
             </tr>
           ))}

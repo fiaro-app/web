@@ -14,7 +14,7 @@ export default async function LoansPage({ searchParams }: PageProps<'/prestamos'
   const result = await getLoans(parsePageParam(pagina), parseStatusParam(estado));
 
   if (result.status === 'forbidden') {
-    return <EmptyState className="max-w-md" icon="!" {...LOANS_TEXT.forbidden} />;
+    return <EmptyState icon="!" {...LOANS_TEXT.forbidden} />;
   }
   return <LoansView loans={result.loans} />;
 }

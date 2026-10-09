@@ -13,7 +13,7 @@ export default async function CollectorsPage({ searchParams }: PageProps<'/cobra
   const result = await getCollectors(parsePageParam(pagina));
 
   if (result.status === 'forbidden') {
-    return <EmptyState className="max-w-md" icon="!" {...COLLECTORS_TEXT.forbidden} />;
+    return <EmptyState icon="!" {...COLLECTORS_TEXT.forbidden} />;
   }
   return <CollectorsView collectors={result.collectors} />;
 }

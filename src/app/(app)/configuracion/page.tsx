@@ -11,7 +11,7 @@ export default async function SettingsPage() {
   const result = await getSettings();
 
   if (result.status === 'forbidden') {
-    return <EmptyState className="max-w-md" icon="!" {...SETTINGS_TEXT.forbidden} />;
+    return <EmptyState icon="!" {...SETTINGS_TEXT.forbidden} />;
   }
   return <SettingsView settings={result.settings} />;
 }

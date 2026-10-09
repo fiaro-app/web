@@ -12,6 +12,7 @@ export default function NotFound() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-6">
       <EmptyState
+        size="compact"
         className="w-full max-w-md"
         icon="?"
         title="No encontramos esa página"

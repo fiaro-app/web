@@ -13,7 +13,7 @@ export default async function StatsPage({ searchParams }: PageProps<'/estadistic
   const result = await getStats(filters);
 
   if (result.status === 'forbidden') {
-    return <EmptyState className="max-w-md" icon="!" {...STATS_TEXT.forbidden} />;
+    return <EmptyState icon="!" {...STATS_TEXT.forbidden} />;
   }
   return <StatsView stats={result.stats} filters={filters} options={result.options} />;
 }

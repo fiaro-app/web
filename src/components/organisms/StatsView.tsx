@@ -49,7 +49,7 @@ export function StatsView({ stats, filters, options }: Readonly<StatsViewProps>)
       <StatsFilters filters={filters} options={options} />
 
       {stats.isEmpty ? (
-        <EmptyState className="max-w-md" icon="◔" {...STATS_TEXT.empty} />
+        <EmptyState icon="◔" {...STATS_TEXT.empty} />
       ) : (
         <>
           <section aria-label="Indicadores" className="grid gap-4 sm:grid-cols-3">
