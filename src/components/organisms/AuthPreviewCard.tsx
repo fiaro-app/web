@@ -14,7 +14,7 @@ export function AuthPreviewCard({ kpis, activity, className }: Readonly<AuthPrev
     <div
       aria-hidden="true"
       className={cn(
-        'flex w-full max-w-95 flex-col gap-2.5 rounded-md bg-surface p-5 shadow-[0_20px_50px_-10px_rgb(28_27_46/0.35)]',
+        'flex w-full max-w-95 flex-col gap-2.5 rounded-md bg-surface p-5 text-foreground shadow-[0_20px_50px_-10px_rgb(28_27_46/0.35)]',
         className,
       )}
     >
