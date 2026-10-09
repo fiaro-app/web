@@ -1,5 +1,5 @@
 import 'server-only';
-import { MAX_PAGE_SIZE, type Role } from '@fiaro-app/contracts';
+import type { Role } from '@fiaro-app/contracts';
 import { membershipEndpoints } from '@/features/memberships/endpoints';
 import { isApiRequestError } from '@/lib/api';
 import { callEndpointAsUser } from '@/lib/api/server-call';
@@ -20,17 +20,13 @@ export type CollectorResult =
   | { readonly status: 'forbidden' };
 
 /**
- * Busca un cobrador por id. La API no tiene `GET /memberships/:id`, así que se pide la página más
- * grande del listado y se filtra aquí; alcanza para el tamaño de un negocio de cobro diario, y si
- * la API publica el detalle basta con cambiar esta función.
+ * Trae un cobrador por id (`GET /memberships/:id`, D-106). 404 es un estado de la pantalla, igual que
+ * una membresía que no sea de un cobrador; 403, que la persona no administra el negocio.
  */
 export async function getCollector(id: string): Promise<CollectorResult> {
   try {
-    const { data } = await callEndpointAsUser(membershipEndpoints.list, {
-      body: { page: 1, pageSize: MAX_PAGE_SIZE, role: 'COLLECTOR' },
-    });
-    const entry = data.find((candidate) => candidate.id === id);
-    if (!entry) return { status: 'not-found' };
+    const entry = await callEndpointAsUser(membershipEndpoints.get, { params: { id } });
+    if (!entry.roles.includes('COLLECTOR')) return { status: 'not-found' };
     return {
       status: 'ok',
       collector: {
@@ -43,7 +39,10 @@ export async function getCollector(id: string): Promise<CollectorResult> {
       },
     };
   } catch (error) {
-    if (isApiRequestError(error) && error.hasCode('FORBIDDEN')) return { status: 'forbidden' };
+    if (isApiRequestError(error)) {
+      if (error.hasCode('FORBIDDEN')) return { status: 'forbidden' };
+      if (error.hasCode('NOT_FOUND')) return { status: 'not-found' };
+    }
     throw error;
   }
 }

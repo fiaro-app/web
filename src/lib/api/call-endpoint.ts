@@ -30,6 +30,11 @@ export type CallEndpointInput<TEndpoint extends EndpointDefinition> = OptionalWh
   keyof EndpointParams<TEndpoint> extends never ? undefined : EndpointParams<TEndpoint>
 > &
   OptionalWhenEmpty<'body', EndpointRequestBody<TEndpoint>> & {
+    /**
+     * Parámetros de la URL (`?from=…&to=…`) de los `GET` con query. El contrato aún no los tipa:
+     * los valores `undefined` o vacíos no se envían.
+     */
+    readonly query?: Readonly<Record<string, string | undefined>>;
     readonly signal?: AbortSignal;
     /** Origen de la API; por defecto {@link API_BASE_PATH}. Un componente de servidor pasa la URL absoluta. */
     readonly baseUrl?: string;
@@ -72,22 +77,33 @@ async function toRequestError(response: Response): Promise<ApiRequestError> {
 type RawInput = {
   params?: Record<string, string>;
   body?: unknown;
+  query?: Record<string, string | undefined>;
   signal?: AbortSignal;
   baseUrl?: string;
   headers?: Record<string, string>;
 };
+
+/** `?a=1&b=2` con los parámetros que traen valor; vacío si no hay ninguno. */
+function buildQueryString(query: Readonly<Record<string, string | undefined>> | undefined): string {
+  const search = new URLSearchParams();
+  for (const [name, value] of Object.entries(query ?? {})) {
+    if (value !== undefined && value !== '') search.set(name, value);
+  }
+  const text = search.toString();
+  return text === '' ? '' : `?${text}`;
+}
 
 /**
  * Envía la petición y devuelve la respuesta cruda si salió bien. Aquí viven las cabeceras comunes y
  * la traducción de las fallas (sin red, o la API respondió con error) a {@link ApiRequestError}.
  */
 async function sendRequest(endpoint: EndpointDefinition, input: RawInput, accept: string): Promise<Response> {
-  const { params, body, signal, baseUrl = API_BASE_PATH, headers } = input;
+  const { params, body, query, signal, baseUrl = API_BASE_PATH, headers } = input;
   const hasBody = body !== undefined;
 
   let response: Response;
   try {
-    response = await fetch(`${baseUrl}${buildPath(endpoint.path, params ?? {})}`, {
+    response = await fetch(`${baseUrl}${buildPath(endpoint.path, params ?? {})}${buildQueryString(query)}`, {
       method: endpoint.method,
       headers: {
         Accept: accept,
