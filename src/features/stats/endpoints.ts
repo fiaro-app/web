@@ -6,6 +6,8 @@ export const LenderStatsBodySchema = z.strictObject({
   dateRange: DateRangeSchema.optional(),
   collectorMembershipId: IdSchema.optional(),
   portfolioId: IdSchema.optional(),
+  /** Si es `true`, la respuesta trae también el período anterior de la misma duración (`previous`). */
+  includePrevious: z.boolean().optional(),
 });
 export type LenderStatsBody = z.infer<typeof LenderStatsBodySchema>;
 
@@ -36,6 +38,19 @@ const CollectorPerformanceSchema = z.object({
   overdueAmount: z.int().nonnegative(),
 });
 
+/** El período inmediatamente anterior, de la misma duración, para calcular tendencias (D-111). */
+const PreviousPeriodSchema = z.object({
+  from: z.iso.date(),
+  to: z.iso.date(),
+  /** Cartera total al cierre de ese período. */
+  totalPortfolio: z.int().nonnegative(),
+  portfolioAtRisk: z.int().nonnegative(),
+  arrearsRate: z.number().min(0).nullable(),
+  expectedAmount: z.int().nonnegative(),
+  collectedAmount: z.int().nonnegative(),
+  effectiveness: z.number().min(0).nullable(),
+});
+
 /** Respuesta de `QUERY /lenders/me/stats`. */
 export const LenderStatsSchema = z.object({
   from: z.iso.date(),
@@ -48,6 +63,14 @@ export const LenderStatsSchema = z.object({
   arrearsByAge: z.array(ArrearsBucketSchema).length(4),
   topArrears: z.array(TopArrearsEntrySchema),
   collectorPerformance: z.array(CollectorPerformanceSchema),
+  /** Lo que vencía en el período, entre los cobradores que cumplen los filtros. */
+  expectedAmount: z.int().nonnegative(),
+  /** Lo que esos cobradores cobraron en el período, sin los pagos reversados. */
+  collectedAmount: z.int().nonnegative(),
+  /** `collectedAmount / expectedAmount`; `null` si no había nada esperado. */
+  effectiveness: z.number().min(0).nullable(),
+  /** El período anterior; `null` si la petición no pidió `includePrevious`. */
+  previous: PreviousPeriodSchema.nullable().default(null),
 });
 export type LenderStats = z.infer<typeof LenderStatsSchema>;
 

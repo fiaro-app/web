@@ -15,7 +15,14 @@ const SUMMARY = {
   clientsInArrears: 0,
   alerts: [],
   pendingSettlements: [],
+  period: { from: '2026-10-09', to: '2026-10-09' },
+  collectedInPeriod: 100,
+  expectedInPeriod: 200,
+  effectivenessInPeriod: 0.5,
 };
+
+const props = (params: Record<string, string> = {}) =>
+  ({ searchParams: Promise.resolve(params) }) as unknown as Parameters<typeof SummaryPage>[0];
 
 beforeEach(() => vi.clearAllMocks());
 
@@ -23,16 +30,25 @@ describe('Summary page', () => {
   it('paints the dashboard it loads on the server', async () => {
     getLenderDashboard.mockResolvedValue({ status: 'ok', dashboard: toDashboardViewModel(SUMMARY) });
 
-    render(await SummaryPage());
+    render(await SummaryPage(props()));
 
     expect(screen.getByRole('heading', { level: 1, name: 'Resumen' })).toBeInTheDocument();
     expect(screen.getByText('$1.000')).toBeInTheDocument();
   });
 
+  it('asks for the period in the URL and paints it', async () => {
+    getLenderDashboard.mockResolvedValue({ status: 'ok', dashboard: toDashboardViewModel(SUMMARY, undefined, true) });
+
+    render(await SummaryPage(props({ desde: '2026-10-01', hasta: '2026-10-09' })));
+
+    expect(getLenderDashboard).toHaveBeenCalledWith({ from: '2026-10-01', to: '2026-10-09' });
+    expect(screen.getByLabelText('Desde')).toHaveValue('2026-10-01');
+  });
+
   it('explains it when the account has no active business', async () => {
     getLenderDashboard.mockResolvedValue({ status: 'no-business' });
 
-    render(await SummaryPage());
+    render(await SummaryPage(props()));
 
     expect(screen.getByRole('heading', { name: 'Tu cuenta no tiene un negocio activo' })).toBeInTheDocument();
   });

@@ -47,7 +47,7 @@ Tableros nuevos en la página «4 · Web · Lender». Los estados vacíos son **
 |---|---|---|
 | Estados | `Estado — …`: Cobradores vacío, Clientes vacío, Clientes sin resultados, Préstamos vacío, Préstamos sin resultados, Cuadres vacío, Notificaciones vacío, Estadísticas sin datos, Sin acceso, No encontrado, Error de carga, Cargando lista | ✅ `EmptyState` (grande), `ErrorState`, `loading.tsx` con `ListSkeleton` (W-63) |
 | Diálogos | `Diálogo — …`: Restablecer contraseña, Contraseña temporal nueva, Desactivar cobrador, Anular préstamo | ✅ ya existían en la web |
-| Propuestas sin API | `[Propuesta, la API aún no lo tiene] Cobros del día`, `… Calendario de cuotas`, `… Notificaciones — Marcar todas`; `[Propuesta, falta el host de almacenamiento] Configuración — Logo` | ⏳ solo diseño |
+| Propuestas | `Cobros del día`, `Calendario de cuotas` y `Notificaciones — Marcar todas` (marcadas «Propuesta, la API aún no lo tiene»); `Configuración — Logo` (marcada «falta el host de almacenamiento») | Las tres primeras **ya están implementadas** con los endpoints D-103 a D-115: `/cobros`, calendario de cuotas en el detalle del préstamo y «Marcar todas» con `POST /notifications/read-all`; ⏳ quitar la etiqueta «Propuesta» de esos tableros. El logo sigue necesitando `STORAGE_ORIGIN`. Sin mockup todavía (🆕): `Contactar ventas` (`/contacto`), `Tu plan`, `Color de marca`, sesiones activas, filtros de Cuadres y tendencias de Estadísticas |
 
 ## Responsive (Penpot)
 

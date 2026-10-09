@@ -44,6 +44,8 @@ export interface PendingSettlementView {
 }
 
 export interface DashboardViewModel {
+  /** Período de las cifras de cobro: «Hoy · 09/10/2026», «El 05/10/2026» o «Del 01/10/2026 al 09/10/2026». */
+  readonly periodLabel: string;
   readonly kpis: readonly DashboardKpi[];
   readonly alerts: readonly string[];
   readonly pendingSettlements: readonly PendingSettlementView[];
@@ -87,15 +89,40 @@ function toSettlementView(settlement: DashboardSettlement, lookup: SettlementLoo
   };
 }
 
+const DASHBOARD_TEXT = {
+  collectedToday: 'Cobrado hoy',
+  collectedInPeriod: 'Cobrado en el período',
+  effectivenessToday: 'Efectividad de hoy',
+  effectivenessInPeriod: 'Efectividad del período',
+} as const;
+
+/** Texto del período de las cifras de cobro: hoy (sin filtro), un día o un rango. */
+function describePeriod(period: LenderDashboard['period'], filtered: boolean): string {
+  const from = formatBusinessDate(period.from);
+  if (!filtered) return `Hoy · ${from}`;
+  return period.from === period.to ? `El ${from}` : `Del ${from} al ${formatBusinessDate(period.to)}`;
+}
+
 /**
  * Convierte la respuesta de la API en lo que muestra la pantalla: cifras ya formateadas con su
  * tono, y los cuadres con nombres. Es una función pura: la vista no formatea ni decide nada.
  */
-export function toDashboardViewModel(dashboard: LenderDashboard, lookup: SettlementLookup = EMPTY_LOOKUP): DashboardViewModel {
+export function toDashboardViewModel(
+  dashboard: LenderDashboard,
+  lookup: SettlementLookup = EMPTY_LOOKUP,
+  periodFiltered = false,
+): DashboardViewModel {
+  const text = DASHBOARD_TEXT;
   return {
+    periodLabel: describePeriod(dashboard.period, periodFiltered),
     kpis: [
       { id: 'portfolio', label: 'Cartera total', value: formatCopCompact(dashboard.totalPortfolio), tone: 'neutral' },
-      { id: 'collectedToday', label: 'Cobrado hoy', value: formatCopCompact(dashboard.collectedToday), tone: 'good' },
+      {
+        id: 'collectedToday',
+        label: periodFiltered ? text.collectedInPeriod : text.collectedToday,
+        value: formatCopCompact(periodFiltered ? dashboard.collectedInPeriod : dashboard.collectedToday),
+        tone: 'good',
+      },
       {
         id: 'collectors',
         label: 'Cobradores activos',
@@ -104,9 +131,9 @@ export function toDashboardViewModel(dashboard: LenderDashboard, lookup: Settlem
       },
       {
         id: 'effectiveness',
-        label: 'Efectividad de hoy',
-        value: formatPercent(dashboard.effectivenessToday),
-        tone: effectivenessTone(dashboard.effectivenessToday),
+        label: periodFiltered ? text.effectivenessInPeriod : text.effectivenessToday,
+        value: formatPercent(periodFiltered ? dashboard.effectivenessInPeriod : dashboard.effectivenessToday),
+        tone: effectivenessTone(periodFiltered ? dashboard.effectivenessInPeriod : dashboard.effectivenessToday),
       },
       {
         id: 'clientsInArrears',

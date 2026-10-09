@@ -29,6 +29,10 @@ const DASHBOARD: LenderDashboard = {
   totalCollectors: 9,
   effectivenessToday: 0.84,
   clientsInArrears: 23,
+  period: { from: '2026-10-09', to: '2026-10-09' },
+  collectedInPeriod: 3200000,
+  expectedInPeriod: 3800000,
+  effectivenessInPeriod: 0.84,
   alerts: ['3 cobradores aún no han iniciado su ruta hoy.'],
   pendingSettlements: [SETTLEMENT],
 };
@@ -129,5 +133,37 @@ describe('toDashboardViewModel', () => {
 
     expect(toDashboardViewModel(empty).isEmpty).toBe(true);
     expect(toDashboardViewModel({ ...empty, totalCollectors: 1 }).isEmpty).toBe(false);
+  });
+});
+
+describe('period of the collection figures', () => {
+  const PERIOD_DASHBOARD: LenderDashboard = {
+    ...DASHBOARD,
+    period: { from: '2026-10-01', to: '2026-10-09' },
+    collectedInPeriod: 9_000_000,
+    expectedInPeriod: 10_000_000,
+    effectivenessInPeriod: 0.9,
+  };
+
+  it('shows today by default, with the "hoy" labels', () => {
+    const view = toDashboardViewModel(DASHBOARD, LOOKUP);
+
+    expect(view.periodLabel).toBe('Hoy · 09/10/2026');
+    expect(view.kpis.find((kpi) => kpi.id === 'collectedToday')).toMatchObject({ label: 'Cobrado hoy', value: '$3.2M' });
+    expect(view.kpis.find((kpi) => kpi.id === 'effectiveness')).toMatchObject({ label: 'Efectividad de hoy', value: '84 %' });
+  });
+
+  it('uses the figures of the period and relabels them when a period is asked for', () => {
+    const view = toDashboardViewModel(PERIOD_DASHBOARD, LOOKUP, true);
+
+    expect(view.periodLabel).toBe('Del 01/10/2026 al 09/10/2026');
+    expect(view.kpis.find((kpi) => kpi.id === 'collectedToday')).toMatchObject({ label: 'Cobrado en el período', value: '$9M' });
+    expect(view.kpis.find((kpi) => kpi.id === 'effectiveness')).toMatchObject({ label: 'Efectividad del período', value: '90 %', tone: 'good' });
+  });
+
+  it('names a single day', () => {
+    const view = toDashboardViewModel({ ...PERIOD_DASHBOARD, period: { from: '2026-10-05', to: '2026-10-05' } }, LOOKUP, true);
+
+    expect(view.periodLabel).toBe('El 05/10/2026');
   });
 });

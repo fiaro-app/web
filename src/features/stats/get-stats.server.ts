@@ -25,7 +25,7 @@ export type StatsResult =
 export async function getStats(filters: StatsFilters): Promise<StatsResult> {
   try {
     const [stats, lookup, portfolios] = await Promise.all([
-      callEndpointAsUser(statsEndpoints.get, { body: toStatsBody(filters) }),
+      callEndpointAsUser(statsEndpoints.get, { body: { ...toStatsBody(filters), includePrevious: true } }),
       getSettlementLookup(),
       getPortfolioOptions(),
     ]);

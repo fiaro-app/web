@@ -29,6 +29,10 @@ const SUMMARY = {
   clientsInArrears: 0,
   alerts: [],
   pendingSettlements: [] as unknown[],
+  period: { from: '2026-10-09', to: '2026-10-09' },
+  collectedInPeriod: 100,
+  expectedInPeriod: 200,
+  effectivenessInPeriod: 0.5,
 };
 
 const COLLECTORS = {
@@ -63,6 +67,15 @@ function routeApi(responses: Record<string, unknown>) {
 beforeEach(() => vi.clearAllMocks());
 
 describe('getLenderDashboard', () => {
+  it('asks for the period in the query string and labels the figures by it', async () => {
+    routeApi({ '/lenders/me/dashboard': { ...SUMMARY, period: { from: '2026-10-01', to: '2026-10-09' } } });
+
+    const result = await getLenderDashboard({ from: '2026-10-01', to: '2026-10-09' });
+
+    expect(callEndpointAsUser.mock.calls[0]?.[1]).toEqual({ query: { from: '2026-10-01', to: '2026-10-09' } });
+    expect(result.status === 'ok' && result.dashboard.periodLabel).toBe('Del 01/10/2026 al 09/10/2026');
+  });
+
   it('returns the summary ready to paint, without extra calls when there is nothing to complete', async () => {
     routeApi({ '/lenders/me/dashboard': SUMMARY });
 

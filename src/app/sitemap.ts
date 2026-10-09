@@ -3,5 +3,8 @@ import { SITE } from '@/lib/site';
 
 /** Solo las páginas públicas e indexables; las de acceso y el panel no entran. */
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [{ url: SITE.url, changeFrequency: 'monthly', priority: 1 }];
+  return [
+    { url: SITE.url, changeFrequency: 'monthly', priority: 1 },
+    { url: `${SITE.url}/contacto`, changeFrequency: 'yearly', priority: 0.5 },
+  ];
 }

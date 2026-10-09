@@ -10,9 +10,9 @@ const OPTIONS = { collectors: [], portfolios: [] };
 const STATS: StatsViewModel = {
   period: '01/10/2026 – 09/10/2026',
   kpis: [
-    { id: 'portfolio', label: 'Cartera total', value: '$18.4M', tone: 'neutral' },
-    { id: 'atRisk', label: 'Cartera en riesgo', value: '$7.1M', tone: 'bad' },
-    { id: 'arrearsRate', label: '% en mora', value: '18 %', tone: 'warning' },
+    { id: 'portfolio', label: 'Cartera total', value: '$18.4M', tone: 'neutral', trend: null },
+    { id: 'atRisk', label: 'Cartera en riesgo', value: '$7.1M', tone: 'bad', trend: { direction: 'up', label: '↑ 41 %', description: 'Sube 41 % frente al período anterior', tone: 'bad' } },
+    { id: 'arrearsRate', label: '% en mora', value: '18 %', tone: 'warning', trend: null },
   ],
   arrearsByAge: [
     { label: '0–7 días', amount: '$3.200.000', clients: '8 clientes', barPercent: 100 },
@@ -41,6 +41,8 @@ describe('StatsView', () => {
     const kpis = within(screen.getByRole('region', { name: 'Indicadores' }));
     expect(kpis.getByText('$7.1M')).toHaveClass('text-destructive');
     expect(kpis.getByText('18 %')).toHaveClass('text-warning');
+    expect(kpis.getByText('↑ 41 %').parentElement).toHaveClass('text-destructive');
+    expect(kpis.getByText('Sube 41 % frente al período anterior')).toHaveClass('sr-only');
   });
 
   it('shows the four arrears tranches, the top debtors and the collectors', () => {

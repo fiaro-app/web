@@ -6,6 +6,8 @@ import { requireUser } from '@/features/auth/session.server';
 import { lenderEndpoints } from '@/features/lender/endpoints';
 import { isApiRequestError } from '@/lib/api';
 import { parseStorageOrigin } from '@/lib/security-headers';
+import { getSubscription } from '@/features/subscription/get-subscription.server';
+import type { SubscriptionView } from '@/features/subscription/subscription-view-model';
 import { callEndpointAsUser } from '@/lib/api/server-call';
 
 /** Lo que muestra la pantalla de Configuración. */
@@ -21,6 +23,8 @@ export interface SettingsView {
   readonly canEdit: boolean;
   /** Si el entorno tiene el almacenamiento de archivos configurado (`STORAGE_ORIGIN`): sin él el logo no se puede subir. */
   readonly logoUploadAvailable: boolean;
+  /** El plan del negocio; `null` si no se pudo traer (la pantalla sigue sin ese bloque). */
+  readonly subscription: SubscriptionView | null;
 }
 
 export type SettingsResult =
@@ -35,10 +39,11 @@ export type SettingsResult =
 export async function getSettings(): Promise<SettingsResult> {
   try {
     const user = await requireUser();
-    const [lender, portfolios, shell] = await Promise.all([
+    const [lender, portfolios, shell, subscription] = await Promise.all([
       callEndpointAsUser(lenderEndpoints.get, {}),
       callEndpointAsUser(lenderEndpoints.portfolios, {}),
       getShellContext(user),
+      getSubscription(),
     ]);
     return {
       status: 'ok',
@@ -51,6 +56,7 @@ export async function getSettings(): Promise<SettingsResult> {
         portfolios: portfolios.map(({ id, name, isDefault }) => ({ id, name, isDefault })),
         canEdit: shell.roleLabel === ADMIN_LABEL,
         logoUploadAvailable: parseStorageOrigin(process.env.STORAGE_ORIGIN) !== null,
+        subscription,
       },
     };
   } catch (error) {

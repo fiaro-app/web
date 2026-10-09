@@ -13,20 +13,11 @@ export const LANDING_SECTION_IDS = {
   faq: 'preguntas',
 } as const;
 
-/**
- * A dónde lleva «Contacto»: un `mailto:` si `NEXT_PUBLIC_CONTACT_EMAIL` está configurado; si no, a
- * las preguntas frecuentes (no hay página de contacto todavía y un enlace roto cuesta confianza).
- */
-export function resolveContactHref(email: string | undefined = process.env.NEXT_PUBLIC_CONTACT_EMAIL): string {
-  const clean = email?.trim();
-  return clean && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean) ? `mailto:${clean}` : `#${LANDING_SECTION_IDS.faq}`;
-}
-
 /** Rutas a las que apunta la landing. */
 export const LANDING_ROUTES = {
   login: '/login',
   signup: '/registro',
-  contact: resolveContactHref(),
+  contact: '/contacto',
 } as const;
 
 export const NAV_LINKS: readonly LandingNavLink[] = [

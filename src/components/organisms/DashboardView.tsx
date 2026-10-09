@@ -3,22 +3,33 @@ import { Text } from '@/components/atoms/Text';
 import { Alert } from '@/components/molecules/Alert';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { StatTile } from '@/components/molecules/StatTile';
+import { DashboardPeriodFilter } from '@/components/organisms/DashboardPeriodFilter';
 import { PendingSettlementsTable } from '@/components/organisms/PendingSettlementsTable';
 import type { DashboardViewModel } from '@/features/dashboard/dashboard-view-model';
+import { EMPTY_DASHBOARD_RANGE, type DashboardRange } from '@/features/dashboard/dashboard-range';
 
 export interface DashboardViewProps {
   readonly dashboard: DashboardViewModel;
+  /** Período pedido en la URL; vacío es solo hoy. */
+  readonly range?: DashboardRange;
 }
 
 /** Resumen del negocio (`Screen / Web / Resumen`): indicadores, alertas y cuadres pendientes. Solo presentación. */
-export function DashboardView({ dashboard }: Readonly<DashboardViewProps>) {
-  const { kpis, alerts, pendingSettlements, isEmpty } = dashboard;
+export function DashboardView({ dashboard, range = EMPTY_DASHBOARD_RANGE }: Readonly<DashboardViewProps>) {
+  const { kpis, alerts, pendingSettlements, isEmpty, periodLabel } = dashboard;
 
   return (
     <>
-      <Text variant="title" as="h1" weight="bold" className="text-foreground">
-        Resumen
-      </Text>
+      <div className="flex flex-col gap-1">
+        <Text variant="title" as="h1" weight="bold" className="text-foreground">
+          Resumen
+        </Text>
+        <Text variant="label" className="text-foreground/70">
+          {periodLabel}
+        </Text>
+      </div>
+
+      <DashboardPeriodFilter range={range} />
 
       {isEmpty ? (
         <EmptyState

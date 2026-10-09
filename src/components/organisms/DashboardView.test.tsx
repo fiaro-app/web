@@ -11,6 +11,10 @@ const DASHBOARD: LenderDashboard = {
   totalCollectors: 9,
   effectivenessToday: 0.84,
   clientsInArrears: 23,
+  period: { from: '2026-10-09', to: '2026-10-09' },
+  collectedInPeriod: 3200000,
+  expectedInPeriod: 3800000,
+  effectivenessInPeriod: 0.84,
   alerts: ['3 cobradores aún no han iniciado su ruta hoy.', '2 cuadres tienen diferencias pendientes de revisar.'],
   pendingSettlements: [
     {
@@ -74,5 +78,21 @@ describe('DashboardView', () => {
 
     expect(screen.getByRole('heading', { name: 'Todavía no hay movimiento' })).toBeInTheDocument();
     expect(screen.queryByRole('region', { name: 'Indicadores' })).not.toBeInTheDocument();
+  });
+
+  it('shows the period of the figures and a form to change it, keeping what was asked for', () => {
+    render(
+      <DashboardView dashboard={toDashboardViewModel(DASHBOARD, undefined, true)} range={{ from: '2026-10-01', to: '2026-10-09' }} />,
+    );
+
+    expect(screen.getByLabelText('Desde')).toHaveValue('2026-10-01');
+    expect(screen.getByLabelText('Hasta')).toHaveValue('2026-10-09');
+    expect(screen.getByRole('link', { name: 'Ver solo hoy' })).toHaveAttribute('href', '/resumen');
+  });
+
+  it('offers no way back to today when no period is set', () => {
+    render_(DASHBOARD);
+
+    expect(screen.queryByRole('link', { name: 'Ver solo hoy' })).not.toBeInTheDocument();
   });
 });

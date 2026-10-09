@@ -59,9 +59,9 @@ export function StatsView({ stats, filters, options }: Readonly<StatsViewProps>)
         />
       ) : (
         <>
-          <section aria-label="Indicadores" className="grid gap-4 sm:grid-cols-3">
+          <section aria-label="Indicadores" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
             {stats.kpis.map((kpi) => (
-              <StatTile key={kpi.id} label={kpi.label} value={kpi.value} tone={kpi.tone} />
+              <StatTile key={kpi.id} label={kpi.label} value={kpi.value} tone={kpi.tone} trend={kpi.trend} />
             ))}
           </section>
 

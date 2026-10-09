@@ -10,6 +10,10 @@ const VALID = {
   clientsInArrears: 0,
   alerts: [],
   pendingSettlements: [],
+  period: { from: '2026-10-09', to: '2026-10-09' },
+  collectedInPeriod: 0,
+  expectedInPeriod: 0,
+  effectivenessInPeriod: null,
 };
 
 describe('dashboard endpoints', () => {
@@ -19,6 +23,10 @@ describe('dashboard endpoints', () => {
 
   it('accepts an empty business', () => {
     expect(LenderDashboardSchema.safeParse(VALID).success).toBe(true);
+  });
+
+  it('requires the period figures that the API now sends', () => {
+    expect(LenderDashboardSchema.safeParse({ ...VALID, period: undefined }).success).toBe(false);
   });
 
   it('rejects a response that does not follow the contract', () => {
