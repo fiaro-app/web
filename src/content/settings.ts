@@ -15,6 +15,16 @@ export const SETTINGS_TEXT = {
     namePlaceholder: 'Ej: Financiera Buen Vecino',
     save: 'Guardar nombre',
   },
+  logo: {
+    title: 'Logo del negocio',
+    description: 'Aparece en tu panel. PNG o JPG, máximo 2 MB.',
+    current: 'Logo actual',
+    none: 'Todavía no tienes un logo.',
+    upload: 'Subir logo',
+    change: 'Cambiar logo',
+    remove: 'Quitar logo',
+    unavailable: 'La subida de logos no está configurada en este entorno.',
+  },
   days: {
     title: 'Días sin cobro',
     description: 'Los días en que tus cobradores no salen a cobrar. Las cuotas que caigan en uno pasan al siguiente día de cobro.',

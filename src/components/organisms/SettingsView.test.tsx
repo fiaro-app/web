@@ -3,6 +3,9 @@ import { describe, expect, it, vi } from 'vitest';
 import type { SettingsView as SettingsData } from '@/features/lender/get-settings.server';
 import { SettingsView } from './SettingsView';
 
+vi.mock('@/features/lender/use-logo-form', () => ({
+  useLogoForm: () => ({ isBusy: false, error: null, notice: null, chooseFile: vi.fn(), removeLogo: vi.fn() }),
+}));
 vi.mock('@/features/lender/use-settings-forms', () => ({
   useBusinessForm: () => ({ name: 'Buen Vecino', fieldError: undefined, isSubmitting: false, error: null, notice: null, changeName: vi.fn(), submit: vi.fn() }),
   useCollectionDaysForm: () => ({ weekdays: [], skipHolidays: false, isSubmitting: false, error: null, notice: null, toggleDay: () => vi.fn(), toggleHolidays: vi.fn(), submit: vi.fn() }),
@@ -16,13 +19,14 @@ const SETTINGS: SettingsData = {
   skipNationalHolidays: false,
   portfolios: [{ id: 'p1', name: 'General', isDefault: true }],
   canEdit: true,
+  logoUploadAvailable: false,
 };
 
 describe('SettingsView', () => {
-  it('shows the three sections under the page title', () => {
+  it('shows the sections under the page title', () => {
     render(<SettingsView settings={SETTINGS} />);
     expect(screen.getByRole('heading', { level: 1, name: 'Configuración' })).toBeInTheDocument();
-    for (const title of ['Datos del negocio', 'Días sin cobro', 'Carteras']) {
+    for (const title of ['Datos del negocio', 'Logo del negocio', 'Días sin cobro', 'Carteras']) {
       expect(screen.getByRole('heading', { level: 2, name: title })).toBeInTheDocument();
     }
   });

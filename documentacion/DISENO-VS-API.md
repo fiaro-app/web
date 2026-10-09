@@ -36,7 +36,7 @@ Estados de la columna **Penpot**: ✅ ya corregido · ⏳ por corregir · 🆕 n
 | Notificaciones | «Marcar todas como leídas» | Marcar de una en una; la API no tiene «todas». Filtro «No leídas» | ✅ |
 | Estadísticas | Tendencias (↑ 4 %), **efectividad general**, periodo «Este mes» | 3 indicadores sin tendencias; periodo con fechas desde/hasta; exportar PDF | ✅ |
 | Mi cuenta | Pestaña «Seguridad» dentro de Configuración (sin detalle) | Pantalla propia `/cuenta` (tablero «Mi cuenta»): datos de la persona, correo verificable, contraseña, sesiones y desactivar. Se entra desde el perfil de la barra lateral | ✅ |
-| Configuración | Pestañas General / Facturación / Seguridad; logo, nombre y **correo de contacto** | Nombre, días sin cobro y carteras. Sin logo (falta la subida), pestañas ni correo (el correo es de la persona, no del negocio) | ✅ |
+| Configuración | Pestañas General / Facturación / Seguridad; logo, nombre y **correo de contacto** | Nombre, días sin cobro y carteras. Logo con subida directa (necesita `STORAGE_ORIGIN`), sin pestañas ni correo (el correo es de la persona, no del negocio) | ✅ |
 
 ## Estados, diálogos y propuestas (Penpot)
 
@@ -70,6 +70,5 @@ Móvil de 390px (cabecera con menú; las tablas pasan a tarjetas; acciones princ
 
 - Comprobar si una cédula ya existe antes de registrar al cliente (`QUERY /clients` con `search`).
 - Mostrar el cobrador en la lista de préstamos (pide una consulta por préstamo; mejor un campo en la API).
-- Subir el logo (`POST /lender/logo-upload-url`): requiere conocer el host de almacenamiento para la CSP.
 
 Las decisiones técnicas detrás de cada diferencia están en [DECISIONES.md](./DECISIONES.md).

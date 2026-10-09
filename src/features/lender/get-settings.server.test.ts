@@ -43,6 +43,7 @@ describe('getSettings', () => {
         skipNationalHolidays: true,
         portfolios: [{ id: 'p1', name: 'General', isDefault: true }],
         canEdit: true,
+        logoUploadAvailable: false,
       },
     });
   });
