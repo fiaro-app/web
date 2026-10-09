@@ -1,25 +1,21 @@
-import type { LoanStatus } from "@fiaro-app/contracts";
-import { LOANS_TEXT } from "@/content/loans";
-import type {
-  CollectionAssignment,
-  LoanBalance,
-  LoanResponse,
-} from "@/features/loans/endpoints";
-import { paidInstallments } from "@/features/loans/loan-calculations";
-import { formatBusinessDate, formatInstantDate } from "@/lib/dates";
-import { formatCop } from "@/lib/amount";
-import type { Tone } from "@/lib/tone";
+import type { LoanStatus } from '@fiaro-app/contracts';
+import { LOANS_TEXT } from '@/content/loans';
+import type { CollectionAssignment, LoanBalance, LoanResponse } from '@/features/loans/endpoints';
+import { paidInstallments } from '@/features/loans/loan-calculations';
+import { formatBusinessDate, formatInstantDate } from '@/lib/dates';
+import { formatCop } from '@/lib/amount';
+import type { Tone } from '@/lib/tone';
 
 /** Nombres de cliente por id, para completar las filas del listado. */
 export type ClientNames = ReadonlyMap<string, string>;
 
 /** Color del estado de un préstamo: activo en tinta, pagado en verde y anulado atenuado. */
-export type LoanStatusTone = Extract<Tone, "success" | "info"> | "muted";
+export type LoanStatusTone = Extract<Tone, 'success' | 'info'> | 'muted';
 
 const STATUS_TONE: Record<LoanStatus, LoanStatusTone> = {
-  ACTIVE: "info",
-  PAID_OFF: "success",
-  CANCELED: "muted",
+  ACTIVE: 'info',
+  PAID_OFF: 'success',
+  CANCELED: 'muted',
 };
 
 /** Una fila de la tabla de préstamos, lista para pintar. */
@@ -61,9 +57,10 @@ export type LoanBalances = ReadonlyMap<string, LoanBalance>;
  * (anulado, o la consulta falló). Un préstamo pagado no necesita preguntar a la API.
  */
 function balanceOf(loan: LoanResponse, balances: LoanBalances): number | null {
+  if (loan.status === 'CANCELED') return null;
   const known = balances.get(loan.id);
   if (known) return known.balance;
-  return loan.status === "PAID_OFF" ? 0 : null;
+  return loan.status === 'PAID_OFF' ? 0 : null;
 }
 
 /** Convierte una página de préstamos de la API en filas de la tabla. */
@@ -84,14 +81,11 @@ export function toLoansViewModel(
       id: loan.id,
       clientName: clientNames.get(loan.clientId) ?? LOANS_TEXT.unknownClient,
       principal: formatCop(loan.principalAmount),
-      installments: describeInstallments(
-        loan.installmentCount,
-        loan.installmentValue,
-      ),
-      balance: balance === null ? "—" : formatCop(balance),
+      installments: describeInstallments(loan.installmentCount, loan.installmentValue),
+      balance: balance === null ? '—' : formatCop(balance),
       paid:
         balance === null
-          ? "—"
+          ? '—'
           : `${String(paidInstallments(loan.totalPayable, balance, loan.installmentValue, loan.installmentCount))}/${String(loan.installmentCount)}`,
       frequency: LOANS_TEXT.frequency[loan.frequency],
       startDate: formatBusinessDate(loan.startDate),
@@ -149,24 +143,19 @@ export interface LoanDetailExtras {
 }
 
 function daysText(days: number): string {
-  return `${String(days)} ${days === 1 ? "día" : "días"} de mora`;
+  return `${String(days)} ${days === 1 ? 'día' : 'días'} de mora`;
 }
 
-export function toLoanDetailView(
-  loan: LoanResponse,
-  extras: LoanDetailExtras = {},
-): LoanDetailView {
-  const { balance = null, assignment = null } = extras;
-  const balanceValue =
-    balance?.balance ?? (loan.status === "PAID_OFF" ? 0 : null);
+export function toLoanDetailView(loan: LoanResponse, extras: LoanDetailExtras = {}): LoanDetailView {
+  const { assignment = null } = extras;
+  // Un préstamo anulado no se cobró: su saldo, cuotas y mora no significan nada.
+  const balance = loan.status === 'CANCELED' ? null : (extras.balance ?? null);
+  const balanceValue = balance?.balance ?? (loan.status === 'PAID_OFF' ? 0 : null);
   return {
     id: loan.id,
     clientName: extras.clientName ?? LOANS_TEXT.unknownClient,
     principal: formatCop(loan.principalAmount),
-    installments: describeInstallments(
-      loan.installmentCount,
-      loan.installmentValue,
-    ),
+    installments: describeInstallments(loan.installmentCount, loan.installmentValue),
     totalPayable: formatCop(loan.totalPayable),
     frequency: LOANS_TEXT.frequency[loan.frequency],
     startDate: formatBusinessDate(loan.startDate),
@@ -174,7 +163,7 @@ export function toLoanDetailView(
     statusTone: STATUS_TONE[loan.status],
     // El día se lee en hora de Colombia: con UTC, un cierre a las 9 pm saldría con la fecha del día siguiente.
     closedAt: loan.closedAt === null ? null : formatInstantDate(loan.closedAt),
-    cancelable: loan.status === "ACTIVE",
+    cancelable: loan.status === 'ACTIVE',
     balance: balanceValue === null ? null : formatCop(balanceValue),
     paidInstallments:
       balanceValue === null
@@ -187,20 +176,15 @@ export function toLoanDetailView(
             days: daysText(balance.overdueDays),
           }
         : null,
-    nextDueDate: balance?.nextDueDate
-      ? formatBusinessDate(balance.nextDueDate)
-      : null,
+    nextDueDate: balance?.nextDueDate ? formatBusinessDate(balance.nextDueDate) : null,
     collector:
       assignment && extras.collectorName
         ? {
             name: extras.collectorName,
             since: formatBusinessDate(assignment.effectiveFrom),
-            until:
-              assignment.effectiveTo === null
-                ? null
-                : formatBusinessDate(assignment.effectiveTo),
+            until: assignment.effectiveTo === null ? null : formatBusinessDate(assignment.effectiveTo),
           }
         : null,
-    assignable: loan.status === "ACTIVE",
+    assignable: loan.status === 'ACTIVE',
   };
 }

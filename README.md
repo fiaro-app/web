@@ -54,6 +54,8 @@ Copia `.env.example` a `.env.local` y ajusta `API_URL` (origen de la API) y `NEX
 | `pnpm build` | Build de producción |
 | `pnpm docs` | Genera documentación de la API del código (TypeDoc) de `src/lib` y `src/features` en `docs/` |
 
+> **Probar el build de producción en local (`pnpm build && pnpm start`)**: la política de seguridad incluye `upgrade-insecure-requests` solo fuera de desarrollo, así que sobre `http://localhost` el navegador intenta una vez `https` y muestra `ERR_SSL_PROTOCOL_ERROR` en la consola. Es esperado y no ocurre detrás de HTTPS; la navegación sigue funcionando.
+
 El pipeline de CI (`.github/workflows/ci.yml`) corre lint → typecheck → test → build → docs → análisis de Sonar en cada PR y en cada push a `dev`.
 
 ## Estructura

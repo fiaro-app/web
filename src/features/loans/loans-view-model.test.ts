@@ -115,6 +115,18 @@ describe('balance in the list', () => {
   });
 });
 
+describe('canceled loans', () => {
+  it('show no balance, paid installments, arrears or next due date, even if the API returned some', () => {
+    const view = toLoanDetailView({ ...LOAN, status: 'CANCELED', closedAt: '2026-10-02T15:00:00.000Z' }, { balance: BALANCE });
+    expect(view).toMatchObject({ balance: null, paidInstallments: null, overdue: null, nextDueDate: null });
+  });
+
+  it('show dashes in the list even if a balance was passed', () => {
+    const view = toLoansViewModel([{ ...LOAN, status: 'CANCELED' }], NAMES, PAGE, null, new Map([['l1', BALANCE]]));
+    expect(view.rows[0]).toMatchObject({ balance: '—', paid: '—' });
+  });
+});
+
 describe('balance and collector in the detail', () => {
   it('describes balance, paid installments, arrears and next due date', () => {
     const view = toLoanDetailView(LOAN, { clientName: 'Carlos', balance: BALANCE });

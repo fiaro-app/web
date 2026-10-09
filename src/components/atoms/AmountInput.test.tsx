@@ -59,3 +59,19 @@ describe('AmountInput', () => {
     expect(screen.getByLabelText('Monto')).toBeDisabled();
   });
 });
+
+describe('AmountInput sizes', () => {
+  it('is the big centered figure by default', () => {
+    const { container } = render(<AmountInput aria-label="Monto" value={null} onValueChange={() => {}} />);
+    expect(container.querySelector('label')).toHaveClass('h-16', 'justify-center');
+    expect(screen.getByLabelText('Monto')).toHaveClass('font-mono');
+  });
+
+  it('is a regular 44px form field with size="field"', () => {
+    const { container } = render(<AmountInput aria-label="Monto" size="field" value={1000} onValueChange={() => {}} />);
+    expect(container.querySelector('label')).toHaveClass('h-11', 'justify-start');
+    expect(container.querySelector('label')).not.toHaveClass('h-16');
+    expect(screen.getByLabelText('Monto')).toHaveClass('font-sans');
+    expect(screen.getByLabelText('Monto')).toHaveValue('1.000');
+  });
+});

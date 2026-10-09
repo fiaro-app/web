@@ -65,16 +65,16 @@ export function LoanForm({ clients, collectors, initialClientId }: Readonly<Loan
           </Select>
         </FormField>
         <FormField label={text.principalAmount.label} required error={fieldErrors.principalAmount}>
-          <AmountInput name="principalAmount" value={values.principalAmount} onValueChange={setAmount('principalAmount')} />
+          <AmountInput size="field" name="principalAmount" value={values.principalAmount} onValueChange={setAmount('principalAmount')} />
         </FormField>
         <FormField label={text.installmentCount.label} required error={fieldErrors.installmentCount}>
           <Input name="installmentCount" inputMode="numeric" autoComplete="off" placeholder={text.installmentCount.placeholder} value={values.installmentCount} onChange={setText('installmentCount')} />
         </FormField>
         <FormField label={text.installmentValue.label} required error={fieldErrors.installmentValue}>
-          <AmountInput name="installmentValue" value={values.installmentValue} onValueChange={setAmount('installmentValue')} />
+          <AmountInput size="field" name="installmentValue" value={values.installmentValue} onValueChange={setAmount('installmentValue')} />
         </FormField>
         <FormField label={text.totalPayable.label} required hint={text.totalPayable.hint} error={fieldErrors.totalPayable}>
-          <AmountInput name="totalPayable" value={values.totalPayable} onValueChange={setTotalPayable} />
+          <AmountInput size="field" name="totalPayable" value={values.totalPayable} onValueChange={setTotalPayable} />
         </FormField>
         <FormField label={text.frequency.label} required error={fieldErrors.frequency}>
           <Select name="frequency" value={values.frequency} onChange={setText('frequency')}>
