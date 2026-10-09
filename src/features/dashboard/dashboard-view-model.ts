@@ -1,5 +1,6 @@
 import { formatBusinessDate } from '@/lib/dates';
-import { formatCop, formatPercent } from '@/lib/amount';
+import type { FigureTone } from '@/lib/tone';
+import { formatCop, formatCopCompact, formatPercent } from '@/lib/amount';
 import type { DashboardSettlement, LenderDashboard } from '@/features/dashboard/endpoints';
 
 /** Desde qué proporción cobrada la efectividad del día se considera buena o aceptable. */
@@ -7,9 +8,6 @@ export const EFFECTIVENESS_GOOD_FROM = 0.9;
 export const EFFECTIVENESS_ACCEPTABLE_FROM = 0.7;
 
 export type EffectivenessLevel = 'good' | 'acceptable' | 'low' | 'none';
-
-/** Color semántico de una cifra: neutro (tinta), bien (musgo), atención (ámbar) o problema (grana). */
-export type FigureTone = 'neutral' | 'good' | 'warning' | 'bad';
 
 export interface DashboardKpi {
   readonly id: 'portfolio' | 'collectedToday' | 'collectors' | 'effectiveness' | 'clientsInArrears';
@@ -95,8 +93,8 @@ function toSettlementView(settlement: DashboardSettlement, lookup: SettlementLoo
 export function toDashboardViewModel(dashboard: LenderDashboard, lookup: SettlementLookup = EMPTY_LOOKUP): DashboardViewModel {
   return {
     kpis: [
-      { id: 'portfolio', label: 'Cartera total', value: formatCop(dashboard.totalPortfolio), tone: 'neutral' },
-      { id: 'collectedToday', label: 'Cobrado hoy', value: formatCop(dashboard.collectedToday), tone: 'good' },
+      { id: 'portfolio', label: 'Cartera total', value: formatCopCompact(dashboard.totalPortfolio), tone: 'neutral' },
+      { id: 'collectedToday', label: 'Cobrado hoy', value: formatCopCompact(dashboard.collectedToday), tone: 'good' },
       {
         id: 'collectors',
         label: 'Cobradores activos',

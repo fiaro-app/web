@@ -36,4 +36,10 @@ describe('Text', () => {
 
     expect(screen.getByText('$420.000')).toHaveClass('font-mono', 'font-bold');
   });
+
+  it('has a page-title scale in the display font', () => {
+    render(<Text variant="title">Resumen</Text>);
+
+    expect(screen.getByRole('heading', { level: 1, name: 'Resumen' })).toHaveClass('font-display', 'text-title', 'font-semibold');
+  });
 });

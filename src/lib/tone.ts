@@ -16,3 +16,13 @@ export const TONE_SURFACE_CLASSES: Record<Tone, string> = {
   error: 'bg-destructive/12 text-destructive',
   info: 'bg-primary/12 text-primary',
 };
+
+/** Color semántico de una cifra: neutro (tinta), bien (musgo), atención (ámbar) o problema (grana). */
+export type FigureTone = 'neutral' | 'good' | 'warning' | 'bad';
+
+export const FIGURE_TEXT_CLASSES: Record<FigureTone, string> = {
+  neutral: 'text-foreground',
+  good: 'text-success',
+  warning: 'text-warning',
+  bad: 'text-destructive',
+};

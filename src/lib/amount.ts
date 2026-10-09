@@ -46,3 +46,22 @@ export function formatCop(value: number): string {
 export function formatPercent(ratio: number | null): string {
   return ratio === null ? '—' : `${String(Math.round(ratio * 100))} %`;
 }
+
+const MILLION = 1_000_000;
+
+/**
+ * Pesos en formato compacto para indicadores grandes: desde un millón, en millones con un decimal
+ * (`$18.4M`); por debajo, el valor completo (`$850.000`). Evita que una cifra enorme desborde su
+ * tarjeta; el valor exacto se muestra en otro lugar (tablas, detalle).
+ *
+ * @example
+ * formatCopCompact(18400000)    // '$18.4M'
+ * formatCopCompact(3000000)     // '$3M'
+ * formatCopCompact(1234000000)  // '$1.234M'
+ */
+export function formatCopCompact(value: number): string {
+  if (Math.abs(value) < MILLION) return formatCop(value);
+  const millions = Math.round((value / MILLION) * 10) / 10;
+  const text = millions >= 1000 || millions <= -1000 ? amountFormatter.format(millions) : String(millions);
+  return `${value < 0 ? '-' : ''}$${text.replace(/^-/, '')}M`;
+}

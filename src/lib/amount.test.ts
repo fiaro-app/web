@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatAmount, formatCop, formatPercent, parseAmount } from './amount';
+import { formatAmount, formatCop, formatCopCompact, formatPercent, parseAmount } from './amount';
 
 describe('parseAmount', () => {
   it('extracts the integer from a formatted amount', () => {
@@ -54,5 +54,21 @@ describe('formatPercent', () => {
 
   it('shows a dash when there is nothing to measure', () => {
     expect(formatPercent(null)).toBe('—');
+  });
+});
+
+describe('formatCopCompact', () => {
+  it.each([
+    [18400000, '$18.4M'],
+    [3200000, '$3.2M'],
+    [3000000, '$3M'],
+    [1000000, '$1M'],
+    [999999, '$999.999'],
+    [850000, '$850.000'],
+    [0, '$0'],
+    [1234000000, '$1.234M'],
+    [-2500000, '-$2.5M'],
+  ])('writes %s as %s', (value, text) => {
+    expect(formatCopCompact(value)).toBe(text);
   });
 });

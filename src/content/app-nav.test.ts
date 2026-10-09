@@ -1,0 +1,29 @@
+import { describe, expect, it } from 'vitest';
+import { APP_NAV_ITEMS, isNavItemActive } from './app-nav';
+
+describe('APP_NAV_ITEMS', () => {
+  it('lists the modules of the design, with only the summary available for now', () => {
+    expect(APP_NAV_ITEMS.map((item) => item.label)).toEqual([
+      'Resumen',
+      'Cobradores',
+      'Clientes',
+      'Préstamos',
+      'Cuadres',
+      'Estadísticas',
+      'Configuración',
+    ]);
+    expect(APP_NAV_ITEMS.filter((item) => item.available).map((item) => item.href)).toEqual(['/resumen']);
+  });
+});
+
+describe('isNavItemActive', () => {
+  it('matches the route itself and its sub-routes', () => {
+    expect(isNavItemActive('/clientes', '/clientes')).toBe(true);
+    expect(isNavItemActive('/clientes/123', '/clientes')).toBe(true);
+  });
+
+  it('does not match a route that only starts with the same letters', () => {
+    expect(isNavItemActive('/clientes-nuevos', '/clientes')).toBe(false);
+    expect(isNavItemActive('/resumen', '/clientes')).toBe(false);
+  });
+});
