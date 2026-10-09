@@ -67,7 +67,8 @@ export function useRegisterForm({ redirectTo }: UseRegisterFormOptions) {
   const fail = (error: unknown) => {
     const { message, field } = describeAuthError(error);
     const errors: FieldErrors<RegisterField> = issueFieldErrors(error);
-    if (field) errors[field] = message;
+    // Solo los campos que este formulario tiene (el mismo error en otro formulario apunta a otro campo).
+    if (field && field in EMPTY_VALUES) errors[field as RegisterField] = message;
     showErrors(errors, Object.keys(errors).length === 0 ? message : null);
     setIsSubmitting(false);
   };

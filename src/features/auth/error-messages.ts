@@ -2,7 +2,16 @@ import { contractMessage } from '@fiaro-app/contracts';
 import { CLIENT_ERROR_CODES, isApiRequestError } from '@/lib/api';
 
 /** Campo del formulario al que pertenece un error de la API, si lo hay. */
-export type AuthErrorField = 'phone' | 'password' | 'nationalId' | 'fullName' | 'contactEmail' | 'businessName';
+export type AuthErrorField =
+  | 'phone'
+  | 'password'
+  | 'newPassword'
+  | 'currentPassword'
+  | 'code'
+  | 'nationalId'
+  | 'fullName'
+  | 'contactEmail'
+  | 'businessName';
 
 export interface AuthErrorView {
   readonly message: string;
@@ -49,6 +58,12 @@ export function describeAuthError(error: unknown): AuthErrorView {
       return { message: 'Esa contraseña es muy fácil de adivinar. Elige una más larga o menos común.', field: 'password' };
     case 'INVALID_PASSWORD_LENGTH':
       return { message: 'La contraseña debe tener entre 8 y 128 caracteres.', field: 'password' };
+    case 'PASSWORD_RESET_CODE_INVALID':
+      return { message: 'El código no es correcto o ya se usó. Pide uno nuevo.', field: 'code' };
+    case 'PASSWORD_RESET_CODE_EXPIRED':
+      return { message: 'El código venció. Pide uno nuevo.', field: 'code' };
+    case 'INVALID_PASSWORD':
+      return { message: 'La contraseña actual no es correcta.', field: 'currentPassword' };
     case 'MAINTENANCE':
       return { message: 'Fiaro está en mantenimiento. Vuelve a intentarlo en un rato.', field: null };
     case CLIENT_ERROR_CODES.network:
@@ -58,7 +73,17 @@ export function describeAuthError(error: unknown): AuthErrorView {
   }
 }
 
-const SERVER_FIELDS: readonly AuthErrorField[] = ['phone', 'password', 'nationalId', 'fullName', 'contactEmail', 'businessName'];
+const SERVER_FIELDS: readonly AuthErrorField[] = [
+  'phone',
+  'password',
+  'newPassword',
+  'currentPassword',
+  'code',
+  'nationalId',
+  'fullName',
+  'contactEmail',
+  'businessName',
+];
 
 /**
  * Errores de campo que trae un `VALIDATION_FAILED` de la API (`issues[].path[0]`). La API es la

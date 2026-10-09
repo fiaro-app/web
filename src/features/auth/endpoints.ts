@@ -7,7 +7,7 @@ import {
   defineEndpoint,
 } from '@fiaro-app/contracts';
 import { z } from 'zod';
-import { PASSWORD_MAX_LENGTH } from '@/features/auth/password-policy';
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, VERIFICATION_CODE_LENGTH } from '@/features/auth/password-policy';
 
 /**
  * Endpoints de autenticación y registro que consume la web.
@@ -51,7 +51,46 @@ export const SessionSchema = z
   .object({ session: z.looseObject({ id: IdSchema }), user: AuthUserSchema })
   .nullable();
 
+/** Cuerpo de `POST /auth/request-password-reset`. */
+export const RequestPasswordResetBodySchema = z.strictObject({ phoneNumber: MobilePhoneSchema });
+
+/** Cuerpo de `POST /auth/reset-password`. */
+export const ResetPasswordBodySchema = z.strictObject({
+  phoneNumber: MobilePhoneSchema,
+  code: z.string().regex(new RegExp(String.raw`^\d{${String(VERIFICATION_CODE_LENGTH)}}$`)),
+  newPassword: z.string().min(PASSWORD_MIN_LENGTH).max(PASSWORD_MAX_LENGTH),
+});
+
+/** Cuerpo de `POST /auth/change-password`. */
+export const ChangePasswordBodySchema = z.strictObject({
+  currentPassword: z.string().min(1).max(PASSWORD_MAX_LENGTH),
+  newPassword: z.string().min(PASSWORD_MIN_LENGTH).max(PASSWORD_MAX_LENGTH),
+});
+
+const StatusSchema = z.object({ status: z.literal(true) });
+
 export const authEndpoints = {
+  requestPasswordReset: defineEndpoint({
+    method: 'POST',
+    path: '/auth/request-password-reset',
+    summary: 'Manda un código al correo de contacto; responde igual exista o no la cuenta.',
+    body: RequestPasswordResetBodySchema,
+    response: StatusSchema,
+  }),
+  resetPassword: defineEndpoint({
+    method: 'POST',
+    path: '/auth/reset-password',
+    summary: 'Canjea el código por una contraseña nueva y cierra todas las sesiones de la persona.',
+    body: ResetPasswordBodySchema,
+    response: StatusSchema,
+  }),
+  changePassword: defineEndpoint({
+    method: 'POST',
+    path: '/auth/change-password',
+    summary: 'Cambia la contraseña con la sesión abierta (la temporal es la actual).',
+    body: ChangePasswordBodySchema,
+    response: z.object({ user: AuthUserSchema }),
+  }),
   getSession: defineEndpoint({
     method: 'GET',
     path: '/auth/get-session',

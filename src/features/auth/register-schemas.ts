@@ -1,13 +1,12 @@
 import {
   BusinessNameSchema,
-  MobilePhoneSchema,
   NationalIdSchema,
   PersonNameSchema,
   normalizeNationalId,
-  toColombianE164,
 } from '@fiaro-app/contracts';
 import { z } from 'zod';
-import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '@/features/auth/password-policy';
+import { newPasswordSchema } from '@/features/auth/password-schemas';
+import { phoneField } from '@/features/auth/phone-field';
 
 /**
  * Esquemas del registro. Cada campo repite la regla del contrato (`PersonNameSchema`,
@@ -21,13 +20,6 @@ const fullName = z
   .min(2, 'Escribe tu nombre completo.')
   .max(120, 'El nombre es demasiado largo.')
   .pipe(PersonNameSchema);
-
-const phone = z
-  .string()
-  .trim()
-  .min(1, 'Escribe tu celular.')
-  .transform((value) => toColombianE164(value) ?? value)
-  .pipe(MobilePhoneSchema);
 
 const nationalId = z
   .string()
@@ -43,11 +35,6 @@ const contactEmail = z
   .transform((value) => (value === '' ? undefined : value))
   .pipe(z.email('Escribe un correo válido, por ejemplo tu@correo.com.').optional());
 
-const password = z
-  .string()
-  .min(PASSWORD_MIN_LENGTH, `Usa al menos ${String(PASSWORD_MIN_LENGTH)} caracteres.`)
-  .max(PASSWORD_MAX_LENGTH, 'La contraseña es demasiado larga.');
-
 const businessName = z
   .string()
   .trim()
@@ -56,7 +43,7 @@ const businessName = z
   .pipe(BusinessNameSchema);
 
 /** Paso 1: la persona (será Owner, Lender y cobrador de su propio negocio). */
-export const AccountStepSchema = z.object({ fullName, phone, nationalId, contactEmail, password });
+export const AccountStepSchema = z.object({ fullName, phone: phoneField, nationalId, contactEmail, password: newPasswordSchema });
 
 /** Paso 2: el negocio. */
 export const CompanyStepSchema = z.object({ businessName });

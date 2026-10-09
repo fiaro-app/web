@@ -33,6 +33,9 @@ describe('describeAuthError', () => {
     ['INVALID_PHONE', 'phone'],
     ['PASSWORD_TOO_WEAK', 'password'],
     ['INVALID_PASSWORD_LENGTH', 'password'],
+    ['PASSWORD_RESET_CODE_INVALID', 'code'],
+    ['PASSWORD_RESET_CODE_EXPIRED', 'code'],
+    ['INVALID_PASSWORD', 'currentPassword'],
   ] as const)('points %s at the %s field', (code, field) => {
     expect(describeAuthError(errorWith(code)).field).toBe(field);
   });

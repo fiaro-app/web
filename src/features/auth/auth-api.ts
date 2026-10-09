@@ -23,3 +23,23 @@ export async function registerOwner({ phone, fullName, password, nationalId, con
     body: { phone, fullName, password, nationalId, businessName, ...(contactEmail && { contactEmail }) },
   });
 }
+
+/**
+ * Pide un código para recuperar la contraseña. La API responde lo mismo exista o no la cuenta y
+ * tenga o no correo (no revela qué celulares están registrados), así que un éxito no garantiza que
+ * se haya mandado nada.
+ */
+export async function requestPasswordReset(phone: string): Promise<void> {
+  await callEndpoint(authEndpoints.requestPasswordReset, { body: { phoneNumber: phone } });
+}
+
+/** Canjea el código por una contraseña nueva. La API cierra todas las sesiones de la persona. */
+export async function resetPassword({ phone, code, newPassword }: { phone: string; code: string; newPassword: string }): Promise<void> {
+  await callEndpoint(authEndpoints.resetPassword, { body: { phoneNumber: phone, code, newPassword } });
+}
+
+/** Cambia la contraseña con la sesión abierta; la API deja una sesión nueva en la cookie. */
+export async function changePassword({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }) {
+  const { user } = await callEndpoint(authEndpoints.changePassword, { body: { currentPassword, newPassword } });
+  return user;
+}

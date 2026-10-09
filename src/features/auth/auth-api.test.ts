@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { registerOwner, signIn, signOut } from './auth-api';
+import { changePassword, registerOwner, requestPasswordReset, resetPassword, signIn, signOut } from './auth-api';
 
 const fetchMock = vi.fn<typeof fetch>();
 
@@ -73,5 +73,40 @@ describe('registerOwner', () => {
     await registerOwner({ ...ACCOUNT, contactEmail: 'ana@correo.com' }, { businessName: 'X Y' });
 
     expect(JSON.parse(fetchMock.mock.calls[0]![1]?.body as string)).toMatchObject({ contactEmail: 'ana@correo.com' });
+  });
+});
+
+describe('password recovery and change', () => {
+  const OK = () => new Response(JSON.stringify({ status: true }), { status: 200 });
+
+  it('requests a code for the phone', async () => {
+    fetchMock.mockResolvedValue(OK());
+
+    await requestPasswordReset('+573001234567');
+
+    const [url, init] = fetchMock.mock.calls[0]!;
+    expect(url).toBe('/api/auth/request-password-reset');
+    expect(JSON.parse(init?.body as string)).toEqual({ phoneNumber: '+573001234567' });
+  });
+
+  it('redeems the code for a new password', async () => {
+    fetchMock.mockResolvedValue(OK());
+
+    await resetPassword({ phone: '+573001234567', code: '048213', newPassword: 'nueva-clave-1' });
+
+    const [url, init] = fetchMock.mock.calls[0]!;
+    expect(url).toBe('/api/auth/reset-password');
+    expect(JSON.parse(init?.body as string)).toEqual({ phoneNumber: '+573001234567', code: '048213', newPassword: 'nueva-clave-1' });
+  });
+
+  it('changes the password with the current one and returns the user', async () => {
+    fetchMock.mockResolvedValue(new Response(JSON.stringify({ user: USER }), { status: 200 }));
+
+    const user = await changePassword({ currentPassword: 'temporal', newPassword: 'nueva-clave-1' });
+
+    expect(user).toMatchObject({ name: 'Ana Pérez' });
+    const [url, init] = fetchMock.mock.calls[0]!;
+    expect(url).toBe('/api/auth/change-password');
+    expect(JSON.parse(init?.body as string)).toEqual({ currentPassword: 'temporal', newPassword: 'nueva-clave-1' });
   });
 });
