@@ -18,7 +18,7 @@ export interface ConfirmDialogProps {
 }
 
 /**
- * Modal de confirmación para acciones irreversibles. Usa el `<dialog>` nativo en modo modal:
+ * Modal de confirmación para acciones importantes: grande, con un icono y el fondo desenfocado. Usa el `<dialog>` nativo en modo modal:
  * el navegador atrapa el foco, bloquea el fondo y maneja Esc. No se cierra al hacer clic fuera,
  * para que una confirmación no se descarte por accidente.
  */
@@ -53,19 +53,27 @@ export function ConfirmDialog({
         event.preventDefault();
         if (!loading) onCancel();
       }}
-      className="m-auto w-80 max-w-[calc(100%-2rem)] rounded-lg bg-surface p-6 text-foreground shadow-[0_12px_32px_-4px_rgb(28_27_46/0.28)] backdrop:bg-foreground/40 open:flex open:flex-col open:gap-3"
+      className="m-auto w-[30rem] max-w-[calc(100%-2rem)] rounded-xl bg-surface p-8 text-foreground shadow-[0_24px_64px_-8px_rgb(28_27_46/0.4)] backdrop:bg-foreground/45 backdrop:backdrop-blur-sm open:flex open:flex-col open:gap-5"
     >
-      <Text id={titleId} variant="h3" as="h2">
-        {title}
-      </Text>
-      <Text id={descriptionId} className="text-foreground/75">
-        {description}
-      </Text>
-      <div className="flex justify-end gap-3">
-        <Button variant="outline" size="sm" className="w-32" disabled={loading} onClick={onCancel}>
+      <span aria-hidden="true" className="grid size-12 place-items-center rounded-full bg-primary/10 text-primary">
+        <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 8v5M12 16.5v.01" />
+        </svg>
+      </span>
+      <div className="flex flex-col gap-2">
+        <Text id={titleId} variant="h3" as="h2">
+          {title}
+        </Text>
+        <Text id={descriptionId} className="text-foreground/75">
+          {description}
+        </Text>
+      </div>
+      <div className="flex justify-end gap-3 max-sm:flex-col-reverse">
+        <Button variant="outline" size="sm" className="min-w-36 max-sm:w-full" disabled={loading} onClick={onCancel}>
           {cancelLabel}
         </Button>
-        <Button size="sm" className="w-32" loading={loading} onClick={onConfirm}>
+        <Button size="sm" className="min-w-36 max-sm:w-full" loading={loading} onClick={onConfirm}>
           {confirmLabel}
         </Button>
       </div>

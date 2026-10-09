@@ -98,6 +98,7 @@ se agrega la nueva.
 | W-91 | Calendario y menús desplegables propios (`DatePicker`, `Select`), no los del navegador: calendario de lunes a domingo con «Borrar» y «Hoy», lista con la opción marcada, teclado completo (flechas, Enter, Esc, RePág/AvPág). El valor viaja en un campo oculto, así los filtros GET siguen funcionando | El diseño debe ser de Fiaro en todos los navegadores; `Select` conserva el contrato de `<select>` (hijos `<option>`, `onChange`) |
 | W-92 | «Aplicar» y «Buscar» de los filtros (`FilterForm` + `FilterSubmitButton`) se apagan cuando no hay nada nuevo que aplicar y se activan en cuanto cambia un valor; sin JavaScript siguen activos | Dejar claro cuándo se puede pulsar |
 | W-93 | «Mi cuenta» se reparte como Configuración: datos y contraseña a la izquierda, sesiones y desactivar cuenta a la derecha | Menos scroll; la barra lateral ya no se mueve |
+| W-94 | Los modales de confirmación son más grandes (30rem), llevan un icono y desenfocan el fondo (`backdrop-blur`) | Una decisión importante debe ocupar la atención; el fondo borroso evita distraerse |
 
 ## Pendientes conocidos
 
