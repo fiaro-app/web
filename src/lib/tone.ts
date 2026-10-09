@@ -17,6 +17,14 @@ export const TONE_SURFACE_CLASSES: Record<Tone, string> = {
   info: 'bg-primary/12 text-primary',
 };
 
+/** Relleno sólido en el color de la intención (franjas e indicadores). */
+export const TONE_FILL_CLASSES: Record<Tone, string> = {
+  success: 'bg-success',
+  warning: 'bg-warning',
+  error: 'bg-destructive',
+  info: 'bg-primary',
+};
+
 /** Color semántico de una cifra: neutro (tinta), bien (musgo), atención (ámbar) o problema (grana). */
 export type FigureTone = 'neutral' | 'good' | 'warning' | 'bad';
 

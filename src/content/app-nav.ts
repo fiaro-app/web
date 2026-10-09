@@ -16,6 +16,7 @@ export const APP_NAV_ITEMS: readonly AppNavItem[] = [
   { label: 'Clientes', href: '/clientes', available: true },
   { label: 'Préstamos', href: '/prestamos', available: true },
   { label: 'Cuadres', href: '/cuadres', available: true },
+  { label: 'Notificaciones', href: '/notificaciones', available: true },
   { label: 'Estadísticas', href: '/estadisticas', available: false },
   { label: 'Configuración', href: '/configuracion', available: false },
 ];

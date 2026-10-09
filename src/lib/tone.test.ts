@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FIGURE_TEXT_CLASSES, TONE_SURFACE_CLASSES, TONE_TEXT_CLASSES } from './tone';
+import { FIGURE_TEXT_CLASSES, TONE_FILL_CLASSES, TONE_SURFACE_CLASSES, TONE_TEXT_CLASSES } from './tone';
 
 describe('tone classes', () => {
   it('has a text color for every intention and figure tone', () => {
@@ -11,5 +11,9 @@ describe('tone classes', () => {
       warning: 'text-warning',
       bad: 'text-destructive',
     });
+  });
+
+  it('has a solid fill for every intention', () => {
+    expect(TONE_FILL_CLASSES).toEqual({ success: 'bg-success', warning: 'bg-warning', error: 'bg-destructive', info: 'bg-primary' });
   });
 });
