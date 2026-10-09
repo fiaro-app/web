@@ -1,4 +1,4 @@
-const BUSINESS_TIME_ZONE = 'America/Bogota';
+import { businessDateOf } from '@/lib/dates';
 
 /**
  * Lo pactado en total que sugiere la app: cuotas × valor de la cuota. El prestamista puede
@@ -10,16 +10,7 @@ export function suggestTotalPayable(installmentCount: number | null, installment
   return installmentCount * installmentValue;
 }
 
-/**
- * Fecha de hoy en Colombia (`2026-10-09`), que es la que usa el negocio: con la zona del
- * navegador, a las 8 pm el día ya habría cambiado para quien esté en otra zona.
- */
+/** Fecha de hoy en Colombia (`2026-10-09`), la que usa el negocio. */
 export function todayBusinessDate(now: Date = new Date()): string {
-  // `en-CA` formatea como `AAAA-MM-DD`.
-  return new Intl.DateTimeFormat('en-CA', {
-    timeZone: BUSINESS_TIME_ZONE,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(now);
+  return businessDateOf(now);
 }

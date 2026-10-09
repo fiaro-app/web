@@ -1,0 +1,52 @@
+import { FilterPillLink } from '@/components/atoms/FilterPillLink';
+import { Text } from '@/components/atoms/Text';
+import { EmptyState } from '@/components/molecules/EmptyState';
+import { PaginationNav } from '@/components/molecules/PaginationNav';
+import { SettlementsTable } from '@/components/organisms/SettlementsTable';
+import { SETTLEMENTS_TEXT } from '@/content/settlements';
+import { SETTLEMENT_STATUS_FILTERS } from '@/features/settlements/status-filter';
+import type { SettlementsViewModel } from '@/features/settlements/settlements-view-model';
+import { pageHref } from '@/lib/pagination';
+
+export interface SettlementsViewProps {
+  readonly settlements: SettlementsViewModel;
+}
+
+/** Cuadres: título, filtro por estado (enlaces `?estado=`) y tabla. Solo presentación. */
+export function SettlementsView({ settlements }: Readonly<SettlementsViewProps>) {
+  const { rows, total, page, pageSize, status } = settlements;
+  const pages = Math.max(1, Math.ceil(total / pageSize));
+
+  return (
+    <>
+      <Text variant="title" as="h1" weight="bold" className="text-foreground">
+        {SETTLEMENTS_TEXT.title}
+      </Text>
+
+      <nav aria-label={SETTLEMENTS_TEXT.filters.label} className="flex flex-wrap gap-2">
+        <FilterPillLink href="/cuadres" selected={status === null}>
+          {SETTLEMENTS_TEXT.filters.all}
+        </FilterPillLink>
+        {SETTLEMENT_STATUS_FILTERS.map((filter) => (
+          <FilterPillLink key={filter} href={pageHref('/cuadres', 1, { estado: filter })} selected={status === filter}>
+            {SETTLEMENTS_TEXT.status[filter]}
+          </FilterPillLink>
+        ))}
+      </nav>
+
+      {rows.length === 0 ? (
+        <EmptyState className="max-w-md" icon="◔" {...(status === null ? SETTLEMENTS_TEXT.empty : SETTLEMENTS_TEXT.emptyFiltered)} />
+      ) : (
+        <>
+          <SettlementsTable rows={rows} />
+          <PaginationNav
+            page={page}
+            pages={pages}
+            summary={SETTLEMENTS_TEXT.pagination.summary(page, pages, total)}
+            hrefFor={(target) => pageHref('/cuadres', target, { estado: status ?? undefined })}
+          />
+        </>
+      )}
+    </>
+  );
+}

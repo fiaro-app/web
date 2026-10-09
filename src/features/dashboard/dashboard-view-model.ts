@@ -1,3 +1,4 @@
+import { describeDifference } from '@/features/settlements/difference';
 import { formatBusinessDate } from '@/lib/dates';
 import type { FigureTone } from '@/lib/tone';
 import { formatCop, formatCopCompact, formatPercent } from '@/lib/amount';
@@ -65,13 +66,8 @@ const LEVEL_TONE: Record<EffectivenessLevel, FigureTone> = {
   none: 'neutral',
 };
 
-function differenceTone(difference: number): FigureTone {
-  if (difference < 0) return 'bad';
-  return difference > 0 ? 'warning' : 'neutral';
-}
-
 function toSettlementView(settlement: DashboardSettlement, lookup: SettlementLookup): PendingSettlementView {
-  const difference = settlement.collectedAmount - settlement.expectedAmount;
+  const difference = describeDifference(settlement.expectedAmount, settlement.collectedAmount);
   const id = settlement.collectorMembershipId;
   return {
     id: settlement.id,
@@ -80,8 +76,8 @@ function toSettlementView(settlement: DashboardSettlement, lookup: SettlementLoo
     date: formatBusinessDate(settlement.date),
     expected: formatCop(settlement.expectedAmount),
     collected: formatCop(settlement.collectedAmount),
-    difference: difference === 0 ? null : formatCop(difference),
-    differenceTone: differenceTone(difference),
+    difference: difference.text,
+    differenceTone: difference.tone,
     note: settlement.collectorNote,
   };
 }

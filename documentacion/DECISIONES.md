@@ -39,6 +39,11 @@ se agrega la nueva.
 | W-32 | El filtro de estado de préstamos es una URL (`?estado=`) con enlaces `FilterPillLink`, validado en el servidor | Compartible, sin JS y un valor inválido equivale a "todos" |
 | W-33 | Los nombres de cliente del listado salen de la página más grande de clientes (100); si no se pueden traer, se muestra "Cliente no disponible" | La API no devuelve el nombre dentro del préstamo; no se rompe la pantalla por eso |
 | W-34 | Un préstamo solo se anula mientras está activo, con confirmación; el error `LOAN_NOT_CANCELABLE` se explica | La API rechaza anular uno que ya recibió pagos |
+| W-35 | Los endpoints de cuadres (leer, listar, aprobar, rechazar) se declaran en la web; el envío queda fuera | El cobrador envía el cuadre desde la app móvil; la web solo lo revisa |
+| W-36 | El botón "Revisar" del Resumen lleva a `/cuadres/[id]` (reemplaza la omisión de W-17) | Ya existe el módulo Cuadres |
+| W-37 | Aprobar y rechazar comparten un comentario opcional; un comentario vacío no se envía | La API lo trata como `reviewNote` ausente y el rechazo no exige motivo |
+| W-38 | `businessDateOf` (hora de Colombia) vive en `lib/dates` y lo usan préstamos y cuadres | Un instante a las 9 pm hora local ya es el día siguiente en UTC |
+| W-39 | La diferencia de un cuadre y el lookup de nombres de cobradores se comparten entre Resumen y Cuadres | Una sola regla para el tono (falta = grana, sobra = ámbar) y una sola consulta |
 
 ## Pendientes conocidos
 

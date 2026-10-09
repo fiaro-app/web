@@ -1,3 +1,4 @@
+import { Link } from '@/components/atoms/Link';
 import { cn } from '@/lib/cn';
 import { FIGURE_TEXT_CLASSES } from '@/lib/tone';
 import type { PendingSettlementView } from '@/features/dashboard/dashboard-view-model';
@@ -13,7 +14,7 @@ export interface PendingSettlementsTableProps {
 export function PendingSettlementsTable({ settlements, className }: Readonly<PendingSettlementsTableProps>) {
   return (
     <div className={cn('overflow-x-auto rounded-md bg-surface', className)}>
-      <table className="w-full min-w-170 border-collapse text-left text-label">
+      <table className="w-full min-w-190 border-collapse text-left text-label">
         <caption className="sr-only">Cuadres pendientes de aprobar</caption>
         <thead>
           <tr className="border-b border-foreground/8">
@@ -22,6 +23,9 @@ export function PendingSettlementsTable({ settlements, className }: Readonly<Pen
                 {header}
               </th>
             ))}
+            <th scope="col" className="px-5 py-3.5">
+              <span className="sr-only">Acciones</span>
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-foreground/8">
@@ -36,6 +40,11 @@ export function PendingSettlementsTable({ settlements, className }: Readonly<Pen
               <td className="px-5 py-5">{settlement.collected}</td>
               <td className={cn('px-5 py-5', settlement.difference && `font-semibold ${FIGURE_TEXT_CLASSES[settlement.differenceTone]}`)}>
                 {settlement.difference ?? '—'}
+              </td>
+              <td className="px-5 py-5 text-right">
+                <Link href={`/cuadres/${settlement.id}`} aria-label={`Revisar cuadre de ${settlement.collectorName}`}>
+                  Revisar
+                </Link>
               </td>
             </tr>
           ))}
