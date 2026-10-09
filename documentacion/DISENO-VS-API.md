@@ -12,8 +12,8 @@ Estados de la columna **Penpot**: ✅ ya corregido · ⏳ por corregir · 🆕 n
 |---|---|---|---|
 | Login | — | Celular + contraseña (`POST /auth/sign-in/phone-number`) | ✅ |
 | Registro | Pasos de cuenta, empresa y plan | Cuenta y empresa; no hay plan ni logo al registrarse (`POST /register`) | ✅ |
-| Recuperar contraseña | — | Celular → código de 6 dígitos y contraseña nueva → aviso final | 🆕 |
-| Cambio de contraseña obligatorio | — | Pantalla propia tras entrar con contraseña temporal | 🆕 |
+| Recuperar contraseña | — | Tableros «Recuperar contraseña — Celular» y «— Código». Celular → código de 6 dígitos y contraseña nueva → aviso final | ✅ |
+| Cambio de contraseña obligatorio | — | Tablero «Cambio de contraseña obligatorio». Pantalla propia tras entrar con contraseña temporal | ✅ |
 
 ## Panel
 
@@ -43,7 +43,7 @@ Estados de la columna **Penpot**: ✅ ya corregido · ⏳ por corregir · 🆕 n
 4. Clientes y Préstamos: columnas ✅ (hecho). Falta diseñar la ficha del cliente con sus préstamos y la asignación de cobrador en el detalle del préstamo.
 5. ✅ (hecho) Nuevo préstamo: cobrador opcional, y los cuatro montos tal como los pide la API.
 6. ✅ (hecho) Cuadres, Notificaciones, Estadísticas y Configuración: alinear los filtros y las secciones con lo implementado.
-7. Diseñar las pantallas de recuperar contraseña y de cambio obligatorio.
+7. ✅ (hecho) Diseñar las pantallas de recuperar contraseña y de cambio obligatorio.
 
 ## Pendientes que sí caben en la API (sin mockup nuevo)
 
