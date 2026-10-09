@@ -1,6 +1,7 @@
 import { cn } from '@/lib/cn';
 
-const DOT_DELAY_MS = 150;
+/** Desfase de cada punto; clases literales para que Tailwind las detecte. */
+const DOT_DELAY_CLASSES = ['', '[animation-delay:150ms]', '[animation-delay:300ms]'] as const;
 
 export interface LoadingDotsProps {
   readonly className?: string;
@@ -14,11 +15,10 @@ export interface LoadingDotsProps {
 export function LoadingDots({ className }: Readonly<LoadingDotsProps>) {
   return (
     <span aria-hidden="true" className={cn('inline-flex items-center gap-1.5', className)}>
-      {[0, 1, 2].map((index) => (
+      {DOT_DELAY_CLASSES.map((delay) => (
         <span
-          key={index}
-          className="size-1.5 rounded-full bg-current motion-safe:animate-pulse"
-          style={{ animationDelay: `${index * DOT_DELAY_MS}ms` }}
+          key={delay}
+          className={cn('size-1.5 rounded-full bg-current motion-safe:animate-pulse', delay)}
         />
       ))}
     </span>

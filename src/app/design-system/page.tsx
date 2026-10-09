@@ -16,7 +16,17 @@ import { Spinner } from '@/components/atoms/Spinner';
 import { StatusChip } from '@/components/atoms/StatusChip';
 import { Text } from '@/components/atoms/Text';
 import { TextButton } from '@/components/atoms/TextButton';
+import { Alert } from '@/components/molecules/Alert';
+import { ClientRow } from '@/components/molecules/ClientRow';
+import { EmptyState } from '@/components/molecules/EmptyState';
+import { HistoryRow } from '@/components/molecules/HistoryRow';
+import { InfoRow } from '@/components/molecules/InfoRow';
+import { Stepper } from '@/components/molecules/Stepper';
+import { Toast } from '@/components/molecules/Toast';
+import { TopBar } from '@/components/organisms/TopBar';
+import { FilterPill } from '@/components/atoms/FilterPill';
 import { AmountDemo } from './AmountDemo';
+import { MoleculesDemo } from './MoleculesDemo';
 
 export const metadata: Metadata = { title: 'Sistema de diseño · Fiaro' };
 
@@ -123,6 +133,56 @@ export default function DesignSystemPage() {
         <Row label="Divider">
           <div className="w-75"><Divider /></div>
         </Row>
+      </Section>
+
+      <Section title="Filtros (átomo)">
+        <Row label="FilterPill">
+          <FilterPill selected>Todos</FilterPill>
+          <FilterPill>Al día</FilterPill>
+          <FilterPill disabled>Mora</FilterPill>
+        </Row>
+      </Section>
+
+      <Section title="Moléculas — feedback">
+        <div className="flex max-w-md flex-col gap-3">
+          <Alert tone="success">Visita registrada correctamente.</Alert>
+          <Alert tone="warning">Esta cuota ya tiene 3 días de atraso.</Alert>
+          <Alert tone="error">No se pudo guardar. Verifica tu conexión.</Alert>
+          <Alert tone="info">Los cambios se sincronizan automáticamente.</Alert>
+          <Toast message="Guardado, pendiente de sync" />
+        </div>
+        <EmptyState
+          className="max-w-xs"
+          title="Sin clientes asignados hoy"
+          description="Cuando tu Lender te asigne una ruta, aparecerá aquí."
+        />
+      </Section>
+
+      <Section title="Moléculas — listas y datos">
+        <div className="flex max-w-md flex-col divide-y divide-foreground/12 overflow-hidden rounded-md border border-skeleton">
+          <ClientRow name="Marta Gómez" balance={420000} status="delinquent" daysLate={12} />
+          <ClientRow name="Juan Pérez" balance={80000} status="current" />
+          <HistoryRow date="12 sep 2026" method="Efectivo" amount={35000} statusLabel="Pagado" statusTone="success" />
+          <InfoRow label="Teléfono" value="300 123 4567" />
+        </div>
+        <Stepper steps={['Tipo de cuenta', 'Configuración', 'Plan']} current={1} />
+      </Section>
+
+      <Section title="Moléculas — filtros y modal">
+        <MoleculesDemo />
+      </Section>
+
+      <Section title="Organismo — TopBar">
+        <div className="overflow-hidden rounded-md border border-skeleton">
+          <TopBar
+            userName="Alejo Zuleta"
+            navItems={[
+              { label: 'Cartera', href: '/design-system', active: true },
+              { label: 'Estadísticas', href: '/design-system' },
+              { label: 'Cuadre', href: '/design-system' },
+            ]}
+          />
+        </div>
       </Section>
 
       <Section title="Carga">

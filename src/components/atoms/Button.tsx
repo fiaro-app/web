@@ -10,8 +10,17 @@ const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   text: 'bg-transparent text-primary',
 };
 
+export type ButtonSize = 'md' | 'sm';
+
+/** `md` = 48px (estándar); `sm` = 44px (acciones dentro de un modal). */
+const SIZE_CLASSES: Record<ButtonSize, string> = {
+  md: 'h-12',
+  sm: 'h-11',
+};
+
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly variant?: ButtonVariant;
+  readonly size?: ButtonSize;
   /** Reemplaza el contenido por tres puntos y deshabilita el botón, sin cambiar su tamaño. */
   readonly loading?: boolean;
   readonly leftIcon?: ReactNode;
@@ -29,6 +38,7 @@ export function Button({
   ref,
   type = 'button',
   variant = 'primary',
+  size = 'md',
   loading = false,
   disabled = false,
   leftIcon,
@@ -44,10 +54,11 @@ export function Button({
       disabled={disabled || loading}
       aria-busy={loading}
       className={cn(
-        'relative inline-flex h-12 items-center justify-center rounded-md px-6 text-label font-medium transition-opacity',
+        'relative inline-flex items-center justify-center rounded-md px-6 text-label font-medium transition-opacity',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         'enabled:hover:opacity-85 enabled:active:opacity-70',
         loading ? 'cursor-wait' : 'disabled:cursor-not-allowed disabled:opacity-40',
+        SIZE_CLASSES[size],
         VARIANT_CLASSES[variant],
         className,
       )}

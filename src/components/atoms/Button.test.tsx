@@ -81,3 +81,13 @@ describe('Button', () => {
     expect(screen.getByTestId('right')).toBeInTheDocument();
   });
 });
+
+describe('Button size', () => {
+  it('is 48px by default and 44px when small', () => {
+    const { rerender } = render(<Button>Pagar</Button>);
+    expect(screen.getByRole('button')).toHaveClass('h-12');
+
+    rerender(<Button size="sm">Pagar</Button>);
+    expect(screen.getByRole('button')).toHaveClass('h-11');
+  });
+});

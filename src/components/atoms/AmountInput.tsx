@@ -44,21 +44,28 @@ export function AmountInput({
       <span aria-hidden="true" className="text-h2 font-semibold text-foreground">
         {currencySymbol}
       </span>
-      <input
-        ref={ref}
-        type="text"
-        inputMode="numeric"
-        autoComplete="off"
-        placeholder="0"
-        value={text}
-        disabled={disabled}
-        aria-invalid={invalid}
-        onChange={(event) => onValueChange(parseAmount(event.target.value))}
-        // En fuente monoespaciada 1ch es el ancho exacto de un carácter: el campo crece con el monto.
-        style={{ width: `${Math.max(text.length, 1)}ch` }}
-        className="min-w-0 bg-transparent font-mono text-h2 font-semibold text-foreground outline-none placeholder:text-foreground disabled:cursor-not-allowed"
-        {...props}
-      />
+      {/* Truco de grid: el texto invisible da el ancho al campo, que crece con el monto. */}
+      <span className="inline-grid">
+        <span
+          aria-hidden="true"
+          className="invisible col-start-1 row-start-1 font-mono text-h2 font-semibold whitespace-pre"
+        >
+          {text || '0'}
+        </span>
+        <input
+          ref={ref}
+          type="text"
+          inputMode="numeric"
+          autoComplete="off"
+          placeholder="0"
+          value={text}
+          disabled={disabled}
+          aria-invalid={invalid}
+          onChange={(event) => onValueChange(parseAmount(event.target.value))}
+          className="col-start-1 row-start-1 w-full min-w-0 bg-transparent font-mono text-h2 font-semibold text-foreground outline-none placeholder:text-foreground disabled:cursor-not-allowed"
+          {...props}
+        />
+      </span>
     </label>
   );
 }
