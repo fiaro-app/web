@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { APP_NAV_ITEMS, isNavItemActive } from './app-nav';
 
 describe('APP_NAV_ITEMS', () => {
-  it('lists the modules of the design, with summary, collectors, clients, loans, settlements and notifications available', () => {
+  it('lists the modules of the design, with every module but statistics available', () => {
     expect(APP_NAV_ITEMS.map((item) => item.label)).toEqual([
       'Resumen',
       'Cobradores',
@@ -13,7 +13,15 @@ describe('APP_NAV_ITEMS', () => {
       'Estadísticas',
       'Configuración',
     ]);
-    expect(APP_NAV_ITEMS.filter((item) => item.available).map((item) => item.href)).toEqual(['/resumen', '/cobradores', '/clientes', '/prestamos', '/cuadres', '/notificaciones']);
+    expect(APP_NAV_ITEMS.filter((item) => item.available).map((item) => item.href)).toEqual([
+      '/resumen',
+      '/cobradores',
+      '/clientes',
+      '/prestamos',
+      '/cuadres',
+      '/notificaciones',
+      '/configuracion',
+    ]);
   });
 });
 

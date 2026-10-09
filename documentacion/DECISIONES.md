@@ -48,6 +48,10 @@ se agrega la nueva.
 | W-41 | Las notificaciones son de la persona (todos sus negocios), no de un negocio; no hay estado "sin acceso" | `QUERY /notifications` filtra por el usuario de la sesión |
 | W-42 | Cada notificación lleva a su entidad solo si el id tiene forma de UUID y la pantalla existe (`notificationHref`); las de suscripción no llevan a ninguna parte | El id viene de la API y termina en una ruta; no se arma una dirección con un valor raro |
 | W-43 | El filtro "no leídas" es una URL (`?filtro=no-leidas`) y las no leídas se marcan con texto ("Sin leer") y título en negrita, no solo con color | Compartible, sin JS y accesible |
+| W-44 | Configuración tiene tres bloques: nombre del negocio, días sin cobro (días de la semana y festivos) y carteras (listar y crear) | Es lo que `PATCH /lender` y `POST /portfolios` permiten cambiar hoy |
+| W-45 | Quien no administra (Owner o Lender) ve la configuración en solo lectura, con los campos deshabilitados y sin botones | La API devuelve 403 al guardar; la interfaz no ofrece lo que no puede hacer |
+| W-46 | Los formularios solo llaman a la API si hay cambios y mandan una lista de días ordenada (lunes primero) | Evita llamadas inútiles y comparaciones inestables |
+| W-47 | `getShellContext` se memoiza por petición | La barra lateral y Configuración necesitan el rol; así no se repiten las consultas |
 
 ## Pendientes conocidos
 
@@ -56,4 +60,5 @@ se agrega la nueva.
 - Notificaciones: contador de no leídas en la barra lateral y notificaciones push (tokens de dispositivo).
 - Recuperar contraseña (la API ya tiene `request-password-reset` y `reset-password`).
 - Cambio de contraseña obligatorio (`mustChangePassword`) para cuentas con contraseña temporal.
-- Subir el logo del prestamista desde Configuración (`POST /lender/logo-upload-url`).
+- Subir el logo del prestamista desde Configuración: el endpoint está declarado, falta la subida directa (PUT a la URL firmada), que exige permitir ese host en la CSP (`connect-src` e `img-src`) una vez se conozca el almacenamiento.
+- Configuración: eliminar carteras y fechas puntuales sin cobro (`NonWorkingDay`) cuando la API los exponga.
