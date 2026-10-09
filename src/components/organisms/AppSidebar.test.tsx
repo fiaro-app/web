@@ -31,4 +31,21 @@ describe('AppSidebar', () => {
     expect(screen.getByRole('link', { name: /Notificaciones.*3 sin leer/ })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Resumen' })).toBeInTheDocument();
   });
+
+  it('hides the administration modules from a collector', () => {
+    pathname.mockReturnValue('/resumen');
+    render(<AppSidebar businessName="Buen Vecino" userName="Luis Gómez" roleLabel="Cobrador" />);
+
+    for (const name of ['Cobradores', 'Cuadres', 'Estadísticas', 'Configuración']) {
+      expect(screen.queryByRole('link', { name })).not.toBeInTheDocument();
+    }
+    expect(screen.getByRole('link', { name: 'Cobros' })).toBeInTheDocument();
+  });
+
+  it('shows every module to an administrator', () => {
+    pathname.mockReturnValue('/resumen');
+    render(<AppSidebar businessName="Buen Vecino" userName="Ana Pérez" roleLabel="Administrador" />);
+
+    expect(screen.getByRole('link', { name: 'Configuración' })).toBeInTheDocument();
+  });
 });

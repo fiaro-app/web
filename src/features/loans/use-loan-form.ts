@@ -25,14 +25,12 @@ function emptyValues(initialClientId: string): LoanFormInput {
 }
 
 /**
- * Lógica del formulario de préstamo, sin diseño. El total a pagar se sugiere (cuotas × valor)
- * mientras la persona no lo haya tocado; en cuanto lo edita, se respeta lo que pactó. Al salir
- * bien sigue a `/prestamos`.
+ * Lógica del formulario de préstamo, sin diseño. El total a pagar no se escribe: se calcula siempre
+ * (cuotas × valor de la cuota) y la pantalla solo lo muestra. Al salir bien sigue a `/prestamos`.
  */
 export function useLoanForm({ initialClientId = '' }: { readonly initialClientId?: string } = {}) {
   const router = useRouter();
   const [values, setValues] = useState<LoanFormInput>(() => emptyValues(initialClientId));
-  const [totalEdited, setTotalEdited] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors<LoanField>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,11 +39,10 @@ export function useLoanForm({ initialClientId = '' }: { readonly initialClientId
 
   const clearError = (field: LoanField) => setFieldErrors((current) => ({ ...current, [field]: undefined }));
 
-  /** Aplica un cambio y, si el total no se editó a mano, lo vuelve a sugerir. */
-  const update = (field: LoanField, patch: Partial<LoanFormInput>, edited = totalEdited) => {
+  /** Aplica un cambio y recalcula el total a pagar. */
+  const update = (field: LoanField, patch: Partial<LoanFormInput>) => {
     setValues((current) => {
       const next = { ...current, ...patch };
-      if (edited) return next;
       const count = /^\d+$/.test(next.installmentCount) ? Number(next.installmentCount) : null;
       return { ...next, totalPayable: suggestTotalPayable(count, next.installmentValue) };
     });
@@ -56,11 +53,6 @@ export function useLoanForm({ initialClientId = '' }: { readonly initialClientId
     update(field, { [field]: event.target.value });
 
   const setAmount = (field: 'principalAmount' | 'installmentValue') => (value: number | null) => update(field, { [field]: value });
-
-  const setTotalPayable = (value: number | null) => {
-    setTotalEdited(true);
-    update('totalPayable', { totalPayable: value }, true);
-  };
 
   const fail = (error: unknown) => {
     const { message, field } = describeLoanError(error);
@@ -111,5 +103,5 @@ export function useLoanForm({ initialClientId = '' }: { readonly initialClientId
     router.refresh();
   };
 
-  return { values, fieldErrors, formError, isSubmitting, createdLoanId, setText, setAmount, setTotalPayable, submit };
+  return { values, fieldErrors, formError, isSubmitting, createdLoanId, setText, setAmount, submit };
 }

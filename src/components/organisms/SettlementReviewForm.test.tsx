@@ -12,6 +12,12 @@ const state = (overrides = {}) => ({ note: '', changeNote: vi.fn(), pending: nul
 
 beforeEach(() => {
   vi.clearAllMocks();
+  HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
+    this.setAttribute('open', '');
+  });
+  HTMLDialogElement.prototype.close = vi.fn(function (this: HTMLDialogElement) {
+    this.removeAttribute('open');
+  });
   useReviewSettlement.mockReturnValue(state());
 });
 
@@ -20,7 +26,10 @@ describe('SettlementReviewForm', () => {
     render(<SettlementReviewForm settlementId="s1" />);
     expect(useReviewSettlement).toHaveBeenCalledWith('s1');
     await userEvent.click(screen.getByRole('button', { name: 'Aprobar cuadre' }));
+    expect(approve).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole('button', { name: 'Aprobar' }));
     await userEvent.click(screen.getByRole('button', { name: 'Rechazar cuadre' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Rechazar' }));
     expect(approve).toHaveBeenCalledTimes(1);
     expect(reject).toHaveBeenCalledTimes(1);
   });

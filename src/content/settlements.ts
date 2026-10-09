@@ -70,6 +70,18 @@ export const SETTLEMENTS_TEXT = {
     approve: 'Aprobar cuadre',
     reject: 'Rechazar cuadre',
     approved: 'Cuadre aprobado.',
+    confirm: {
+      approve: {
+        confirmTitle: '¿Aprobar el cuadre?',
+        confirmDescription: 'Queda aprobado y el cobrador deja de poder cambiarlo.',
+        confirmLabel: 'Aprobar',
+      },
+      reject: {
+        confirmTitle: '¿Rechazar el cuadre?',
+        confirmDescription: 'El cobrador verá el rechazo con tu comentario. Esta decisión no se puede deshacer.',
+        confirmLabel: 'Rechazar',
+      },
+    },
     rejected: 'Cuadre rechazado.',
   },
 } as const;

@@ -2,8 +2,8 @@
 
 import { Alert } from '@/components/molecules/Alert';
 import { Button } from '@/components/atoms/Button';
-import { Input } from '@/components/atoms/Input';
 import { Text } from '@/components/atoms/Text';
+import { PasswordInput } from '@/components/molecules/PasswordInput';
 import { FormField } from '@/components/molecules/FormField';
 import { CHANGE_PASSWORD_CONTENT } from '@/content/password';
 import { useChangePasswordForm } from '@/features/auth/use-change-password-form';
@@ -25,13 +25,13 @@ export function ChangePasswordForm({ redirectTo }: Readonly<{ redirectTo: string
       </div>
 
       <FormField label={text.currentPassword.label} error={fieldErrors.currentPassword}>
-        <Input name="currentPassword" type="password" autoComplete="current-password" placeholder="••••••••" value={values.currentPassword} onChange={setField('currentPassword')} />
+        <PasswordInput name="currentPassword" autoComplete="current-password" placeholder="••••••••" value={values.currentPassword} onChange={setField('currentPassword')} />
       </FormField>
       <FormField label={text.newPassword.label} hint={text.newPassword.hint} error={fieldErrors.newPassword}>
-        <Input name="newPassword" type="password" autoComplete="new-password" placeholder="••••••••" value={values.newPassword} onChange={setField('newPassword')} />
+        <PasswordInput name="newPassword" autoComplete="new-password" placeholder="••••••••" value={values.newPassword} onChange={setField('newPassword')} />
       </FormField>
       <FormField label={text.confirmPassword.label} error={fieldErrors.confirmPassword}>
-        <Input name="confirmPassword" type="password" autoComplete="new-password" placeholder="••••••••" value={values.confirmPassword} onChange={setField('confirmPassword')} />
+        <PasswordInput name="confirmPassword" autoComplete="new-password" placeholder="••••••••" value={values.confirmPassword} onChange={setField('confirmPassword')} />
       </FormField>
 
       {formError && <Alert tone="error">{formError}</Alert>}

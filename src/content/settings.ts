@@ -23,6 +23,9 @@ export const SETTINGS_TEXT = {
     upload: 'Subir logo',
     change: 'Cambiar logo',
     remove: 'Quitar logo',
+    confirmTitle: '¿Quitar el logo?',
+    confirmDescription: 'Tu panel vuelve a mostrar solo el nombre del negocio. Puedes subir otro cuando quieras.',
+    confirmLabel: 'Quitar',
     unavailable: 'La subida de logos no está configurada en este entorno.',
   },
   brand: {

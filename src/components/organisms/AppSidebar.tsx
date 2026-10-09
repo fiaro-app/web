@@ -1,9 +1,10 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { COLLECTOR_LABEL } from '@/features/app-shell/role-label';
 import { SignOutButton } from '@/components/molecules/SignOutButton';
 import { Sidebar } from '@/components/organisms/Sidebar';
-import { APP_NAV_ITEMS, NOTIFICATIONS_HREF, isNavItemActive } from '@/content/app-nav';
+import { NOTIFICATIONS_HREF, isNavItemActive, visibleNavItems } from '@/content/app-nav';
 
 export interface AppSidebarProps {
   readonly businessName: string;
@@ -16,7 +17,7 @@ export interface AppSidebarProps {
 /** La barra lateral del panel con su estado: marca la sección según la ruta y trae "Cerrar sesión". */
 export function AppSidebar({ businessName, userName, roleLabel, unreadNotifications = 0 }: Readonly<AppSidebarProps>) {
   const pathname = usePathname();
-  const items = APP_NAV_ITEMS.map((item) => ({
+  const items = visibleNavItems(roleLabel === COLLECTOR_LABEL).map((item) => ({
     label: item.label,
     href: item.href,
     disabled: !item.available,

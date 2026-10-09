@@ -1,9 +1,10 @@
 'use client';
 
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import { Alert } from '@/components/molecules/Alert';
 import { Avatar } from '@/components/atoms/Avatar';
 import { Button } from '@/components/atoms/Button';
+import { ConfirmDialog } from '@/components/molecules/ConfirmDialog';
 import { SettingsSection } from '@/components/molecules/SettingsSection';
 import { SETTINGS_TEXT } from '@/content/settings';
 import { LOGO_CONTENT_TYPES } from '@/features/lender/logo-file';
@@ -22,6 +23,7 @@ export function LogoForm({ businessName, logoUrl, canEdit, uploadAvailable }: Re
   const text = SETTINGS_TEXT.logo;
   const inputId = useId();
   const { isBusy, error, notice, chooseFile, removeLogo } = useLogoForm();
+  const [confirmingRemove, setConfirmingRemove] = useState(false);
 
   return (
     <SettingsSection title={text.title} description={text.description}>
@@ -54,12 +56,23 @@ export function LogoForm({ businessName, logoUrl, canEdit, uploadAvailable }: Re
             {logoUrl ? text.change : text.upload}
           </Button>
           {logoUrl && (
-            <Button type="button" variant="outline" disabled={isBusy} onClick={() => void removeLogo()}>
+            <Button type="button" variant="outline" disabled={isBusy} onClick={() => setConfirmingRemove(true)}>
               {text.remove}
             </Button>
           )}
         </div>
       )}
+      <ConfirmDialog
+        open={confirmingRemove}
+        title={text.confirmTitle}
+        description={text.confirmDescription}
+        confirmLabel={text.confirmLabel}
+        onCancel={() => setConfirmingRemove(false)}
+        onConfirm={() => {
+          setConfirmingRemove(false);
+          void removeLogo();
+        }}
+      />
     </SettingsSection>
   );
 }

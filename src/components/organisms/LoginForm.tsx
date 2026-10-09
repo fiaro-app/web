@@ -5,6 +5,7 @@ import { Button } from '@/components/atoms/Button';
 import { Input } from '@/components/atoms/Input';
 import { Link } from '@/components/atoms/Link';
 import { Text } from '@/components/atoms/Text';
+import { PasswordInput } from '@/components/molecules/PasswordInput';
 import { FormField } from '@/components/molecules/FormField';
 import { useLoginForm } from '@/features/auth/use-login-form';
 
@@ -43,9 +44,8 @@ export function LoginForm({ redirectTo, forgotPasswordHref }: Readonly<LoginForm
       </FormField>
 
       <FormField label="Contraseña" error={fieldErrors.password}>
-        <Input
+        <PasswordInput
           name="password"
-          type="password"
           autoComplete="current-password"
           placeholder="••••••••"
           value={values.password}

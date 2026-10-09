@@ -23,9 +23,19 @@ describe('useDeactivateAccount', () => {
   it('asks for the password first', async () => {
     const { result } = renderHook(() => useDeactivateAccount());
 
-    await act(() => result.current.submit(submitEvent()));
+    act(() => result.current.submit(submitEvent()));
 
     expect(result.current.passwordError).toBe('Escribe tu contraseña para confirmar.');
+    expect(deactivate).not.toHaveBeenCalled();
+  });
+
+  it('lets the person cancel the confirmation', () => {
+    const { result } = renderHook(() => useDeactivateAccount());
+    act(() => result.current.changePassword(change('mi-clave')));
+    act(() => result.current.submit(submitEvent()));
+    act(() => result.current.cancel());
+
+    expect(result.current.isConfirming).toBe(false);
     expect(deactivate).not.toHaveBeenCalled();
   });
 
@@ -33,7 +43,10 @@ describe('useDeactivateAccount', () => {
     const { result } = renderHook(() => useDeactivateAccount());
     act(() => result.current.changePassword(change('mi-clave')));
 
-    await act(() => result.current.submit(submitEvent()));
+    act(() => result.current.submit(submitEvent()));
+    expect(result.current.isConfirming).toBe(true);
+    expect(deactivate).not.toHaveBeenCalled();
+    await act(() => result.current.confirm());
 
     expect(deactivate).toHaveBeenCalledWith('mi-clave');
     expect(replace).toHaveBeenCalledWith('/login');
@@ -43,11 +56,13 @@ describe('useDeactivateAccount', () => {
     const { result } = renderHook(() => useDeactivateAccount());
     act(() => result.current.changePassword(change('mala')));
     deactivate.mockRejectedValueOnce(new ApiRequestError({ statusCode: 400, code: 'INVALID_PASSWORD', message: 'x' }));
-    await act(() => result.current.submit(submitEvent()));
+    act(() => result.current.submit(submitEvent()));
+    await act(() => result.current.confirm());
     expect(result.current.passwordError).toBe('La contraseña actual no es correcta.');
 
     deactivate.mockRejectedValueOnce(new ApiRequestError({ statusCode: 503, code: 'MAINTENANCE', message: 'x' }));
-    await act(() => result.current.submit(submitEvent()));
+    act(() => result.current.submit(submitEvent()));
+    await act(() => result.current.confirm());
     expect(result.current.formError).not.toBeNull();
     expect(result.current.isSubmitting).toBe(false);
   });

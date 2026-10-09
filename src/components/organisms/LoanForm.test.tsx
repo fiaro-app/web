@@ -15,7 +15,6 @@ const state = (overrides = {}) => ({
   isSubmitting: false,
   setText: () => vi.fn(),
   setAmount: () => vi.fn(),
-  setTotalPayable: vi.fn(),
   submit,
   ...overrides,
 });
@@ -79,5 +78,10 @@ describe('LoanForm', () => {
   it('passes the preselected client to the hook', () => {
     render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} initialClientId="c1" />);
     expect(useLoanForm).toHaveBeenCalledWith({ initialClientId: 'c1' });
+  });
+
+  it('shows the total to pay as read-only information', () => {
+    render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
+    expect(screen.getByLabelText('Total a pagar')).toHaveAttribute('readonly');
   });
 });

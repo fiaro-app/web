@@ -28,7 +28,7 @@ export interface LoanFormProps {
 }
 
 export function LoanForm({ clients, collectors, initialClientId }: Readonly<LoanFormProps>) {
-  const { values, fieldErrors, formError, isSubmitting, createdLoanId, setText, setAmount, setTotalPayable, submit } = useLoanForm({ initialClientId });
+  const { values, fieldErrors, formError, isSubmitting, createdLoanId, setText, setAmount, submit } = useLoanForm({ initialClientId });
   const text = LOANS_TEXT.form;
 
   if (clients.length === 0) {
@@ -74,7 +74,7 @@ export function LoanForm({ clients, collectors, initialClientId }: Readonly<Loan
           <AmountInput size="field" name="installmentValue" value={values.installmentValue} onValueChange={setAmount('installmentValue')} />
         </FormField>
         <FormField label={text.totalPayable.label} hint={text.totalPayable.hint} error={fieldErrors.totalPayable}>
-          <AmountInput size="field" name="totalPayable" value={values.totalPayable} onValueChange={setTotalPayable} />
+          <AmountInput size="field" name="totalPayable" value={values.totalPayable} onValueChange={() => undefined} readOnly tabIndex={-1} className="cursor-default bg-foreground/5" />
         </FormField>
         <FormField label={text.frequency.label} error={fieldErrors.frequency}>
           <Select name="frequency" value={values.frequency} onChange={setText('frequency')}>
