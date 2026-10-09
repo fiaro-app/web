@@ -69,28 +69,20 @@ async function toRequestError(response: Response): Promise<ApiRequestError> {
   });
 }
 
+type RawInput = {
+  params?: Record<string, string>;
+  body?: unknown;
+  signal?: AbortSignal;
+  baseUrl?: string;
+  headers?: Record<string, string>;
+};
+
 /**
- * Llama a un endpoint declarado con `defineEndpoint` y devuelve su respuesta ya validada con el
- * schema del contrato. Es el único punto por el que la web habla con la API: así método, ruta,
- * cabeceras, errores y validación de la respuesta se resuelven una sola vez.
- *
- * @throws {@link ApiRequestError} Si la API responde con error (`code` del contrato), si no hay
- * conexión (`NETWORK_ERROR`) o si la respuesta no cumple el contrato (`INVALID_RESPONSE`).
- *
- * @example
- * const { user } = await callEndpoint(authEndpoints.signIn, { body: { phoneNumber, password } });
+ * Envía la petición y devuelve la respuesta cruda si salió bien. Aquí viven las cabeceras comunes y
+ * la traducción de las fallas (sin red, o la API respondió con error) a {@link ApiRequestError}.
  */
-export async function callEndpoint<const TEndpoint extends EndpointDefinition>(
-  endpoint: TEndpoint,
-  input: CallEndpointInput<TEndpoint>,
-): Promise<EndpointResponse<TEndpoint>> {
-  const { params, body, signal, baseUrl = API_BASE_PATH, headers } = input as {
-    params?: Record<string, string>;
-    body?: unknown;
-    signal?: AbortSignal;
-    baseUrl?: string;
-    headers?: Record<string, string>;
-  };
+async function sendRequest(endpoint: EndpointDefinition, input: RawInput, accept: string): Promise<Response> {
+  const { params, body, signal, baseUrl = API_BASE_PATH, headers } = input;
   const hasBody = body !== undefined;
 
   let response: Response;
@@ -98,7 +90,7 @@ export async function callEndpoint<const TEndpoint extends EndpointDefinition>(
     response = await fetch(`${baseUrl}${buildPath(endpoint.path, params ?? {})}`, {
       method: endpoint.method,
       headers: {
-        Accept: 'application/json',
+        Accept: accept,
         'Accept-Language': API_LANGUAGE,
         'API-Version': API_VERSION,
         ...(hasBody && { 'Content-Type': 'application/json' }),
@@ -120,6 +112,25 @@ export async function callEndpoint<const TEndpoint extends EndpointDefinition>(
   if (!response.ok) {
     throw await toRequestError(response);
   }
+  return response;
+}
+
+/**
+ * Llama a un endpoint declarado con `defineEndpoint` y devuelve su respuesta ya validada con el
+ * schema del contrato. Es el único punto por el que la web habla con la API: así método, ruta,
+ * cabeceras, errores y validación de la respuesta se resuelven una sola vez.
+ *
+ * @throws {@link ApiRequestError} Si la API responde con error (`code` del contrato), si no hay
+ * conexión (`NETWORK_ERROR`) o si la respuesta no cumple el contrato (`INVALID_RESPONSE`).
+ *
+ * @example
+ * const { user } = await callEndpoint(authEndpoints.signIn, { body: { phoneNumber, password } });
+ */
+export async function callEndpoint<const TEndpoint extends EndpointDefinition>(
+  endpoint: TEndpoint,
+  input: CallEndpointInput<TEndpoint>,
+): Promise<EndpointResponse<TEndpoint>> {
+  const response = await sendRequest(endpoint, input as RawInput, 'application/json');
 
   const result = endpoint.response.safeParse(await readJson(response));
   if (!result.success) {
@@ -130,4 +141,28 @@ export async function callEndpoint<const TEndpoint extends EndpointDefinition>(
     });
   }
   return result.data as EndpointResponse<TEndpoint>;
+}
+
+/** Un archivo que devolvió la API, con el nombre que sugirió (`Content-Disposition`), si lo hizo. */
+export interface DownloadedFile {
+  readonly blob: Blob;
+  readonly filename: string | null;
+}
+
+const FILENAME_PATTERN = /filename="?([^";]+)"?/i;
+
+/**
+ * Igual que {@link callEndpoint}, pero para los endpoints que devuelven un archivo (p. ej. un PDF)
+ * en vez de JSON: no valida la respuesta contra un schema, devuelve el contenido y su nombre.
+ *
+ * @throws {@link ApiRequestError} Igual que `callEndpoint` si la API responde con error o no hay red.
+ */
+export async function callEndpointForFile<const TEndpoint extends EndpointDefinition>(
+  endpoint: TEndpoint,
+  input: CallEndpointInput<TEndpoint>,
+  accept = 'application/pdf',
+): Promise<DownloadedFile> {
+  const response = await sendRequest(endpoint, input as RawInput, accept);
+  const disposition = response.headers.get('Content-Disposition');
+  return { blob: await response.blob(), filename: disposition?.match(FILENAME_PATTERN)?.[1] ?? null };
 }

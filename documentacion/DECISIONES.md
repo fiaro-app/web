@@ -42,7 +42,7 @@ se agrega la nueva.
 | W-35 | Los endpoints de cuadres (leer, listar, aprobar, rechazar) se declaran en la web; el envío queda fuera | El cobrador envía el cuadre desde la app móvil; la web solo lo revisa |
 | W-36 | El botón "Revisar" del Resumen lleva a `/cuadres/[id]` (reemplaza la omisión de W-17) | Ya existe el módulo Cuadres |
 | W-37 | Aprobar y rechazar comparten un comentario opcional; un comentario vacío no se envía | La API lo trata como `reviewNote` ausente y el rechazo no exige motivo |
-| W-38 | `businessDateOf` (hora de Colombia) vive en `lib/dates` y lo usan préstamos y cuadres | Un instante a las 9 pm hora local ya es el día siguiente en UTC |
+| W-38 | Las fechas de calendario de Colombia salen de `toBusinessDate` del contrato, y `formatInstantDate` (en `lib/dates`) escribe el día de un instante como `08/10/2026` | Un instante a las 9 pm hora local ya es el día siguiente en UTC; una sola regla, la del contrato |
 | W-39 | La diferencia de un cuadre y el lookup de nombres de cobradores se comparten entre Resumen y Cuadres | Una sola regla para el tono (falta = grana, sobra = ámbar) y una sola consulta |
 | W-40 | "Notificaciones" se agrega a la barra lateral entre Cuadres y Estadísticas | Es una pantalla propia en la web; el orden del diseño no la incluía y debe verificarse contra Penpot |
 | W-41 | Las notificaciones son de la persona (todos sus negocios), no de un negocio; no hay estado "sin acceso" | `QUERY /notifications` filtra por el usuario de la sesión |
@@ -52,11 +52,16 @@ se agrega la nueva.
 | W-45 | Quien no administra (Owner o Lender) ve la configuración en solo lectura, con los campos deshabilitados y sin botones | La API devuelve 403 al guardar; la interfaz no ofrece lo que no puede hacer |
 | W-46 | Los formularios solo llaman a la API si hay cambios y mandan una lista de días ordenada (lunes primero) | Evita llamadas inútiles y comparaciones inestables |
 | W-47 | `getShellContext` se memoiza por petición | La barra lateral y Configuración necesitan el rol; así no se repiten las consultas |
+| W-48 | Estadísticas muestra tres indicadores (cartera total, cartera en riesgo y % en mora); no hay tendencias (↑ 4 %) ni "efectividad general" | `QUERY /lenders/me/stats` no las devuelve y no se calculan ni inventan en la web |
+| W-49 | Los filtros de Estadísticas (período, cobrador, cartera) son un formulario GET (`?desde=&hasta=&cobrador=&cartera=`) validado en el servidor (`parseStatsFilters`) | Compartible y sin JavaScript; un período solo vale con las dos fechas reales y en orden, y los ids deben ser UUID |
+| W-50 | El PDF se pide con `callEndpointForFile` (variante de `callEndpoint` para archivos) y se descarga con `saveFile`; el nombre lo sugiere la API | La respuesta no es JSON; se reutilizan cabeceras, errores y la misma ruta `/api` |
+| W-51 | El desempeño por cobrador toma la cartera de `getSettlementLookup` | La API de estadísticas trae el nombre pero no la cartera del cobrador |
 
 ## Pendientes conocidos
 
 - Migrar a `@fiaro-app/contracts`: endpoints de auth/registro y política de contraseña (W-13, W-14).
 - Préstamos: registrar pagos y ver el calendario de cuotas (módulo de cobros pendiente).
+- Estadísticas: el botón de exportar no se ha probado con un PDF real (solo con respuestas simuladas).
 - Notificaciones: contador de no leídas en la barra lateral y notificaciones push (tokens de dispositivo).
 - Recuperar contraseña (la API ya tiene `request-password-reset` y `reset-password`).
 - Cambio de contraseña obligatorio (`mustChangePassword`) para cuentas con contraseña temporal.

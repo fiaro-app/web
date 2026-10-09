@@ -4,7 +4,7 @@ import { describeDifference } from '@/features/settlements/difference';
 import type { SettlementResponse } from '@/features/settlements/endpoints';
 import { SETTLEMENTS_TEXT } from '@/content/settlements';
 import { formatCop } from '@/lib/amount';
-import { businessDateOf, formatBusinessDate } from '@/lib/dates';
+import { formatBusinessDate, formatInstantDate } from '@/lib/dates';
 import type { FigureTone } from '@/lib/tone';
 
 /** Color del estado: pendiente en ámbar, aprobado en musgo y rechazado en grana. */
@@ -80,11 +80,6 @@ export interface SettlementDetailView extends SettlementRow {
   readonly reviewedAt: string | null;
 }
 
-/** El día de un instante en hora de Colombia, escrito como se lee ahí (`09/10/2026`). */
-function formatInstant(instant: string): string {
-  return formatBusinessDate(businessDateOf(new Date(instant)));
-}
-
 export function toSettlementDetailView(settlement: SettlementResponse, lookup: SettlementLookup = EMPTY_LOOKUP): SettlementDetailView {
   return {
     ...toRow(settlement, lookup),
@@ -93,7 +88,7 @@ export function toSettlementDetailView(settlement: SettlementResponse, lookup: S
     transfer: formatCop(settlement.collectedByMethod.TRANSFER),
     collectorNote: settlement.collectorNote,
     reviewNote: settlement.reviewNote,
-    submittedAt: formatInstant(settlement.submittedAt),
-    reviewedAt: settlement.reviewedAt === null ? null : formatInstant(settlement.reviewedAt),
+    submittedAt: formatInstantDate(settlement.submittedAt),
+    reviewedAt: settlement.reviewedAt === null ? null : formatInstantDate(settlement.reviewedAt),
   };
 }

@@ -17,11 +17,10 @@ describe('AppSidebar', () => {
     expect(screen.getByRole('button', { name: 'Cerrar sesión' })).toBeInTheDocument();
   });
 
-  it('leaves the unbuilt modules disabled and marks no section on an unknown route', () => {
+  it('marks no section on an unknown route', () => {
     pathname.mockReturnValue('/otra-ruta');
     render(<AppSidebar businessName="Buen Vecino" userName="Ana Pérez" roleLabel={null} />);
 
     expect(screen.getByRole('link', { name: 'Resumen' })).not.toHaveAttribute('aria-current');
-    expect(screen.getByText('Estadísticas')).toHaveAttribute('aria-disabled', 'true');
   });
 });

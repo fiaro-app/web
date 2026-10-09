@@ -1,8 +1,7 @@
 import type { LoanStatus } from '@fiaro-app/contracts';
 import { LOANS_TEXT } from '@/content/loans';
 import type { LoanResponse } from '@/features/loans/endpoints';
-import { todayBusinessDate } from '@/features/loans/loan-calculations';
-import { formatBusinessDate } from '@/lib/dates';
+import { formatBusinessDate, formatInstantDate } from '@/lib/dates';
 import { formatCop } from '@/lib/amount';
 import type { Tone } from '@/lib/tone';
 
@@ -94,7 +93,7 @@ export function toLoanDetailView(loan: LoanResponse, clientName: string | undefi
     status: LOANS_TEXT.status[loan.status],
     statusTone: STATUS_TONE[loan.status],
     // El día se lee en hora de Colombia: con UTC, un cierre a las 9 pm saldría con la fecha del día siguiente.
-    closedAt: loan.closedAt === null ? null : formatBusinessDate(todayBusinessDate(new Date(loan.closedAt))),
+    closedAt: loan.closedAt === null ? null : formatInstantDate(loan.closedAt),
     cancelable: loan.status === 'ACTIVE',
   };
 }

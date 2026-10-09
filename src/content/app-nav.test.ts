@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { APP_NAV_ITEMS, isNavItemActive } from './app-nav';
 
 describe('APP_NAV_ITEMS', () => {
-  it('lists the modules of the design, with every module but statistics available', () => {
+  it('lists the modules of the design, all available', () => {
     expect(APP_NAV_ITEMS.map((item) => item.label)).toEqual([
       'Resumen',
       'Cobradores',
@@ -20,6 +20,7 @@ describe('APP_NAV_ITEMS', () => {
       '/prestamos',
       '/cuadres',
       '/notificaciones',
+      '/estadisticas',
       '/configuracion',
     ]);
   });
