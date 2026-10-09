@@ -39,18 +39,20 @@ pnpm install
 pnpm dev
 ```
 
-Abre [http://localhost:3000](http://localhost:3000).
+Abre [http://localhost:3001](http://localhost:3001) (el puerto que espera `CORS_ORIGINS` de la API).
+
+Copia `.env.example` a `.env.local` y ajusta `API_URL` (origen de la API) y `NEXT_PUBLIC_SITE_URL` (URL pública de la web). Para iniciar sesión y registrarte en local, la API debe estar corriendo y tener `http://localhost:3001` en su `CORS_ORIGINS`.
 
 ## Scripts
 
 | Comando | Qué hace |
 |---|---|
-| `pnpm dev` | Servidor de desarrollo |
+| `pnpm dev` | Servidor de desarrollo (puerto 3001) |
 | `pnpm lint` | ESLint |
 | `pnpm typecheck` | Genera tipos de rutas (`next typegen`) + `tsc --noEmit` |
 | `pnpm test` | Tests (Vitest + Testing Library) |
 | `pnpm build` | Build de producción |
-| `pnpm docs` | Genera documentación (TypeDoc) de `src/lib` en `docs/` |
+| `pnpm docs` | Genera documentación de la API del código (TypeDoc) de `src/lib` y `src/features` en `docs/` |
 
 El pipeline de CI (`.github/workflows/ci.yml`) corre lint → typecheck → test → build → docs → análisis de Sonar en cada PR y en cada push a `dev`.
 
@@ -58,21 +60,23 @@ El pipeline de CI (`.github/workflows/ci.yml`) corre lint → typecheck → test
 
 ```
 src/
-  app/              # Rutas (App Router) — cada archivo es una pantalla, layout.tsx define el shell
-  components/
-    atoms/          # Lo más chico: Button, Input, Label, Spinner — no conocen la API ni el negocio
-    molecules/      # Átomos combinados con un propósito (FormField = Label + Input + error)
-    organisms/       # Piezas de pantalla completas (Navbar, Sidebar, LoginForm)
-    templates/       # El layout de una pantalla sin datos reales (dónde va cada organism)
-  stores/            # Estado global con Zustand (p. ej. useThemeStore)
-  lib/               # Utilidades puras, testeadas con Vitest
+  app/              # Rutas (App Router): páginas finas, solo metadata y composición
+  components/       # Solo presentación (Atomic Design): atoms · molecules · organisms · templates
+  features/         # Lógica por módulo: endpoints, schemas, hooks (use-*), mensajes de error
+  content/          # Textos y datos estáticos de pantalla, tipados
+  lib/              # Utilidades puras: cliente de la API, formularios, SEO, seguridad
+  stores/           # Estado global con Zustand (tema del Lender)
+  proxy.ts          # Chequeo optimista de sesión
+documentacion/      # Arquitectura, guía para agregar un módulo y registro de decisiones
 ```
 
-**Diseño de componentes:** Atomic Design (átomos → moléculas → organismos → templates); las
-pantallas reales son las de `app/`, no hace falta una carpeta `pages/` aparte. Los colores salen
-de variables CSS (`globals.css`, `@theme inline` de Tailwind 4) en vez de clases fijas como
-`bg-teal-700`: así `useThemeStore` puede cambiar el color de marca del Lender en tiempo de
-ejecución sin tocar ningún componente.
+**Lógica y diseño van separados:** un componente solo pinta; lo que decide, valida o llama a la API
+vive en un hook de `features/`. Los colores salen de variables CSS (`globals.css`, `@theme inline` de
+Tailwind 4) en vez de clases fijas: así `useThemeStore` puede cambiar el color de marca del Lender
+en tiempo de ejecución sin tocar ningún componente.
+
+Lee [documentacion/ARQUITECTURA.md](./documentacion/ARQUITECTURA.md) antes de agregar código y
+[documentacion/AGREGAR-UN-MODULO.md](./documentacion/AGREGAR-UN-MODULO.md) para sumar un módulo.
 
 ## Ramas y flujo de trabajo
 
