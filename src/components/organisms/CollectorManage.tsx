@@ -6,6 +6,8 @@ import { Link } from '@/components/atoms/Link';
 import { Select } from '@/components/atoms/Select';
 import { Text } from '@/components/atoms/Text';
 import { Alert } from '@/components/molecules/Alert';
+import { ConfirmForm } from '@/components/molecules/ConfirmForm';
+import { COMMON_TEXT } from '@/content/common';
 import { ConfirmDialog } from '@/components/molecules/ConfirmDialog';
 import { FormField } from '@/components/molecules/FormField';
 import { InfoRow } from '@/components/molecules/InfoRow';
@@ -64,7 +66,8 @@ export function CollectorManage({ collector, portfolios }: Readonly<CollectorMan
 
       {collector.active && (
         <>
-          <form
+          <ConfirmForm
+            confirmation={COMMON_TEXT.confirm.save}
             className="flex flex-col gap-3"
             onSubmit={(event) => {
               event.preventDefault();
@@ -84,7 +87,7 @@ export function CollectorManage({ collector, portfolios }: Readonly<CollectorMan
             <Button type="submit" loading={actions.pending === 'portfolio'} disabled={actions.pending !== null}>
               {text.portfolio.save}
             </Button>
-          </form>
+          </ConfirmForm>
 
           <div className="flex flex-col gap-3">
             <Button variant="outline" disabled={actions.pending !== null} onClick={() => setConfirming('reset-password')}>

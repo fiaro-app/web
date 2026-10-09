@@ -1,5 +1,7 @@
 'use client';
 
+import { ConfirmForm } from '@/components/molecules/ConfirmForm';
+import { COMMON_TEXT } from '@/content/common';
 import { Button } from '@/components/atoms/Button';
 import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { Input } from '@/components/atoms/Input';
@@ -18,7 +20,8 @@ export function ClientForm({ client }: Readonly<{ client?: ClientResponse }>) {
   const title = isEditing ? text.editTitle : text.createTitle;
 
   return (
-    <form onSubmit={submit} noValidate aria-label={title} className="flex max-w-lg flex-col gap-5">
+    <ConfirmForm
+      confirmation={COMMON_TEXT.confirm.create} onSubmit={submit} noValidate aria-label={title} className="flex max-w-lg flex-col gap-5">
       <div className="flex flex-col gap-1">
         <Text variant="title" as="h1" weight="bold" className="text-foreground">
           {title}
@@ -56,6 +59,6 @@ export function ClientForm({ client }: Readonly<{ client?: ClientResponse }>) {
           {isEditing ? text.submitEdit : text.submitCreate}
         </Button>
       </div>
-    </form>
+    </ConfirmForm>
   );
 }

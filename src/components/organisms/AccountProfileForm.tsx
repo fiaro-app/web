@@ -1,5 +1,7 @@
 'use client';
 
+import { ConfirmForm } from '@/components/molecules/ConfirmForm';
+import { COMMON_TEXT } from '@/content/common';
 import { Alert } from '@/components/molecules/Alert';
 import { Button } from '@/components/atoms/Button';
 import { Input } from '@/components/atoms/Input';
@@ -19,7 +21,8 @@ export function AccountProfileForm({ fullName, phoneNumber, contactEmail }: Read
   const { values, fieldErrors, formError, notice, isSubmitting, setField, submit } = useProfileForm({ fullName, contactEmail });
 
   return (
-    <form onSubmit={submit} noValidate aria-label={text.title} className="flex flex-col gap-4">
+    <ConfirmForm
+      confirmation={COMMON_TEXT.confirm.save} onSubmit={submit} noValidate aria-label={text.title} className="flex flex-col gap-4">
       <FormField label={text.fullName.label} error={fieldErrors.fullName}>
         <Input name="fullName" autoComplete="name" placeholder={text.fullName.placeholder} value={values.fullName} onChange={setField('fullName')} />
       </FormField>
@@ -43,6 +46,6 @@ export function AccountProfileForm({ fullName, phoneNumber, contactEmail }: Read
       <Button type="submit" loading={isSubmitting} className="self-start">
         {text.save}
       </Button>
-    </form>
+    </ConfirmForm>
   );
 }

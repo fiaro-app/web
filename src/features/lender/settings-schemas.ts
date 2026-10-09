@@ -8,7 +8,11 @@ export const BusinessFormSchema = z.object({
 });
 export type BusinessField = 'name';
 
-/** Formulario "Color de marca": un `#RRGGBB` con contraste suficiente para el texto blanco de los botones. */
+/**
+ * Formulario "Color de marca": un `#RRGGBB` con contraste suficiente para el texto blanco de los
+ * botones. La pantalla solo ofrece la gama de `brand-palette`; aquí se valida el formato y el contraste
+ * (la API acepta cualquier `#RRGGBB`, y un color guardado antes sigue siendo válido).
+ */
 export const BrandColorFormSchema = z.object({
   color: z
     .string()

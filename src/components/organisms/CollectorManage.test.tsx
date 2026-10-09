@@ -52,6 +52,8 @@ describe('CollectorManage', () => {
   it('saves the portfolio through the hook', async () => {
     render(<CollectorManage collector={COLLECTOR} portfolios={PORTFOLIOS} />);
     await userEvent.click(screen.getByRole('button', { name: 'Guardar cartera' }));
+    expect(actions.savePortfolio).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar' }));
     expect(actions.savePortfolio).toHaveBeenCalledTimes(1);
   });
 

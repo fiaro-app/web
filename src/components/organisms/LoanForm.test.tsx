@@ -56,6 +56,7 @@ describe('LoanForm', () => {
   it('submits through the hook and can be cancelled', async () => {
     render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
     await userEvent.click(screen.getByRole('button', { name: 'Registrar préstamo' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Sí, registrar' }));
     expect(submit).toHaveBeenCalledTimes(1);
     expect(screen.getByRole('link', { name: 'Cancelar' })).toHaveAttribute('href', '/prestamos');
   });

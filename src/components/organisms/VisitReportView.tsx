@@ -2,6 +2,7 @@ import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { StateIcon } from '@/components/atoms/StateIcon';
 import { Text } from '@/components/atoms/Text';
 import { EmptyState } from '@/components/molecules/EmptyState';
+import { Alert } from '@/components/molecules/Alert';
 import { PaginationNav } from '@/components/molecules/PaginationNav';
 import { VisitReportFilters } from '@/components/organisms/VisitReportFilters';
 import { VisitReportTable } from '@/components/organisms/VisitReportTable';
@@ -30,7 +31,7 @@ export function VisitReportView({ report, filters, collectors }: Readonly<VisitR
   const { rows, total, page, pageSize } = report;
   const pages = Math.max(1, Math.ceil(total / pageSize));
   const isFiltered = JSON.stringify(filters) !== JSON.stringify(EMPTY_VISIT_REPORT_FILTERS);
-  const hrefFilters = { desde: filters.from, hasta: filters.to, cobrador: filters.collectorId, resultado: filters.outcome };
+  const hrefFilters = { desde: filters.from, hasta: filters.to, cobrador: filters.collectorId, resultado: filters.outcome, q: filters.search };
 
   return (
     <>
@@ -46,6 +47,7 @@ export function VisitReportView({ report, filters, collectors }: Readonly<VisitR
       <VisitReportFilters filters={filters} collectors={collectors} />
 
       <p className="text-label font-semibold text-foreground">{describeRange(report, filters)}</p>
+      {report.searchTruncated && <Alert tone="info">{text.searchTruncated}</Alert>}
 
       {rows.length === 0 ? (
         <EmptyState

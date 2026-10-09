@@ -1,5 +1,6 @@
 import { FilterActions } from '@/components/molecules/FilterActions';
 import { FilterDateRange } from '@/components/molecules/FilterDateRange';
+import { SearchInput } from '@/components/molecules/SearchInput';
 import { FilterSelectField } from '@/components/molecules/FilterSelectField';
 import { VISITS_TEXT } from '@/content/visits';
 import type { VisitReportCollectorOption } from '@/features/visits/get-visit-report.server';
@@ -11,8 +12,8 @@ export interface VisitReportFiltersProps {
 }
 
 /**
- * Filtros de «Cobros del día» (fechas, cobrador y resultado). Es un formulario GET: los filtros viajan
- * en la URL (`?desde=&hasta=&cobrador=&resultado=`), así funciona sin JavaScript y se puede
+ * Filtros de «Cobros del día» (búsqueda, fechas, cobrador y resultado). Es un formulario GET: los filtros viajan
+ * en la URL (`?q=&desde=&hasta=&cobrador=&resultado=`), así funciona sin JavaScript y se puede
  * compartir. Solo presentación.
  */
 export function VisitReportFilters({ filters, collectors }: Readonly<VisitReportFiltersProps>) {
@@ -22,6 +23,10 @@ export function VisitReportFilters({ filters, collectors }: Readonly<VisitReport
   return (
     <form action="/cobros" aria-label={text.label} className="flex flex-col gap-2">
       <div className="flex flex-wrap items-end gap-4">
+        <label className="flex min-w-56 flex-1 flex-col gap-1.5 text-label font-medium">
+          {text.search}
+          <SearchInput name="q" defaultValue={filters.search} placeholder={text.searchPlaceholder} />
+        </label>
         <FilterDateRange from={filters.from} to={filters.to} fromLabel={text.from} toLabel={text.to} />
         <FilterSelectField
           name="cobrador"

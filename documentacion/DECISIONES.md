@@ -91,6 +91,10 @@ se agrega la nueva.
 | W-84 | El menú del panel oculta Cobradores, Cuadres, Estadísticas y Configuración a quien solo es cobrador (`adminOnly` en `content/app-nav.ts`); sin rol conocido se muestra todo y decide la API | No ofrecer páginas que solo dirían «sin permiso»; la API sigue siendo quien autoriza |
 | W-85 | Las contraseñas llevan «ojito» (`PasswordInput`); desactivar la cuenta, cerrar sesiones, quitar el logo y aprobar/rechazar un cuadre piden confirmación (`ConfirmDialog`) | Evitar errores en decisiones difíciles de deshacer |
 | W-86 | «Total a pagar» del préstamo es solo informativo (cuotas × valor), de solo lectura | El total pactado siempre debe cuadrar con las cuotas |
+| W-87 | Préstamos y Cobros del día tienen buscador (`?q=`). La API no busca texto en ninguno: Préstamos busca primero los clientes (hasta 10) y luego sus préstamos; Cobros filtra por cliente o cobrador la primera página grande (100) y avisa si el período tiene más | Se sirve lo que hay sin inventar endpoints; se propone a la API un `search` en `QUERY /loans` y en el reporte de cobros |
+| W-88 | La barra lateral queda fija a la altura de la pantalla (`sticky`) y Configuración se reparte en dos columnas (negocio / cobro) con el plan arriba | El menú no se pierde al hacer scroll; menos longitud de página |
+| W-89 | El color de marca se elige de una gama de 5 (`brand-palette.ts`), todos con contraste ≥ 4.5 con blanco; elegir el de Fiaro guarda «sin color». Un color guardado antes fuera de la gama se conserva como «Color actual» | Personalizar sin perder la identidad de Fiaro |
+| W-90 | Guardar o registrar datos y cerrar sesión piden confirmación (`ConfirmForm`, `ConfirmDialog`), salvo los formularios de autenticación y el contacto público | Evitar cambios por accidente en el negocio |
 
 ## Pendientes conocidos
 

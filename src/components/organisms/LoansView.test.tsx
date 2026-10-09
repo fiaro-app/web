@@ -26,6 +26,7 @@ const view = (overrides: Partial<LoansViewModel> = {}): LoansViewModel => ({
   page: 1,
   pageSize: 20,
   status: null,
+  search: '',
   ...overrides,
 });
 
@@ -55,5 +56,16 @@ describe('LoansView', () => {
     render(<LoansView loans={view({ total: 45, status: 'ACTIVE' })} />);
     expect(screen.getByText('Página 1 de 3 · 45 préstamos')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Siguiente' })).toHaveAttribute('href', '/prestamos?pagina=2&estado=ACTIVE');
+  });
+
+  it('offers a search by client that keeps the status filter', () => {
+    render(<LoansView loans={view({ status: 'ACTIVE', search: 'carlos' })} />);
+    expect(screen.getByRole('searchbox')).toHaveValue('carlos');
+    expect(screen.getByRole('link', { name: 'Limpiar búsqueda' })).toHaveAttribute('href', '/prestamos?estado=ACTIVE');
+  });
+
+  it('says nothing matched the search', () => {
+    render(<LoansView loans={view({ rows: [], total: 0, search: 'zzz' })} />);
+    expect(screen.getByText('Sin resultados')).toBeInTheDocument();
   });
 });

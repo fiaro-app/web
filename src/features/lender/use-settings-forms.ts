@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import type { Weekday } from '@fiaro-app/contracts';
+import { DEFAULT_BRAND_COLOR } from '@/features/lender/brand-palette';
 import { describeSettingsError } from '@/features/lender/error-messages';
 import { createPortfolio, updateBrandColor, updateBusinessName, updateCollectionDays } from '@/features/lender/lender-api';
 import {
@@ -128,17 +129,15 @@ export function usePortfolioForm() {
   return { name, fieldError, isSubmitting, error, notice, changeName, submit };
 }
 
-/** Color de Fiaro con el que arranca todo negocio nuevo (igual al de `globals.css`). */
-export const DEFAULT_BRAND_COLOR = '#3b3382';
-
 /** Lógica de "Color de marca", sin diseño. `brandColor` es el guardado (`null`: el de Fiaro). */
 export function useBrandColorForm(current: { readonly brandColor: string | null }) {
   const [color, setColor] = useState(current.brandColor ?? DEFAULT_BRAND_COLOR);
   const [fieldError, setFieldError] = useState<string | undefined>();
   const { isSubmitting, error, notice, setNotice, save } = useSaveState();
 
-  const changeColor = (event: ChangeEvent<HTMLInputElement>) => {
-    setColor(event.target.value);
+  /** Elige uno de los colores de la gama. */
+  const chooseColor = (value: string) => {
+    setColor(value);
     setFieldError(undefined);
     setNotice(null);
   };
@@ -156,7 +155,8 @@ export function useBrandColorForm(current: { readonly brandColor: string | null 
       setNotice('No hay cambios para guardar.');
       return;
     }
-    await save(() => updateBrandColor(next), 'Color actualizado.');
+    // Elegir el color de Fiaro es volver al predeterminado: se guarda «sin color», no el mismo hex.
+    await save(() => updateBrandColor(next === DEFAULT_BRAND_COLOR.toUpperCase() ? null : next), 'Color actualizado.');
   };
 
   /** Vuelve al color de Fiaro (guarda `null`). */
@@ -165,5 +165,5 @@ export function useBrandColorForm(current: { readonly brandColor: string | null 
     if (await save(() => updateBrandColor(null), 'Volvimos al color de Fiaro.')) setColor(DEFAULT_BRAND_COLOR);
   };
 
-  return { color, fieldError, isSubmitting, error, notice, isCustom: current.brandColor !== null, changeColor, submit, reset };
+  return { color, fieldError, isSubmitting, error, notice, isCustom: current.brandColor !== null, chooseColor, submit, reset };
 }

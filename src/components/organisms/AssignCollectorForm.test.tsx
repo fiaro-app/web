@@ -21,6 +21,8 @@ describe('AssignCollectorForm', () => {
     expect(useAssignCollector).toHaveBeenCalledWith('l1');
     expect(screen.getByRole('option', { name: 'Luis Gómez' })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Asignar cobrador' }));
+    expect(submit).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar' }));
     expect(submit).toHaveBeenCalledTimes(1);
   });
 

@@ -88,6 +88,8 @@ export interface VisitReportViewModel {
   /** Primer y último día del rango, ya escritos como se leen en Colombia. */
   readonly rangeFrom: string;
   readonly rangeTo: string;
+  /** La búsqueda solo revisó parte de las visitas del rango (hay más de las que la API entrega de una vez). */
+  readonly searchTruncated: boolean;
 }
 
 function toVisitReportRow(entry: VisitReportEntry): VisitReportRow {
@@ -109,7 +111,7 @@ function toVisitReportRow(entry: VisitReportEntry): VisitReportRow {
 }
 
 /** Convierte la respuesta del reporte en lo que pinta la pantalla; la API ya entrega las visitas de la más reciente a la más antigua. */
-export function toVisitReportViewModel(report: VisitReport): VisitReportViewModel {
+export function toVisitReportViewModel(report: VisitReport, searchTruncated = false): VisitReportViewModel {
   return {
     rows: report.data.map(toVisitReportRow),
     total: report.meta.total,
@@ -117,5 +119,6 @@ export function toVisitReportViewModel(report: VisitReport): VisitReportViewMode
     pageSize: report.meta.pageSize,
     rangeFrom: formatBusinessDate(report.range.from),
     rangeTo: formatBusinessDate(report.range.to),
+    searchTruncated,
   };
 }

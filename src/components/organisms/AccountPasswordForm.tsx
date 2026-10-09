@@ -1,5 +1,7 @@
 'use client';
 
+import { ConfirmForm } from '@/components/molecules/ConfirmForm';
+import { COMMON_TEXT } from '@/content/common';
 import { useState } from 'react';
 import { Alert } from '@/components/molecules/Alert';
 import { Button } from '@/components/atoms/Button';
@@ -15,7 +17,8 @@ export function AccountPasswordForm() {
   const { values, fieldErrors, formError, isSubmitting, setField, submit } = useChangePasswordForm({ onSuccess: () => setDone(true) });
 
   return (
-    <form
+    <ConfirmForm
+      confirmation={COMMON_TEXT.confirm.password}
       onSubmit={(event) => {
         setDone(false);
         void submit(event);
@@ -40,6 +43,6 @@ export function AccountPasswordForm() {
       <Button type="submit" loading={isSubmitting} className="self-start">
         {text.submit}
       </Button>
-    </form>
+    </ConfirmForm>
   );
 }

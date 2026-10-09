@@ -70,6 +70,7 @@ describe('PortfolioItem', () => {
     await userEvent.clear(input);
     await userEvent.type(input, 'Zona Sur');
     await userEvent.click(screen.getByRole('button', { name: 'Guardar' }));
+    await userEvent.click(screen.getAllByRole('button', { name: 'Guardar' }).at(-1)!);
 
     expect(renamePortfolio).toHaveBeenCalledWith('p2', 'Zona Sur');
   });

@@ -1,5 +1,7 @@
 'use client';
 
+import { ConfirmForm } from '@/components/molecules/ConfirmForm';
+import { COMMON_TEXT } from '@/content/common';
 import type { Weekday } from '@fiaro-app/contracts';
 import { Button } from '@/components/atoms/Button';
 import { Checkbox } from '@/components/atoms/Checkbox';
@@ -22,7 +24,8 @@ export function CollectionDaysForm({ nonWorkingWeekdays, skipNationalHolidays, c
 
   return (
     <SettingsSection title={text.title} description={text.description}>
-      <form onSubmit={form.submit} noValidate aria-label={text.title} className="flex flex-col gap-4">
+      <ConfirmForm
+        confirmation={COMMON_TEXT.confirm.save} onSubmit={form.submit} noValidate aria-label={text.title} className="flex flex-col gap-4">
         <fieldset className="flex flex-col gap-3" disabled={!canEdit}>
           <legend className="mb-1 text-caption font-medium text-foreground">{text.legend}</legend>
           {WEEKDAYS.map((day) => (
@@ -43,7 +46,7 @@ export function CollectionDaysForm({ nonWorkingWeekdays, skipNationalHolidays, c
             {text.save}
           </Button>
         )}
-      </form>
+      </ConfirmForm>
     </SettingsSection>
   );
 }
