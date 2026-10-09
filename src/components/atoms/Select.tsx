@@ -133,7 +133,7 @@ export function Select({
         role="combobox"
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-controls={listId}
+        aria-controls={open ? listId : undefined}
         aria-activedescendant={open ? optionId(active) : undefined}
         aria-label={ariaLabel}
         aria-describedby={ariaDescribedBy}

@@ -137,41 +137,47 @@ export function DatePicker({ name, value, defaultValue = '', onValueChange, id, 
               </button>
             </span>
           </div>
-          <div role="grid" aria-label={monthLabel(month)} className="grid grid-cols-7 gap-y-1 text-center">
-            {WEEKDAY_LETTERS.map((letter) => (
-              <span key={letter} role="columnheader" className="pb-1 text-caption font-semibold text-foreground/60">
-                {letter}
-              </span>
+          <div role="grid" aria-label={monthLabel(month)} className="flex flex-col gap-y-1 text-center">
+            <div role="row" className="grid grid-cols-7">
+              {WEEKDAY_LETTERS.map((letter) => (
+                <span key={letter} role="columnheader" className="pb-1 text-caption font-semibold text-foreground/60">
+                  {letter}
+                </span>
+              ))}
+            </div>
+            {weeksOf(monthGrid(month)).map((week) => (
+              <div key={week[0]} role="row" className="grid grid-cols-7">
+                {week.map((day) => {
+                  const inMonth = day.slice(0, 7) === month.slice(0, 7);
+                  const isSelected = day === selected;
+                  return (
+                    <button
+                      key={day}
+                      ref={(node) => {
+                        if (node) dayRefs.current.set(day, node);
+                        else dayRefs.current.delete(day);
+                      }}
+                      type="button"
+                      role="gridcell"
+                      aria-label={dayLabel(day)}
+                      aria-selected={isSelected}
+                      aria-current={day === today ? 'date' : undefined}
+                      tabIndex={day === focusedDay ? 0 : -1}
+                      onClick={() => commit(day)}
+                      onKeyDown={onDayKeyDown}
+                      className={cn(
+                        'mx-auto grid size-9 place-items-center rounded-full text-label transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
+                        inMonth ? 'text-foreground' : 'text-foreground/35',
+                        day === today && !isSelected && 'ring-1 ring-primary',
+                        isSelected ? 'bg-primary font-semibold text-primary-foreground' : 'hover:bg-foreground/8',
+                      )}
+                    >
+                      {Number(day.slice(8, 10))}
+                    </button>
+                  );
+                })}
+              </div>
             ))}
-            {monthGrid(month).map((day) => {
-              const inMonth = day.slice(0, 7) === month.slice(0, 7);
-              const isSelected = day === selected;
-              return (
-                <button
-                  key={day}
-                  ref={(node) => {
-                    if (node) dayRefs.current.set(day, node);
-                    else dayRefs.current.delete(day);
-                  }}
-                  type="button"
-                  role="gridcell"
-                  aria-label={dayLabel(day)}
-                  aria-selected={isSelected}
-                  aria-current={day === today ? 'date' : undefined}
-                  tabIndex={day === focusedDay ? 0 : -1}
-                  onClick={() => commit(day)}
-                  onKeyDown={onDayKeyDown}
-                  className={cn(
-                    'mx-auto grid size-9 place-items-center rounded-full text-label transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
-                    inMonth ? 'text-foreground' : 'text-foreground/35',
-                    day === today && !isSelected && 'ring-1 ring-primary',
-                    isSelected ? 'bg-primary font-semibold text-primary-foreground' : 'hover:bg-foreground/8',
-                  )}
-                >
-                  {Number(day.slice(8, 10))}
-                </button>
-              );
-            })}
           </div>
           <div className="mt-3 flex justify-between border-t border-foreground/10 pt-3 text-label font-semibold">
             <button type="button" onClick={() => commit('')} className={footerButton}>
@@ -185,6 +191,11 @@ export function DatePicker({ name, value, defaultValue = '', onValueChange, id, 
       )}
     </span>
   );
+}
+
+/** Parte los 42 días del mes en sus 6 semanas (filas del calendario). */
+function weeksOf(days: readonly string[]): readonly (readonly string[])[] {
+  return Array.from({ length: days.length / 7 }, (_, week) => days.slice(week * 7, week * 7 + 7));
 }
 
 const navButton =
