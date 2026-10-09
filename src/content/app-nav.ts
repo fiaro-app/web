@@ -4,6 +4,8 @@ export interface AppNavItem {
   readonly href: string;
   /** `false` mientras el módulo no exista: se muestra apagado y sin enlace. */
   readonly available: boolean;
+  /** `true` si es de administración: quien solo es cobrador no lo ve en el menú. */
+  readonly adminOnly?: boolean;
 }
 
 /**
@@ -12,14 +14,14 @@ export interface AppNavItem {
  */
 export const APP_NAV_ITEMS: readonly AppNavItem[] = [
   { label: 'Resumen', href: '/resumen', available: true },
-  { label: 'Cobradores', href: '/cobradores', available: true },
+  { label: 'Cobradores', href: '/cobradores', available: true, adminOnly: true },
   { label: 'Clientes', href: '/clientes', available: true },
   { label: 'Préstamos', href: '/prestamos', available: true },
   { label: 'Cobros', href: '/cobros', available: true },
-  { label: 'Cuadres', href: '/cuadres', available: true },
+  { label: 'Cuadres', href: '/cuadres', available: true, adminOnly: true },
   { label: 'Notificaciones', href: '/notificaciones', available: true },
-  { label: 'Estadísticas', href: '/estadisticas', available: true },
-  { label: 'Configuración', href: '/configuracion', available: true },
+  { label: 'Estadísticas', href: '/estadisticas', available: true, adminOnly: true },
+  { label: 'Configuración', href: '/configuracion', available: true, adminOnly: true },
 ];
 
 /** Ruta de Notificaciones: la opción que lleva la insignia de no leídas. */
@@ -28,4 +30,13 @@ export const NOTIFICATIONS_HREF = '/notificaciones';
 /** ¿La ruta actual es la de esta opción o una de sus subrutas (`/clientes/123`)? */
 export function isNavItemActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/**
+ * Las opciones del menú que puede ver esa persona. Quien solo es cobrador no ve las de administración
+ * (la API ya le niega esos datos: aquí se evita ofrecerle páginas que solo le dirían «sin permiso»).
+ * Si no se sabe el rol, se muestra todo y es la API quien decide.
+ */
+export function visibleNavItems(isCollector: boolean): readonly AppNavItem[] {
+  return isCollector ? APP_NAV_ITEMS.filter((item) => !item.adminOnly) : APP_NAV_ITEMS;
 }

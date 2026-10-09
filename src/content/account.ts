@@ -37,11 +37,27 @@ export const ACCOUNT_TEXT = {
     closeOne: (device: string) => `Cerrar la sesión de ${device}`,
     closeOthers: 'Cerrar las demás sesiones',
     closeAll: 'Cerrar todas las sesiones',
+    confirm: {
+      one: { confirmTitle: '¿Cerrar esta sesión?', confirmDescription: 'Quien la use tendrá que iniciar sesión de nuevo.', confirmLabel: 'Cerrar sesión' },
+      others: {
+        confirmTitle: '¿Cerrar las demás sesiones?',
+        confirmDescription: 'Se cierran todas menos esta. En los otros equipos tendrán que iniciar sesión de nuevo.',
+        confirmLabel: 'Cerrar las demás',
+      },
+      all: {
+        confirmTitle: '¿Cerrar todas las sesiones?',
+        confirmDescription: 'Se cierran todas, incluida esta: tendrás que iniciar sesión de nuevo.',
+        confirmLabel: 'Cerrar todas',
+      },
+    },
   },
   danger: {
     title: 'Desactivar mi cuenta',
     description: 'Pierdes el acceso a Fiaro de inmediato. Tu historial se conserva. Confirma con tu contraseña.',
     password: { label: 'Contraseña' },
     submit: 'Desactivar mi cuenta',
+    confirmTitle: '¿Desactivar tu cuenta?',
+    confirmDescription: 'Pierdes el acceso a Fiaro de inmediato. Tu historial se conserva.',
+    confirmLabel: 'Desactivar',
   },
 } as const;

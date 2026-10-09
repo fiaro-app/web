@@ -6,6 +6,7 @@ import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { Input } from '@/components/atoms/Input';
 import { Text } from '@/components/atoms/Text';
 import { TextButton } from '@/components/atoms/TextButton';
+import { PasswordInput } from '@/components/molecules/PasswordInput';
 import { FormField } from '@/components/molecules/FormField';
 import { RECOVERY_CONTENT } from '@/content/password';
 import { usePasswordRecovery } from '@/features/auth/use-password-recovery';
@@ -55,10 +56,10 @@ export function PasswordRecoveryForm() {
             <Input name="code" inputMode="numeric" autoComplete="one-time-code" placeholder={text.reset.code.placeholder} value={values.code} onChange={setField('code')} />
           </FormField>
           <FormField label={text.reset.newPassword.label} hint={text.reset.newPassword.hint} error={fieldErrors.newPassword}>
-            <Input name="newPassword" type="password" autoComplete="new-password" placeholder="••••••••" value={values.newPassword} onChange={setField('newPassword')} />
+            <PasswordInput name="newPassword" autoComplete="new-password" placeholder="••••••••" value={values.newPassword} onChange={setField('newPassword')} />
           </FormField>
           <FormField label={text.reset.confirmPassword.label} error={fieldErrors.confirmPassword}>
-            <Input name="confirmPassword" type="password" autoComplete="new-password" placeholder="••••••••" value={values.confirmPassword} onChange={setField('confirmPassword')} />
+            <PasswordInput name="confirmPassword" autoComplete="new-password" placeholder="••••••••" value={values.confirmPassword} onChange={setField('confirmPassword')} />
           </FormField>
         </>
       ) : (

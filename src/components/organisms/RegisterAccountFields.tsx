@@ -1,4 +1,5 @@
 import { Input } from '@/components/atoms/Input';
+import { PasswordInput } from '@/components/molecules/PasswordInput';
 import { FormField } from '@/components/molecules/FormField';
 import { FormFieldset } from '@/components/molecules/FormFieldset';
 import type { useRegisterForm } from '@/features/auth/use-register-form';
@@ -22,7 +23,7 @@ export function RegisterAccountFields({ values, fieldErrors, setField }: Readonl
         <Input name="contactEmail" type="email" inputMode="email" autoComplete="email" placeholder="tu@correo.com" value={values.contactEmail} onChange={setField('contactEmail')} />
       </FormField>
       <FormField label="Contraseña" hint="Mínimo 8 caracteres." error={fieldErrors.password}>
-        <Input name="password" type="password" autoComplete="new-password" placeholder="••••••••" value={values.password} onChange={setField('password')} />
+        <PasswordInput name="password" autoComplete="new-password" placeholder="••••••••" value={values.password} onChange={setField('password')} />
       </FormField>
     </FormFieldset>
   );

@@ -10,11 +10,11 @@ export interface FilterActionsProps {
   readonly isFiltered: boolean;
 }
 
-/** Botones «Aplicar» y «Limpiar» de un filtro de listado (formulario GET). Solo presentación. */
+/** Botones «Aplicar» (sólido: es la acción principal y siempre se puede pulsar) y «Limpiar» de un filtro de listado (formulario GET). Solo presentación. */
 export function FilterActions({ applyLabel, clearLabel, clearHref, isFiltered }: Readonly<FilterActionsProps>) {
   return (
     <div className="flex gap-3">
-      <Button type="submit" variant="outline" size="sm" className="h-11">
+      <Button type="submit" variant="primary" size="sm" className="h-11">
         {applyLabel}
       </Button>
       {isFiltered && (

@@ -50,12 +50,12 @@ describe('useLoanForm', () => {
     expect(result.current.values.totalPayable).toBe(600_000);
   });
 
-  it('stops suggesting once the total was edited by hand', () => {
+  it('recalculates the total every time installments or value change; it cannot be set by hand', () => {
     const result = setup();
     fill(result);
-    act(() => result.current.setTotalPayable(650_000));
     act(() => result.current.setAmount('installmentValue')(40_000));
-    expect(result.current.values.totalPayable).toBe(650_000);
+    expect(result.current.values.totalPayable).toBe(800_000);
+    expect(result.current).not.toHaveProperty('setTotalPayable');
   });
 
   it('validates before calling the API', async () => {

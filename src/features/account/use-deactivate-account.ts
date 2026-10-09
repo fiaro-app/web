@@ -13,13 +13,15 @@ export function useDeactivateAccount() {
   const [passwordError, setPasswordError] = useState<string | undefined>();
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
 
   const changePassword = (event: ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
     setPasswordError(undefined);
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  /** Valida la contraseña y, si es válida, pide confirmar: desactivar la cuenta es una decisión importante. */
+  const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
     const parsed = DeactivateFormSchema.safeParse({ password });
@@ -27,6 +29,17 @@ export function useDeactivateAccount() {
       setPasswordError(parsed.error.issues[0]?.message);
       return;
     }
+    setIsConfirming(true);
+  };
+
+  const cancel = () => setIsConfirming(false);
+
+  /** Ya confirmado: desactiva la cuenta con la contraseña escrita. */
+  const confirm = async () => {
+    if (isSubmitting) return;
+    const parsed = DeactivateFormSchema.safeParse({ password });
+    if (!parsed.success) return;
+    setIsConfirming(false);
     setIsSubmitting(true);
     setFormError(null);
     try {
@@ -42,5 +55,5 @@ export function useDeactivateAccount() {
     router.refresh();
   };
 
-  return { password, passwordError, formError, isSubmitting, changePassword, submit };
+  return { password, passwordError, formError, isSubmitting, isConfirming, changePassword, submit, cancel, confirm };
 }

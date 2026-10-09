@@ -15,4 +15,14 @@ describe('LandingTemplate', () => {
     expect(screen.getByRole('banner').compareDocumentPosition(main)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
     expect(main.compareDocumentPosition(screen.getByRole('contentinfo'))).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   });
+
+  it('keeps the nav pinned to the top while scrolling', () => {
+    render(
+      <LandingTemplate nav={<header>nav</header>} footer={<footer>pie</footer>}>
+        <section>contenido</section>
+      </LandingTemplate>,
+    );
+
+    expect(screen.getByRole('banner').parentElement).toHaveClass('sticky', 'top-0');
+  });
 });

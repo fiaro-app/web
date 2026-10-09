@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
@@ -32,5 +33,20 @@ describe('LogoForm', () => {
     render(<LogoForm businessName="Buen Vecino" logoUrl={null} canEdit={false} uploadAvailable />);
 
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+
+  it('asks for confirmation before removing the logo and lets the person cancel', async () => {
+    HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
+      this.setAttribute('open', '');
+    });
+    HTMLDialogElement.prototype.close = vi.fn(function (this: HTMLDialogElement) {
+      this.removeAttribute('open');
+    });
+    render(<LogoForm businessName="Buen Vecino" logoUrl="https://cdn.fiaro.co/l.png" canEdit uploadAvailable />);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Quitar logo' }));
+    expect(screen.getByRole('heading', { name: '¿Quitar el logo?' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Cancelar' }));
+    expect(HTMLDialogElement.prototype.close).toHaveBeenCalled();
   });
 });

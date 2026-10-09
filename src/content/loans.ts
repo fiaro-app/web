@@ -69,7 +69,7 @@ export const LOANS_TEXT = {
     installmentValue: { label: 'Valor de cada cuota' },
     totalPayable: {
       label: 'Total a pagar',
-      hint: 'Sugerido: cuotas × valor de la cuota. Cámbialo si pactaron otra cosa.',
+      hint: 'Se calcula solo: cuotas × valor de la cuota.',
     },
     frequency: {
       label: 'Frecuencia de cobro',

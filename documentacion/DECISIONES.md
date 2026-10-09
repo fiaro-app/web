@@ -87,6 +87,10 @@ se agrega la nueva.
 | W-80 | «Contacto» y «Contactar ventas» llevan a la nueva página pública `/contacto` (D-114, `POST /leads`), con campo señuelo contra robots y el aviso del límite por IP; reemplaza al `mailto:` de W-68 y la variable `NEXT_PUBLIC_CONTACT_EMAIL` ya no se usa | Un formulario deja el contacto guardado y medible, sin depender de que la persona tenga un cliente de correo |
 | W-81 | El panel avisa del plan (D-115) cuando la prueba termina en 7 días o menos, está en gracia o en solo lectura, y Configuración suma «Tu plan» con vencimiento y uso de cobradores. Solo informa: ni la web ni la API bloquean nada todavía | La API aún no aplica el solo lectura; avisar primero deja decidir después qué se bloquea |
 | W-82 | `@fiaro-app/contracts` (paquete propio) queda excluido de la edad mínima de publicación de pnpm (`minimumReleaseAgeExclude` en `pnpm-workspace.yaml`); los paquetes de terceros siguen sujetos a esa regla | Una versión nueva del contrato debe poder instalarse el mismo día que se publica; la protección contra paquetes recién publicados es para código ajeno |
+| W-83 | Configuración muestra sus bloques en dos columnas desde `xl`; el menú de la landing queda fijo arriba (`sticky`); «Aplicar» de los filtros es un botón sólido | Menos scroll en Configuración; el menú siempre a mano; el botón en contorno parecía deshabilitado |
+| W-84 | El menú del panel oculta Cobradores, Cuadres, Estadísticas y Configuración a quien solo es cobrador (`adminOnly` en `content/app-nav.ts`); sin rol conocido se muestra todo y decide la API | No ofrecer páginas que solo dirían «sin permiso»; la API sigue siendo quien autoriza |
+| W-85 | Las contraseñas llevan «ojito» (`PasswordInput`); desactivar la cuenta, cerrar sesiones, quitar el logo y aprobar/rechazar un cuadre piden confirmación (`ConfirmDialog`) | Evitar errores en decisiones difíciles de deshacer |
+| W-86 | «Total a pagar» del préstamo es solo informativo (cuotas × valor), de solo lectura | El total pactado siempre debe cuadrar con las cuotas |
 
 ## Pendientes conocidos
 
