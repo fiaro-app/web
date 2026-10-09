@@ -15,7 +15,10 @@ describe('Toast', () => {
     const onAction = vi.fn();
     render(<Toast message="Error" actionLabel="Reintentar" onAction={onAction} />);
 
-    await userEvent.click(screen.getByRole('button', { name: 'Reintentar' }));
+    const action = screen.getByRole('button', { name: 'Reintentar' });
+    // El ámbar claro sobre la tinta cumple AA; el ámbar normal (`text-warning`) no.
+    expect(action).toHaveClass('text-warning-soft');
+    await userEvent.click(action);
 
     expect(onAction).toHaveBeenCalledOnce();
   });

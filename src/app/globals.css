@@ -26,6 +26,8 @@
   --success-foreground: #ffffff;
   --warning: #7a5106;
   --warning-foreground: #ffffff;
+  /* Ámbar legible sobre fondos oscuros (acción del Toast): 10.35:1 contra la tinta; el ámbar normal da 2.41:1. */
+  --warning-soft: #f5c451;
   --destructive: #ae3730;
   --destructive-foreground: #ffffff;
 }
@@ -49,6 +51,7 @@
   --color-success-foreground: var(--success-foreground);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
+  --color-warning-soft: var(--warning-soft);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
 

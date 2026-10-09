@@ -26,7 +26,7 @@ export function Toast({ message, actionLabel, onAction, className }: Readonly<To
         <button
           type="button"
           onClick={onAction}
-          className="rounded-sm font-semibold text-warning focus-visible:ring-2 focus-visible:ring-surface focus-visible:outline-none"
+          className="rounded-sm font-semibold text-warning-soft focus-visible:ring-2 focus-visible:ring-surface focus-visible:outline-none"
         >
           {actionLabel}
         </button>

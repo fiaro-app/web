@@ -28,6 +28,12 @@ import { FilterPill } from '@/components/atoms/FilterPill';
 import { AmountDemo } from './AmountDemo';
 import { MoleculesDemo } from './MoleculesDemo';
 
+const SELECT_STATES = [
+  { state: 'reposo', props: {} },
+  { state: 'error', props: { invalid: true } },
+  { state: 'deshabilitado', props: { disabled: true } },
+];
+
 export const metadata: Metadata = { title: 'Sistema de diseño · Fiaro' };
 
 /**
@@ -90,9 +96,9 @@ export default function DesignSystemPage() {
           <div className="w-60"><Input placeholder="Monto" disabled aria-label="Deshabilitado" /></div>
         </Row>
         <Row label="Select">
-          {[{}, { invalid: true }, { disabled: true }].map((props, index) => (
-            <div key={index} className="w-50">
-              <Select aria-label={`Cobrador ${index}`} {...props}>
+          {SELECT_STATES.map(({ state, props }) => (
+            <div key={state} className="w-50">
+              <Select aria-label={`Cobrador ${state}`} {...props}>
                 <option>Todos los cobradores</option>
                 <option>Luis Albares</option>
               </Select>

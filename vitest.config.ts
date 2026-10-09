@@ -17,7 +17,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/**/*.test.{ts,tsx}'],
+      exclude: ['src/**/*.test.{ts,tsx}', 'src/app/design-system/**'],
       // lcovonly es el formato que lee SonarCloud, sin el reporte HTML que trae "lcov"; text lo
       // muestra en la terminal.
       reporter: ['text', 'lcovonly'],
