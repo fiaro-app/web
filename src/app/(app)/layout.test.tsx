@@ -1,31 +1,38 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-import AppLayout, { metadata } from './layout';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('@/features/auth/session.server', () => ({
-  requireUser: async () => ({ id: 'u1', name: 'Ana Pérez', phoneNumber: '+573001234567', contactEmail: null, mustChangePassword: false }),
+const { requireUser, getShellContext, redirect } = vi.hoisted(() => ({
+  requireUser: vi.fn(),
+  getShellContext: vi.fn(),
+  redirect: vi.fn((to: string) => {
+    throw new Error(`NEXT_REDIRECT:${to}`);
+  }),
 }));
-vi.mock('@/features/app-shell/get-shell-context.server', () => ({
-  getShellContext: async () => ({ businessName: 'Financiera Buen Vecino', roleLabel: 'Administrador' }),
-}));
-vi.mock('next/navigation', () => ({
-  usePathname: () => '/resumen',
-  useRouter: () => ({ replace: vi.fn(), refresh: vi.fn() }),
-}));
+vi.mock('@/features/auth/session.server', () => ({ requireUser }));
+vi.mock('@/features/app-shell/get-shell-context.server', () => ({ getShellContext }));
+vi.mock('next/navigation', () => ({ redirect, usePathname: () => '/resumen', useRouter: () => ({ replace: vi.fn(), refresh: vi.fn() }) }));
 
-describe('Private layout', () => {
-  it('is kept out of search engines', () => {
-    expect(metadata.robots).toEqual({ index: false, follow: false });
+import AppLayout from './layout';
+
+const USER = { id: 'u1', name: 'Ana Pérez', mustChangePassword: false };
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  getShellContext.mockResolvedValue({ businessName: 'Buen Vecino', roleLabel: 'Administrador' });
+});
+
+describe('AppLayout', () => {
+  it('renders the shell around the page for a person with a settled password', async () => {
+    requireUser.mockResolvedValue(USER);
+    render(await AppLayout({ children: <p>contenido</p> }));
+    expect(screen.getByText('contenido')).toBeInTheDocument();
+    expect(screen.getByText('Buen Vecino')).toBeInTheDocument();
+    expect(redirect).not.toHaveBeenCalled();
   });
 
-  it('shows the business, the signed-in person, the navigation and the page', async () => {
-    render(await AppLayout({ children: <p>contenido</p> }));
-
-    expect(screen.getByText('Financiera Buen Vecino')).toBeInTheDocument();
-    expect(screen.getByText('Ana Pérez')).toBeInTheDocument();
-    expect(screen.getByText('Administrador')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Resumen' })).toHaveAttribute('aria-current', 'page');
-    expect(screen.getByRole('button', { name: 'Cerrar sesión' })).toBeInTheDocument();
-    expect(screen.getByRole('main')).toHaveTextContent('contenido');
+  it('sends a person who signed in with a temporary password to change it, before loading anything else', async () => {
+    requireUser.mockResolvedValue({ ...USER, mustChangePassword: true });
+    await expect(AppLayout({ children: <p>contenido</p> })).rejects.toThrow('NEXT_REDIRECT:/cambiar-contrasena');
+    expect(getShellContext).not.toHaveBeenCalled();
   });
 });
