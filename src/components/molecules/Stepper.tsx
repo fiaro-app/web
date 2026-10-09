@@ -1,14 +1,23 @@
 import { cn } from '@/lib/cn';
 
+export type StepperSize = 'md' | 'sm';
+
+/** `md` = círculos de 28px; `sm` = 24px (formularios de varios pasos). */
+const SIZE_CLASSES: Record<StepperSize, { readonly circle: string; readonly gap: string }> = {
+  md: { circle: 'size-7', gap: 'gap-2' },
+  sm: { circle: 'size-6 text-[11px]', gap: 'gap-1.5' },
+};
+
 export interface StepperProps {
   readonly steps: readonly string[];
   /** Índice (desde 0) del paso actual; los pasos anteriores y el actual se rellenan. */
   readonly current: number;
+  readonly size?: StepperSize;
   readonly className?: string;
 }
 
 /** Indicador de progreso de un flujo de varios pasos (registro, alta de préstamo). */
-export function Stepper({ steps, current, className }: Readonly<StepperProps>) {
+export function Stepper({ steps, current, size = 'md', className }: Readonly<StepperProps>) {
   return (
     <ol className={cn('flex items-center', className)}>
       {steps.map((label, index) => {
@@ -19,10 +28,11 @@ export function Stepper({ steps, current, className }: Readonly<StepperProps>) {
             aria-current={index === current ? 'step' : undefined}
             className="flex items-center"
           >
-            <span className="flex items-center gap-2">
+            <span className={cn('flex items-center', SIZE_CLASSES[size].gap)}>
               <span
                 className={cn(
-                  'grid size-7 place-items-center rounded-full font-mono text-caption font-medium',
+                  'grid place-items-center rounded-full font-mono text-caption font-medium',
+                  SIZE_CLASSES[size].circle,
                   reached
                     ? 'bg-primary text-primary-foreground'
                     : 'border-[1.5px] border-foreground bg-surface text-foreground/60',
