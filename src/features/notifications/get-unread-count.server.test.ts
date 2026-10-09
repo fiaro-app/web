@@ -12,11 +12,11 @@ beforeEach(() => {
 });
 
 describe('getUnreadCount', () => {
-  it('asks for a single unread row and returns the total', async () => {
-    callEndpointAsUser.mockResolvedValue({ data: [], meta: { page: 1, pageSize: 1, total: 7 } });
+  it('reads the count from the dedicated endpoint', async () => {
+    callEndpointAsUser.mockResolvedValue({ count: 7 });
 
     await expect(getUnreadCount()).resolves.toBe(7);
-    expect(callEndpointAsUser.mock.calls[0]?.[1]).toEqual({ body: { page: 1, pageSize: 1, unreadOnly: true } });
+    expect(callEndpointAsUser.mock.calls[0]?.[0]).toMatchObject({ method: 'GET', path: '/notifications/unread-count' });
   });
 
   it('shows no badge when the API fails', async () => {

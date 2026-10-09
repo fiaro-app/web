@@ -20,3 +20,10 @@ export function formatBusinessDate(value: string): string {
 export function formatInstantDate(instant: string): string {
   return formatBusinessDate(toBusinessDate(new Date(instant)));
 }
+
+const TIME_FORMAT = new Intl.DateTimeFormat('es-CO', { timeZone: 'America/Bogota', hour: '2-digit', minute: '2-digit', hour12: true });
+
+/** La hora a la que ocurrió un instante, como se lee en Colombia (`3:05 p. m.`). */
+export function formatInstantTime(instant: string): string {
+  return TIME_FORMAT.format(new Date(instant));
+}

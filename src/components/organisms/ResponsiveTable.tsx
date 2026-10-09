@@ -9,6 +9,8 @@ export interface ResponsiveTableProps {
   readonly headers: readonly string[];
   /** Ancho mínimo desde `md` (`md:min-w-150`); debajo la tabla se vuelve una lista de tarjetas. */
   readonly minWidthClass: string;
+  /** Si la tabla lleva una última columna de acciones (por defecto sí); sin ella cada fila omite su `<td>` final. */
+  readonly withActions?: boolean;
   /** Las filas (`<tr>`) con las clases de `RESPONSIVE_TABLE`. */
   readonly children: ReactNode;
   readonly className?: string;
@@ -22,6 +24,7 @@ export function ResponsiveTable({
   caption,
   headers,
   minWidthClass,
+  withActions = true,
   children,
   className,
 }: Readonly<ResponsiveTableProps>) {
@@ -36,9 +39,11 @@ export function ResponsiveTable({
                 {header}
               </th>
             ))}
-            <th scope="col" className="px-5 py-3.5">
-              <span className="sr-only">Acciones</span>
-            </th>
+            {withActions && (
+              <th scope="col" className="px-5 py-3.5">
+                <span className="sr-only">Acciones</span>
+              </th>
+            )}
           </tr>
         </thead>
         <tbody className={RESPONSIVE_TABLE.body}>{children}</tbody>

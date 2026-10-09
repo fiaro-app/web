@@ -51,6 +51,27 @@ export const LoanBalanceSchema = z.object({
 });
 export type LoanBalance = z.infer<typeof LoanBalanceSchema>;
 
+/** Estado de una cuota del calendario (`GET /loans/:loanId/installments`). */
+export const InstallmentStatusSchema = z.enum(['PAID', 'PARTIAL', 'OVERDUE', 'PENDING']);
+export type InstallmentStatus = z.infer<typeof InstallmentStatusSchema>;
+
+/** Una cuota del calendario: lo esperado, lo imputado de los pagos y su estado al día de hoy. */
+export const LoanInstallmentSchema = z.object({
+  number: z.int().positive(),
+  dueDate: z.iso.date(),
+  expectedAmount: z.int().positive(),
+  paidAmount: z.int().nonnegative(),
+  status: InstallmentStatusSchema,
+});
+export type LoanInstallment = z.infer<typeof LoanInstallmentSchema>;
+
+/** Calendario de cuotas de un préstamo; sale del mismo motor que el saldo y la mora. */
+export const LoanInstallmentsSchema = z.object({
+  loanId: IdSchema,
+  asOf: z.iso.date(),
+  installments: z.array(LoanInstallmentSchema),
+});
+
 /** Quién cobra un préstamo y durante qué fechas (`/loans/:loanId/collection-assignments`). */
 export const CollectionAssignmentSchema = z.object({
   id: IdSchema,
@@ -109,6 +130,13 @@ export const loanEndpoints = {
     summary: 'Saldo, mora y próxima cuota de un préstamo, al día de hoy.',
     params: LoanIdParamsSchema,
     response: LoanBalanceSchema,
+  }),
+  installments: defineEndpoint({
+    method: 'GET',
+    path: '/loans/:loanId/installments',
+    summary: 'Calendario de cuotas de un préstamo, con lo pagado y el estado de cada una.',
+    params: LoanIdParamsSchema,
+    response: LoanInstallmentsSchema,
   }),
   assignments: defineEndpoint({
     method: 'GET',

@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { describeAuthError } from '@/features/auth/error-messages';
-import { markNotificationRead } from '@/features/notifications/notifications-api';
+import { markAllNotificationsRead, markNotificationRead } from '@/features/notifications/notifications-api';
 import { isApiRequestError } from '@/lib/api';
 
 /** Mensaje de un error al marcar como leída; `NOT_FOUND` significa que ya no existe. */
@@ -18,8 +18,7 @@ function describeMarkReadError(error: unknown): string {
  * Lógica de marcar notificaciones como leídas, sin diseño. Solo una a la vez (`pendingId`); si sale
  * bien refresca la página para traer la lista nueva, y si falla deja el mensaje en `error`.
  *
- * `markAllRead` marca las de la página una por una (la API no tiene «todas»): sigue con las demás
- * si una falla y avisa al final cuántas no se pudieron marcar.
+ * `markAllRead` marca todas las de la persona con una sola llamada (`POST /notifications/read-all`).
  */
 export function useMarkNotificationRead() {
   const router = useRouter();
@@ -41,27 +40,18 @@ export function useMarkNotificationRead() {
     }
   };
 
-  const markAllRead = async (ids: readonly string[]) => {
-    if (pendingId || isMarkingAll || ids.length === 0) return;
+  const markAllRead = async () => {
+    if (pendingId || isMarkingAll) return;
     setIsMarkingAll(true);
     setError(null);
-    let failed = 0;
-    for (const id of ids) {
-      try {
-        await markNotificationRead(id);
-      } catch {
-        failed += 1;
-      }
+    try {
+      await markAllNotificationsRead();
+      router.refresh();
+    } catch (failure) {
+      setError(describeAuthError(failure).message);
+    } finally {
+      setIsMarkingAll(false);
     }
-    if (failed > 0) {
-      setError(
-        failed === ids.length
-          ? 'No pudimos marcar las notificaciones. Inténtalo de nuevo.'
-          : `No pudimos marcar ${String(failed)} de ${String(ids.length)} notificaciones. Inténtalo de nuevo.`,
-      );
-    }
-    setIsMarkingAll(false);
-    router.refresh();
   };
 
   return { pendingId, error, isMarkingAll, markRead, markAllRead };

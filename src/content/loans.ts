@@ -117,4 +117,15 @@ export const LOANS_TEXT = {
       done: 'Préstamo anulado.',
     },
   },
+  installments: {
+    title: 'Calendario de cuotas',
+    caption: 'Cuotas del préstamo, con lo pagado y su estado',
+    headers: ['Cuota', 'Vence', 'Esperado', 'Pagado', 'Estado'] as const,
+    empty: 'Este préstamo no tiene cuotas por mostrar.',
+    summary: (paid: number, total: number, overdue: number) =>
+      overdue > 0
+        ? `${String(paid)} de ${String(total)} cuotas pagadas · ${String(overdue)} vencidas`
+        : `${String(paid)} de ${String(total)} cuotas pagadas`,
+    status: { PAID: 'Pagada', PARTIAL: 'Parcial', OVERDUE: 'Vencida', PENDING: 'Pendiente' },
+  },
 } as const;
