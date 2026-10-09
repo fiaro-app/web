@@ -12,7 +12,7 @@ export function LandingTemplate({ nav, footer, children }: Readonly<LandingTempl
   return (
     <div className="flex min-h-full flex-col bg-surface">
       {nav}
-      <main className="flex flex-1 flex-col">{children}</main>
+      <main id="contenido" tabIndex={-1} className="focus:outline-none flex flex-1 flex-col">{children}</main>
       {footer}
     </div>
   );

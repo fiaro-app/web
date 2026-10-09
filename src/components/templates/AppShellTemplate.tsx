@@ -16,7 +16,7 @@ export function AppShellTemplate({ sidebar, children }: Readonly<AppShellTemplat
     <div className="flex min-h-screen flex-col bg-background lg:flex-row">
       <div className="hidden lg:flex">{sidebar}</div>
       <MobileNav>{sidebar}</MobileNav>
-      <main className="flex min-w-0 flex-1 flex-col gap-7 p-5 sm:p-8">{children}</main>
+      <main id="contenido" tabIndex={-1} className="focus:outline-none flex min-w-0 flex-1 flex-col gap-7 p-5 sm:p-8">{children}</main>
     </div>
   );
 }
