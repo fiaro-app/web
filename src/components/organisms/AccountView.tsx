@@ -30,8 +30,8 @@ export function AccountView({ fullName, phoneNumber, contactEmail, contactEmailV
         <div className="flex flex-col gap-7">
           <SettingsSection title={text.profile.title} description={text.profile.description}>
             <AccountProfileForm key={`${fullName}|${contactEmail ?? ''}`} fullName={fullName} phoneNumber={phoneNumber} contactEmail={contactEmail} />
-            {contactEmail && contactEmailVerified && <p className="text-small font-semibold text-success">{text.verification.verified}</p>}
-            {contactEmail && !contactEmailVerified && <EmailVerificationForm email={contactEmail} />}
+            {contactEmail !== null && contactEmailVerified && <p className="text-small font-semibold text-success">{text.verification.verified}</p>}
+            {contactEmail !== null && !contactEmailVerified && <EmailVerificationForm email={contactEmail} />}
           </SettingsSection>
           <SettingsSection title={text.password.title} description={text.password.description}>
             <AccountPasswordForm />
