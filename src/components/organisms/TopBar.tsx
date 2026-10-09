@@ -1,4 +1,5 @@
 import NextLink from 'next/link';
+import type { ReactNode } from 'react';
 import { Avatar } from '@/components/atoms/Avatar';
 import { NavLink } from '@/components/atoms/NavLink';
 import { cn } from '@/lib/cn';
@@ -13,11 +14,13 @@ export interface TopBarProps {
   readonly navItems: readonly TopBarNavItem[];
   readonly userName: string;
   readonly brandName?: string;
+  /** Acciones a la derecha del usuario (p. ej. el botón de cerrar sesión). */
+  readonly actions?: ReactNode;
   readonly className?: string;
 }
 
 /** Barra superior del panel web: marca y navegación a la izquierda, usuario a la derecha. */
-export function TopBar({ navItems, userName, brandName = 'Fiaro', className }: Readonly<TopBarProps>) {
+export function TopBar({ navItems, userName, brandName = 'Fiaro', actions, className }: Readonly<TopBarProps>) {
   return (
     <header className={cn('flex h-16 items-center justify-between bg-surface px-8', className)}>
       <div className="flex items-center gap-10">
@@ -38,6 +41,7 @@ export function TopBar({ navItems, userName, brandName = 'Fiaro', className }: R
       <div className="flex items-center gap-2.5">
         <Avatar name={userName} size="sm" />
         <span className="text-label font-medium">{userName}</span>
+        {actions}
       </div>
     </header>
   );
