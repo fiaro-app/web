@@ -1,6 +1,6 @@
 import type { NextConfig } from 'next';
 import { resolveApiUrl } from './src/lib/api-url';
-import { NO_STORE_HEADER, NO_STORE_SOURCES, buildSecurityHeaders } from './src/lib/security-headers';
+import { NO_STORE_HEADER, NO_STORE_SOURCES, buildSecurityHeaders, parseStorageOrigin } from './src/lib/security-headers';
 
 /**
  * Origen de la API. Las llamadas del navegador van a `/api/*` de esta misma web y Next las
@@ -10,7 +10,10 @@ import { NO_STORE_HEADER, NO_STORE_SOURCES, buildSecurityHeaders } from './src/l
  */
 const API_URL = resolveApiUrl();
 
-const securityHeaders = buildSecurityHeaders({ isDevelopment: process.env.NODE_ENV !== 'production' });
+const securityHeaders = buildSecurityHeaders({
+  isDevelopment: process.env.NODE_ENV !== 'production',
+  storageOrigin: parseStorageOrigin(process.env.STORAGE_ORIGIN),
+});
 
 const nextConfig: NextConfig = {
   // No anunciar la tecnología del servidor.

@@ -5,6 +5,7 @@ export const NOTIFICATIONS_TEXT = {
   listLabel: 'Lista de notificaciones',
   unreadBadge: 'Sin leer',
   markRead: 'Marcar como leída',
+  markAll: 'Marcar todas como leídas',
   view: 'Ver',
   empty: {
     title: 'No tienes notificaciones',

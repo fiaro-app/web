@@ -24,5 +24,5 @@ export function AppSidebar({ businessName, userName, roleLabel, unreadNotificati
     badge: item.href === NOTIFICATIONS_HREF ? unreadNotifications : 0,
   }));
 
-  return <Sidebar businessName={businessName} items={items} userName={userName} roleLabel={roleLabel} actions={<SignOutButton />} />;
+  return <Sidebar businessName={businessName} items={items} userName={userName} roleLabel={roleLabel} accountHref="/cuenta" actions={<SignOutButton />} />;
 }

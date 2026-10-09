@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { organizationJsonLd, serializeJsonLd, softwareApplicationJsonLd } from './json-ld';
+import { faqJsonLd, organizationJsonLd, serializeJsonLd, softwareApplicationJsonLd } from './json-ld';
 
 describe('organizationJsonLd', () => {
   it('describes the organization with absolute URLs', () => {
@@ -46,5 +46,15 @@ describe('serializeJsonLd', () => {
 
     expect(text).not.toMatch(/[\u2028\u2029]/);
     expect(JSON.parse(text)).toEqual([{ a: 'x\u2028y\u2029z' }]);
+  });
+
+  it('builds a FAQPage with one question and answer per entry', () => {
+    const node = faqJsonLd([{ question: '¿Cuesta?', answer: 'No.' }]);
+
+    expect(node).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [{ '@type': 'Question', name: '¿Cuesta?', acceptedAnswer: { '@type': 'Answer', text: 'No.' } }],
+    });
   });
 });

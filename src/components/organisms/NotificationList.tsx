@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/components/atoms/Button';
 import { Alert } from '@/components/molecules/Alert';
 import { NotificationCard } from '@/components/molecules/NotificationCard';
 import { NOTIFICATIONS_TEXT } from '@/content/notifications';
@@ -8,15 +9,21 @@ import { useMarkNotificationRead } from '@/features/notifications/use-mark-notif
 
 /** Lista de notificaciones con la acción de marcarlas como leídas. Solo diseño; la lógica vive en `useMarkNotificationRead`. */
 export function NotificationList({ items }: Readonly<{ items: readonly NotificationItem[] }>) {
-  const { pendingId, error, markRead } = useMarkNotificationRead();
+  const { pendingId, error, isMarkingAll, markRead, markAllRead } = useMarkNotificationRead();
+  const unreadIds = items.filter((item) => !item.read).map((item) => item.id);
 
   return (
     <div className="flex flex-col gap-3">
+      {unreadIds.length > 0 && (
+        <Button variant="outline" loading={isMarkingAll} disabled={pendingId !== null} onClick={() => void markAllRead(unreadIds)} className="self-start">
+          {NOTIFICATIONS_TEXT.markAll}
+        </Button>
+      )}
       {error && <Alert tone="error">{error}</Alert>}
       <ul aria-label={NOTIFICATIONS_TEXT.listLabel} className="flex flex-col gap-3">
         {items.map((item) => (
           <li key={item.id}>
-            <NotificationCard notification={item} onMarkRead={(id) => void markRead(id)} busy={pendingId !== null} />
+            <NotificationCard notification={item} onMarkRead={(id) => void markRead(id)} busy={pendingId !== null || isMarkingAll} />
           </li>
         ))}
       </ul>

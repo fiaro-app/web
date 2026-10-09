@@ -20,7 +20,7 @@ export function SettlementReviewForm({ settlementId }: Readonly<{ settlementId: 
       <FormField label={text.noteLabel}>
         <Textarea name="reviewNote" placeholder={text.notePlaceholder} value={note} onChange={changeNote} maxLength={500} disabled={busy} />
       </FormField>
-      <div className="flex gap-3">
+      <div className="flex gap-3 max-md:sticky max-md:bottom-0 max-md:-mx-5 max-md:border-t max-md:border-foreground/8 max-md:bg-surface max-md:p-5">
         <Button variant="outline" loading={pending === 'reject'} disabled={busy} onClick={() => void reject()} className="flex-1">
           {text.reject}
         </Button>

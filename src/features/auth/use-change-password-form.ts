@@ -14,9 +14,9 @@ const EMPTY_VALUES: Record<ChangePasswordField, string> = { currentPassword: '',
 /**
  * Lógica de cambiar la contraseña con la sesión abierta (p. ej. cuentas que entran con una
  * temporal), sin diseño. Al salir bien la API deja una sesión nueva en la cookie y se sigue a
- * `redirectTo`.
+ * `redirectTo`, o, si se da `onSuccess`, se queda en la pantalla y lo llama.
  */
-export function useChangePasswordForm({ redirectTo }: { readonly redirectTo: string }) {
+export function useChangePasswordForm({ redirectTo, onSuccess }: { readonly redirectTo?: string; readonly onSuccess?: () => void }) {
   const router = useRouter();
   const [values, setValues] = useState(EMPTY_VALUES);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors<ChangePasswordField>>({});
@@ -61,7 +61,14 @@ export function useChangePasswordForm({ redirectTo }: { readonly redirectTo: str
       fail(error);
       return;
     }
-    router.replace(redirectTo);
+    if (onSuccess) {
+      // Se queda en la misma pantalla (la cuenta): limpia el formulario y avisa.
+      setValues(EMPTY_VALUES);
+      setIsSubmitting(false);
+      onSuccess();
+      return;
+    }
+    if (redirectTo) router.replace(redirectTo);
     router.refresh();
   };
 

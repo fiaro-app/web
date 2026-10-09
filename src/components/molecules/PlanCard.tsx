@@ -33,7 +33,7 @@ export function PlanCard({
   return (
     <article
       className={cn(
-        'flex flex-col gap-4 rounded-lg border-2 px-6 py-7',
+        'flex h-full flex-col gap-4 rounded-lg border-2 px-6 py-7',
         highlighted
           ? 'border-primary bg-primary text-primary-foreground'
           : 'border-transparent bg-background text-foreground',
@@ -56,7 +56,7 @@ export function PlanCard({
         {description}
       </Text>
       <Divider inverse={highlighted} decorative />
-      <ul className="flex flex-col gap-2">
+      <ul className="mb-2 flex flex-col gap-2">
         {features.map((feature) => (
           <li key={feature} className="flex gap-2 text-small">
             <span aria-hidden="true" className={highlighted ? undefined : 'text-success'}>
@@ -66,7 +66,7 @@ export function PlanCard({
           </li>
         ))}
       </ul>
-      <ButtonLink href={ctaHref} variant={highlighted ? 'inverse' : 'primary'} className="w-full">
+      <ButtonLink href={ctaHref} variant={highlighted ? 'inverse' : 'primary'} className="mt-auto w-full">
         {ctaLabel}
       </ButtonLink>
     </article>

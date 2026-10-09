@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { NO_STORE_HEADER, NO_STORE_SOURCES, buildContentSecurityPolicy, buildSecurityHeaders } from './security-headers';
+import { NO_STORE_HEADER, NO_STORE_SOURCES, buildContentSecurityPolicy, buildSecurityHeaders, parseStorageOrigin } from './security-headers';
 
 const directive = (csp: string, name: string) => csp.split('; ').find((entry) => entry.startsWith(`${name} `) || entry === name);
 
@@ -49,5 +49,30 @@ describe('no-store routes', () => {
   it('cover the panel and the access pages', () => {
     expect(NO_STORE_SOURCES).toEqual(expect.arrayContaining(['/resumen/:path*', '/login', '/registro']));
     expect(NO_STORE_HEADER).toEqual({ key: 'Cache-Control', value: 'private, no-store' });
+  });
+});
+
+describe('storage origin', () => {
+  it('is allowed to show images and to receive the upload, and nothing else', () => {
+    const csp = buildContentSecurityPolicy({ isDevelopment: false, storageOrigin: 'https://cdn.fiaro.co' });
+
+    expect(directive(csp, 'img-src')).toContain('https://cdn.fiaro.co');
+    expect(directive(csp, 'connect-src')).toContain('https://cdn.fiaro.co');
+    expect(directive(csp, 'script-src')).not.toContain('cdn.fiaro.co');
+  });
+
+  it('is not in the policy when it is not configured', () => {
+    expect(buildContentSecurityPolicy({ isDevelopment: false })).not.toContain('cdn');
+  });
+});
+
+describe('parseStorageOrigin', () => {
+  it('keeps only the origin of an http(s) URL', () => {
+    expect(parseStorageOrigin('https://pub-1.r2.dev/logos/x.png')).toBe('https://pub-1.r2.dev');
+    expect(parseStorageOrigin('http://localhost:9000')).toBe('http://localhost:9000');
+  });
+
+  it.each([undefined, '', 'no es una url', 'ftp://host', 'javascript:alert(1)'])('ignores %s', (raw) => {
+    expect(parseStorageOrigin(raw)).toBeNull();
   });
 });

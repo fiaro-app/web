@@ -5,6 +5,7 @@ import { getShellContext } from '@/features/app-shell/get-shell-context.server';
 import { requireUser } from '@/features/auth/session.server';
 import { lenderEndpoints } from '@/features/lender/endpoints';
 import { isApiRequestError } from '@/lib/api';
+import { parseStorageOrigin } from '@/lib/security-headers';
 import { callEndpointAsUser } from '@/lib/api/server-call';
 
 /** Lo que muestra la pantalla de Configuración. */
@@ -16,6 +17,8 @@ export interface SettingsView {
   readonly portfolios: readonly Pick<Portfolio, 'id' | 'name' | 'isDefault'>[];
   /** Solo quien administra el negocio (Owner o Lender) puede cambiar la configuración. */
   readonly canEdit: boolean;
+  /** Si el entorno tiene el almacenamiento de archivos configurado (`STORAGE_ORIGIN`): sin él el logo no se puede subir. */
+  readonly logoUploadAvailable: boolean;
 }
 
 export type SettingsResult =
@@ -44,6 +47,7 @@ export async function getSettings(): Promise<SettingsResult> {
         skipNationalHolidays: lender.skipNationalHolidays,
         portfolios: portfolios.map(({ id, name, isDefault }) => ({ id, name, isDefault })),
         canEdit: shell.roleLabel === ADMIN_LABEL,
+        logoUploadAvailable: parseStorageOrigin(process.env.STORAGE_ORIGIN) !== null,
       },
     };
   } catch (error) {

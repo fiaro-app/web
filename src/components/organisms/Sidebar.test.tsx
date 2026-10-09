@@ -41,4 +41,10 @@ describe('Sidebar', () => {
 
     expect(screen.queryByText('Administrador')).not.toBeInTheDocument();
   });
+
+  it('links the profile to «Mi cuenta» when given an account route', () => {
+    render(<Sidebar businessName="Buen Vecino" items={[]} userName="Ana Pérez" accountHref="/cuenta" />);
+
+    expect(screen.getByRole('link', { name: 'Mi cuenta, Ana Pérez' })).toHaveAttribute('href', '/cuenta');
+  });
 });

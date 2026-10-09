@@ -53,7 +53,7 @@ export function LoanForm({ clients, collectors, initialClientId }: Readonly<Loan
       </div>
 
       <FormFieldset>
-        <FormField label={text.client.label} required error={fieldErrors.clientId}>
+        <FormField label={text.client.label} error={fieldErrors.clientId}>
           <Select name="clientId" value={values.clientId} onChange={setText('clientId')}>
             <option value="">{text.client.placeholder}</option>
             {clients.map((client) => (
@@ -63,19 +63,19 @@ export function LoanForm({ clients, collectors, initialClientId }: Readonly<Loan
             ))}
           </Select>
         </FormField>
-        <FormField label={text.principalAmount.label} required error={fieldErrors.principalAmount}>
+        <FormField label={text.principalAmount.label} error={fieldErrors.principalAmount}>
           <AmountInput size="field" name="principalAmount" value={values.principalAmount} onValueChange={setAmount('principalAmount')} />
         </FormField>
-        <FormField label={text.installmentCount.label} required error={fieldErrors.installmentCount}>
+        <FormField label={text.installmentCount.label} error={fieldErrors.installmentCount}>
           <Input name="installmentCount" inputMode="numeric" autoComplete="off" placeholder={text.installmentCount.placeholder} value={values.installmentCount} onChange={setText('installmentCount')} />
         </FormField>
-        <FormField label={text.installmentValue.label} required error={fieldErrors.installmentValue}>
+        <FormField label={text.installmentValue.label} error={fieldErrors.installmentValue}>
           <AmountInput size="field" name="installmentValue" value={values.installmentValue} onValueChange={setAmount('installmentValue')} />
         </FormField>
-        <FormField label={text.totalPayable.label} required hint={text.totalPayable.hint} error={fieldErrors.totalPayable}>
+        <FormField label={text.totalPayable.label} hint={text.totalPayable.hint} error={fieldErrors.totalPayable}>
           <AmountInput size="field" name="totalPayable" value={values.totalPayable} onValueChange={setTotalPayable} />
         </FormField>
-        <FormField label={text.frequency.label} required error={fieldErrors.frequency}>
+        <FormField label={text.frequency.label} error={fieldErrors.frequency}>
           <Select name="frequency" value={values.frequency} onChange={setText('frequency')}>
             <option value="">{text.frequency.placeholder}</option>
             {FREQUENCIES.map((frequency) => (
@@ -85,7 +85,7 @@ export function LoanForm({ clients, collectors, initialClientId }: Readonly<Loan
             ))}
           </Select>
         </FormField>
-        <FormField label={text.startDate.label} required error={fieldErrors.startDate}>
+        <FormField label={text.startDate.label} error={fieldErrors.startDate}>
           <Input name="startDate" type="date" value={values.startDate} onChange={setText('startDate')} />
         </FormField>
         {collectors.length > 0 && (

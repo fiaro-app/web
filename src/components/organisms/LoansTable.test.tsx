@@ -35,4 +35,12 @@ describe('LoansTable', () => {
     render(<LoansTable rows={[ROW]} />);
     expect(screen.getByRole('link', { name: 'Ver préstamo de Carlos Gómez' })).toHaveAttribute('href', '/prestamos/l1');
   });
+
+  it('labels every cell with its header so the row reads as a card on narrow screens', () => {
+    render(<LoansTable rows={[ROW]} />);
+
+    const row = screen.getByRole('row', { name: /Carlos Gómez/ });
+    expect(within(row).getByText('$380.000')).toHaveAttribute('data-label', 'Saldo');
+    expect(within(row).getByText('01/10/2026')).toHaveAttribute('data-label', 'Inicio');
+  });
 });

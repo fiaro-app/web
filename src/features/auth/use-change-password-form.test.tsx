@@ -115,4 +115,16 @@ describe('useChangePasswordForm', () => {
 
     expect(changeMock).toHaveBeenCalledTimes(1);
   });
+
+  it('stays on the page, clears the form and calls onSuccess when it is given', async () => {
+    const onSuccess = vi.fn();
+    const { result } = renderHook(() => useChangePasswordForm({ onSuccess }));
+    type(result, VALID);
+
+    await act(() => result.current.submit(submitEvent()));
+
+    expect(onSuccess).toHaveBeenCalled();
+    expect(replace).not.toHaveBeenCalled();
+    expect(result.current.values.newPassword).toBe('');
+  });
 });

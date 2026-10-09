@@ -11,18 +11,26 @@ export interface HeaderEntry {
  * y formularios solo hacia sí misma.
  *
  * `connect-src 'self'`: la web llama siempre a su propio origen (`/api` se reenvía a la API), así
- * que el navegador nunca habla directo con otro dominio.
+ * que el navegador nunca habla directo con otro dominio. La única excepción es el almacenamiento de
+ * archivos (`STORAGE_ORIGIN`): el logo se sube directo con una URL firmada y se muestra desde ahí.
  */
-export function buildContentSecurityPolicy({ isDevelopment }: { readonly isDevelopment: boolean }): string {
+export function buildContentSecurityPolicy({
+  isDevelopment,
+  storageOrigin = null,
+}: {
+  readonly isDevelopment: boolean;
+  /** Origen del almacenamiento de archivos (logos): se permite para mostrar las imágenes y subirlas. */
+  readonly storageOrigin?: string | null;
+}): string {
   const directives: Record<string, readonly string[]> = {
     'default-src': ["'self'"],
     // React usa eval para reconstruir errores del servidor en desarrollo; en producción no hace falta.
     'script-src': ["'self'", "'unsafe-inline'", ...(isDevelopment ? ["'unsafe-eval'"] : [])],
     'style-src': ["'self'", "'unsafe-inline'"],
-    'img-src': ["'self'", 'data:', 'blob:'],
+    'img-src': ["'self'", 'data:', 'blob:', ...(storageOrigin ? [storageOrigin] : [])],
     'font-src': ["'self'"],
     // El recargado en caliente de desarrollo usa WebSocket.
-    'connect-src': ["'self'", ...(isDevelopment ? ['ws:', 'wss:'] : [])],
+    'connect-src': ["'self'", ...(storageOrigin ? [storageOrigin] : []), ...(isDevelopment ? ['ws:', 'wss:'] : [])],
     'manifest-src': ["'self'"],
     'object-src': ["'none'"],
     'base-uri': ["'self'"],
@@ -37,9 +45,15 @@ export function buildContentSecurityPolicy({ isDevelopment }: { readonly isDevel
 }
 
 /** Cabeceras de seguridad para todas las respuestas. */
-export function buildSecurityHeaders({ isDevelopment }: { readonly isDevelopment: boolean }): readonly HeaderEntry[] {
+export function buildSecurityHeaders({
+  isDevelopment,
+  storageOrigin = null,
+}: {
+  readonly isDevelopment: boolean;
+  readonly storageOrigin?: string | null;
+}): readonly HeaderEntry[] {
   return [
-    { key: 'Content-Security-Policy', value: buildContentSecurityPolicy({ isDevelopment }) },
+    { key: 'Content-Security-Policy', value: buildContentSecurityPolicy({ isDevelopment, storageOrigin }) },
     // Solo HTTPS durante 2 años, subdominios incluidos; el navegador ignora esto sobre HTTP.
     { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
     { key: 'X-Content-Type-Options', value: 'nosniff' },
@@ -55,3 +69,17 @@ export function buildSecurityHeaders({ isDevelopment }: { readonly isDevelopment
 export const NO_STORE_SOURCES: readonly string[] = ['/resumen/:path*', '/login', '/registro'];
 
 export const NO_STORE_HEADER: HeaderEntry = { key: 'Cache-Control', value: 'private, no-store' };
+
+/**
+ * Origen válido de `STORAGE_ORIGIN` (`https://cdn.fiaro.co`): solo http(s), sin ruta. Cualquier otro
+ * valor (vacío, mal escrito, otro protocolo) se ignora para no abrir la CSP a algo inesperado.
+ */
+export function parseStorageOrigin(raw: string | undefined): string | null {
+  if (!raw) return null;
+  try {
+    const url = new URL(raw);
+    return url.protocol === 'https:' || url.protocol === 'http:' ? url.origin : null;
+  } catch {
+    return null;
+  }
+}

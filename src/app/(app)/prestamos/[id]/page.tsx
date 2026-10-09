@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { LoanDetail } from '@/components/organisms/LoanDetail';
+import { LoanVisits } from '@/components/organisms/LoanVisits';
 import { LOANS_TEXT } from '@/content/loans';
 import { getLoan } from '@/features/loans/get-loan.server';
+import { getLoanVisits } from '@/features/visits/get-visits.server';
 
 export const metadata: Metadata = { title: 'Préstamo' };
 
@@ -17,5 +19,11 @@ export default async function LoanPage({ params }: PageProps<'/prestamos/[id]'>)
   if (result.status === 'not-found') {
     return <EmptyState icon="?" {...LOANS_TEXT.notFound} />;
   }
-  return <LoanDetail loan={result.loan} collectors={result.collectorOptions} />;
+  const visits = await getLoanVisits(id);
+  return (
+    <>
+      <LoanDetail loan={result.loan} collectors={result.collectorOptions} />
+      <LoanVisits visits={visits} />
+    </>
+  );
 }

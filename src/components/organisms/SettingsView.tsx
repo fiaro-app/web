@@ -2,13 +2,14 @@ import { Text } from '@/components/atoms/Text';
 import { Alert } from '@/components/molecules/Alert';
 import { BusinessForm } from '@/components/organisms/BusinessForm';
 import { CollectionDaysForm } from '@/components/organisms/CollectionDaysForm';
+import { LogoForm } from '@/components/organisms/LogoForm';
 import { PortfoliosPanel } from '@/components/organisms/PortfoliosPanel';
 import { SETTINGS_TEXT } from '@/content/settings';
 import type { SettingsView as SettingsData } from '@/features/lender/get-settings.server';
 
-/** Configuración: datos del negocio, días sin cobro y carteras. Los datos se leen en el servidor; cada bloque es un formulario. */
+/** Configuración: datos del negocio, logo, días sin cobro y carteras. Los datos se leen en el servidor; cada bloque es un formulario. */
 export function SettingsView({ settings }: Readonly<{ settings: SettingsData }>) {
-  const { name, nonWorkingWeekdays, skipNationalHolidays, portfolios, canEdit } = settings;
+  const { name, logoUrl, logoUploadAvailable, nonWorkingWeekdays, skipNationalHolidays, portfolios, canEdit } = settings;
 
   return (
     <>
@@ -17,6 +18,7 @@ export function SettingsView({ settings }: Readonly<{ settings: SettingsData }>)
       </Text>
       {!canEdit && <Alert tone="info">{SETTINGS_TEXT.readOnly}</Alert>}
       <BusinessForm name={name} canEdit={canEdit} />
+      <LogoForm businessName={name} logoUrl={logoUrl} canEdit={canEdit} uploadAvailable={logoUploadAvailable} />
       <CollectionDaysForm nonWorkingWeekdays={nonWorkingWeekdays} skipNationalHolidays={skipNationalHolidays} canEdit={canEdit} />
       <PortfoliosPanel portfolios={portfolios} canEdit={canEdit} />
     </>

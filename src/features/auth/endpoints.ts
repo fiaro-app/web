@@ -25,6 +25,8 @@ export const AuthUserSchema = z.looseObject({
   name: z.string(),
   phoneNumber: MobilePhoneSchema,
   contactEmail: z.email().nullable(),
+  /** Si el correo de contacto se verificó con el código (la API lo manda siempre; opcional para no romper sesiones viejas). */
+  contactEmailVerified: z.boolean().optional(),
   mustChangePassword: z.boolean(),
 });
 export type AuthUser = z.infer<typeof AuthUserSchema>;

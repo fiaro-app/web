@@ -1,0 +1,42 @@
+/** Textos de «Mi cuenta» (`Screen / Web / Mi cuenta`). */
+export const ACCOUNT_TEXT = {
+  title: 'Mi cuenta',
+  link: 'Mi cuenta',
+  profile: {
+    title: 'Mis datos',
+    description: 'Tu nombre y el correo donde recibes los códigos de seguridad.',
+    fullName: { label: 'Nombre completo', placeholder: 'Ej: Daniel Rojas' },
+    phone: { label: 'Celular', hint: 'Con este celular inicias sesión. No se puede cambiar desde aquí.' },
+    contactEmail: { label: 'Correo electrónico (opcional)', hint: 'Sirve para recuperar tu contraseña.', placeholder: 'tu@correo.com' },
+    save: 'Guardar cambios',
+  },
+  verification: {
+    verified: 'Correo verificado',
+    pending: 'Correo sin verificar',
+    hint: 'Escribe el código de 6 dígitos que te enviamos.',
+    code: { label: 'Código', placeholder: '123456' },
+    submit: 'Verificar correo',
+    resend: 'Reenviar código',
+  },
+  password: {
+    title: 'Contraseña',
+    description: 'Cámbiala cuando quieras. Necesitas tu contraseña actual.',
+    currentPassword: { label: 'Contraseña actual' },
+    newPassword: { label: 'Contraseña nueva', hint: 'Mínimo 8 caracteres.' },
+    confirmPassword: { label: 'Repite la contraseña nueva' },
+    submit: 'Cambiar contraseña',
+    done: 'Contraseña cambiada.',
+  },
+  sessions: {
+    title: 'Sesiones',
+    description: 'Si usaste Fiaro en un equipo que no es tuyo, cierra las demás sesiones.',
+    closeOthers: 'Cerrar las demás sesiones',
+    closeAll: 'Cerrar todas las sesiones',
+  },
+  danger: {
+    title: 'Desactivar mi cuenta',
+    description: 'Pierdes el acceso a Fiaro de inmediato. Tu historial se conserva. Confirma con tu contraseña.',
+    password: { label: 'Contraseña' },
+    submit: 'Desactivar mi cuenta',
+  },
+} as const;

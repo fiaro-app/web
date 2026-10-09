@@ -16,3 +16,25 @@ export function updateCollectionDays(nonWorkingWeekdays: readonly Weekday[], ski
 export function createPortfolio(name: string) {
   return callEndpoint(lenderEndpoints.createPortfolio, { body: { name } });
 }
+
+/** Pide la URL firmada para subir un logo del tipo dado. */
+export function requestLogoUploadUrl(contentType: 'image/png' | 'image/jpeg') {
+  return callEndpoint(lenderEndpoints.logoUploadUrl, { body: { contentType } });
+}
+
+/** Guarda la URL pública del logo ya subido; `null` lo quita. */
+export function saveLogoUrl(logoUrl: string | null) {
+  return callEndpoint(lenderEndpoints.update, { body: { logoUrl } });
+}
+
+/**
+ * Sube el archivo del logo directo al almacenamiento con la URL firmada (no pasa por la API ni por
+ * la web) y devuelve la URL pública. Lanza si el almacenamiento rechaza la subida.
+ */
+export async function uploadLogoFile(file: File): Promise<string> {
+  const contentType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+  const { uploadUrl, publicUrl } = await requestLogoUploadUrl(contentType);
+  const response = await fetch(uploadUrl, { method: 'PUT', headers: { 'Content-Type': contentType }, body: file });
+  if (!response.ok) throw new Error(`Falló la subida del logo (${String(response.status)}).`);
+  return publicUrl;
+}

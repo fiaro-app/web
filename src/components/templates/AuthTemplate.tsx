@@ -15,7 +15,7 @@ export function AuthTemplate({ nav, panel, children }: Readonly<AuthTemplateProp
       {nav}
       <div className="grid flex-1 lg:grid-cols-2">
         <aside className="hidden lg:block">{panel}</aside>
-        <main className="flex items-center justify-center px-6 py-12">
+        <main id="contenido" tabIndex={-1} className="focus:outline-none flex items-center justify-center px-6 py-12">
           <div className="w-full max-w-95">{children}</div>
         </main>
       </div>
