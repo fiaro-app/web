@@ -4,8 +4,8 @@ import { redirect } from 'next/navigation';
 import { cache } from 'react';
 import { authEndpoints, type AuthUser } from '@/features/auth/endpoints';
 import { LOGIN_PATH } from '@/features/auth/route-guard';
-import { resolveApiUrl } from '@/lib/api-url';
-import { callEndpoint, isApiRequestError } from '@/lib/api';
+import { isApiRequestError } from '@/lib/api';
+import { callEndpointAsUser } from '@/lib/api/server-call';
 
 /**
  * Persona con sesión vigente, o `null`. Es la comprobación **autoritativa**: reenvía la cookie a la
@@ -20,10 +20,7 @@ export const getCurrentUser = cache(async (): Promise<AuthUser | null> => {
   if (cookieHeader === '') return null;
 
   try {
-    const session = await callEndpoint(authEndpoints.getSession, {
-      baseUrl: resolveApiUrl(),
-      headers: { Cookie: cookieHeader },
-    });
+    const session = await callEndpointAsUser(authEndpoints.getSession, {});
     return session?.user ?? null;
   } catch (error) {
     if (isApiRequestError(error) && error.statusCode === 401) return null;
