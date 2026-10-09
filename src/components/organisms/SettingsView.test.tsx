@@ -18,6 +18,7 @@ const SETTINGS: SettingsData = {
   name: 'Buen Vecino',
   logoUrl: null,
   brandColor: null,
+  subscription: null,
   nonWorkingWeekdays: [],
   skipNationalHolidays: false,
   portfolios: [{ id: 'p1', name: 'General', isDefault: true }],
@@ -39,5 +40,22 @@ describe('SettingsView', () => {
     expect(screen.queryByText(/Solo quien administra/)).not.toBeInTheDocument();
     rerender(<SettingsView settings={{ ...SETTINGS, canEdit: false }} />);
     expect(screen.getByText(/Solo quien administra/)).toBeInTheDocument();
+  });
+
+  it('shows the plan block only when the subscription could be loaded', () => {
+    const subscription = {
+      planName: 'Prueba gratis',
+      statusLabel: 'Activo',
+      endsOn: '08/11/2026',
+      daysRemaining: '30',
+      collectors: '1 de 5',
+      collectorsPercent: 20,
+      notice: null,
+    };
+    const { rerender } = render(<SettingsView settings={SETTINGS} />);
+    expect(screen.queryByRole('heading', { level: 2, name: 'Tu plan' })).not.toBeInTheDocument();
+
+    rerender(<SettingsView settings={{ ...SETTINGS, subscription }} />);
+    expect(screen.getByRole('heading', { level: 2, name: 'Tu plan' })).toBeInTheDocument();
   });
 });

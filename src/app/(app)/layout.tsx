@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
+import { SubscriptionBanner } from '@/components/molecules/SubscriptionBanner';
 import { AppSidebar } from '@/components/organisms/AppSidebar';
 import { AppShellTemplate } from '@/components/templates/AppShellTemplate';
 import { brandThemeStyle } from '@/features/app-shell/brand-theme';
 import { getShellContext } from '@/features/app-shell/get-shell-context.server';
 import { CHANGE_PASSWORD_PATH } from '@/features/auth/route-guard';
 import { requireUser } from '@/features/auth/session.server';
+import { getSubscription } from '@/features/subscription/get-subscription.server';
 
 // Todo el panel es privado: nada de esto debe indexarse.
 export const metadata: Metadata = { robots: { index: false, follow: false } };
@@ -20,12 +22,16 @@ export default async function AppLayout({ children }: Readonly<{ children: React
   const user = await requireUser();
   // Quien entró con una contraseña temporal debe cambiarla antes de usar el panel (la API también lo exige).
   if (user.mustChangePassword) redirect(CHANGE_PASSWORD_PATH);
-  const { businessName, brandColor, roleLabel, unreadNotifications } = await getShellContext(user);
+  const [{ businessName, brandColor, roleLabel, unreadNotifications }, subscription] = await Promise.all([
+    getShellContext(user),
+    getSubscription(),
+  ]);
 
   return (
     // `contents`: el contenedor solo lleva las variables de color de marca, sin alterar el diseño.
     <div className="contents" style={brandThemeStyle(brandColor)}>
       <AppShellTemplate
+        banner={subscription?.notice ? <SubscriptionBanner notice={subscription.notice} /> : undefined}
         sidebar={
           <AppSidebar businessName={businessName} userName={user.name} roleLabel={roleLabel} unreadNotifications={unreadNotifications} />
         }

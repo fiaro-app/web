@@ -4,13 +4,14 @@ import { BrandColorForm } from '@/components/organisms/BrandColorForm';
 import { BusinessForm } from '@/components/organisms/BusinessForm';
 import { CollectionDaysForm } from '@/components/organisms/CollectionDaysForm';
 import { LogoForm } from '@/components/organisms/LogoForm';
+import { PlanPanel } from '@/components/organisms/PlanPanel';
 import { PortfoliosPanel } from '@/components/organisms/PortfoliosPanel';
 import { SETTINGS_TEXT } from '@/content/settings';
 import type { SettingsView as SettingsData } from '@/features/lender/get-settings.server';
 
 /** Configuración: datos del negocio, logo, color de marca, días sin cobro y carteras. Los datos se leen en el servidor; cada bloque es un formulario. */
 export function SettingsView({ settings }: Readonly<{ settings: SettingsData }>) {
-  const { name, logoUrl, brandColor, logoUploadAvailable, nonWorkingWeekdays, skipNationalHolidays, portfolios, canEdit } = settings;
+  const { name, logoUrl, brandColor, subscription, logoUploadAvailable, nonWorkingWeekdays, skipNationalHolidays, portfolios, canEdit } = settings;
 
   return (
     <>
@@ -18,6 +19,7 @@ export function SettingsView({ settings }: Readonly<{ settings: SettingsData }>)
         {SETTINGS_TEXT.title}
       </Text>
       {!canEdit && <Alert tone="info">{SETTINGS_TEXT.readOnly}</Alert>}
+      {subscription && <PlanPanel subscription={subscription} />}
       <BusinessForm name={name} canEdit={canEdit} />
       <LogoForm businessName={name} logoUrl={logoUrl} canEdit={canEdit} uploadAvailable={logoUploadAvailable} />
       <BrandColorForm brandColor={brandColor} canEdit={canEdit} />

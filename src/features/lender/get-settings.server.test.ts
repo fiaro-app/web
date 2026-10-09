@@ -10,6 +10,8 @@ const { callEndpointAsUser, getShellContext, requireUser } = vi.hoisted(() => ({
 vi.mock('@/lib/api/server-call', () => ({ callEndpointAsUser }));
 vi.mock('@/features/app-shell/get-shell-context.server', () => ({ getShellContext }));
 vi.mock('@/features/auth/session.server', () => ({ requireUser }));
+const { getSubscription } = vi.hoisted(() => ({ getSubscription: vi.fn() }));
+vi.mock('@/features/subscription/get-subscription.server', () => ({ getSubscription }));
 
 import { getSettings } from './get-settings.server';
 
@@ -27,6 +29,7 @@ const PORTFOLIOS = [{ id: 'p1', name: 'General', isDefault: true, createdAt: '20
 beforeEach(() => {
   vi.resetAllMocks();
   requireUser.mockResolvedValue({ id: 'u1' });
+  getSubscription.mockResolvedValue(null);
   getShellContext.mockResolvedValue({ businessName: 'Buen Vecino', roleLabel: 'Administrador' });
   callEndpointAsUser.mockImplementation(async (endpoint: { path: string }) => (endpoint.path === '/lender' ? LENDER : PORTFOLIOS));
 });
@@ -45,6 +48,7 @@ describe('getSettings', () => {
         portfolios: [{ id: 'p1', name: 'General', isDefault: true }],
         canEdit: true,
         logoUploadAvailable: false,
+        subscription: null,
       },
     });
   });
