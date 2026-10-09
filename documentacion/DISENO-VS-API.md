@@ -33,6 +33,7 @@ Estados de la columna **Penpot**: ✅ ya corregido · ⏳ por corregir · 🆕 n
 | Detalle de cuadre | Montos por medio de pago, **historial de visitas**, nota, aprobar/rechazar | Montos por medio de pago, notas y revisión con comentario; el historial de visitas es por préstamo, no por cuadre | ✅ |
 | Ficha del cliente | — | Datos del cliente, sus préstamos y acciones (nuevo préstamo, editar). Tablero «Ficha del cliente» | ✅ |
 | Detalle de préstamo | — | Resumen, estado, cobrador asignado, asignar cobrador y anular. Tablero «Detalle de préstamo» | ✅ |
+| Historial de cobros | — | Tablero «Detalle de préstamo — Historial de cobros»: visitas con fecha, resultado, cobrado y medio, y «Revertir pago» con motivo. La web agrega las columnas cobrador y esperado | ✅ |
 | Notificaciones | «Marcar todas como leídas» | Marcar de una en una; la API no tiene «todas». Filtro «No leídas» | ✅ |
 | Estadísticas | Tendencias (↑ 4 %), **efectividad general**, periodo «Este mes» | 3 indicadores sin tendencias; periodo con fechas desde/hasta; exportar PDF | ✅ |
 | Mi cuenta | Pestaña «Seguridad» dentro de Configuración (sin detalle) | Pantalla propia `/cuenta` (tablero «Mi cuenta»): datos de la persona, correo verificable, contraseña, sesiones y desactivar. Se entra desde el perfil de la barra lateral | ✅ |
