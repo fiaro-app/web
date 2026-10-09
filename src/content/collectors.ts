@@ -43,4 +43,25 @@ export const COLLECTORS_TEXT = {
     passwordLabel: 'Contraseña temporal',
     done: 'Volver a cobradores',
   },
+  manage: {
+    title: 'Gestionar cobrador',
+    back: '← Volver a cobradores',
+    manage: 'Gestionar',
+    notFound: { title: 'No encontramos al cobrador', description: 'Puede que ya no exista. Vuelve a la lista y elige otro.' },
+    portfolio: { save: 'Guardar cartera' },
+    resetPassword: {
+      action: 'Restablecer contraseña',
+      confirmTitle: '¿Restablecer la contraseña?',
+      confirmDescription: 'Se genera una contraseña temporal nueva y la anterior deja de servir.',
+      confirmLabel: 'Restablecer',
+      result: 'Contraseña temporal nueva',
+    },
+    deactivate: {
+      action: 'Desactivar cobrador',
+      confirmTitle: '¿Desactivar al cobrador?',
+      confirmDescription: 'Pierde el acceso de inmediato. Su historial de cobros se conserva.',
+      confirmLabel: 'Desactivar',
+      inactiveNotice: 'Este cobrador está desactivado y no puede ingresar.',
+    },
+  },
 } as const;
