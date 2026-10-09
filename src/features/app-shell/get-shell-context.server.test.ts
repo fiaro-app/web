@@ -44,7 +44,13 @@ describe('getShellContext', () => {
       '/memberships': { data: [membership('otro', ['COLLECTOR']), membership('u1', ['OWNER', 'LENDER', 'COLLECTOR'])], meta: { page: 1, pageSize: 100, total: 2 } },
     });
 
-    await expect(getShellContext(USER)).resolves.toEqual({ businessName: 'Financiera Buen Vecino', roleLabel: 'Administrador', unreadNotifications: 0 });
+    await expect(getShellContext(USER)).resolves.toEqual({ businessName: 'Financiera Buen Vecino', roleLabel: 'Administrador', brandColor: null, unreadNotifications: 0 });
+  });
+
+  it('passes along the brand color of the business', async () => {
+    routeApi({ '/lender': { ...LENDER, brandColor: '#0F766E' }, '/memberships': api(403, 'FORBIDDEN') });
+
+    expect((await getShellContext(USER)).brandColor).toBe('#0F766E');
   });
 
   it('reports the unread notifications for the sidebar badge', async () => {
@@ -68,7 +74,7 @@ describe('getShellContext', () => {
   it('opens the panel with fallbacks when the API fails on these extras', async () => {
     routeApi({ '/lender': api(503, 'MAINTENANCE'), '/memberships': api(500, 'INTERNAL_ERROR') });
 
-    await expect(getShellContext(USER)).resolves.toEqual({ businessName: FALLBACK_BUSINESS_NAME, roleLabel: null, unreadNotifications: 0 });
+    await expect(getShellContext(USER)).resolves.toEqual({ businessName: FALLBACK_BUSINESS_NAME, roleLabel: null, brandColor: null, unreadNotifications: 0 });
   });
 
   it('does not hide an unexpected (non-API) failure', async () => {

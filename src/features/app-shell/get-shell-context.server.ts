@@ -13,6 +13,8 @@ export interface ShellContext {
   readonly businessName: string;
   /** Rol que se muestra bajo el nombre; `null` si no se pudo saber. */
   readonly roleLabel: string | null;
+  /** Color de marca del negocio (`#RRGGBB`); `null` es el de Fiaro o no se pudo saber. */
+  readonly brandColor: string | null;
   /** Notificaciones sin leer, para la insignia de la barra lateral (0 si no hay o no se pudo saber). */
   readonly unreadNotifications: number;
 }
@@ -35,26 +37,27 @@ async function loadRoleLabel(user: AuthUser): Promise<string | null> {
   }
 }
 
-async function loadBusinessName(): Promise<string> {
+async function loadLenderBranding(): Promise<{ readonly businessName: string; readonly brandColor: string | null }> {
   try {
-    return (await callEndpointAsUser(lenderEndpoints.get, {})).name;
+    const lender = await callEndpointAsUser(lenderEndpoints.get, {});
+    return { businessName: lender.name, brandColor: lender.brandColor ?? null };
   } catch (error) {
-    if (isApiRequestError(error)) return FALLBACK_BUSINESS_NAME;
+    if (isApiRequestError(error)) return { businessName: FALLBACK_BUSINESS_NAME, brandColor: null };
     throw error;
   }
 }
 
 /**
- * Lo que necesita la barra lateral además de la persona: el nombre del negocio, su rol y las notificaciones sin leer. Es un
+ * Lo que necesita la barra lateral además de la persona: el nombre del negocio, su color de marca, su rol y las notificaciones sin leer. Es un
  * adorno de la pantalla: si la API falla al traerlos, el panel abre con valores de respaldo en vez
  * de quedar inservible. Se memoiza por petición (con la misma `user` que devuelve `requireUser`)
  * para que el layout y una página que también necesite el rol no repitan las consultas.
  */
 export const getShellContext = cache(async (user: AuthUser): Promise<ShellContext> => {
-  const [businessName, role, unreadNotifications] = await Promise.all([
-    loadBusinessName(),
+  const [{ businessName, brandColor }, role, unreadNotifications] = await Promise.all([
+    loadLenderBranding(),
     loadRoleLabel(user),
     getUnreadCount(),
   ]);
-  return { businessName, roleLabel: role, unreadNotifications };
+  return { businessName, brandColor, roleLabel: role, unreadNotifications };
 });

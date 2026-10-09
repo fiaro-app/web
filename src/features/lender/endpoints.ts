@@ -1,5 +1,15 @@
-import { BusinessNameSchema, LenderSchema, PortfolioSchema, WeekdaySchema, defineEndpoint } from '@fiaro-app/contracts';
+import { BusinessNameSchema, IdSchema, LenderSchema, PortfolioSchema, WeekdaySchema, defineEndpoint } from '@fiaro-app/contracts';
 import { z } from 'zod';
+
+/** Color de marca: `#RRGGBB` (la API lo guarda siempre en mayúsculas). */
+export const BrandColorSchema = z.string().regex(/^#[0-9a-fA-F]{6}$/);
+
+/**
+ * Prestamista tal como lo devuelve la API: el contrato más `brandColor` (D-110), que `LenderSchema`
+ * de `@fiaro-app/contracts` 0.6.0 aún no conoce. `null` o ausente es el color de Fiaro.
+ */
+export const LenderResponseSchema = LenderSchema.extend({ brandColor: BrandColorSchema.nullable().optional() });
+export type LenderResponse = z.infer<typeof LenderResponseSchema>;
 
 /** Cuerpo de `PATCH /lender`: un campo ausente no se toca y debe venir al menos uno. */
 export const UpdateLenderBodySchema = z
@@ -8,6 +18,7 @@ export const UpdateLenderBodySchema = z
     logoUrl: z.url().nullable().optional(),
     nonWorkingWeekdays: z.array(WeekdaySchema).optional(),
     skipNationalHolidays: z.boolean().optional(),
+    brandColor: BrandColorSchema.nullable().optional(),
   })
   .refine((body) => Object.values(body).some((value) => value !== undefined), {
     message: 'Debes enviar al menos un campo para actualizar.',
@@ -28,6 +39,9 @@ export const LogoUploadUrlSchema = z.object({
 /** Cuerpo de `POST /portfolios`: el nombre es único dentro del prestamista. */
 export const CreatePortfolioBodySchema = z.strictObject({ name: BusinessNameSchema });
 
+/** Cuerpo de `PATCH /portfolios/:id`: el nuevo nombre, que tampoco puede repetirse. */
+export const RenamePortfolioBodySchema = z.strictObject({ name: BusinessNameSchema });
+
 /**
  * Datos del prestamista de la sesión. `@fiaro-app/contracts` 0.6.0 publica los schemas
  * (`LenderSchema`, `PortfolioSchema`) pero no los endpoints: se declaran aquí con los mismos
@@ -37,15 +51,15 @@ export const lenderEndpoints = {
   get: defineEndpoint({
     method: 'GET',
     path: '/lender',
-    summary: 'Datos públicos del prestamista de la sesión (nombre, logo, días sin cobro).',
-    response: LenderSchema,
+    summary: 'Datos públicos del prestamista de la sesión (nombre, logo, color de marca, días sin cobro).',
+    response: LenderResponseSchema,
   }),
   update: defineEndpoint({
     method: 'PATCH',
     path: '/lender',
     summary: 'Actualiza los campos enviados del prestamista (solo Owner y Lender).',
     body: UpdateLenderBodySchema,
-    response: LenderSchema,
+    response: LenderResponseSchema,
   }),
   logoUploadUrl: defineEndpoint({
     method: 'POST',
@@ -66,5 +80,20 @@ export const lenderEndpoints = {
     summary: 'Crea una cartera (solo Owner y Lender); el nombre no puede repetirse.',
     body: CreatePortfolioBodySchema,
     response: PortfolioSchema,
+  }),
+  renamePortfolio: defineEndpoint({
+    method: 'PATCH',
+    path: '/portfolios/:id',
+    summary: 'Renombra una cartera, la de por defecto incluida (solo Owner y Lender); el nombre no puede repetirse.',
+    params: z.object({ id: IdSchema }),
+    body: RenamePortfolioBodySchema,
+    response: PortfolioSchema,
+  }),
+  deletePortfolio: defineEndpoint({
+    method: 'DELETE',
+    path: '/portfolios/:id',
+    summary: 'Borra una cartera (solo Owner y Lender); 409 si es la de por defecto o tiene cobradores activos.',
+    params: z.object({ id: IdSchema }),
+    response: z.undefined(),
   }),
 } as const;

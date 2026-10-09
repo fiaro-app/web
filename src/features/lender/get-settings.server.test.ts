@@ -39,6 +39,7 @@ describe('getSettings', () => {
       settings: {
         name: 'Buen Vecino',
         logoUrl: null,
+        brandColor: null,
         nonWorkingWeekdays: ['SUNDAY'],
         skipNationalHolidays: true,
         portfolios: [{ id: 'p1', name: 'General', isDefault: true }],

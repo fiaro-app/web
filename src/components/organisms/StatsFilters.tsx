@@ -1,8 +1,6 @@
-import { Button } from '@/components/atoms/Button';
-import { ButtonLink } from '@/components/atoms/ButtonLink';
-import { Input } from '@/components/atoms/Input';
-import { Select } from '@/components/atoms/Select';
-import { FormField } from '@/components/molecules/FormField';
+import { FilterActions } from '@/components/molecules/FilterActions';
+import { FilterDateRange } from '@/components/molecules/FilterDateRange';
+import { FilterSelectField } from '@/components/molecules/FilterSelectField';
 import { STATS_TEXT } from '@/content/stats';
 import type { StatsFilterOptions } from '@/features/stats/get-stats.server';
 import { EMPTY_STATS_FILTERS, type StatsFilters as Filters } from '@/features/stats/stats-filters';
@@ -24,50 +22,22 @@ export function StatsFilters({ filters, options }: Readonly<StatsFiltersProps>) 
   return (
     <form action="/estadisticas" aria-label={text.label} className="flex flex-col gap-2">
       <div className="flex flex-wrap items-end gap-4">
-        <div className="w-44">
-          <FormField label={text.from}>
-            <Input name="desde" type="date" defaultValue={filters.from} />
-          </FormField>
-        </div>
-        <div className="w-44">
-          <FormField label={text.to}>
-            <Input name="hasta" type="date" defaultValue={filters.to} />
-          </FormField>
-        </div>
-        <div className="w-56">
-          <FormField label={text.collector}>
-            <Select name="cobrador" defaultValue={filters.collectorId}>
-              <option value="">{text.allCollectors}</option>
-              {options.collectors.map((collector) => (
-                <option key={collector.id} value={collector.id}>
-                  {collector.name}
-                </option>
-              ))}
-            </Select>
-          </FormField>
-        </div>
-        <div className="w-56">
-          <FormField label={text.portfolio}>
-            <Select name="cartera" defaultValue={filters.portfolioId}>
-              <option value="">{text.allPortfolios}</option>
-              {options.portfolios.map((portfolio) => (
-                <option key={portfolio.id} value={portfolio.id}>
-                  {portfolio.name}
-                </option>
-              ))}
-            </Select>
-          </FormField>
-        </div>
-        <div className="flex gap-3">
-          <Button type="submit" variant="outline" size="sm" className="h-11">
-            {text.apply}
-          </Button>
-          {isFiltered && (
-            <ButtonLink href="/estadisticas" variant="text" size="sm" className="h-11">
-              {text.clear}
-            </ButtonLink>
-          )}
-        </div>
+        <FilterDateRange from={filters.from} to={filters.to} fromLabel={text.from} toLabel={text.to} />
+        <FilterSelectField
+          name="cobrador"
+          label={text.collector}
+          defaultValue={filters.collectorId}
+          allLabel={text.allCollectors}
+          options={options.collectors.map((collector) => ({ value: collector.id, label: collector.name }))}
+        />
+        <FilterSelectField
+          name="cartera"
+          label={text.portfolio}
+          defaultValue={filters.portfolioId}
+          allLabel={text.allPortfolios}
+          options={options.portfolios.map((portfolio) => ({ value: portfolio.id, label: portfolio.name }))}
+        />
+        <FilterActions applyLabel={text.apply} clearLabel={text.clear} clearHref="/estadisticas" isFiltered={isFiltered} />
       </div>
       <p className="text-caption text-foreground/70">{text.periodHint}</p>
     </form>

@@ -29,7 +29,12 @@ export const ACCOUNT_TEXT = {
   },
   sessions: {
     title: 'Sesiones',
-    description: 'Si usaste Fiaro en un equipo que no es tuyo, cierra las demás sesiones.',
+    description: 'Estos son los equipos donde tienes Fiaro abierto. Si no reconoces alguno, ciérralo.',
+    listLabel: 'Sesiones abiertas',
+    current: 'Esta sesión',
+    detail: (ip: string | null, lastUsed: string) => (ip ? `IP ${ip} · Último uso ${lastUsed}` : `Último uso ${lastUsed}`),
+    close: 'Cerrar',
+    closeOne: (device: string) => `Cerrar la sesión de ${device}`,
     closeOthers: 'Cerrar las demás sesiones',
     closeAll: 'Cerrar todas las sesiones',
   },

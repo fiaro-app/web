@@ -7,6 +7,11 @@ export function updateBusinessName(name: string) {
   return callEndpoint(lenderEndpoints.update, { body: { name } });
 }
 
+/** Cambia el color de marca (`#RRGGBB`); `null` vuelve al color de Fiaro. */
+export function updateBrandColor(brandColor: string | null) {
+  return callEndpoint(lenderEndpoints.update, { body: { brandColor } });
+}
+
 /** Cambia los días sin cobro y si los festivos nacionales cuentan. */
 export function updateCollectionDays(nonWorkingWeekdays: readonly Weekday[], skipNationalHolidays: boolean) {
   return callEndpoint(lenderEndpoints.update, { body: { nonWorkingWeekdays: [...nonWorkingWeekdays], skipNationalHolidays } });
@@ -15,6 +20,16 @@ export function updateCollectionDays(nonWorkingWeekdays: readonly Weekday[], ski
 /** Crea una cartera nueva. */
 export function createPortfolio(name: string) {
   return callEndpoint(lenderEndpoints.createPortfolio, { body: { name } });
+}
+
+/** Cambia el nombre de una cartera. */
+export function renamePortfolio(id: string, name: string) {
+  return callEndpoint(lenderEndpoints.renamePortfolio, { params: { id }, body: { name } });
+}
+
+/** Borra una cartera (la de por defecto o con cobradores activos no se puede borrar). */
+export function deletePortfolio(id: string) {
+  return callEndpoint(lenderEndpoints.deletePortfolio, { params: { id } });
 }
 
 /** Pide la URL firmada para subir un logo del tipo dado. */

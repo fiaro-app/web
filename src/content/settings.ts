@@ -25,6 +25,14 @@ export const SETTINGS_TEXT = {
     remove: 'Quitar logo',
     unavailable: 'La subida de logos no está configurada en este entorno.',
   },
+  brand: {
+    title: 'Color de marca',
+    description: 'El color de los botones y los detalles de tu panel. Se ve así en todos tus dispositivos.',
+    colorLabel: 'Color',
+    preview: 'Así se verá un botón',
+    save: 'Guardar color',
+    reset: 'Volver al color de Fiaro',
+  },
   days: {
     title: 'Días sin cobro',
     description: 'Los días en que tus cobradores no salen a cobrar. Las cuotas que caigan en uno pasan al siguiente día de cobro.',
@@ -40,6 +48,22 @@ export const SETTINGS_TEXT = {
     nameLabel: 'Nueva cartera',
     namePlaceholder: 'Ej: Zona Norte',
     create: 'Crear cartera',
+    rename: {
+      action: 'Renombrar',
+      actionFor: (name: string) => `Renombrar la cartera ${name}`,
+      label: 'Nuevo nombre',
+      save: 'Guardar',
+      cancel: 'Cancelar',
+      done: 'Cartera renombrada.',
+    },
+    remove: {
+      action: 'Borrar',
+      actionFor: (name: string) => `Borrar la cartera ${name}`,
+      confirmTitle: '¿Borrar la cartera?',
+      confirmDescription: 'Solo se puede borrar si no tiene cobradores activos. Los cobradores desactivados que la tenían quedan sin cartera.',
+      confirmLabel: 'Borrar',
+      done: 'Cartera borrada.',
+    },
   },
   weekdays: {
     MONDAY: 'Lunes',

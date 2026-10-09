@@ -22,6 +22,20 @@ export const ProfileSchema = z.object({
 });
 export type Profile = z.infer<typeof ProfileSchema>;
 
+/** Una sesión abierta de la persona (`GET /account/sessions`); nunca trae el token. */
+export const AccountSessionSchema = z.object({
+  id: z.uuid(),
+  /** Es la sesión desde la que se hizo la consulta. */
+  isCurrent: z.boolean(),
+  device: z.object({ client: z.string().nullable(), os: z.string().nullable(), label: z.string() }),
+  ipAddress: z.string().nullable(),
+  createdAt: z.iso.datetime({ offset: true }),
+  /** Último uso, con precisión de un día. */
+  lastUsedAt: z.iso.datetime({ offset: true }),
+  expiresAt: z.iso.datetime({ offset: true }),
+});
+export type AccountSession = z.infer<typeof AccountSessionSchema>;
+
 /**
  * Endpoints de la cuenta de la persona (perfil, correo de contacto y sesiones). `@fiaro-app/contracts`
  * todavía no los publica: se declaran aquí (mismo plan de migración que W-13).
@@ -53,6 +67,19 @@ export const accountEndpoints = {
     summary: 'Desactiva la cuenta de la persona, con su contraseña como confirmación.',
     body: z.strictObject({ password: z.string().min(1).max(PASSWORD_MAX_LENGTH) }),
     response: StatusSchema,
+  }),
+  sessions: defineEndpoint({
+    method: 'GET',
+    path: '/account/sessions',
+    summary: 'Las sesiones vigentes de la persona, con su dispositivo y último uso.',
+    response: z.array(AccountSessionSchema),
+  }),
+  revokeSession: defineEndpoint({
+    method: 'DELETE',
+    path: '/account/sessions/:id',
+    summary: 'Cierra una sesión puntual de la persona; la actual da 409 (para salir existe el cierre de sesión).',
+    params: z.object({ id: z.uuid() }),
+    response: z.undefined(),
   }),
   revokeOtherSessions: defineEndpoint({
     method: 'POST',

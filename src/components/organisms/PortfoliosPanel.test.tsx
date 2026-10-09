@@ -2,6 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PortfoliosPanel } from './PortfoliosPanel';
 
+vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
 const { usePortfolioForm } = vi.hoisted(() => ({ usePortfolioForm: vi.fn() }));
 vi.mock('@/features/lender/use-settings-forms', () => ({ usePortfolioForm }));
 

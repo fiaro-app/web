@@ -1,5 +1,6 @@
 import {
   DailySettlementSchema,
+  DateRangeSchema,
   IdSchema,
   NoteSchema,
   PageQuerySchema,
@@ -13,11 +14,17 @@ import { z } from 'zod';
 export const SettlementResponseSchema = DailySettlementSchema;
 export type SettlementResponse = z.infer<typeof SettlementResponseSchema>;
 
-/** Cuerpo de `QUERY /daily-settlements`: página y filtros opcionales por cobrador y estado. */
+/**
+ * Cuerpo de `QUERY /daily-settlements`: página y filtros combinables por cobrador, cartera, estado y
+ * rango de fechas del cuadre (D-108).
+ */
 export const ListSettlementsBodySchema = PageQuerySchema.extend({
   collectorMembershipId: IdSchema.optional(),
+  portfolioId: IdSchema.optional(),
   status: SettlementStatusSchema.optional(),
+  dateRange: DateRangeSchema.optional(),
 });
+export type ListSettlementsBody = z.infer<typeof ListSettlementsBodySchema>;
 
 /** Cuerpo de aprobar o rechazar: el comentario del prestamista es opcional. */
 export const ReviewSettlementBodySchema = z.strictObject({
@@ -42,7 +49,7 @@ export const settlementEndpoints = {
   list: defineEndpoint({
     method: 'QUERY',
     path: '/daily-settlements',
-    summary: 'Lista paginada de cuadres, con filtros por cobrador y estado.',
+    summary: 'Lista paginada de cuadres, con filtros por cobrador, cartera, estado y fecha.',
     body: ListSettlementsBodySchema,
     response: paginated(SettlementResponseSchema),
   }),

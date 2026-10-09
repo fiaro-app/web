@@ -2,6 +2,7 @@ import type { SettlementStatus } from '@fiaro-app/contracts';
 import { EMPTY_LOOKUP, NO_PORTFOLIO, UNKNOWN_COLLECTOR, type SettlementLookup } from '@/features/dashboard/dashboard-view-model';
 import { describeDifference } from '@/features/settlements/difference';
 import type { SettlementResponse } from '@/features/settlements/endpoints';
+import { EMPTY_SETTLEMENT_FILTERS, type SettlementFilters } from '@/features/settlements/settlement-filters';
 import { SETTLEMENTS_TEXT } from '@/content/settlements';
 import { formatCop } from '@/lib/amount';
 import { formatBusinessDate, formatInstantDate } from '@/lib/dates';
@@ -38,6 +39,8 @@ export interface SettlementsViewModel {
   readonly pageSize: number;
   /** Estado por el que se filtra, o `null` para ver todos. */
   readonly status: SettlementStatus | null;
+  /** Fechas, cobrador y cartera por los que se filtra (vacíos si no hay filtro). */
+  readonly filters: SettlementFilters;
 }
 
 function toRow(settlement: SettlementResponse, lookup: SettlementLookup): SettlementRow {
@@ -64,8 +67,9 @@ export function toSettlementsViewModel(
   lookup: SettlementLookup = EMPTY_LOOKUP,
   pageInfo: { readonly total: number; readonly page: number; readonly pageSize: number },
   status: SettlementStatus | null,
+  filters: SettlementFilters = EMPTY_SETTLEMENT_FILTERS,
 ): SettlementsViewModel {
-  return { rows: settlements.map((settlement) => toRow(settlement, lookup)), ...pageInfo, status };
+  return { rows: settlements.map((settlement) => toRow(settlement, lookup)), ...pageInfo, status, filters };
 }
 
 /** Datos del detalle de un cuadre, listos para pintar. */
