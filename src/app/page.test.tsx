@@ -30,3 +30,15 @@ describe('Landing (Home)', () => {
     }
   });
 });
+
+describe('Landing structured data', () => {
+  it('declares the organization and the application with its priced plans for search engines', () => {
+    const { container } = render(<Home />);
+
+    const script = container.querySelector('script[type="application/ld+json"]');
+    const nodes = JSON.parse(script?.textContent ?? '[]') as { '@type': string; offers?: unknown[] }[];
+
+    expect(nodes.map((node) => node['@type'])).toEqual(['Organization', 'SoftwareApplication']);
+    expect(nodes[1]?.offers).toHaveLength(2);
+  });
+});

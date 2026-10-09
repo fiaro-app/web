@@ -1,0 +1,50 @@
+import { describe, expect, it } from 'vitest';
+import { organizationJsonLd, serializeJsonLd, softwareApplicationJsonLd } from './json-ld';
+
+describe('organizationJsonLd', () => {
+  it('describes the organization with absolute URLs', () => {
+    const node = organizationJsonLd();
+
+    expect(node).toMatchObject({ '@type': 'Organization', name: 'Fiaro' });
+    expect(String(node.url)).toMatch(/^https?:\/\//);
+    expect(String(node.logo)).toMatch(/\/icon$/);
+  });
+});
+
+describe('softwareApplicationJsonLd', () => {
+  const PLANS = [
+    { name: 'Básico', price: '$79.000', description: 'a' },
+    { name: 'Profesional', price: '$149.000', description: 'b' },
+    { name: 'Empresarial', price: 'Hablemos', description: 'c' },
+  ];
+
+  it('turns the priced plans into COP offers and skips the one without a price', () => {
+    const node = softwareApplicationJsonLd(PLANS);
+
+    expect(node).toMatchObject({ '@type': 'SoftwareApplication', applicationCategory: 'BusinessApplication' });
+    expect(node.offers).toEqual([
+      { '@type': 'Offer', name: 'Básico', description: 'a', price: 79000, priceCurrency: 'COP' },
+      { '@type': 'Offer', name: 'Profesional', description: 'b', price: 149000, priceCurrency: 'COP' },
+    ]);
+  });
+
+  it('omits offers when no plan has a price', () => {
+    expect(softwareApplicationJsonLd([PLANS[2]!])).not.toHaveProperty('offers');
+  });
+});
+
+describe('serializeJsonLd', () => {
+  it('cannot be used to close the script tag', () => {
+    const text = serializeJsonLd({ name: '</script><script>alert(1)</script>' });
+
+    expect(text).not.toContain('<');
+    expect(JSON.parse(text)).toEqual({ name: '</script><script>alert(1)</script>' });
+  });
+
+  it('escapes the unicode line separators and accepts a list', () => {
+    const text = serializeJsonLd([{ a: 'x\u2028y\u2029z' }]);
+
+    expect(text).not.toMatch(/[\u2028\u2029]/);
+    expect(JSON.parse(text)).toEqual([{ a: 'x\u2028y\u2029z' }]);
+  });
+});

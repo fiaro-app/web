@@ -1,3 +1,4 @@
+import { JsonLd } from '@/components/atoms/JsonLd';
 import { CtaBand } from '@/components/organisms/CtaBand';
 import { DashboardPreview } from '@/components/organisms/DashboardPreview';
 import { FeaturesSection } from '@/components/organisms/FeaturesSection';
@@ -7,6 +8,7 @@ import { LandingFooter } from '@/components/organisms/LandingFooter';
 import { LandingNav } from '@/components/organisms/LandingNav';
 import { PricingSection } from '@/components/organisms/PricingSection';
 import { LandingTemplate } from '@/components/templates/LandingTemplate';
+import { organizationJsonLd, softwareApplicationJsonLd } from '@/lib/seo/json-ld';
 import {
   CTA_BAND,
   FEATURES,
@@ -25,23 +27,26 @@ import {
 /** Landing pública de Fiaro (`Screen / Web / Landing` en Penpot). */
 export default function Home() {
   return (
-    <LandingTemplate
-      nav={<LandingNav links={NAV_LINKS} loginHref={LANDING_ROUTES.login} signupHref={LANDING_ROUTES.signup} />}
-      footer={
-        <LandingFooter
-          links={FOOTER_LINKS}
-          copyright={`© ${new Date().getFullYear()} Fiaro. Todos los derechos reservados.`}
+    <>
+      <JsonLd data={[organizationJsonLd(), softwareApplicationJsonLd(PRICING.plans)]} />
+      <LandingTemplate
+        nav={<LandingNav links={NAV_LINKS} loginHref={LANDING_ROUTES.login} signupHref={LANDING_ROUTES.signup} />}
+        footer={
+          <LandingFooter
+            links={FOOTER_LINKS}
+            copyright={`© ${new Date().getFullYear()} Fiaro. Todos los derechos reservados.`}
+          />
+        }
+      >
+        <HeroSection
+          {...HERO}
+          visual={<DashboardPreview kpis={PREVIEW_KPIS} chartTitle={PREVIEW_CHART_TITLE} bars={PREVIEW_BARS} />}
         />
-      }
-    >
-      <HeroSection
-        {...HERO}
-        visual={<DashboardPreview kpis={PREVIEW_KPIS} chartTitle={PREVIEW_CHART_TITLE} bars={PREVIEW_BARS} />}
-      />
-      <FeaturesSection id={LANDING_SECTION_IDS.product} title={FEATURES.title} subtitle={FEATURES.subtitle} features={FEATURES.items} />
-      <HowItWorksSection id={LANDING_SECTION_IDS.howItWorks} {...HOW_IT_WORKS} />
-      <PricingSection id={LANDING_SECTION_IDS.pricing} {...PRICING} />
-      <CtaBand {...CTA_BAND} />
-    </LandingTemplate>
+        <FeaturesSection id={LANDING_SECTION_IDS.product} title={FEATURES.title} subtitle={FEATURES.subtitle} features={FEATURES.items} />
+        <HowItWorksSection id={LANDING_SECTION_IDS.howItWorks} {...HOW_IT_WORKS} />
+        <PricingSection id={LANDING_SECTION_IDS.pricing} {...PRICING} />
+        <CtaBand {...CTA_BAND} />
+      </LandingTemplate>
+    </>
   );
 }
