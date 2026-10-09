@@ -1,8 +1,9 @@
 import { StateIcon } from '@/components/atoms/StateIcon';
-import { Button } from '@/components/atoms/Button';
 import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { Text } from '@/components/atoms/Text';
 import { EmptyState } from '@/components/molecules/EmptyState';
+import { FilterForm } from '@/components/molecules/FilterForm';
+import { FilterSubmitButton } from '@/components/molecules/FilterSubmitButton';
 import { PaginationNav } from '@/components/molecules/PaginationNav';
 import { SearchInput } from '@/components/molecules/SearchInput';
 import { ClientsTable } from '@/components/organisms/ClientsTable';
@@ -32,17 +33,17 @@ export function ClientsView({ clients }: Readonly<ClientsViewProps>) {
         <ButtonLink href="/clientes/nuevo">{CLIENTS_TEXT.newClient}</ButtonLink>
       </header>
 
-      <form action="/clientes" role="search" className="flex max-w-xl gap-3">
+      <FilterForm action="/clientes" role="search" className="flex max-w-xl gap-3">
         <SearchInput name="q" defaultValue={search} placeholder={CLIENTS_TEXT.search.placeholder} className="flex-1" />
-        <Button type="submit" variant="outline" size="sm" className="h-11">
+        <FilterSubmitButton size="sm" className="h-11">
           {CLIENTS_TEXT.search.submit}
-        </Button>
+        </FilterSubmitButton>
         {hasSearch && (
           <ButtonLink href="/clientes" variant="text" size="sm" className="h-11">
             {CLIENTS_TEXT.search.clear}
           </ButtonLink>
         )}
-      </form>
+      </FilterForm>
 
       {rows.length === 0 ? (
         <EmptyState

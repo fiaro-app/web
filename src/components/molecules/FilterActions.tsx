@@ -1,5 +1,5 @@
-import { Button } from '@/components/atoms/Button';
 import { ButtonLink } from '@/components/atoms/ButtonLink';
+import { FilterSubmitButton } from '@/components/molecules/FilterSubmitButton';
 
 export interface FilterActionsProps {
   readonly applyLabel: string;
@@ -14,9 +14,9 @@ export interface FilterActionsProps {
 export function FilterActions({ applyLabel, clearLabel, clearHref, isFiltered }: Readonly<FilterActionsProps>) {
   return (
     <div className="flex gap-3">
-      <Button type="submit" variant="primary" size="sm" className="h-11">
+      <FilterSubmitButton size="sm" className="h-11">
         {applyLabel}
-      </Button>
+      </FilterSubmitButton>
       {isFiltered && (
         <ButtonLink href={clearHref} variant="text" size="sm" className="h-11">
           {clearLabel}

@@ -16,5 +16,13 @@ export const COMMON_TEXT = {
       confirmLabel: 'Cambiar contraseña',
     },
   },
+  calendar: {
+    placeholder: 'dd/mm/aaaa',
+    choose: 'Elegir fecha',
+    previousMonth: 'Mes anterior',
+    nextMonth: 'Mes siguiente',
+    clear: 'Borrar',
+    today: 'Hoy',
+  },
   password: { show: 'Mostrar contraseña', hide: 'Ocultar contraseña' },
 } as const;

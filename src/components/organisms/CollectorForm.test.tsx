@@ -22,12 +22,13 @@ function buildForm(overrides: Partial<State> = {}): State {
 const PORTFOLIOS = [{ id: 'p1', name: 'Zona Norte' }];
 
 describe('CollectorForm', () => {
-  it('renders every field and the portfolio options', () => {
+  it('renders every field and the portfolio options', async () => {
     render(<CollectorForm form={buildForm()} portfolios={PORTFOLIOS} />);
     expect(screen.getByLabelText(/Nombre completo/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Cédula/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Celular/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Correo electrónico/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('combobox'));
     expect(screen.getByRole('option', { name: 'Zona Norte' })).toBeInTheDocument();
   });
 

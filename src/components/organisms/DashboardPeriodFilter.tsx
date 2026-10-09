@@ -1,3 +1,4 @@
+import { FilterForm } from '@/components/molecules/FilterForm';
 import { FilterActions } from '@/components/molecules/FilterActions';
 import { FilterDateRange } from '@/components/molecules/FilterDateRange';
 import { DASHBOARD_TEXT } from '@/content/dashboard';
@@ -11,12 +12,12 @@ export function DashboardPeriodFilter({ range }: Readonly<{ range: DashboardRang
   const text = DASHBOARD_TEXT.period;
 
   return (
-    <form action="/resumen" aria-label={text.label} className="flex flex-col gap-2">
+    <FilterForm action="/resumen" aria-label={text.label} className="flex flex-col gap-2">
       <div className="flex flex-wrap items-end gap-4">
         <FilterDateRange from={range.from} to={range.to} fromLabel={text.from} toLabel={text.to} />
         <FilterActions applyLabel={text.apply} clearLabel={text.clear} clearHref="/resumen" isFiltered={range.from !== ''} />
       </div>
       <p className="text-caption text-foreground/70">{text.hint}</p>
-    </form>
+    </FilterForm>
   );
 }

@@ -1,3 +1,4 @@
+import { FilterForm } from '@/components/molecules/FilterForm';
 import { FilterActions } from '@/components/molecules/FilterActions';
 import { FilterDateRange } from '@/components/molecules/FilterDateRange';
 import { FilterSelectField } from '@/components/molecules/FilterSelectField';
@@ -20,7 +21,7 @@ export function StatsFilters({ filters, options }: Readonly<StatsFiltersProps>) 
   const isFiltered = JSON.stringify(filters) !== JSON.stringify(EMPTY_STATS_FILTERS);
 
   return (
-    <form action="/estadisticas" aria-label={text.label} className="flex flex-col gap-2">
+    <FilterForm action="/estadisticas" aria-label={text.label} className="flex flex-col gap-2">
       <div className="flex flex-wrap items-end gap-4">
         <FilterDateRange from={filters.from} to={filters.to} fromLabel={text.from} toLabel={text.to} />
         <FilterSelectField
@@ -40,6 +41,6 @@ export function StatsFilters({ filters, options }: Readonly<StatsFiltersProps>) 
         <FilterActions applyLabel={text.apply} clearLabel={text.clear} clearHref="/estadisticas" isFiltered={isFiltered} />
       </div>
       <p className="text-caption text-foreground/70">{text.periodHint}</p>
-    </form>
+    </FilterForm>
   );
 }

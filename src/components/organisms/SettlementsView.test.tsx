@@ -1,3 +1,4 @@
+import { fieldValue } from '@/test/field-value';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { EMPTY_SETTLEMENT_FILTERS } from '@/features/settlements/settlement-filters';
@@ -58,9 +59,9 @@ describe('SettlementsView', () => {
     const filters = { from: '2026-10-01', to: '2026-10-09', collectorId: 'c1', portfolioId: '' };
     const { container } = render(<SettlementsView settlements={view({ status: 'PENDING', filters })} options={options} />);
 
-    expect(screen.getByLabelText('Desde')).toHaveValue('2026-10-01');
-    expect(screen.getByLabelText('Cobrador')).toHaveValue('c1');
-    expect(screen.getByLabelText('Cartera')).toHaveValue('');
+    expect(fieldValue(container, 'desde')).toBe('2026-10-01');
+    expect(fieldValue(container, 'cobrador')).toBe('c1');
+    expect(fieldValue(container, 'cartera')).toBe('');
     expect(container.querySelector('input[type="hidden"][name="estado"]')).toHaveValue('PENDING');
     expect(screen.getByRole('link', { name: 'Limpiar filtros' })).toHaveAttribute('href', '/cuadres?estado=PENDING');
   });

@@ -27,13 +27,15 @@ beforeEach(() => {
 });
 
 describe('LoanForm', () => {
-  it('renders every field with the client and frequency options', () => {
+  it('renders every field with the client and frequency options', async () => {
     render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
     expect(screen.getByRole('form', { name: 'Registrar préstamo' })).toBeInTheDocument();
     for (const label of [/^Cliente/, /Monto prestado/, /Número de cuotas/, /Valor de cada cuota/, /Total a pagar/, /Frecuencia de cobro/, /Fecha de inicio/]) {
       expect(screen.getByLabelText(label)).toBeInTheDocument();
     }
+    await userEvent.click(screen.getByLabelText(/^Cliente/));
     expect(screen.getByRole('option', { name: 'Carlos Gómez · 1020304050' })).toBeInTheDocument();
+    await userEvent.click(screen.getByLabelText(/Frecuencia de cobro/));
     for (const frequency of ['Diaria', 'Semanal', 'Quincenal', 'Mensual']) {
       expect(screen.getByRole('option', { name: frequency })).toBeInTheDocument();
     }
@@ -61,9 +63,10 @@ describe('LoanForm', () => {
     expect(screen.getByRole('link', { name: 'Cancelar' })).toHaveAttribute('href', '/prestamos');
   });
 
-  it('offers the optional collector select when there are collectors, and hides it otherwise', () => {
+  it('offers the optional collector select when there are collectors, and hides it otherwise', async () => {
     const { rerender } = render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
     expect(screen.getByLabelText(/Cobrador asignado/)).toBeInTheDocument();
+    await userEvent.click(screen.getByLabelText(/Cobrador asignado/));
     expect(screen.getByRole('option', { name: 'Luis Gómez' })).toBeInTheDocument();
     rerender(<LoanForm clients={CLIENTS} collectors={[]} />);
     expect(screen.queryByLabelText(/Cobrador asignado/)).not.toBeInTheDocument();

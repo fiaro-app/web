@@ -1,3 +1,4 @@
+import { FilterForm } from '@/components/molecules/FilterForm';
 import { FilterActions } from '@/components/molecules/FilterActions';
 import { FilterDateRange } from '@/components/molecules/FilterDateRange';
 import { SearchInput } from '@/components/molecules/SearchInput';
@@ -21,7 +22,7 @@ export function VisitReportFilters({ filters, collectors }: Readonly<VisitReport
   const isFiltered = JSON.stringify(filters) !== JSON.stringify(EMPTY_VISIT_REPORT_FILTERS);
 
   return (
-    <form action="/cobros" aria-label={text.label} className="flex flex-col gap-2">
+    <FilterForm action="/cobros" aria-label={text.label} className="flex flex-col gap-2">
       <div className="flex flex-wrap items-end gap-4">
         <label className="flex min-w-56 flex-1 flex-col gap-1.5 text-label font-medium">
           {text.search}
@@ -45,6 +46,6 @@ export function VisitReportFilters({ filters, collectors }: Readonly<VisitReport
         <FilterActions applyLabel={text.apply} clearLabel={text.clear} clearHref="/cobros" isFiltered={isFiltered} />
       </div>
       <p className="text-caption text-foreground/70">{text.periodHint}</p>
-    </form>
+    </FilterForm>
   );
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { DatePicker } from '@/components/molecules/DatePicker';
 import { ConfirmForm } from '@/components/molecules/ConfirmForm';
 import { COMMON_TEXT } from '@/content/common';
 import { Button } from '@/components/atoms/Button';
@@ -30,7 +31,7 @@ export interface LoanFormProps {
 }
 
 export function LoanForm({ clients, collectors, initialClientId }: Readonly<LoanFormProps>) {
-  const { values, fieldErrors, formError, isSubmitting, createdLoanId, setText, setAmount, submit } = useLoanForm({ initialClientId });
+  const { values, fieldErrors, formError, isSubmitting, createdLoanId, setText, setAmount, setStartDate, submit } = useLoanForm({ initialClientId });
   const text = LOANS_TEXT.form;
 
   if (clients.length === 0) {
@@ -90,7 +91,7 @@ export function LoanForm({ clients, collectors, initialClientId }: Readonly<Loan
           </Select>
         </FormField>
         <FormField label={text.startDate.label} error={fieldErrors.startDate}>
-          <Input name="startDate" type="date" value={values.startDate} onChange={setText('startDate')} />
+          <DatePicker name="startDate" value={values.startDate} onValueChange={setStartDate} />
         </FormField>
         {collectors.length > 0 && (
           <FormField label={text.collector.label} hint={text.collector.hint} error={fieldErrors.collectorId}>

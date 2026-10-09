@@ -52,6 +52,8 @@ export function useLoanForm({ initialClientId = '' }: { readonly initialClientId
   const setText = (field: 'clientId' | 'installmentCount' | 'frequency' | 'startDate' | 'collectorId') => (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     update(field, { [field]: event.target.value });
 
+  const setStartDate = (value: string) => update('startDate', { startDate: value });
+
   const setAmount = (field: 'principalAmount' | 'installmentValue') => (value: number | null) => update(field, { [field]: value });
 
   const fail = (error: unknown) => {
@@ -103,5 +105,5 @@ export function useLoanForm({ initialClientId = '' }: { readonly initialClientId
     router.refresh();
   };
 
-  return { values, fieldErrors, formError, isSubmitting, createdLoanId, setText, setAmount, submit };
+  return { values, fieldErrors, formError, isSubmitting, createdLoanId, setText, setAmount, setStartDate, submit };
 }

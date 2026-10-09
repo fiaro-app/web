@@ -1,3 +1,4 @@
+import { FilterForm } from '@/components/molecules/FilterForm';
 import { FilterActions } from '@/components/molecules/FilterActions';
 import { FilterDateRange } from '@/components/molecules/FilterDateRange';
 import { FilterSelectField } from '@/components/molecules/FilterSelectField';
@@ -22,7 +23,7 @@ export function SettlementFilters({ filters, options, status }: Readonly<Settlem
   const isFiltered = JSON.stringify(filters) !== JSON.stringify(EMPTY_SETTLEMENT_FILTERS);
 
   return (
-    <form action="/cuadres" aria-label={text.form} className="flex flex-col gap-2">
+    <FilterForm action="/cuadres" aria-label={text.form} className="flex flex-col gap-2">
       {status && <input type="hidden" name="estado" value={status} />}
       <div className="flex flex-wrap items-end gap-4">
         <FilterDateRange from={filters.from} to={filters.to} fromLabel={text.from} toLabel={text.to} />
@@ -48,6 +49,6 @@ export function SettlementFilters({ filters, options, status }: Readonly<Settlem
         />
       </div>
       <p className="text-caption text-foreground/70">{text.dateHint}</p>
-    </form>
+    </FilterForm>
   );
 }

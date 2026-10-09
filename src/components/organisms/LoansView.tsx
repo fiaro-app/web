@@ -1,9 +1,10 @@
 import { StateIcon } from '@/components/atoms/StateIcon';
-import { Button } from '@/components/atoms/Button';
 import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { FilterPillLink } from '@/components/atoms/FilterPillLink';
 import { Text } from '@/components/atoms/Text';
 import { EmptyState } from '@/components/molecules/EmptyState';
+import { FilterForm } from '@/components/molecules/FilterForm';
+import { FilterSubmitButton } from '@/components/molecules/FilterSubmitButton';
 import { PaginationNav } from '@/components/molecules/PaginationNav';
 import { SearchInput } from '@/components/molecules/SearchInput';
 import { LoansTable } from '@/components/organisms/LoansTable';
@@ -34,18 +35,18 @@ export function LoansView({ loans }: Readonly<LoansViewProps>) {
         <ButtonLink href="/prestamos/nuevo">{LOANS_TEXT.newLoan}</ButtonLink>
       </header>
 
-      <form action="/prestamos" role="search" aria-label={LOANS_TEXT.search.label} className="flex max-w-xl gap-3">
+      <FilterForm action="/prestamos" role="search" aria-label={LOANS_TEXT.search.label} className="flex max-w-xl gap-3">
         {status !== null && <input type="hidden" name="estado" value={status} />}
         <SearchInput name="q" defaultValue={search} placeholder={LOANS_TEXT.search.placeholder} className="flex-1" />
-        <Button type="submit" variant="outline" size="sm" className="h-11">
+        <FilterSubmitButton size="sm" className="h-11">
           {LOANS_TEXT.search.submit}
-        </Button>
+        </FilterSubmitButton>
         {hasSearch && (
           <ButtonLink href={pageHref('/prestamos', 1, { estado: status ?? undefined })} variant="text" size="sm" className="h-11">
             {LOANS_TEXT.search.clear}
           </ButtonLink>
         )}
-      </form>
+      </FilterForm>
 
       <nav aria-label={LOANS_TEXT.filters.label} className="flex flex-wrap gap-2">
         <FilterPillLink href={pageHref('/prestamos', 1, { q: search })} selected={status === null}>
