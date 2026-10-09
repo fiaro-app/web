@@ -20,4 +20,10 @@ describe('Divider', () => {
 
     expect(screen.queryByRole('separator')).not.toBeInTheDocument();
   });
+
+  it('has an inverse look for brand backgrounds', () => {
+    render(<Divider inverse />);
+
+    expect(screen.getByRole('separator')).toHaveClass('bg-primary-foreground/20');
+  });
 });

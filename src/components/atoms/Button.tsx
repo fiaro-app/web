@@ -1,22 +1,9 @@
 import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react';
 import { cn } from '@/lib/cn';
 import { LoadingDots } from '@/components/atoms/LoadingDots';
+import { buttonClasses, type ButtonSize, type ButtonVariant } from '@/components/atoms/button-styles';
 
-export type ButtonVariant = 'primary' | 'outline' | 'text';
-
-const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: 'bg-primary text-primary-foreground',
-  outline: 'border-[1.5px] border-primary bg-surface text-primary',
-  text: 'bg-transparent text-primary',
-};
-
-export type ButtonSize = 'md' | 'sm';
-
-/** `md` = 48px (estándar); `sm` = 44px (acciones dentro de un modal). */
-const SIZE_CLASSES: Record<ButtonSize, string> = {
-  md: 'h-12',
-  sm: 'h-11',
-};
+export type { ButtonSize, ButtonVariant };
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly variant?: ButtonVariant;
@@ -30,7 +17,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 /**
  * La acción principal del producto, en los tres estilos del diseño (`primary`, `outline`,
- * `text`) y sus cuatro estados: reposo, hover/pressed (opacidad), disabled (40%) y loading
+ * `text`) más `inverse` para fondos de marca y sus cuatro estados: reposo, hover/pressed (opacidad), disabled (40%) y loading
  * (puntos). El hover usa opacidad y no un color derivado, así sigue al color de marca que
  * `useThemeStore` cambie en tiempo de ejecución.
  */
@@ -54,12 +41,9 @@ export function Button({
       disabled={disabled || loading}
       aria-busy={loading}
       className={cn(
-        'relative inline-flex items-center justify-center rounded-md px-6 text-label font-medium transition-opacity',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+        buttonClasses(variant, size),
         'enabled:hover:opacity-85 enabled:active:opacity-70',
         loading ? 'cursor-wait' : 'disabled:cursor-not-allowed disabled:opacity-40',
-        SIZE_CLASSES[size],
-        VARIANT_CLASSES[variant],
         className,
       )}
       {...props}
