@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { lenderEndpoints } from './endpoints';
+import {
+  CreatePortfolioBodySchema,
+  LogoUploadUrlBodySchema,
+  UpdateLenderBodySchema,
+  lenderEndpoints,
+} from './endpoints';
 
 describe('lender endpoints', () => {
   it('declares the lender and the portfolios as GET routes', () => {
@@ -13,5 +18,32 @@ describe('lender endpoints', () => {
     ]);
 
     expect(parsed.success).toBe(true);
+  });
+});
+
+describe('lender write endpoints', () => {
+  it('declares update, logo upload url and create portfolio with the API paths', () => {
+    expect(lenderEndpoints.update).toMatchObject({ method: 'PATCH', path: '/lender' });
+    expect(lenderEndpoints.logoUploadUrl).toMatchObject({ method: 'POST', path: '/lender/logo-upload-url' });
+    expect(lenderEndpoints.createPortfolio).toMatchObject({ method: 'POST', path: '/portfolios' });
+  });
+
+  it('requires at least one field to update the lender', () => {
+    expect(UpdateLenderBodySchema.safeParse({}).success).toBe(false);
+    expect(UpdateLenderBodySchema.safeParse({ name: 'Buen Vecino' }).success).toBe(true);
+    expect(UpdateLenderBodySchema.safeParse({ skipNationalHolidays: false }).success).toBe(true);
+    expect(UpdateLenderBodySchema.safeParse({ nonWorkingWeekdays: [] }).success).toBe(true);
+    expect(UpdateLenderBodySchema.safeParse({ logoUrl: null }).success).toBe(true);
+  });
+
+  it('rejects an unknown weekday and an unsupported logo type', () => {
+    expect(UpdateLenderBodySchema.safeParse({ nonWorkingWeekdays: ['FUNDAY'] }).success).toBe(false);
+    expect(LogoUploadUrlBodySchema.safeParse({ contentType: 'image/gif' }).success).toBe(false);
+    expect(LogoUploadUrlBodySchema.safeParse({ contentType: 'image/png' }).success).toBe(true);
+  });
+
+  it('requires a name to create a portfolio', () => {
+    expect(CreatePortfolioBodySchema.safeParse({ name: '' }).success).toBe(false);
+    expect(CreatePortfolioBodySchema.safeParse({ name: 'Zona Norte' }).success).toBe(true);
   });
 });
