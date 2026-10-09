@@ -42,7 +42,7 @@ describe('Summary page', () => {
     render(await SummaryPage(props({ desde: '2026-10-01', hasta: '2026-10-09' })));
 
     expect(getLenderDashboard).toHaveBeenCalledWith({ from: '2026-10-01', to: '2026-10-09' });
-    expect(screen.getByLabelText('Desde')).toHaveValue('2026-10-01');
+    expect(screen.getByLabelText('Desde')).toHaveTextContent('01/10/2026');
   });
 
   it('explains it when the account has no active business', async () => {

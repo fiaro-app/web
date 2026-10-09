@@ -85,8 +85,8 @@ describe('DashboardView', () => {
       <DashboardView dashboard={toDashboardViewModel(DASHBOARD, undefined, true)} range={{ from: '2026-10-01', to: '2026-10-09' }} />,
     );
 
-    expect(screen.getByLabelText('Desde')).toHaveValue('2026-10-01');
-    expect(screen.getByLabelText('Hasta')).toHaveValue('2026-10-09');
+    expect(screen.getByLabelText('Desde')).toHaveTextContent('01/10/2026');
+    expect(screen.getByLabelText('Hasta')).toHaveTextContent('09/10/2026');
     expect(screen.getByRole('link', { name: 'Ver solo hoy' })).toHaveAttribute('href', '/resumen');
   });
 

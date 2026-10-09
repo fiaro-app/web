@@ -1,4 +1,4 @@
-import { Input } from '@/components/atoms/Input';
+import { DatePicker } from '@/components/molecules/DatePicker';
 import { FormField } from '@/components/molecules/FormField';
 
 export interface FilterDateRangeProps {
@@ -14,12 +14,12 @@ export function FilterDateRange({ from, to, fromLabel, toLabel }: Readonly<Filte
     <>
       <div className="w-44">
         <FormField label={fromLabel}>
-          <Input name="desde" type="date" defaultValue={from} />
+          <DatePicker name="desde" defaultValue={from} />
         </FormField>
       </div>
       <div className="w-44">
         <FormField label={toLabel}>
-          <Input name="hasta" type="date" defaultValue={to} />
+          <DatePicker name="hasta" defaultValue={to} />
         </FormField>
       </div>
     </>

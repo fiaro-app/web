@@ -30,7 +30,7 @@ describe('BrandColorForm', () => {
   it('shows the color picker, a preview and the actions to an administrator', async () => {
     render(<BrandColorForm brandColor="#0F766E" canEdit />);
 
-    expect(screen.getAllByRole('radio')).toHaveLength(5);
+    expect(screen.getAllByRole('radio')).toHaveLength(6);
     expect(screen.getByRole('radio', { name: 'Verde azulado' })).toBeChecked();
     await userEvent.click(screen.getByRole('radio', { name: 'Azul' }));
     expect(chooseColor).toHaveBeenCalledWith('#1D4ED8');
@@ -65,7 +65,7 @@ describe('BrandColorForm', () => {
     useBrandColorForm.mockReturnValue(state({ color: '#123456' }));
     render(<BrandColorForm brandColor="#123456" canEdit />);
 
-    expect(screen.getAllByRole('radio')).toHaveLength(6);
+    expect(screen.getAllByRole('radio')).toHaveLength(7);
     expect(screen.getByRole('radio', { name: 'Color actual' })).toBeChecked();
   });
 });

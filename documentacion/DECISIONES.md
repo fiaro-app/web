@@ -93,8 +93,12 @@ se agrega la nueva.
 | W-86 | «Total a pagar» del préstamo es solo informativo (cuotas × valor), de solo lectura | El total pactado siempre debe cuadrar con las cuotas |
 | W-87 | Préstamos y Cobros del día tienen buscador (`?q=`). La API no busca texto en ninguno: Préstamos busca primero los clientes (hasta 10) y luego sus préstamos; Cobros filtra por cliente o cobrador la primera página grande (100) y avisa si el período tiene más | Se sirve lo que hay sin inventar endpoints; se propone a la API un `search` en `QUERY /loans` y en el reporte de cobros |
 | W-88 | La barra lateral queda fija a la altura de la pantalla (`sticky`) y Configuración se reparte en dos columnas (negocio / cobro) con el plan arriba | El menú no se pierde al hacer scroll; menos longitud de página |
-| W-89 | El color de marca se elige de una gama de 5 (`brand-palette.ts`), todos con contraste ≥ 4.5 con blanco; elegir el de Fiaro guarda «sin color». Un color guardado antes fuera de la gama se conserva como «Color actual» | Personalizar sin perder la identidad de Fiaro |
+| W-89 | El color de marca se elige de una gama de 6, con el negro incluido (`brand-palette.ts`), todos con contraste ≥ 4.5 con blanco; elegir el de Fiaro guarda «sin color». Un color guardado antes fuera de la gama se conserva como «Color actual» | Personalizar sin perder la identidad de Fiaro |
 | W-90 | Guardar o registrar datos y cerrar sesión piden confirmación (`ConfirmForm`, `ConfirmDialog`), salvo los formularios de autenticación y el contacto público | Evitar cambios por accidente en el negocio |
+| W-91 | Calendario y menús desplegables propios (`DatePicker`, `Select`), no los del navegador: calendario de lunes a domingo con «Borrar» y «Hoy», lista con la opción marcada, teclado completo (flechas, Enter, Esc, RePág/AvPág). El valor viaja en un campo oculto, así los filtros GET siguen funcionando | El diseño debe ser de Fiaro en todos los navegadores; `Select` conserva el contrato de `<select>` (hijos `<option>`, `onChange`) |
+| W-92 | «Aplicar» y «Buscar» de los filtros (`FilterForm` + `FilterSubmitButton`) se apagan cuando no hay nada nuevo que aplicar y se activan en cuanto cambia un valor; sin JavaScript siguen activos | Dejar claro cuándo se puede pulsar |
+| W-93 | «Mi cuenta» se reparte como Configuración: datos y contraseña a la izquierda, sesiones y desactivar cuenta a la derecha | Menos scroll; la barra lateral ya no se mueve |
+| W-94 | Los modales de confirmación son más grandes (30rem), llevan un icono y desenfocan el fondo (`backdrop-blur`) | Una decisión importante debe ocupar la atención; el fondo borroso evita distraerse |
 
 ## Pendientes conocidos
 

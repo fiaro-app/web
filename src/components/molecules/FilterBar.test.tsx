@@ -44,7 +44,8 @@ describe('FilterBar', () => {
       />,
     );
 
-    await userEvent.selectOptions(screen.getByRole('combobox', { name: 'Cobrador' }), 'luis');
+    await userEvent.click(screen.getByRole('combobox', { name: 'Cobrador' }));
+    await userEvent.click(screen.getByRole('option', { name: 'Luis' }));
 
     expect(onChange).toHaveBeenCalledWith('luis');
   });

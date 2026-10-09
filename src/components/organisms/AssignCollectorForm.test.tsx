@@ -19,7 +19,9 @@ describe('AssignCollectorForm', () => {
   it('lists the collectors and submits through the hook', async () => {
     render(<AssignCollectorForm loanId="l1" collectors={COLLECTORS} />);
     expect(useAssignCollector).toHaveBeenCalledWith('l1');
+    await userEvent.click(screen.getByRole('combobox'));
     expect(screen.getByRole('option', { name: 'Luis Gómez' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('option', { name: 'Luis Gómez' }));
     await userEvent.click(screen.getByRole('button', { name: 'Asignar cobrador' }));
     expect(submit).not.toHaveBeenCalled();
     await userEvent.click(screen.getByRole('button', { name: 'Guardar' }));
