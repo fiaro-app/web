@@ -1,0 +1,36 @@
+import { render, screen, within } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { LoansTable } from './LoansTable';
+
+const ROW = {
+  id: 'l1',
+  clientName: 'Carlos Gómez',
+  principal: '$500.000',
+  installments: '20 × $30.000',
+  frequency: 'Diaria',
+  startDate: '01/10/2026',
+  status: 'Pagado',
+  statusTone: 'success' as const,
+};
+
+describe('LoansTable', () => {
+  it('renders every column of a loan', () => {
+    render(<LoansTable rows={[ROW]} />);
+    const row = screen.getByRole('row', { name: /Carlos Gómez/ });
+    expect(within(row).getByRole('rowheader', { name: 'Carlos Gómez' })).toBeInTheDocument();
+    for (const text of ['$500.000', '20 × $30.000', 'Diaria', '01/10/2026', 'Pagado']) {
+      expect(within(row).getByText(text)).toBeInTheDocument();
+    }
+  });
+
+  it('colors the status by tone without relying on color alone', () => {
+    render(<LoansTable rows={[ROW, { ...ROW, id: 'l2', status: 'Anulado', statusTone: 'muted' }]} />);
+    expect(screen.getByText('Pagado')).toHaveClass('text-success');
+    expect(screen.getByText('Anulado')).toHaveClass('text-foreground/60');
+  });
+
+  it('links each row to its detail with a descriptive name', () => {
+    render(<LoansTable rows={[ROW]} />);
+    expect(screen.getByRole('link', { name: 'Ver préstamo de Carlos Gómez' })).toHaveAttribute('href', '/prestamos/l1');
+  });
+});

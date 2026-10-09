@@ -19,11 +19,16 @@ export function parseSearchParam(value: string | string[] | undefined): string {
   return typeof value === 'string' ? value.trim().slice(0, MAX_SEARCH_LENGTH) : '';
 }
 
-/** Dirección de una página de un listado, conservando la búsqueda activa. */
-export function pageHref(path: string, page: number, search = ''): string {
+/**
+ * Dirección de una página de un listado, conservando los filtros activos (`q`, `estado`…). Los
+ * filtros vacíos o ausentes no entran en la URL, y la página 1 tampoco.
+ */
+export function pageHref(path: string, page: number, filters: Readonly<Record<string, string | undefined>> = {}): string {
   const params = new URLSearchParams();
   if (page > 1) params.set('pagina', String(page));
-  if (search !== '') params.set('q', search);
+  for (const [name, value] of Object.entries(filters)) {
+    if (value !== undefined && value !== '') params.set(name, value);
+  }
   const query = params.toString();
   return query === '' ? path : `${path}?${query}`;
 }

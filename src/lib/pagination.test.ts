@@ -28,7 +28,11 @@ describe('pageHref', () => {
   });
 
   it('keeps the page and encodes the search', () => {
-    expect(pageHref('/clientes', 3, 'Gómez Pérez')).toBe('/clientes?pagina=3&q=G%C3%B3mez+P%C3%A9rez');
-    expect(pageHref('/clientes', 1, 'a&b')).toBe('/clientes?q=a%26b');
+    expect(pageHref('/clientes', 3, { q: 'Gómez Pérez' })).toBe('/clientes?pagina=3&q=G%C3%B3mez+P%C3%A9rez');
+    expect(pageHref('/clientes', 1, { q: 'a&b' })).toBe('/clientes?q=a%26b');
+  });
+
+  it('supports several filters and skips the empty ones', () => {
+    expect(pageHref('/prestamos', 2, { estado: 'ACTIVE', q: '', otro: undefined })).toBe('/prestamos?pagina=2&estado=ACTIVE');
   });
 });
