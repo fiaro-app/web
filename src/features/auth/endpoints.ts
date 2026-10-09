@@ -46,7 +46,18 @@ export const RegisterBodySchema = z.strictObject({
   contactEmail: z.email().optional(),
 });
 
+/** Sesión vigente y su persona. `null` (cuerpo `null`) cuando no hay sesión. */
+export const SessionSchema = z
+  .object({ session: z.looseObject({ id: IdSchema }), user: AuthUserSchema })
+  .nullable();
+
 export const authEndpoints = {
+  getSession: defineEndpoint({
+    method: 'GET',
+    path: '/auth/get-session',
+    summary: 'Sesión de la cookie y su persona, o null si no hay sesión vigente.',
+    response: SessionSchema,
+  }),
   signIn: defineEndpoint({
     method: 'POST',
     path: '/auth/sign-in/phone-number',

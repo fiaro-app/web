@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import { resolveApiUrl } from './src/lib/api-url';
 
 /**
  * Origen de la API. Las llamadas del navegador van a `/api/*` de esta misma web y Next las
@@ -6,7 +7,7 @@ import type { NextConfig } from 'next';
  * terceros) y `proxy.ts` puede leerla. El origen de la web debe estar en `CORS_ORIGINS` de la API
  * (better-auth comprueba la cabecera `Origin`).
  */
-const API_URL = new URL(process.env.API_URL ?? 'http://localhost:3000').origin;
+const API_URL = resolveApiUrl();
 
 const nextConfig: NextConfig = {
   async rewrites() {

@@ -24,4 +24,10 @@ describe('TopBar', () => {
 
     expect(screen.getByRole('link', { name: 'Prestamos Ya' })).toBeInTheDocument();
   });
+
+  it('renders the actions next to the user', () => {
+    render(<TopBar navItems={[]} userName="A B" actions={<button>Salir</button>} />);
+
+    expect(screen.getByRole('button', { name: 'Salir' })).toBeInTheDocument();
+  });
 });
