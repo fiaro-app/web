@@ -26,4 +26,18 @@ describe('SidebarNavItem', () => {
     expect(item).toHaveAttribute('aria-disabled', 'true');
     expect(item).toHaveAttribute('title', 'Próximamente');
   });
+
+  it('shows a badge with the pending count, capped at 99+', () => {
+    const { rerender } = render(<SidebarNavItem label="Notificaciones" href="/notificaciones" badge={5} />);
+    expect(screen.getByRole('link', { name: /Notificaciones.*5 sin leer/ })).toBeInTheDocument();
+
+    rerender(<SidebarNavItem label="Notificaciones" href="/notificaciones" badge={240} />);
+    expect(screen.getByText('99+')).toBeInTheDocument();
+  });
+
+  it('shows no badge with zero pending', () => {
+    render(<SidebarNavItem label="Notificaciones" href="/notificaciones" badge={0} />);
+
+    expect(screen.getByRole('link')).toHaveTextContent(/^Notificaciones$/);
+  });
 });

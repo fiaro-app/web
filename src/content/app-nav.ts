@@ -21,6 +21,9 @@ export const APP_NAV_ITEMS: readonly AppNavItem[] = [
   { label: 'Configuración', href: '/configuracion', available: true },
 ];
 
+/** Ruta de Notificaciones: la opción que lleva la insignia de no leídas. */
+export const NOTIFICATIONS_HREF = '/notificaciones';
+
 /** ¿La ruta actual es la de esta opción o una de sus subrutas (`/clientes/123`)? */
 export function isNavItemActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
