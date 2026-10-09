@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { signIn, signOut } from './auth-api';
+import { registerOwner, signIn, signOut } from './auth-api';
 
 const fetchMock = vi.fn<typeof fetch>();
 
@@ -41,5 +41,37 @@ describe('signOut', () => {
     const [url, init] = fetchMock.mock.calls[0]!;
     expect(url).toBe('/api/auth/sign-out');
     expect(init?.body).toBeUndefined();
+  });
+});
+
+describe('registerOwner', () => {
+  const ACCOUNT = { fullName: 'Ana Pérez', phone: '+573001234567', nationalId: '1020304050', contactEmail: undefined, password: 'una-contraseña' };
+  const CREATED = {
+    user: { id: USER.id, phone: '+573001234567' },
+    tenant: { id: '0192f0a4-7c3e-7000-8000-000000000002', name: 'Préstamos Ana' },
+  };
+
+  it('posts the account and the business to /register, leaving out an empty email', async () => {
+    fetchMock.mockResolvedValue(new Response(JSON.stringify(CREATED), { status: 201 }));
+
+    await registerOwner(ACCOUNT, { businessName: 'Préstamos Ana' });
+
+    const [url, init] = fetchMock.mock.calls[0]!;
+    expect(url).toBe('/api/register');
+    expect(JSON.parse(init?.body as string)).toEqual({
+      phone: '+573001234567',
+      fullName: 'Ana Pérez',
+      password: 'una-contraseña',
+      nationalId: '1020304050',
+      businessName: 'Préstamos Ana',
+    });
+  });
+
+  it('sends the email when there is one', async () => {
+    fetchMock.mockResolvedValue(new Response(JSON.stringify(CREATED), { status: 201 }));
+
+    await registerOwner({ ...ACCOUNT, contactEmail: 'ana@correo.com' }, { businessName: 'X Y' });
+
+    expect(JSON.parse(fetchMock.mock.calls[0]![1]?.body as string)).toMatchObject({ contactEmail: 'ana@correo.com' });
   });
 });
