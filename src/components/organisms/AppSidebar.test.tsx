@@ -23,4 +23,12 @@ describe('AppSidebar', () => {
 
     expect(screen.getByRole('link', { name: 'Resumen' })).not.toHaveAttribute('aria-current');
   });
+
+  it('shows the unread count only on Notificaciones', () => {
+    pathname.mockReturnValue('/resumen');
+    render(<AppSidebar businessName="Buen Vecino" userName="Ana Pérez" roleLabel={null} unreadNotifications={3} />);
+
+    expect(screen.getByRole('link', { name: /Notificaciones.*3 sin leer/ })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Resumen' })).toBeInTheDocument();
+  });
 });

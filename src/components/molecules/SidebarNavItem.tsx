@@ -8,12 +8,15 @@ export interface SidebarNavItemProps {
   readonly active?: boolean;
   /** Módulo aún no disponible: se muestra apagado y sin enlace. */
   readonly disabled?: boolean;
+  /** Pendientes por atender; con 1 o más se muestra una insignia (tope visual «99+»). */
+  readonly badge?: number;
 }
 
-const BASE = 'flex rounded-sm px-3 py-2.5 text-label';
+const MAX_BADGE = 99;
+const BASE = 'flex items-center justify-between gap-2 rounded-sm px-3 py-2.5 text-label';
 
 /** Una opción de la barra lateral (14px): activa, normal o apagada si el módulo todavía no existe. */
-export function SidebarNavItem({ label, href, active = false, disabled = false }: Readonly<SidebarNavItemProps>) {
+export function SidebarNavItem({ label, href, active = false, disabled = false, badge = 0 }: Readonly<SidebarNavItemProps>) {
   if (disabled) {
     return (
       <span aria-disabled="true" title="Próximamente" className={cn(BASE, 'cursor-not-allowed text-foreground/40')}>
@@ -33,6 +36,12 @@ export function SidebarNavItem({ label, href, active = false, disabled = false }
       )}
     >
       {label}
+      {badge > 0 && (
+        <span className="min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-center text-[11px] leading-none font-semibold text-primary-foreground">
+          <span aria-hidden="true">{badge > MAX_BADGE ? `${String(MAX_BADGE)}+` : badge}</span>
+          <span className="sr-only">{`, ${String(badge)} sin leer`}</span>
+        </span>
+      )}
     </NextLink>
   );
 }

@@ -9,6 +9,8 @@ export interface SidebarItem {
   readonly href: string;
   readonly active: boolean;
   readonly disabled: boolean;
+  /** Cantidad pendiente (notificaciones sin leer); 0 u omitido no muestra insignia. */
+  readonly badge?: number;
 }
 
 export interface SidebarProps {

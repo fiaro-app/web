@@ -19,10 +19,19 @@ export default async function AppLayout({ children }: Readonly<{ children: React
   const user = await requireUser();
   // Quien entró con una contraseña temporal debe cambiarla antes de usar el panel (la API también lo exige).
   if (user.mustChangePassword) redirect(CHANGE_PASSWORD_PATH);
-  const { businessName, roleLabel } = await getShellContext(user);
+  const { businessName, roleLabel, unreadNotifications } = await getShellContext(user);
 
   return (
-    <AppShellTemplate sidebar={<AppSidebar businessName={businessName} userName={user.name} roleLabel={roleLabel} />}>
+    <AppShellTemplate
+      sidebar={
+        <AppSidebar
+          businessName={businessName}
+          userName={user.name}
+          roleLabel={roleLabel}
+          unreadNotifications={unreadNotifications}
+        />
+      }
+    >
       {children}
     </AppShellTemplate>
   );

@@ -64,15 +64,15 @@ se agrega la nueva.
 | W-57 | La ficha del cliente muestra sus préstamos y un atajo `?cliente=` para registrarle uno; la lista de clientes no muestra saldo ni mora | Saldo y mora por cliente exigirían una consulta por cliente; se necesita un campo en `QUERY /clients` (propuesto a la API) |
 | W-58 | Recuperar contraseña (`/recuperar-contrasena`) es pública y va en tres pasos: celular → código y contraseña nueva → aviso final | La API manda un código al correo de contacto y no revela si el celular tiene cuenta, así que el texto es neutro |
 | W-59 | Quien entra con una contraseña temporal (`mustChangePassword`) es llevado a `/cambiar-contrasena` desde el layout del panel, antes de cargar nada; esa pantalla manda al panel a quien ya la cambió | La API también exige el cambio (`PASSWORD_CHANGE_REQUIRED`); la web evita mostrar un panel que fallaría en cada llamada |
-| W-60 | Estas dos pantallas no tienen mockup en Penpot: reutilizan la plantilla y el estilo de Login | Hay que diseñarlas y contrastarlas cuando se pueda |
+| W-60 | Estas dos pantallas reutilizan la plantilla y el estilo de Login; ya tienen mockup en Penpot (recuperar contraseña y cambio obligatorio) | Mantener ambos alineados |
+| W-61 | La insignia de no leídas de la barra lateral sale de `QUERY /notifications` con `unreadOnly` y `pageSize: 1` (se lee `meta.total`); si la API falla, no se muestra | Una sola consulta barata por petición (memoizada en el contexto del panel); es un adorno y no debe tumbar el panel. Al marcar una como leída, `router.refresh()` la actualiza |
 
 ## Pendientes conocidos
 
-- Diseñar en Penpot las pantallas de recuperar contraseña y de cambio obligatorio (W-60).
 - Migrar a `@fiaro-app/contracts`: endpoints de auth/registro y política de contraseña (W-13, W-14).
 - Préstamos: registrar pagos y ver el calendario de cuotas (módulo de cobros pendiente); mostrar el cobrador en la lista (hoy solo en el detalle).
 - API: pedir saldo y mora dentro de `QUERY /clients` y `QUERY /loans` para no consultar fila por fila.
 - Estadísticas: el botón de exportar no se ha probado con un PDF real (solo con respuestas simuladas).
-- Notificaciones: contador de no leídas en la barra lateral y notificaciones push (tokens de dispositivo).
+- Notificaciones: notificaciones push (tokens de dispositivo).
 - Subir el logo del prestamista desde Configuración: el endpoint está declarado, falta la subida directa (PUT a la URL firmada), que exige permitir ese host en la CSP (`connect-src` e `img-src`) una vez se conozca el almacenamiento.
 - Configuración: eliminar carteras y fechas puntuales sin cobro (`NonWorkingDay`) cuando la API los exponga.

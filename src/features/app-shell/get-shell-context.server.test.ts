@@ -23,9 +23,11 @@ const membership = (userId: string, roles: string[]) => ({
   phone: '+573001234567',
 });
 
+const NO_UNREAD = { data: [], meta: { page: 1, pageSize: 1, total: 0 } };
+
 function routeApi(responses: Record<string, unknown>) {
   callEndpointAsUser.mockImplementation(async (endpoint: { path: string }) => {
-    const response = responses[endpoint.path];
+    const response = { '/notifications': NO_UNREAD, ...responses }[endpoint.path];
     if (response instanceof Error) throw response;
     return response;
   });
@@ -42,7 +44,13 @@ describe('getShellContext', () => {
       '/memberships': { data: [membership('otro', ['COLLECTOR']), membership('u1', ['OWNER', 'LENDER', 'COLLECTOR'])], meta: { page: 1, pageSize: 100, total: 2 } },
     });
 
-    await expect(getShellContext(USER)).resolves.toEqual({ businessName: 'Financiera Buen Vecino', roleLabel: 'Administrador' });
+    await expect(getShellContext(USER)).resolves.toEqual({ businessName: 'Financiera Buen Vecino', roleLabel: 'Administrador', unreadNotifications: 0 });
+  });
+
+  it('reports the unread notifications for the sidebar badge', async () => {
+    routeApi({ '/lender': LENDER, '/memberships': api(403, 'FORBIDDEN'), '/notifications': { data: [], meta: { page: 1, pageSize: 1, total: 4 } } });
+
+    expect((await getShellContext(USER)).unreadNotifications).toBe(4);
   });
 
   it('has no role when the person is not in the list', async () => {
@@ -60,7 +68,7 @@ describe('getShellContext', () => {
   it('opens the panel with fallbacks when the API fails on these extras', async () => {
     routeApi({ '/lender': api(503, 'MAINTENANCE'), '/memberships': api(500, 'INTERNAL_ERROR') });
 
-    await expect(getShellContext(USER)).resolves.toEqual({ businessName: FALLBACK_BUSINESS_NAME, roleLabel: null });
+    await expect(getShellContext(USER)).resolves.toEqual({ businessName: FALLBACK_BUSINESS_NAME, roleLabel: null, unreadNotifications: 0 });
   });
 
   it('does not hide an unexpected (non-API) failure', async () => {
