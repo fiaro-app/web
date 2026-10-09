@@ -13,10 +13,7 @@ export interface FormAsideProps {
  */
 export function FormAside({ title, steps, tip }: Readonly<FormAsideProps>) {
   return (
-    <aside
-      aria-label={title}
-      className="hidden flex-col gap-6 rounded-lg bg-surface p-8 lg:flex"
-    >
+    <aside aria-label={title} className="hidden flex-col gap-6 rounded-lg bg-surface p-8 lg:flex">
       <h2 className="text-lg font-semibold text-foreground">{title}</h2>
       <ol className="flex flex-col gap-5">
         {steps.map((step, index) => (

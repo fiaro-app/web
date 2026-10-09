@@ -1,14 +1,14 @@
-import { StateIcon } from "@/components/atoms/StateIcon";
-import { Button } from "@/components/atoms/Button";
-import { ButtonLink } from "@/components/atoms/ButtonLink";
-import { Text } from "@/components/atoms/Text";
-import { EmptyState } from "@/components/molecules/EmptyState";
-import { PaginationNav } from "@/components/molecules/PaginationNav";
-import { SearchInput } from "@/components/molecules/SearchInput";
-import { ClientsTable } from "@/components/organisms/ClientsTable";
-import { CLIENTS_TEXT } from "@/content/clients";
-import type { ClientsViewModel } from "@/features/clients/clients-view-model";
-import { pageHref } from "@/lib/pagination";
+import { StateIcon } from '@/components/atoms/StateIcon';
+import { Button } from '@/components/atoms/Button';
+import { ButtonLink } from '@/components/atoms/ButtonLink';
+import { Text } from '@/components/atoms/Text';
+import { EmptyState } from '@/components/molecules/EmptyState';
+import { PaginationNav } from '@/components/molecules/PaginationNav';
+import { SearchInput } from '@/components/molecules/SearchInput';
+import { ClientsTable } from '@/components/organisms/ClientsTable';
+import { CLIENTS_TEXT } from '@/content/clients';
+import type { ClientsViewModel } from '@/features/clients/clients-view-model';
+import { pageHref } from '@/lib/pagination';
 
 export interface ClientsViewProps {
   readonly clients: ClientsViewModel;
@@ -21,7 +21,7 @@ export interface ClientsViewProps {
 export function ClientsView({ clients }: Readonly<ClientsViewProps>) {
   const { rows, total, page, pageSize, search } = clients;
   const pages = Math.max(1, Math.ceil(total / pageSize));
-  const hasSearch = search !== "";
+  const hasSearch = search !== '';
 
   return (
     <>
@@ -33,22 +33,12 @@ export function ClientsView({ clients }: Readonly<ClientsViewProps>) {
       </header>
 
       <form action="/clientes" role="search" className="flex max-w-xl gap-3">
-        <SearchInput
-          name="q"
-          defaultValue={search}
-          placeholder={CLIENTS_TEXT.search.placeholder}
-          className="flex-1"
-        />
+        <SearchInput name="q" defaultValue={search} placeholder={CLIENTS_TEXT.search.placeholder} className="flex-1" />
         <Button type="submit" variant="outline" size="sm" className="h-11">
           {CLIENTS_TEXT.search.submit}
         </Button>
         {hasSearch && (
-          <ButtonLink
-            href="/clientes"
-            variant="text"
-            size="sm"
-            className="h-11"
-          >
+          <ButtonLink href="/clientes" variant="text" size="sm" className="h-11">
             {CLIENTS_TEXT.search.clear}
           </ButtonLink>
         )}
@@ -56,7 +46,7 @@ export function ClientsView({ clients }: Readonly<ClientsViewProps>) {
 
       {rows.length === 0 ? (
         <EmptyState
-          icon={<StateIcon name={hasSearch ? "search" : "user-plus"} />}
+          icon={<StateIcon name={hasSearch ? 'search' : 'user-plus'} />}
           {...(hasSearch ? CLIENTS_TEXT.noResults(search) : CLIENTS_TEXT.empty)}
           action={
             hasSearch ? (
@@ -64,9 +54,7 @@ export function ClientsView({ clients }: Readonly<ClientsViewProps>) {
                 {CLIENTS_TEXT.search.clear}
               </ButtonLink>
             ) : (
-              <ButtonLink href="/clientes/nuevo">
-                {CLIENTS_TEXT.form.createTitle}
-              </ButtonLink>
+              <ButtonLink href="/clientes/nuevo">{CLIENTS_TEXT.form.createTitle}</ButtonLink>
             )
           }
         />
@@ -77,7 +65,7 @@ export function ClientsView({ clients }: Readonly<ClientsViewProps>) {
             page={page}
             pages={pages}
             summary={CLIENTS_TEXT.pagination.summary(page, pages, total)}
-            hrefFor={(target) => pageHref("/clientes", target, { q: search })}
+            hrefFor={(target) => pageHref('/clientes', target, { q: search })}
           />
         </>
       )}

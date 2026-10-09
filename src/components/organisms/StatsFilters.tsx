@@ -1,14 +1,11 @@
-import { Button } from "@/components/atoms/Button";
-import { ButtonLink } from "@/components/atoms/ButtonLink";
-import { Input } from "@/components/atoms/Input";
-import { Select } from "@/components/atoms/Select";
-import { FormField } from "@/components/molecules/FormField";
-import { STATS_TEXT } from "@/content/stats";
-import type { StatsFilterOptions } from "@/features/stats/get-stats.server";
-import {
-  EMPTY_STATS_FILTERS,
-  type StatsFilters as Filters,
-} from "@/features/stats/stats-filters";
+import { Button } from '@/components/atoms/Button';
+import { ButtonLink } from '@/components/atoms/ButtonLink';
+import { Input } from '@/components/atoms/Input';
+import { Select } from '@/components/atoms/Select';
+import { FormField } from '@/components/molecules/FormField';
+import { STATS_TEXT } from '@/content/stats';
+import type { StatsFilterOptions } from '@/features/stats/get-stats.server';
+import { EMPTY_STATS_FILTERS, type StatsFilters as Filters } from '@/features/stats/stats-filters';
 
 export interface StatsFiltersProps {
   readonly filters: Filters;
@@ -20,20 +17,12 @@ export interface StatsFiltersProps {
  * viajan en la URL (`?desde=&hasta=&cobrador=&cartera=`), así funciona sin JavaScript y se puede
  * compartir. Solo presentación.
  */
-export function StatsFilters({
-  filters,
-  options,
-}: Readonly<StatsFiltersProps>) {
+export function StatsFilters({ filters, options }: Readonly<StatsFiltersProps>) {
   const text = STATS_TEXT.filters;
-  const isFiltered =
-    JSON.stringify(filters) !== JSON.stringify(EMPTY_STATS_FILTERS);
+  const isFiltered = JSON.stringify(filters) !== JSON.stringify(EMPTY_STATS_FILTERS);
 
   return (
-    <form
-      action="/estadisticas"
-      aria-label={text.label}
-      className="flex flex-col gap-2"
-    >
+    <form action="/estadisticas" aria-label={text.label} className="flex flex-col gap-2">
       <div className="flex flex-wrap items-end gap-4">
         <div className="w-44">
           <FormField label={text.from}>
@@ -74,12 +63,7 @@ export function StatsFilters({
             {text.apply}
           </Button>
           {isFiltered && (
-            <ButtonLink
-              href="/estadisticas"
-              variant="text"
-              size="sm"
-              className="h-11"
-            >
+            <ButtonLink href="/estadisticas" variant="text" size="sm" className="h-11">
               {text.clear}
             </ButtonLink>
           )}

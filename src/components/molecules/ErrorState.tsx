@@ -1,6 +1,6 @@
-import { StateIcon } from "@/components/atoms/StateIcon";
-import { Button } from "@/components/atoms/Button";
-import { EmptyState } from "@/components/molecules/EmptyState";
+import { StateIcon } from '@/components/atoms/StateIcon';
+import { Button } from '@/components/atoms/Button';
+import { EmptyState } from '@/components/molecules/EmptyState';
 
 export interface ErrorStateProps {
   /** Reintenta lo que falló. */
@@ -16,8 +16,8 @@ export interface ErrorStateProps {
  */
 export function ErrorState({
   onRetry,
-  title = "Algo salió mal",
-  description = "No pudimos cargar esta pantalla. Inténtalo de nuevo en un momento.",
+  title = 'Algo salió mal',
+  description = 'No pudimos cargar esta pantalla. Inténtalo de nuevo en un momento.',
   className,
 }: Readonly<ErrorStateProps>) {
   return (
