@@ -2,7 +2,7 @@ import { defineEndpoint } from '@fiaro-app/contracts';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import { ApiRequestError, CLIENT_ERROR_CODES } from './api-error';
-import { API_BASE_PATH, API_VERSION, callEndpoint } from './call-endpoint';
+import { API_BASE_PATH, API_VERSION, callEndpoint, callEndpointForFile } from './call-endpoint';
 
 const getThing = defineEndpoint({
   method: 'GET',
@@ -166,5 +166,49 @@ describe('callEndpoint', () => {
     await expect(callEndpoint(getThing, { params: { id: '1' } })).rejects.toMatchObject({
       code: CLIENT_ERROR_CODES.invalidResponse,
     });
+  });
+});
+
+const exportThing = defineEndpoint({
+  method: 'QUERY',
+  path: '/things/export',
+  summary: 'Exporta las cosas a un archivo.',
+  body: z.object({ format: z.literal('pdf') }),
+  response: z.unknown(),
+});
+
+describe('callEndpointForFile', () => {
+  it('asks for the file type and returns the content with the name the API suggests', async () => {
+    fetchMock.mockResolvedValueOnce(
+      new Response('%PDF-1.7', {
+        status: 200,
+        headers: { 'Content-Type': 'application/pdf', 'Content-Disposition': 'attachment; filename="estadisticas-2026-10-01-a-2026-10-09.pdf"' },
+      }),
+    );
+
+    const file = await callEndpointForFile(exportThing, { body: { format: 'pdf' } });
+
+    const [url, init] = fetchMock.mock.calls[0] ?? [];
+    expect(url).toBe(`${API_BASE_PATH}/things/export`);
+    expect(init).toMatchObject({ method: 'QUERY', headers: expect.objectContaining({ Accept: 'application/pdf', 'API-Version': API_VERSION }) });
+    expect(await file.blob.text()).toBe('%PDF-1.7');
+    expect(file.filename).toBe('estadisticas-2026-10-01-a-2026-10-09.pdf');
+  });
+
+  it('has no filename when the API does not suggest one', async () => {
+    fetchMock.mockResolvedValueOnce(new Response('x', { status: 200 }));
+    expect((await callEndpointForFile(exportThing, { body: { format: 'pdf' } })).filename).toBeNull();
+  });
+
+  it('throws the contract error when the API refuses', async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse({ ...API_ERROR, statusCode: 403, code: 'FORBIDDEN' }, { status: 403 }));
+    await expect(callEndpointForFile(exportThing, { body: { format: 'pdf' } })).rejects.toMatchObject({ code: 'FORBIDDEN', statusCode: 403 });
+  });
+
+  it('reports NETWORK_ERROR when there is no connection', async () => {
+    fetchMock.mockRejectedValueOnce(new TypeError('fetch failed'));
+    const error = await callEndpointForFile(exportThing, { body: { format: 'pdf' } }).catch((failure: unknown) => failure);
+    expect(error).toBeInstanceOf(ApiRequestError);
+    expect(error).toMatchObject({ code: CLIENT_ERROR_CODES.network });
   });
 });

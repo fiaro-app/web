@@ -9,6 +9,9 @@ export const LenderStatsBodySchema = z.strictObject({
 });
 export type LenderStatsBody = z.infer<typeof LenderStatsBodySchema>;
 
+/** Cuerpo de `QUERY /lenders/me/stats/export`: los mismos filtros y el formato (por ahora solo PDF). */
+export const LenderStatsExportBodySchema = LenderStatsBodySchema.extend({ format: z.literal('pdf') });
+
 /** Los cuatro tramos fijos de antigüedad de la mora, siempre en este orden. */
 export const ARREARS_BUCKET_LABELS = ['0-7', '8-15', '16-30', '30+'] as const;
 
@@ -51,7 +54,7 @@ export type LenderStats = z.infer<typeof LenderStatsSchema>;
 /**
  * Estadísticas del prestamista. `@fiaro-app/contracts` 0.6.0 no las publica (la API las define en
  * `modules/dashboard`): mismo plan de migración que W-13. El PDF (`/lenders/me/stats/export`)
- * devuelve un archivo, no JSON, así que no pasa por `callEndpoint` (ver `stats-export.ts`).
+ * devuelve un archivo, no JSON, así que se llama con `callEndpointForFile`.
  */
 export const statsEndpoints = {
   get: defineEndpoint({
@@ -60,5 +63,13 @@ export const statsEndpoints = {
     summary: 'Estadísticas del período: cartera en riesgo, mora por antigüedad y desempeño por cobrador.',
     body: LenderStatsBodySchema,
     response: LenderStatsSchema,
+  }),
+  exportPdf: defineEndpoint({
+    method: 'QUERY',
+    path: '/lenders/me/stats/export',
+    summary: 'Las mismas estadísticas en un PDF descargable.',
+    body: LenderStatsExportBodySchema,
+    // La respuesta es un archivo, no JSON: se lee con `callEndpointForFile`.
+    response: z.unknown(),
   }),
 } as const;
