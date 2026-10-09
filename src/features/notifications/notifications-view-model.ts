@@ -1,7 +1,7 @@
 import type { NotificationSeverity } from '@fiaro-app/contracts';
 import type { NotificationResponse } from '@/features/notifications/endpoints';
 import { notificationHref } from '@/features/notifications/notification-link';
-import { businessDateOf, formatBusinessDate } from '@/lib/dates';
+import { formatInstantDate } from '@/lib/dates';
 import type { Tone } from '@/lib/tone';
 
 /** Color de cada nivel de importancia, con las intenciones del sistema de diseño. */
@@ -45,7 +45,7 @@ export function toNotificationsViewModel(
     tone: SEVERITY_TONE[notification.severity],
     title: notification.title,
     body: notification.body,
-    date: formatBusinessDate(businessDateOf(new Date(notification.createdAt))),
+    date: formatInstantDate(notification.createdAt),
     read: notification.readAt !== null,
     href: notificationHref(notification.relatedEntityType, notification.relatedEntityId),
   }));

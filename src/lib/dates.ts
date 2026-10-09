@@ -1,3 +1,5 @@
+import { toBusinessDate } from '@fiaro-app/contracts';
+
 const BUSINESS_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
 /**
@@ -10,18 +12,11 @@ export function formatBusinessDate(value: string): string {
   return match ? `${match[3]}/${match[2]}/${match[1]}` : value;
 }
 
-const BUSINESS_TIME_ZONE = 'America/Bogota';
-
 /**
- * El día de calendario de un instante (`2026-10-09`) según el reloj de Colombia, que es el del
- * negocio: con UTC o la zona del navegador, a las 9 pm el día ya habría cambiado.
+ * El día en que ocurrió un instante (`2026-10-09T02:00:00Z`) escrito como se lee en Colombia
+ * (`08/10/2026`). El día se toma con `toBusinessDate` del contrato (hora de Bogotá): con UTC o la
+ * zona del navegador, a las 9 pm el día ya habría cambiado.
  */
-export function businessDateOf(instant: Date): string {
-  // `en-CA` formatea como `AAAA-MM-DD`.
-  return new Intl.DateTimeFormat('en-CA', {
-    timeZone: BUSINESS_TIME_ZONE,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(instant);
+export function formatInstantDate(instant: string): string {
+  return formatBusinessDate(toBusinessDate(new Date(instant)));
 }

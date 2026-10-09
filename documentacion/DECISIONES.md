@@ -42,7 +42,7 @@ se agrega la nueva.
 | W-35 | Los endpoints de cuadres (leer, listar, aprobar, rechazar) se declaran en la web; el envío queda fuera | El cobrador envía el cuadre desde la app móvil; la web solo lo revisa |
 | W-36 | El botón "Revisar" del Resumen lleva a `/cuadres/[id]` (reemplaza la omisión de W-17) | Ya existe el módulo Cuadres |
 | W-37 | Aprobar y rechazar comparten un comentario opcional; un comentario vacío no se envía | La API lo trata como `reviewNote` ausente y el rechazo no exige motivo |
-| W-38 | `businessDateOf` (hora de Colombia) vive en `lib/dates` y lo usan préstamos y cuadres | Un instante a las 9 pm hora local ya es el día siguiente en UTC |
+| W-38 | Las fechas de calendario de Colombia salen de `toBusinessDate` del contrato, y `formatInstantDate` (en `lib/dates`) escribe el día de un instante como `08/10/2026` | Un instante a las 9 pm hora local ya es el día siguiente en UTC; una sola regla, la del contrato |
 | W-39 | La diferencia de un cuadre y el lookup de nombres de cobradores se comparten entre Resumen y Cuadres | Una sola regla para el tono (falta = grana, sobra = ámbar) y una sola consulta |
 | W-40 | "Notificaciones" se agrega a la barra lateral entre Cuadres y Estadísticas | Es una pantalla propia en la web; el orden del diseño no la incluía y debe verificarse contra Penpot |
 | W-41 | Las notificaciones son de la persona (todos sus negocios), no de un negocio; no hay estado "sin acceso" | `QUERY /notifications` filtra por el usuario de la sesión |

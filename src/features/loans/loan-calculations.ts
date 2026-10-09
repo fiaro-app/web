@@ -1,4 +1,4 @@
-import { businessDateOf } from '@/lib/dates';
+import { toBusinessDate } from '@fiaro-app/contracts';
 
 /**
  * Lo pactado en total que sugiere la app: cuotas × valor de la cuota. El prestamista puede
@@ -12,5 +12,5 @@ export function suggestTotalPayable(installmentCount: number | null, installment
 
 /** Fecha de hoy en Colombia (`2026-10-09`), la que usa el negocio. */
 export function todayBusinessDate(now: Date = new Date()): string {
-  return businessDateOf(now);
+  return toBusinessDate(now);
 }
