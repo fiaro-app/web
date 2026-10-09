@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { darken } from '@/lib/color';
 
-/** The default brand color, same as the static fallback in `globals.css`. */
-export const DEFAULT_PRIMARY_COLOR = '#0f766e';
+/** El color de marca por defecto (anil de Fiaro), igual al valor estático de `globals.css`. */
+export const DEFAULT_PRIMARY_COLOR = '#3b3382';
 
 interface ThemeState {
   readonly primaryColor: string;

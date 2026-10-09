@@ -1,77 +1,87 @@
 @import "tailwindcss";
 
+/* Tokens del sistema de diseño (Penpot › "1 · Fundamentos"). Los nombres de abajo son los del
+   diseño traducidos al inglés: anil → primary, cobre → accent, musgo → success, ámbar → warning,
+   grana → destructive. El diseño solo define tema claro, por eso no hay variante oscura. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6f5fb;
+  --surface: #ffffff;
+  --surface-2: #f1f0f8;
+  --foreground: #1c1b2e;
+  --skeleton: #d9d6e4;
 
   /* Color de marca del Lender (D-102 del backend: todavía no hay un campo para esto en la API,
-     así que por ahora es un valor por defecto fijo). `useThemeStore` lo sobreescribe en
-     tiempo de ejecución con `document.documentElement.style.setProperty`, nunca editando este
-     archivo: por eso cada variable vive sola, sin derivarse de otra con `color-mix` aquí mismo. */
-  --primary: #0f766e;
-  --primary-hover: #0d6a63;
+     así que por ahora es el anil de Fiaro). `useThemeStore` lo sobreescribe en tiempo de
+     ejecución con `document.documentElement.style.setProperty`, nunca editando este archivo:
+     por eso cada variable vive sola, sin derivarse de otra con `color-mix` aquí mismo. */
+  --primary: #3b3382;
+  --primary-hover: #352e75;
   --primary-foreground: #ffffff;
+  --ring: #3b3382;
 
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
+  --accent: #8f461f;
+  --accent-foreground: #ffffff;
 
-  --muted: #f8fafc;
-  --muted-foreground: #64748b;
-
-  --border: #e2e8f0;
-  --ring: #0f766e;
-
-  --destructive: #dc2626;
+  --success: #106b32;
+  --success-foreground: #ffffff;
+  --warning: #7a5106;
+  --warning-foreground: #ffffff;
+  /* Ámbar legible sobre fondos oscuros (acción del Toast): 10.35:1 contra la tinta; el ámbar normal da 2.41:1. */
+  --warning-soft: #f5c451;
+  --destructive: #ae3730;
   --destructive-foreground: #ffffff;
-
-  --success: #16a34a;
-  --warning: #d97706;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
   --color-foreground: var(--foreground);
+  --color-skeleton: var(--skeleton);
 
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-primary-foreground: var(--primary-foreground);
-
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-
-  --color-border: var(--border);
   --color-ring: var(--ring);
 
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning-soft: var(--warning-soft);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
 
-  --color-success: var(--success);
-  --color-warning: var(--warning);
+  /* radius.sm / md / lg del diseño (radius.full ya es `rounded-full`). */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* font.display / font.body / font.mono; las variables --font-* las define next/font en layout.tsx. */
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-
-    --secondary: #1e293b;
-    --secondary-foreground: #f1f5f9;
-
-    --muted: #18181b;
-    --muted-foreground: #a1a1aa;
-
-    --border: #27272a;
-  }
+  /* size.display / h2 / h3 / body / label / caption (size.mono es `text-label` + `font-mono`). */
+  --text-display: 34px;
+  --text-display--line-height: 1.2;
+  --text-h2: 26px;
+  --text-h2--line-height: 1.25;
+  --text-h3: 20px;
+  --text-h3--line-height: 1.3;
+  --text-body: 16px;
+  --text-body--line-height: 1.5;
+  --text-label: 14px;
+  --text-label--line-height: 1.43;
+  --text-caption: 12px;
+  --text-caption--line-height: 1.33;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
 }

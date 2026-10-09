@@ -1,26 +1,24 @@
 import type { InputHTMLAttributes, Ref } from 'react';
 import { cn } from '@/lib/cn';
+import { fieldClasses } from '@/lib/field-styles';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  /** Marks the border/ring red and sets `aria-invalid`, without owning the error message itself. */
+  /** Pone el borde rojo y `aria-invalid`, sin ser dueño del mensaje de error (ver `FormField`). */
   readonly invalid?: boolean;
   readonly ref?: Ref<HTMLInputElement>;
 }
 
-/** A single-line text field. Pair with `Label` and an error message via `FormField` (molecules). */
+/**
+ * Campo de texto de una línea con los cuatro estados del diseño: reposo (borde en tinta), foco
+ * (borde de 2px en color de marca), error (borde de 2px en rojo) y deshabilitado (40%).
+ * Se combina con `Label` y el mensaje de error mediante `FormField`.
+ */
 export function Input({ ref, invalid = false, className, ...props }: Readonly<InputProps>) {
   return (
     <input
       ref={ref}
       aria-invalid={invalid}
-      className={cn(
-        'h-10 w-full rounded-md border bg-background px-3 text-sm text-foreground transition-colors',
-        'placeholder:text-muted-foreground',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-        'disabled:cursor-not-allowed disabled:opacity-60 disabled:bg-muted',
-        invalid ? 'border-destructive' : 'border-border',
-        className,
-      )}
+      className={cn(fieldClasses(invalid), 'text-body placeholder:text-foreground/70', className)}
       {...props}
     />
   );
