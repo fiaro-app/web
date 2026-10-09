@@ -11,7 +11,9 @@ export type AuthErrorField =
   | 'nationalId'
   | 'fullName'
   | 'contactEmail'
-  | 'businessName';
+  | 'businessName'
+  | 'occupation'
+  | 'address';
 
 export interface AuthErrorView {
   readonly message: string;
@@ -83,6 +85,8 @@ const SERVER_FIELDS: readonly AuthErrorField[] = [
   'fullName',
   'contactEmail',
   'businessName',
+  'occupation',
+  'address',
 ];
 
 /**
