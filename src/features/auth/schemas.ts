@@ -1,5 +1,5 @@
-import { MobilePhoneSchema, toColombianE164 } from '@fiaro-app/contracts';
 import { z } from 'zod';
+import { phoneField } from '@/features/auth/phone-field';
 import { PASSWORD_MAX_LENGTH } from '@/features/auth/password-policy';
 
 /**
@@ -9,12 +9,7 @@ import { PASSWORD_MAX_LENGTH } from '@/features/auth/password-policy';
  * usarla, para no revelarla a quien prueba contraseñas.
  */
 export const SignInFormSchema = z.object({
-  phone: z
-    .string()
-    .trim()
-    .min(1, 'Escribe tu celular.')
-    .transform((value) => toColombianE164(value) ?? value)
-    .pipe(MobilePhoneSchema),
+  phone: phoneField,
   password: z
     .string()
     .min(1, 'Escribe tu contraseña.')

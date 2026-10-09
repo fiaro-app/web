@@ -5,3 +5,6 @@
  */
 export const PASSWORD_MIN_LENGTH = 8;
 export const PASSWORD_MAX_LENGTH = 128;
+
+/** Dígitos del código que se manda por correo para recuperar la contraseña (API: `verification-code.policy`). */
+export const VERIFICATION_CODE_LENGTH = 6;

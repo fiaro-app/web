@@ -27,3 +27,22 @@ export function parseAmount(raw: string): number | null {
 export function formatAmount(value: number | null): string {
   return value === null ? '' : amountFormatter.format(value);
 }
+
+/**
+ * Pesos colombianos para mostrar: `$` y separador de miles de es-CO. Acepta valores negativos
+ * (`-$5.000`).
+ *
+ * @example
+ * formatCop(18400000) // '$18.400.000'
+ */
+export function formatCop(value: number): string {
+  return value < 0 ? `-$${amountFormatter.format(-value)}` : `$${amountFormatter.format(value)}`;
+}
+
+/**
+ * Una proporción (0.85) como porcentaje entero para mostrar ("85 %"); `—` cuando no hay dato
+ * (`null`), para no mostrar un 0 % que parecería un resultado.
+ */
+export function formatPercent(ratio: number | null): string {
+  return ratio === null ? '—' : `${String(Math.round(ratio * 100))} %`;
+}

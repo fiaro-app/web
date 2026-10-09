@@ -4,9 +4,9 @@ import { ApiRequestError } from '@/lib/api';
 vi.mock('server-only', () => ({}));
 vi.mock('react', async (importOriginal) => ({ ...(await importOriginal<typeof import('react')>()), cache: <T,>(fn: T) => fn }));
 
-const { cookieString, callEndpoint } = vi.hoisted(() => ({
+const { cookieString, callEndpointAsUser } = vi.hoisted(() => ({
   cookieString: vi.fn<() => string>(),
-  callEndpoint: vi.fn(),
+  callEndpointAsUser: vi.fn(),
 }));
 
 vi.mock('next/headers', () => ({ cookies: async () => ({ toString: cookieString }) }));
@@ -15,7 +15,7 @@ vi.mock('next/navigation', () => ({
     throw new Error(`NEXT_REDIRECT:${to}`);
   },
 }));
-vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<typeof import('@/lib/api')>()), callEndpoint }));
+vi.mock('@/lib/api/server-call', () => ({ callEndpointAsUser }));
 
 const USER = { id: 'u1', name: 'Ana', phoneNumber: '+573001234567', contactEmail: null, mustChangePassword: false };
 
@@ -34,22 +34,19 @@ describe('getCurrentUser', () => {
     const { getCurrentUser } = await load();
 
     await expect(getCurrentUser()).resolves.toBeNull();
-    expect(callEndpoint).not.toHaveBeenCalled();
+    expect(callEndpointAsUser).not.toHaveBeenCalled();
   });
 
-  it('forwards the cookie to the API and returns its user', async () => {
-    callEndpoint.mockResolvedValue({ session: { id: 's1' }, user: USER });
+  it('asks the API on behalf of the visitor and returns its user', async () => {
+    callEndpointAsUser.mockResolvedValue({ session: { id: 's1' }, user: USER });
     const { getCurrentUser } = await load();
 
     await expect(getCurrentUser()).resolves.toEqual(USER);
-    expect(callEndpoint).toHaveBeenCalledWith(
-      expect.objectContaining({ path: '/auth/get-session' }),
-      expect.objectContaining({ baseUrl: 'http://localhost:3000', headers: { Cookie: 'fiaro.session_token=abc' } }),
-    );
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/auth/get-session' }), {});
   });
 
   it('returns null when the API says there is no session', async () => {
-    callEndpoint.mockResolvedValue(null);
+    callEndpointAsUser.mockResolvedValue(null);
     const { getCurrentUser } = await load();
 
     await expect(getCurrentUser()).resolves.toBeNull();
@@ -58,25 +55,25 @@ describe('getCurrentUser', () => {
   it('returns null on 401, but does not hide other failures as a missing session', async () => {
     const { getCurrentUser } = await load();
 
-    callEndpoint.mockRejectedValueOnce(new ApiRequestError({ statusCode: 401, code: 'UNAUTHENTICATED', message: 'x' }));
+    callEndpointAsUser.mockRejectedValueOnce(new ApiRequestError({ statusCode: 401, code: 'UNAUTHENTICATED', message: 'x' }));
     await expect(getCurrentUser()).resolves.toBeNull();
 
     const outage = new ApiRequestError({ statusCode: 503, code: 'MAINTENANCE', message: 'x' });
-    callEndpoint.mockRejectedValueOnce(outage);
+    callEndpointAsUser.mockRejectedValueOnce(outage);
     await expect(getCurrentUser()).rejects.toBe(outage);
   });
 });
 
 describe('requireUser', () => {
   it('returns the user when there is a session', async () => {
-    callEndpoint.mockResolvedValue({ session: { id: 's1' }, user: USER });
+    callEndpointAsUser.mockResolvedValue({ session: { id: 's1' }, user: USER });
     const { requireUser } = await load();
 
     await expect(requireUser()).resolves.toEqual(USER);
   });
 
   it('sends the person to login when there is none', async () => {
-    callEndpoint.mockResolvedValue(null);
+    callEndpointAsUser.mockResolvedValue(null);
     const { requireUser } = await load();
 
     await expect(requireUser()).rejects.toThrow('NEXT_REDIRECT:/login');
