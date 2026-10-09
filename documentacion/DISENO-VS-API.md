@@ -19,7 +19,7 @@ Estados de la columna **Penpot**: ✅ ya corregido · ⏳ por corregir · 🆕 n
 
 | Pantalla | El mockup muestra | La web implementa (API) | Penpot |
 |---|---|---|---|
-| Barra lateral | 7 opciones (sin Notificaciones) | 8: se agrega **Notificaciones** entre Cuadres y Estadísticas | ⏳ |
+| Barra lateral | 7 opciones (sin Notificaciones) | 8: se agrega **Notificaciones** entre Cuadres y Estadísticas | ✅ |
 | Resumen | Sin filtros de periodo; «Efectividad de hoy» | Igual; botón «Revisar» lleva al cuadre | ✅ |
 | Cobradores (lista) | Nombre, cédula, teléfono, cartera, estado, **efectividad** | Sin cédula ni efectividad: `QUERY /memberships` no las devuelve; enlace «Gestionar» | ⏳ |
 | Registrar cobrador | Contraseña temporal «enviada por correo» | La API la entrega en la respuesta: se muestra **una sola vez** en la confirmación | ⏳ |
@@ -37,7 +37,7 @@ Estados de la columna **Penpot**: ✅ ya corregido · ⏳ por corregir · 🆕 n
 
 ## Qué hacer en Penpot
 
-1. Agregar «Notificaciones» a la barra lateral de todas las pantallas del panel.
+1. ✅ (hecho) Agregar «Notificaciones» a la barra lateral de todas las pantallas del panel.
 2. Cobradores: quitar cédula y efectividad de la tabla, cambiar «Editar» por «Gestionar», y rediseñar «Editar cobrador» como pantalla de gestión.
 3. Registrar cobrador: mostrar la contraseña temporal en la confirmación (una sola vez), no «enviada por correo».
 4. Clientes y Préstamos: ajustar columnas, y diseñar la ficha del cliente con sus préstamos y la asignación de cobrador en el detalle del préstamo.
