@@ -40,6 +40,22 @@ export const SETTINGS_TEXT = {
     nameLabel: 'Nueva cartera',
     namePlaceholder: 'Ej: Zona Norte',
     create: 'Crear cartera',
+    rename: {
+      action: 'Renombrar',
+      actionFor: (name: string) => `Renombrar la cartera ${name}`,
+      label: 'Nuevo nombre',
+      save: 'Guardar',
+      cancel: 'Cancelar',
+      done: 'Cartera renombrada.',
+    },
+    remove: {
+      action: 'Borrar',
+      actionFor: (name: string) => `Borrar la cartera ${name}`,
+      confirmTitle: '¿Borrar la cartera?',
+      confirmDescription: 'Solo se puede borrar si no tiene cobradores activos. Los cobradores desactivados que la tenían quedan sin cartera.',
+      confirmLabel: 'Borrar',
+      done: 'Cartera borrada.',
+    },
   },
   weekdays: {
     MONDAY: 'Lunes',

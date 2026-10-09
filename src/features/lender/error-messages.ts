@@ -20,3 +20,20 @@ export function describeSettingsError(error: unknown): AuthErrorView {
   }
   return describeAuthError(error);
 }
+
+/**
+ * Mensaje de un error al borrar una cartera: `CONFLICT` aquí no es un nombre repetido, sino que la
+ * cartera es la de por defecto o todavía tiene cobradores activos.
+ */
+export function describePortfolioDeleteError(error: unknown): AuthErrorView {
+  if (isApiRequestError(error)) {
+    if (error.hasCode('CONFLICT')) {
+      return {
+        message: 'No se puede borrar: es la cartera por defecto o todavía tiene cobradores activos. Reasígnalos y vuelve a intentarlo.',
+        field: null,
+      };
+    }
+    if (error.hasCode('NOT_FOUND')) return { message: 'Esa cartera ya no existe. Actualiza la página.', field: null };
+  }
+  return describeSettingsError(error);
+}

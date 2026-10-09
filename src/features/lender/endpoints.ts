@@ -1,4 +1,4 @@
-import { BusinessNameSchema, LenderSchema, PortfolioSchema, WeekdaySchema, defineEndpoint } from '@fiaro-app/contracts';
+import { BusinessNameSchema, IdSchema, LenderSchema, PortfolioSchema, WeekdaySchema, defineEndpoint } from '@fiaro-app/contracts';
 import { z } from 'zod';
 
 /** Cuerpo de `PATCH /lender`: un campo ausente no se toca y debe venir al menos uno. */
@@ -27,6 +27,9 @@ export const LogoUploadUrlSchema = z.object({
 
 /** Cuerpo de `POST /portfolios`: el nombre es único dentro del prestamista. */
 export const CreatePortfolioBodySchema = z.strictObject({ name: BusinessNameSchema });
+
+/** Cuerpo de `PATCH /portfolios/:id`: el nuevo nombre, que tampoco puede repetirse. */
+export const RenamePortfolioBodySchema = z.strictObject({ name: BusinessNameSchema });
 
 /**
  * Datos del prestamista de la sesión. `@fiaro-app/contracts` 0.6.0 publica los schemas
@@ -66,5 +69,20 @@ export const lenderEndpoints = {
     summary: 'Crea una cartera (solo Owner y Lender); el nombre no puede repetirse.',
     body: CreatePortfolioBodySchema,
     response: PortfolioSchema,
+  }),
+  renamePortfolio: defineEndpoint({
+    method: 'PATCH',
+    path: '/portfolios/:id',
+    summary: 'Renombra una cartera, la de por defecto incluida (solo Owner y Lender); el nombre no puede repetirse.',
+    params: z.object({ id: IdSchema }),
+    body: RenamePortfolioBodySchema,
+    response: PortfolioSchema,
+  }),
+  deletePortfolio: defineEndpoint({
+    method: 'DELETE',
+    path: '/portfolios/:id',
+    summary: 'Borra una cartera (solo Owner y Lender); 409 si es la de por defecto o tiene cobradores activos.',
+    params: z.object({ id: IdSchema }),
+    response: z.undefined(),
   }),
 } as const;

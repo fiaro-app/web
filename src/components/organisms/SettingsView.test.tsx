@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { SettingsView as SettingsData } from '@/features/lender/get-settings.server';
 import { SettingsView } from './SettingsView';
 
+vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
 vi.mock('@/features/lender/use-logo-form', () => ({
   useLogoForm: () => ({ isBusy: false, error: null, notice: null, chooseFile: vi.fn(), removeLogo: vi.fn() }),
 }));

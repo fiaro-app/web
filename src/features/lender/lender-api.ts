@@ -17,6 +17,16 @@ export function createPortfolio(name: string) {
   return callEndpoint(lenderEndpoints.createPortfolio, { body: { name } });
 }
 
+/** Cambia el nombre de una cartera. */
+export function renamePortfolio(id: string, name: string) {
+  return callEndpoint(lenderEndpoints.renamePortfolio, { params: { id }, body: { name } });
+}
+
+/** Borra una cartera (la de por defecto o con cobradores activos no se puede borrar). */
+export function deletePortfolio(id: string) {
+  return callEndpoint(lenderEndpoints.deletePortfolio, { params: { id } });
+}
+
 /** Pide la URL firmada para subir un logo del tipo dado. */
 export function requestLogoUploadUrl(contentType: 'image/png' | 'image/jpeg') {
   return callEndpoint(lenderEndpoints.logoUploadUrl, { body: { contentType } });
