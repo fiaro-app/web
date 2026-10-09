@@ -5,3 +5,8 @@ import { callEndpoint } from '@/lib/api';
 export function markNotificationRead(id: string) {
   return callEndpoint(notificationEndpoints.markRead, { params: { id } });
 }
+
+/** Marca como leídas todas las notificaciones sin leer de la persona; devuelve cuántas marcó. */
+export function markAllNotificationsRead() {
+  return callEndpoint(notificationEndpoints.markAllRead, { body: {} });
+}

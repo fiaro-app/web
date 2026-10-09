@@ -20,6 +20,9 @@ export const ListNotificationsBodySchema = PageQuerySchema.extend({
   unreadOnly: z.boolean().optional(),
 });
 
+/** Cuerpo de `POST /notifications/read-all`: `lenderId` opcional; vacío marca las de todos los negocios. */
+export const MarkAllReadBodySchema = z.strictObject({ lenderId: IdSchema.optional() });
+
 const NotificationParamsSchema = z.object({ id: IdSchema });
 
 /**
@@ -40,5 +43,18 @@ export const notificationEndpoints = {
     summary: 'Marca una notificación como leída.',
     params: NotificationParamsSchema,
     response: NotificationResponseSchema,
+  }),
+  markAllRead: defineEndpoint({
+    method: 'POST',
+    path: '/notifications/read-all',
+    summary: 'Marca como leídas, en una sola operación, todas las notificaciones sin leer de la persona.',
+    body: MarkAllReadBodySchema,
+    response: z.object({ marked: z.int().nonnegative() }),
+  }),
+  unreadCount: defineEndpoint({
+    method: 'GET',
+    path: '/notifications/unread-count',
+    summary: 'Cuántas notificaciones sin leer tiene la persona de todos sus negocios (para la insignia).',
+    response: z.object({ count: z.int().nonnegative() }),
   }),
 } as const;

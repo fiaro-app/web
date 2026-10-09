@@ -50,7 +50,7 @@ describe('NotificationList', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Marcar todas como leídas' }));
 
-    expect(markAllRead).toHaveBeenCalledWith(['n1', 'n2']);
+    expect(markAllRead).toHaveBeenCalledTimes(1);
   });
 
   it('offers no bulk action when everything is already read', () => {

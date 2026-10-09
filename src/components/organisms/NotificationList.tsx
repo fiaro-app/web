@@ -10,12 +10,12 @@ import { useMarkNotificationRead } from '@/features/notifications/use-mark-notif
 /** Lista de notificaciones con la acción de marcarlas como leídas. Solo diseño; la lógica vive en `useMarkNotificationRead`. */
 export function NotificationList({ items }: Readonly<{ items: readonly NotificationItem[] }>) {
   const { pendingId, error, isMarkingAll, markRead, markAllRead } = useMarkNotificationRead();
-  const unreadIds = items.filter((item) => !item.read).map((item) => item.id);
+  const hasUnread = items.some((item) => !item.read);
 
   return (
     <div className="flex flex-col gap-3">
-      {unreadIds.length > 0 && (
-        <Button variant="outline" loading={isMarkingAll} disabled={pendingId !== null} onClick={() => void markAllRead(unreadIds)} className="self-start">
+      {hasUnread && (
+        <Button variant="outline" loading={isMarkingAll} disabled={pendingId !== null} onClick={() => void markAllRead()} className="self-start">
           {NOTIFICATIONS_TEXT.markAll}
         </Button>
       )}
