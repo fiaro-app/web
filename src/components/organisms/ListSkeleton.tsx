@@ -1,6 +1,7 @@
 import { Skeleton } from '@/components/atoms/Skeleton';
 
-const ROWS = 8;
+/** Filas de relleno con clave estable (no se reordenan, pero evita usar el índice del arreglo como `key`). */
+const ROW_IDS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'] as const;
 
 /** Marcador de una lista que carga (`Estado — Cargando lista`): una tarjeta con encabezado y filas grises. Solo presentación. */
 export function ListSkeleton() {
@@ -10,8 +11,8 @@ export function ListSkeleton() {
       <div className="flex flex-col rounded-lg bg-surface p-5">
         <Skeleton className="h-5 w-full rounded-sm" />
         <ul className="mt-6 flex flex-col">
-          {Array.from({ length: ROWS }, (_, index) => (
-            <li key={index} className="flex items-center gap-12 border-t border-foreground/8 py-7 first:border-t-0">
+          {ROW_IDS.map((id) => (
+            <li key={id} className="flex items-center gap-12 border-t border-foreground/8 py-7 first:border-t-0">
               <Skeleton className="h-4 w-64 rounded-sm" />
               <Skeleton className="h-4 w-40 rounded-sm" />
               <Skeleton className="h-4 w-36 rounded-sm" />
