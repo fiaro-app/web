@@ -1,3 +1,4 @@
+import { StateIcon } from '@/components/atoms/StateIcon';
 import type { Metadata } from 'next';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { StatsView } from '@/components/organisms/StatsView';
@@ -13,7 +14,7 @@ export default async function StatsPage({ searchParams }: PageProps<'/estadistic
   const result = await getStats(filters);
 
   if (result.status === 'forbidden') {
-    return <EmptyState icon="!" {...STATS_TEXT.forbidden} />;
+    return <EmptyState icon={<StateIcon name="lock" />} {...STATS_TEXT.forbidden} />;
   }
   return <StatsView stats={result.stats} filters={filters} options={result.options} />;
 }

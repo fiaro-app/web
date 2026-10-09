@@ -1,3 +1,4 @@
+import { StateIcon } from '@/components/atoms/StateIcon';
 import type { Metadata } from 'next';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { DashboardView } from '@/components/organisms/DashboardView';
@@ -12,7 +13,7 @@ export default async function SummaryPage() {
   if (result.status === 'no-business') {
     return (
       <EmptyState
-        icon="!"
+        icon={<StateIcon name="lock" />}
         title="Tu cuenta no tiene un negocio activo"
         description="Pídele al administrador de tu financiera que active tu acceso."
       />

@@ -1,3 +1,4 @@
+import { StateIcon } from '@/components/atoms/StateIcon';
 import { Button } from '@/components/atoms/Button';
 import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { Text } from '@/components/atoms/Text';
@@ -45,8 +46,17 @@ export function ClientsView({ clients }: Readonly<ClientsViewProps>) {
 
       {rows.length === 0 ? (
         <EmptyState
-          icon="◔"
+          icon={<StateIcon name={hasSearch ? 'search' : 'user-plus'} />}
           {...(hasSearch ? CLIENTS_TEXT.noResults(search) : CLIENTS_TEXT.empty)}
+          action={
+            hasSearch ? (
+              <ButtonLink href="/clientes" variant="outline">
+                {CLIENTS_TEXT.search.clear}
+              </ButtonLink>
+            ) : (
+              <ButtonLink href="/clientes/nuevo">{CLIENTS_TEXT.form.createTitle}</ButtonLink>
+            )
+          }
         />
       ) : (
         <>

@@ -1,3 +1,4 @@
+import { StateIcon } from '@/components/atoms/StateIcon';
 import { Button } from '@/components/atoms/Button';
 import { EmptyState } from '@/components/molecules/EmptyState';
 
@@ -22,7 +23,8 @@ export function ErrorState({
   return (
     <EmptyState
       className={className}
-      icon="!"
+      icon={<StateIcon name="alert" />}
+      tone="error"
       title={title}
       description={description}
       action={<Button onClick={onRetry}>Reintentar</Button>}

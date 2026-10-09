@@ -1,3 +1,4 @@
+import { StateIcon } from '@/components/atoms/StateIcon';
 import type { Metadata } from 'next';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { ClientsView } from '@/components/organisms/ClientsView';
@@ -13,7 +14,7 @@ export default async function ClientsPage({ searchParams }: PageProps<'/clientes
   const result = await getClients(parsePageParam(pagina), parseSearchParam(q));
 
   if (result.status === 'forbidden') {
-    return <EmptyState icon="!" {...CLIENTS_TEXT.forbidden} />;
+    return <EmptyState icon={<StateIcon name="lock" />} {...CLIENTS_TEXT.forbidden} />;
   }
   return <ClientsView clients={result.clients} />;
 }

@@ -1,3 +1,4 @@
+import { StateIcon } from '@/components/atoms/StateIcon';
 import type { Metadata } from 'next';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { ClientForm } from '@/components/organisms/ClientForm';
@@ -14,10 +15,10 @@ export default async function EditClientPage({ params }: PageProps<'/clientes/[i
   const result = await getClient(id);
 
   if (result.status === 'forbidden') {
-    return <EmptyState icon="!" {...CLIENTS_TEXT.forbidden} />;
+    return <EmptyState icon={<StateIcon name="lock" />} {...CLIENTS_TEXT.forbidden} />;
   }
   if (result.status === 'not-found') {
-    return <EmptyState icon="?" {...CLIENTS_TEXT.notFound} />;
+    return <EmptyState icon={<StateIcon name="search" />} {...CLIENTS_TEXT.notFound} />;
   }
   const loans = await getClientLoans(result.client.id, result.client.fullName);
   return (

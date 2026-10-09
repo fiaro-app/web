@@ -1,3 +1,4 @@
+import { StateIcon } from '@/components/atoms/StateIcon';
 import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { FilterPillLink } from '@/components/atoms/FilterPillLink';
 import { Text } from '@/components/atoms/Text';
@@ -42,7 +43,19 @@ export function LoansView({ loans }: Readonly<LoansViewProps>) {
       </nav>
 
       {rows.length === 0 ? (
-        <EmptyState icon="◔" {...(status === null ? LOANS_TEXT.empty : LOANS_TEXT.emptyFiltered)} />
+        <EmptyState
+          icon={<StateIcon name={status === null ? 'wallet' : 'search'} />}
+          {...(status === null ? LOANS_TEXT.empty : LOANS_TEXT.emptyFiltered)}
+          action={
+            status === null ? (
+              <ButtonLink href="/prestamos/nuevo">{LOANS_TEXT.newLoan}</ButtonLink>
+            ) : (
+              <ButtonLink href="/prestamos" variant="outline">
+                {LOANS_TEXT.filters.all}
+              </ButtonLink>
+            )
+          }
+        />
       ) : (
         <>
           <LoansTable rows={rows} />

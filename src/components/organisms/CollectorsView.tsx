@@ -1,3 +1,4 @@
+import { StateIcon } from '@/components/atoms/StateIcon';
 import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { Text } from '@/components/atoms/Text';
 import { EmptyState } from '@/components/molecules/EmptyState';
@@ -27,9 +28,10 @@ export function CollectorsView({ collectors }: Readonly<CollectorsViewProps>) {
 
       {rows.length === 0 ? (
         <EmptyState
-          icon="◔"
+          icon={<StateIcon name="users" />}
           title={COLLECTORS_TEXT.empty.title}
           description={COLLECTORS_TEXT.empty.description}
+          action={<ButtonLink href="/cobradores/nuevo">{COLLECTORS_TEXT.form.submit}</ButtonLink>}
         />
       ) : (
         <>

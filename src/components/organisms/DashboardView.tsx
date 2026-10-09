@@ -1,3 +1,4 @@
+import { StateIcon } from '@/components/atoms/StateIcon';
 import { Text } from '@/components/atoms/Text';
 import { Alert } from '@/components/molecules/Alert';
 import { EmptyState } from '@/components/molecules/EmptyState';
@@ -21,7 +22,7 @@ export function DashboardView({ dashboard }: Readonly<DashboardViewProps>) {
 
       {isEmpty ? (
         <EmptyState
-          icon="◔"
+          icon={<StateIcon name="chart" />}
           title="Todavía no hay movimiento"
           description="Cuando registres cobradores, clientes y préstamos, aquí verás tu cartera, la mora y el cuadre del día."
         />

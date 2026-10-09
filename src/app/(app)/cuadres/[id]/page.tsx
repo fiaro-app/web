@@ -1,3 +1,4 @@
+import { StateIcon } from '@/components/atoms/StateIcon';
 import type { Metadata } from 'next';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { SettlementDetail } from '@/components/organisms/SettlementDetail';
@@ -12,10 +13,10 @@ export default async function SettlementPage({ params }: PageProps<'/cuadres/[id
   const result = await getSettlement(id);
 
   if (result.status === 'forbidden') {
-    return <EmptyState icon="!" {...SETTLEMENTS_TEXT.forbidden} />;
+    return <EmptyState icon={<StateIcon name="lock" />} {...SETTLEMENTS_TEXT.forbidden} />;
   }
   if (result.status === 'not-found') {
-    return <EmptyState icon="?" {...SETTLEMENTS_TEXT.notFound} />;
+    return <EmptyState icon={<StateIcon name="search" />} {...SETTLEMENTS_TEXT.notFound} />;
   }
   return <SettlementDetail settlement={result.settlement} />;
 }

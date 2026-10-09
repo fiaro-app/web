@@ -5,7 +5,11 @@ export const CLIENTS_TEXT = {
   tableCaption: 'Clientes del negocio',
   headers: ['Nombre', 'Cédula', 'Teléfono', 'Oficio'] as const,
   edit: 'Editar',
-  search: { placeholder: 'Buscar por nombre o cédula...', submit: 'Buscar', clear: 'Limpiar búsqueda' },
+  search: {
+    placeholder: 'Buscar por nombre o cédula...',
+    submit: 'Buscar',
+    clear: 'Limpiar búsqueda',
+  },
   empty: {
     title: 'Aún no tienes clientes',
     description: 'Registra a tu primer cliente para poder darle un préstamo.',
@@ -26,12 +30,26 @@ export const CLIENTS_TEXT = {
     view: 'Ver',
     line: (installments: string, balance: string) => `${installments} · saldo ${balance}`,
   },
-  notFound: { title: 'No encontramos al cliente', description: 'Puede que ya no exista. Vuelve a la lista y elige otro.' },
+  notFound: {
+    title: 'No encontramos al cliente',
+    description: 'Puede que ya no exista. Vuelve a la lista y elige otro.',
+  },
   pagination: {
-    summary: (page: number, pages: number, total: number) =>
-      `Página ${String(page)} de ${String(pages)} · ${String(total)} clientes`,
+    summary: (page: number, pages: number, total: number) => `Página ${String(page)} de ${String(pages)} · ${String(total)} clientes`,
   },
   form: {
+    aside: {
+      title: '¿Qué pasa después?',
+      steps: [
+        'Guardamos al cliente en tu cartera con sus datos de contacto.',
+        'Podrás registrarle un préstamo desde su ficha.',
+        'Sus cobros y su historial quedarán en un solo lugar.',
+      ],
+      tip: {
+        title: 'Un consejo',
+        body: 'Con el celular y la dirección completos, tu cobrador llega más rápido y sin llamadas de más.',
+      },
+    },
     createTitle: 'Registrar cliente',
     editTitle: 'Editar cliente',
     createSubtitle: 'Guarda los datos de la persona a la que le vas a prestar.',
@@ -39,10 +57,25 @@ export const CLIENTS_TEXT = {
     submitCreate: 'Registrar cliente',
     submitEdit: 'Guardar cambios',
     cancel: 'Cancelar',
-    fullName: { label: 'Nombre completo', placeholder: 'Ej: Carlos Andrés Gómez' },
-    nationalId: { label: 'Cédula', hint: 'Solo números, sin puntos.', placeholder: 'Ej: 1020304050' },
-    phone: { label: 'Teléfono', hint: 'Celular o fijo.', placeholder: '300 123 4567' },
+    fullName: {
+      label: 'Nombre completo',
+      placeholder: 'Ej: Carlos Andrés Gómez',
+    },
+    nationalId: {
+      label: 'Cédula',
+      hint: 'Solo números, sin puntos.',
+      placeholder: 'Ej: 1020304050',
+    },
+    phone: {
+      label: 'Teléfono',
+      hint: 'Celular o fijo.',
+      placeholder: '300 123 4567',
+    },
     occupation: { label: 'Oficio', placeholder: 'Ej: Vendedor ambulante' },
-    address: { label: 'Dirección', hint: 'De residencia o de cobro.', placeholder: 'Ej: Calle 45 # 12-30, Bogotá' },
+    address: {
+      label: 'Dirección',
+      hint: 'De residencia o de cobro.',
+      placeholder: 'Ej: Calle 45 # 12-30, Bogotá',
+    },
   },
 } as const;

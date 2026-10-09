@@ -1,3 +1,4 @@
+import { StateIcon } from '@/components/atoms/StateIcon';
 import type { Metadata } from 'next';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { CollectorManage } from '@/components/organisms/CollectorManage';
@@ -13,10 +14,10 @@ export default async function ManageCollectorPage({ params }: PageProps<'/cobrad
   const [result, portfolios] = await Promise.all([getCollector(id), getPortfolioOptions()]);
 
   if (result.status === 'forbidden') {
-    return <EmptyState icon="!" {...COLLECTORS_TEXT.forbidden} />;
+    return <EmptyState icon={<StateIcon name="lock" />} {...COLLECTORS_TEXT.forbidden} />;
   }
   if (result.status === 'not-found') {
-    return <EmptyState icon="?" {...COLLECTORS_TEXT.manage.notFound} />;
+    return <EmptyState icon={<StateIcon name="search" />} {...COLLECTORS_TEXT.manage.notFound} />;
   }
   return <CollectorManage collector={result.collector} portfolios={portfolios} />;
 }

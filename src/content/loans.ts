@@ -32,12 +32,26 @@ export const LOANS_TEXT = {
     title: 'No tienes acceso a esta sección',
     description: 'Tu cuenta no tiene un negocio activo desde el que ver préstamos.',
   },
-  notFound: { title: 'No encontramos el préstamo', description: 'Puede que ya no exista. Vuelve a la lista y elige otro.' },
+  notFound: {
+    title: 'No encontramos el préstamo',
+    description: 'Puede que ya no exista. Vuelve a la lista y elige otro.',
+  },
   pagination: {
-    summary: (page: number, pages: number, total: number) =>
-      `Página ${String(page)} de ${String(pages)} · ${String(total)} préstamos`,
+    summary: (page: number, pages: number, total: number) => `Página ${String(page)} de ${String(pages)} · ${String(total)} préstamos`,
   },
   form: {
+    aside: {
+      title: '¿Cómo se calcula?',
+      steps: [
+        'Elige al cliente y el capital que vas a prestar.',
+        'Define el número de cuotas, su valor y cada cuánto se cobran.',
+        'Fiaro genera el calendario y se lo asigna a un cobrador.',
+      ],
+      tip: {
+        title: 'Un consejo',
+        body: 'Revisa que el total a pagar sea la suma de las cuotas: así el saldo siempre cuadra.',
+      },
+    },
     title: 'Registrar préstamo',
     subtitle: 'Todos los montos los pones tú: Fiaro no calcula intereses.',
     submit: 'Registrar préstamo',
@@ -51,10 +65,20 @@ export const LOANS_TEXT = {
     principalAmount: { label: 'Monto prestado' },
     installmentCount: { label: 'Número de cuotas', placeholder: 'Ej: 20' },
     installmentValue: { label: 'Valor de cada cuota' },
-    totalPayable: { label: 'Total a pagar', hint: 'Sugerido: cuotas × valor de la cuota. Cámbialo si pactaron otra cosa.' },
-    frequency: { label: 'Frecuencia de cobro', placeholder: 'Elige la frecuencia' },
+    totalPayable: {
+      label: 'Total a pagar',
+      hint: 'Sugerido: cuotas × valor de la cuota. Cámbialo si pactaron otra cosa.',
+    },
+    frequency: {
+      label: 'Frecuencia de cobro',
+      placeholder: 'Elige la frecuencia',
+    },
     startDate: { label: 'Fecha de inicio' },
-    collector: { label: 'Cobrador asignado (opcional)', placeholder: 'Sin cobrador por ahora', hint: 'Puedes asignarlo o cambiarlo después desde el detalle.' },
+    collector: {
+      label: 'Cobrador asignado (opcional)',
+      placeholder: 'Sin cobrador por ahora',
+      hint: 'Puedes asignarlo o cambiarlo después desde el detalle.',
+    },
     viewCreated: 'Ver el préstamo creado',
   },
   detail: {

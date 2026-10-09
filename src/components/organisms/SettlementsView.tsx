@@ -1,3 +1,5 @@
+import { ButtonLink } from '@/components/atoms/ButtonLink';
+import { StateIcon } from '@/components/atoms/StateIcon';
 import { FilterPillLink } from '@/components/atoms/FilterPillLink';
 import { Text } from '@/components/atoms/Text';
 import { EmptyState } from '@/components/molecules/EmptyState';
@@ -35,7 +37,17 @@ export function SettlementsView({ settlements }: Readonly<SettlementsViewProps>)
       </nav>
 
       {rows.length === 0 ? (
-        <EmptyState icon="◔" {...(status === null ? SETTLEMENTS_TEXT.empty : SETTLEMENTS_TEXT.emptyFiltered)} />
+        <EmptyState
+          icon={<StateIcon name={status === null ? 'clipboard' : 'search'} />}
+          {...(status === null ? SETTLEMENTS_TEXT.empty : SETTLEMENTS_TEXT.emptyFiltered)}
+          action={
+            status === null ? undefined : (
+              <ButtonLink href="/cuadres" variant="outline">
+                {SETTLEMENTS_TEXT.filters.all}
+              </ButtonLink>
+            )
+          }
+        />
       ) : (
         <>
           <SettlementsTable rows={rows} />

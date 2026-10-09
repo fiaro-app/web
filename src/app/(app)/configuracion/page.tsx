@@ -1,3 +1,4 @@
+import { StateIcon } from '@/components/atoms/StateIcon';
 import type { Metadata } from 'next';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { SettingsView } from '@/components/organisms/SettingsView';
@@ -11,7 +12,7 @@ export default async function SettingsPage() {
   const result = await getSettings();
 
   if (result.status === 'forbidden') {
-    return <EmptyState icon="!" {...SETTINGS_TEXT.forbidden} />;
+    return <EmptyState icon={<StateIcon name="lock" />} {...SETTINGS_TEXT.forbidden} />;
   }
   return <SettingsView settings={result.settings} />;
 }

@@ -33,7 +33,7 @@ describe('ClientsView', () => {
     expect(screen.getByText('Sin resultados')).toBeInTheDocument();
     expect(screen.getByText(/«Zuluaga»/)).toBeInTheDocument();
     expect(screen.getByRole('searchbox')).toHaveValue('Zuluaga');
-    expect(screen.getByRole('link', { name: 'Limpiar búsqueda' })).toHaveAttribute('href', '/clientes');
+    expect(screen.getAllByRole('link', { name: 'Limpiar búsqueda' })[0]).toHaveAttribute('href', '/clientes');
   });
 
   it('keeps the search in the pagination links', () => {

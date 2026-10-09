@@ -1,3 +1,5 @@
+import { ButtonLink } from '@/components/atoms/ButtonLink';
+import { StateIcon } from '@/components/atoms/StateIcon';
 import { FilterPillLink } from '@/components/atoms/FilterPillLink';
 import { Text } from '@/components/atoms/Text';
 import { EmptyState } from '@/components/molecules/EmptyState';
@@ -33,7 +35,17 @@ export function NotificationsView({ notifications }: Readonly<NotificationsViewP
       </nav>
 
       {items.length === 0 ? (
-        <EmptyState icon="◔" {...(unreadOnly ? NOTIFICATIONS_TEXT.emptyUnread : NOTIFICATIONS_TEXT.empty)} />
+        <EmptyState
+          icon={<StateIcon name="bell" />}
+          {...(unreadOnly ? NOTIFICATIONS_TEXT.emptyUnread : NOTIFICATIONS_TEXT.empty)}
+          action={
+            unreadOnly ? (
+              <ButtonLink href="/notificaciones" variant="outline">
+                {NOTIFICATIONS_TEXT.filters.all}
+              </ButtonLink>
+            ) : undefined
+          }
+        />
       ) : (
         <>
           <NotificationList items={items} />
@@ -41,7 +53,11 @@ export function NotificationsView({ notifications }: Readonly<NotificationsViewP
             page={page}
             pages={pages}
             summary={NOTIFICATIONS_TEXT.pagination.summary(page, pages, total)}
-            hrefFor={(target) => pageHref('/notificaciones', target, { filtro: unreadOnly ? UNREAD_FILTER : undefined })}
+            hrefFor={(target) =>
+              pageHref('/notificaciones', target, {
+                filtro: unreadOnly ? UNREAD_FILTER : undefined,
+              })
+            }
           />
         </>
       )}

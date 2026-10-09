@@ -5,6 +5,7 @@ import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { AmountInput } from '@/components/atoms/AmountInput';
 import { Input } from '@/components/atoms/Input';
 import { Select } from '@/components/atoms/Select';
+import { StateIcon } from '@/components/atoms/StateIcon';
 import { Text } from '@/components/atoms/Text';
 import { Alert } from '@/components/molecules/Alert';
 import { EmptyState } from '@/components/molecules/EmptyState';
@@ -33,7 +34,7 @@ export function LoanForm({ clients, collectors, initialClientId }: Readonly<Loan
   if (clients.length === 0) {
     return (
       <EmptyState
-        icon="!"
+        icon={<StateIcon name="users" />}
         title={text.noClients.title}
         description={text.noClients.description}
         action={<ButtonLink href="/clientes/nuevo">{text.noClients.action}</ButtonLink>}

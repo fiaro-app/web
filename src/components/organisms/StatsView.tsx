@@ -1,3 +1,6 @@
+import { ButtonLink } from '@/components/atoms/ButtonLink';
+import { LOANS_TEXT } from '@/content/loans';
+import { StateIcon } from '@/components/atoms/StateIcon';
 import type { ReactNode } from 'react';
 import { Avatar } from '@/components/atoms/Avatar';
 import { Text } from '@/components/atoms/Text';
@@ -49,7 +52,11 @@ export function StatsView({ stats, filters, options }: Readonly<StatsViewProps>)
       <StatsFilters filters={filters} options={options} />
 
       {stats.isEmpty ? (
-        <EmptyState icon="◔" {...STATS_TEXT.empty} />
+        <EmptyState
+          icon={<StateIcon name="chart" />}
+          {...STATS_TEXT.empty}
+          action={<ButtonLink href="/prestamos/nuevo">{LOANS_TEXT.newLoan}</ButtonLink>}
+        />
       ) : (
         <>
           <section aria-label="Indicadores" className="grid gap-4 sm:grid-cols-3">

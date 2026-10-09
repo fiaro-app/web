@@ -20,13 +20,33 @@ export const COLLECTORS_TEXT = {
     summary: (page: number, pages: number, total: number) => `Página ${String(page)} de ${String(pages)} · ${String(total)} cobradores`,
   },
   form: {
+    aside: {
+      title: '¿Qué pasa después?',
+      steps: [
+        'Creamos su acceso a Fiaro con su celular.',
+        'Te mostramos una contraseña temporal, una sola vez.',
+        'Al ingresar, la cambia y ya ve su ruta de cobro.',
+      ],
+      tip: {
+        title: 'Un consejo',
+        body: 'Entrégale la contraseña en persona; si la pierde, puedes generar otra desde su ficha.',
+      },
+    },
     title: 'Registrar cobrador',
     subtitle: 'Crea su acceso a Fiaro. Le entregarás una contraseña temporal que deberá cambiar al ingresar.',
     submit: 'Registrar cobrador',
     cancel: 'Cancelar',
     fullName: { label: 'Nombre completo', placeholder: 'Ej: Luis Gómez' },
-    nationalId: { label: 'Cédula', hint: 'Solo números, sin puntos.', placeholder: 'Ej: 1030405060' },
-    phone: { label: 'Celular', hint: 'Con este celular iniciará sesión.', placeholder: '300 123 4567' },
+    nationalId: {
+      label: 'Cédula',
+      hint: 'Solo números, sin puntos.',
+      placeholder: 'Ej: 1030405060',
+    },
+    phone: {
+      label: 'Celular',
+      hint: 'Con este celular iniciará sesión.',
+      placeholder: '300 123 4567',
+    },
     contactEmail: {
       label: 'Correo electrónico (opcional)',
       hint: 'Sirve para recuperar su contraseña.',
@@ -36,8 +56,7 @@ export const COLLECTORS_TEXT = {
   },
   invited: {
     title: 'Cobrador registrado',
-    withPassword: (name: string) =>
-      `${name} ya puede ingresar a Fiaro. Entrégale esta contraseña temporal: solo se muestra una vez.`,
+    withPassword: (name: string) => `${name} ya puede ingresar a Fiaro. Entrégale esta contraseña temporal: solo se muestra una vez.`,
     existingAccount: (name: string) =>
       `${name} ya tenía una cuenta en Fiaro y ahora trabaja con tu negocio. Ingresa con su contraseña de siempre.`,
     passwordLabel: 'Contraseña temporal',
@@ -47,7 +66,10 @@ export const COLLECTORS_TEXT = {
     title: 'Gestionar cobrador',
     back: '← Volver a cobradores',
     manage: 'Gestionar',
-    notFound: { title: 'No encontramos al cobrador', description: 'Puede que ya no exista. Vuelve a la lista y elige otro.' },
+    notFound: {
+      title: 'No encontramos al cobrador',
+      description: 'Puede que ya no exista. Vuelve a la lista y elige otro.',
+    },
     portfolio: { save: 'Guardar cartera' },
     resetPassword: {
       action: 'Restablecer contraseña',
