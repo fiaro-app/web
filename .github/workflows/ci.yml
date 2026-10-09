@@ -10,6 +10,11 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    # `packages: read` deja que el GITHUB_TOKEN automático descargue @fiaro-app/contracts de GitHub
+    # Packages; el paquete debe dar acceso de lectura a este repo (ver README, "Contratos").
+    permissions:
+      contents: read
+      packages: read
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,8 +25,12 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: '@fiaro-app'
 
       - run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Lint
         run: pnpm run lint

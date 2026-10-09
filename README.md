@@ -17,6 +17,21 @@ Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · pnpm · Vercel
 - Node 24
 - pnpm 11 (`corepack enable` si no lo tienes activado)
 
+## Contratos (`@fiaro-app/contracts`)
+
+Los schemas y tipos compartidos con la API viven en un paquete privado de GitHub Packages. El
+`.npmrc` del repo ya apunta al registro; para instalarlo en local hace falta un token **classic**
+con el permiso `read:packages` ([crear uno](https://github.com/settings/tokens/new?scopes=read:packages&description=fiaro-packages-read)),
+guardado en tu `~/.npmrc` global (nunca en el repo):
+
+```ini
+//npm.pkg.github.com/:_authToken=TU_TOKEN
+```
+
+En CI no hace falta ningún secreto: el `GITHUB_TOKEN` del workflow descarga el paquete, siempre
+que [el paquete](https://github.com/orgs/fiaro-app/packages/npm/contracts/settings) le dé acceso
+de lectura a este repo (*Manage Actions access*).
+
 ## Empezar
 
 ```bash
