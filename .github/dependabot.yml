@@ -1,0 +1,10 @@
+version: 2
+updates:
+  # Solo las acciones de GitHub: las dependencias npm incluyen @fiaro-app/contracts (paquete privado)
+  # y Dependabot necesitaría un token propio para leerlo; se actualizan a mano por ahora.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "ci"
