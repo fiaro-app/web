@@ -1,0 +1,63 @@
+'use client';
+
+import { useState } from 'react';
+import { Button } from '@/components/atoms/Button';
+import { Link } from '@/components/atoms/Link';
+import { Text } from '@/components/atoms/Text';
+import { Alert } from '@/components/molecules/Alert';
+import { ConfirmDialog } from '@/components/molecules/ConfirmDialog';
+import { InfoRow } from '@/components/molecules/InfoRow';
+import { LOAN_STATUS_CLASSES } from '@/components/organisms/loan-status-classes';
+import { LOANS_TEXT } from '@/content/loans';
+import type { LoanDetailView } from '@/features/loans/loans-view-model';
+import { useCancelLoan } from '@/features/loans/use-cancel-loan';
+import { cn } from '@/lib/cn';
+
+/** Detalle de un préstamo, con la opción de anularlo mientras siga activo. */
+export function LoanDetail({ loan }: Readonly<{ loan: LoanDetailView }>) {
+  const text = LOANS_TEXT.detail;
+  const { isCanceling, error, cancel } = useCancelLoan(loan.id);
+  const [confirming, setConfirming] = useState(false);
+
+  const confirm = () => {
+    setConfirming(false);
+    void cancel();
+  };
+
+  return (
+    <section aria-labelledby="loan-title" className="flex max-w-lg flex-col gap-5">
+      <Link href="/prestamos">{text.back}</Link>
+      <Text variant="title" as="h1" weight="bold" id="loan-title" className="text-foreground">
+        {loan.clientName}
+      </Text>
+
+      <div className="flex flex-col divide-y divide-foreground/8 overflow-hidden rounded-md">
+        <InfoRow label={text.rows.principalAmount} value={loan.principal} />
+        <InfoRow label={text.rows.installments} value={loan.installments} />
+        <InfoRow label={text.rows.totalPayable} value={loan.totalPayable} />
+        <InfoRow label={text.rows.frequency} value={loan.frequency} />
+        <InfoRow label={text.rows.startDate} value={loan.startDate} />
+        <InfoRow label={text.rows.status} value={<span className={cn('font-semibold', LOAN_STATUS_CLASSES[loan.statusTone])}>{loan.status}</span>} />
+        {loan.closedAt !== null && <InfoRow label={text.rows.closedAt} value={loan.closedAt} />}
+      </div>
+
+      {error && <Alert tone="error">{error}</Alert>}
+
+      {loan.cancelable && (
+        <>
+          <Button variant="text" loading={isCanceling} onClick={() => setConfirming(true)} className="text-destructive">
+            {text.cancel.action}
+          </Button>
+          <ConfirmDialog
+            open={confirming}
+            title={text.cancel.confirmTitle}
+            description={text.cancel.confirmDescription}
+            confirmLabel={text.cancel.confirmLabel}
+            onCancel={() => setConfirming(false)}
+            onConfirm={confirm}
+          />
+        </>
+      )}
+    </section>
+  );
+}

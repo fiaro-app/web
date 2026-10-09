@@ -33,10 +33,17 @@ se agrega la nueva.
 | W-26 | El teléfono del cliente acepta celular o fijo (`PhoneSchema`); el de las cuentas sigue siendo celular | Un cliente puede tener solo un fijo; la API lo permite |
 | W-27 | La edición de cliente manda a la API solo los campos que cambiaron (`toClientChanges`) | `PATCH` deja intacto lo ausente y rechaza un cuerpo vacío |
 | W-28 | La búsqueda de clientes es un formulario GET (`?q=`) validado en el servidor | Funciona sin JavaScript, la URL es compartible y la entrada se acota (`parseSearchParam`) |
+| W-29 | Los endpoints de préstamos se declaran en la web (respuesta = `LoanSchema`) | Mismo plan de migración que W-13 |
+| W-30 | El total a pagar se sugiere (cuotas × valor) hasta que la persona lo edita; después se respeta lo pactado | Fiaro no calcula intereses y la API respeta `totalPayable` |
+| W-31 | "Hoy" y las fechas de cierre se leen en hora de Colombia (`America/Bogota`), no en UTC ni en la zona del navegador | A las 9 pm hora local el día UTC ya cambió y la fecha saldría corrida |
+| W-32 | El filtro de estado de préstamos es una URL (`?estado=`) con enlaces `FilterPillLink`, validado en el servidor | Compartible, sin JS y un valor inválido equivale a "todos" |
+| W-33 | Los nombres de cliente del listado salen de la página más grande de clientes (100); si no se pueden traer, se muestra "Cliente no disponible" | La API no devuelve el nombre dentro del préstamo; no se rompe la pantalla por eso |
+| W-34 | Un préstamo solo se anula mientras está activo, con confirmación; el error `LOAN_NOT_CANCELABLE` se explica | La API rechaza anular uno que ya recibió pagos |
 
 ## Pendientes conocidos
 
 - Migrar a `@fiaro-app/contracts`: endpoints de auth/registro y política de contraseña (W-13, W-14).
+- Préstamos: registrar pagos y ver el calendario de cuotas (módulo de cobros pendiente).
 - Recuperar contraseña (la API ya tiene `request-password-reset` y `reset-password`).
 - Cambio de contraseña obligatorio (`mustChangePassword`) para cuentas con contraseña temporal.
 - Subir el logo del prestamista desde Configuración (`POST /lender/logo-upload-url`).
