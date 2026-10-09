@@ -1,3 +1,4 @@
+import { Link } from '@/components/atoms/Link';
 import { cn } from '@/lib/cn';
 import { COLLECTORS_TEXT } from '@/content/collectors';
 import type { CollectorRow } from '@/features/collectors/collectors-view-model';
@@ -20,6 +21,9 @@ export function CollectorsTable({ rows, className }: Readonly<CollectorsTablePro
                 {header}
               </th>
             ))}
+            <th scope="col" className="px-5 py-3.5 text-caption font-semibold text-foreground/60">
+              <span className="sr-only">Acciones</span>
+            </th>
           </tr>
         </thead>
         <tbody className="divide-y divide-foreground/8">
@@ -32,6 +36,11 @@ export function CollectorsTable({ rows, className }: Readonly<CollectorsTablePro
               <td className="px-5 py-5">{row.portfolioName}</td>
               <td className={cn('px-5 py-5 font-semibold', row.active ? 'text-success' : 'text-foreground/60')}>
                 {row.active ? COLLECTORS_TEXT.active : COLLECTORS_TEXT.inactive}
+              </td>
+              <td className="px-5 py-5 text-right">
+                <Link href={`/cobradores/${row.id}`} aria-label={`${COLLECTORS_TEXT.manage.manage} ${row.fullName}`}>
+                  {COLLECTORS_TEXT.manage.manage}
+                </Link>
               </td>
             </tr>
           ))}

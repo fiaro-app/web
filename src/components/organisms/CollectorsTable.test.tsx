@@ -8,6 +8,11 @@ const ROWS = [
 ];
 
 describe('CollectorsTable', () => {
+  it('links each row to its management page', () => {
+    render(<CollectorsTable rows={ROWS} />);
+    expect(screen.getByRole('link', { name: 'Gestionar Luis Gómez' })).toHaveAttribute('href', '/cobradores/1');
+  });
+
   it('renders one row per collector with name as the row header', () => {
     render(<CollectorsTable rows={ROWS} />);
     const row = screen.getByRole('row', { name: /Luis Gómez/ });
@@ -24,6 +29,6 @@ describe('CollectorsTable', () => {
   it('has an accessible caption and column headers', () => {
     render(<CollectorsTable rows={ROWS} />);
     expect(screen.getByRole('table', { name: 'Cobradores del negocio' })).toBeInTheDocument();
-    expect(screen.getAllByRole('columnheader')).toHaveLength(4);
+    expect(screen.getAllByRole('columnheader')).toHaveLength(5);
   });
 });

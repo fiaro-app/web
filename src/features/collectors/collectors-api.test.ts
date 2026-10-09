@@ -4,7 +4,7 @@ import { membershipEndpoints } from '@/features/memberships/endpoints';
 const { callEndpoint } = vi.hoisted(() => ({ callEndpoint: vi.fn() }));
 vi.mock('@/lib/api', () => ({ callEndpoint }));
 
-import { deactivateCollector, inviteCollector, resetCollectorPassword } from './collectors-api';
+import { changeCollectorPortfolio, deactivateCollector, inviteCollector, resetCollectorPassword } from './collectors-api';
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -31,5 +31,13 @@ describe('collectors api', () => {
     await resetCollectorPassword('m1');
     expect(callEndpoint).toHaveBeenNthCalledWith(1, membershipEndpoints.deactivate, { params: { id: 'm1' } });
     expect(callEndpoint).toHaveBeenNthCalledWith(2, membershipEndpoints.resetPassword, { params: { id: 'm1' } });
+  });
+
+  it('changes the portfolio keeping every role the person already had', async () => {
+    await changeCollectorPortfolio('m1', ['LENDER', 'COLLECTOR'], 'p2');
+    expect(callEndpoint).toHaveBeenCalledWith(membershipEndpoints.changeRoles, {
+      params: { id: 'm1' },
+      body: { roles: ['LENDER', 'COLLECTOR'], portfolioId: 'p2' },
+    });
   });
 });

@@ -26,11 +26,13 @@ se agrega la nueva.
 | W-19 | La tabla de Cobradores muestra nombre, teléfono, cartera y estado; sin cédula ni efectividad | `QUERY /memberships` no devuelve esos datos; la efectividad por cobrador vendrá de estadísticas |
 | W-20 | La contraseña temporal del cobrador se muestra una sola vez en la confirmación y no se guarda en ningún lado | La API la entrega en claro solo en la respuesta; el diseño decía que llegaba por correo y se corrigió |
 | W-21 | La página de la lista viaja en `?pagina=` y se valida en el servidor (`parsePageParam`) | La URL es compartible y cualquier valor inválido cae en la página 1 |
+| W-22 | "Editar cobrador" es una pantalla de gestión: cambiar cartera, restablecer contraseña y desactivar | La API no permite editar nombre, cédula ni celular de un colaborador; solo roles/cartera y estado |
+| W-23 | El cambio de cartera reenvía los roles que ya tenía la persona | `PATCH /memberships/:id/roles` reemplaza todos los roles; mandar solo `COLLECTOR` quitaría otros |
+| W-24 | El detalle de un cobrador se busca en el listado (`getCollector`) | No existe `GET /memberships/:id`; si se publica, se cambia solo esa función |
 
 ## Pendientes conocidos
 
 - Migrar a `@fiaro-app/contracts`: endpoints de auth/registro y política de contraseña (W-13, W-14).
-- Editar y desactivar cobradores desde la UI (los endpoints ya están declarados).
 - Recuperar contraseña (la API ya tiene `request-password-reset` y `reset-password`).
 - Cambio de contraseña obligatorio (`mustChangePassword`) para cuentas con contraseña temporal.
 - Subir el logo del prestamista desde Configuración (`POST /lender/logo-upload-url`).
