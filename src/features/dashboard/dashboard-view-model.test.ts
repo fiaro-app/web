@@ -57,8 +57,8 @@ describe('toDashboardViewModel', () => {
     const view = toDashboardViewModel(DASHBOARD);
 
     expect(view.kpis).toEqual([
-      { id: 'portfolio', label: 'Cartera total', value: '$18.400.000', tone: 'neutral' },
-      { id: 'collectedToday', label: 'Cobrado hoy', value: '$3.200.000', tone: 'good' },
+      { id: 'portfolio', label: 'Cartera total', value: '$18.4M', tone: 'neutral' },
+      { id: 'collectedToday', label: 'Cobrado hoy', value: '$3.2M', tone: 'good' },
       { id: 'collectors', label: 'Cobradores activos', value: '7 / 9', tone: 'neutral' },
       { id: 'effectiveness', label: 'Efectividad de hoy', value: '84 %', tone: 'warning' },
       { id: 'clientsInArrears', label: 'Clientes en mora', value: '23', tone: 'bad' },
