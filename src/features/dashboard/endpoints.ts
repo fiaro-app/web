@@ -32,6 +32,14 @@ export const LenderDashboardSchema = z.object({
   /** Alertas de texto ya armadas por la API. */
   alerts: z.array(z.string()),
   pendingSettlements: z.array(DashboardSettlementSchema),
+  /** El período de las cifras `*InPeriod`: el pedido con `from` y `to`, o solo hoy (D-111). */
+  period: z.object({ from: z.iso.date(), to: z.iso.date() }),
+  /** Lo cobrado en el período, sumado entre los cobradores activos. */
+  collectedInPeriod: CopTotalSchema,
+  /** Lo que el calendario esperaba cobrar en el período. */
+  expectedInPeriod: CopTotalSchema,
+  /** Cobrado sobre lo esperado en el período; `null` si no había nada esperado. */
+  effectivenessInPeriod: z.number().min(0).nullable(),
 });
 export type LenderDashboard = z.infer<typeof LenderDashboardSchema>;
 
@@ -43,7 +51,8 @@ export const dashboardEndpoints = {
   summary: defineEndpoint({
     method: 'GET',
     path: '/lenders/me/dashboard',
-    summary: 'Resumen del negocio: cartera, cobrado hoy, cobradores, mora, alertas y cuadres por revisar.',
+    summary:
+      'Resumen del negocio: cartera, cobrado hoy o en un período (`?from&to`), cobradores, mora, alertas y cuadres por revisar.',
     response: LenderDashboardSchema,
   }),
 } as const;
