@@ -21,9 +21,9 @@ Estados de la columna **Penpot**: ✅ ya corregido · ⏳ por corregir · 🆕 n
 |---|---|---|---|
 | Barra lateral | 7 opciones (sin Notificaciones) | 8: se agrega **Notificaciones** entre Cuadres y Estadísticas | ✅ |
 | Resumen | Sin filtros de periodo; «Efectividad de hoy» | Igual; botón «Revisar» lleva al cuadre | ✅ |
-| Cobradores (lista) | Nombre, cédula, teléfono, cartera, estado, **efectividad** | Sin cédula ni efectividad: `QUERY /memberships` no las devuelve; enlace «Gestionar» | ⏳ |
-| Registrar cobrador | Contraseña temporal «enviada por correo» | La API la entrega en la respuesta: se muestra **una sola vez** en la confirmación | ⏳ |
-| Editar cobrador | Editar nombre, cédula y teléfono | Solo cambiar cartera, restablecer contraseña y desactivar; la API no edita los datos personales | ⏳ |
+| Cobradores (lista) | Nombre, cédula, teléfono, cartera, estado, **efectividad** | Sin cédula ni efectividad: `QUERY /memberships` no las devuelve; enlace «Gestionar» | ✅ |
+| Registrar cobrador | Contraseña temporal «enviada por correo» | La API la entrega en la respuesta: se muestra **una sola vez** en la confirmación | ✅ |
+| Gestionar cobrador (antes «Editar cobrador») | Editar nombre, cédula y teléfono | Solo cambiar cartera, restablecer contraseña y desactivar; la API no edita los datos personales | ✅ |
 | Clientes (lista) | Columnas **saldo** y **mora** | Sin esas columnas (exigirían una consulta por cliente); los préstamos y su saldo están en la ficha | ⏳ |
 | Registrar cliente | 2 pasos (cliente → préstamo) y comprobación de cédula existente | Formularios separados; una cédula repetida se marca en el campo (`CLIENT_NATIONAL_ID_TAKEN`). Falta la comprobación previa por cédula | ⏳ |
 | Préstamos (lista) | Cliente, **cobrador**, valor, cuotas «14/24», saldo, estado; búsqueda por cliente o cobrador | Cliente, monto, cuotas, pagadas, saldo, inicio, estado; filtro por estado. Sin cobrador (solo en el detalle) ni búsqueda | ⏳ |
@@ -38,8 +38,8 @@ Estados de la columna **Penpot**: ✅ ya corregido · ⏳ por corregir · 🆕 n
 ## Qué hacer en Penpot
 
 1. ✅ (hecho) Agregar «Notificaciones» a la barra lateral de todas las pantallas del panel.
-2. Cobradores: quitar cédula y efectividad de la tabla, cambiar «Editar» por «Gestionar», y rediseñar «Editar cobrador» como pantalla de gestión.
-3. Registrar cobrador: mostrar la contraseña temporal en la confirmación (una sola vez), no «enviada por correo».
+2. ✅ (hecho) Cobradores: quitar cédula y efectividad de la tabla, cambiar «Editar» por «Gestionar», y rediseñar «Editar cobrador» como pantalla de gestión.
+3. ✅ (hecho) Registrar cobrador: mostrar la contraseña temporal en la confirmación (una sola vez), no «enviada por correo».
 4. Clientes y Préstamos: ajustar columnas, y diseñar la ficha del cliente con sus préstamos y la asignación de cobrador en el detalle del préstamo.
 5. Nuevo préstamo: cobrador opcional, y los cuatro montos tal como los pide la API.
 6. Cuadres, Notificaciones, Estadísticas y Configuración: alinear los filtros y las secciones con lo implementado.
