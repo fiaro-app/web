@@ -2,7 +2,6 @@ import { EMPTY_LOOKUP, NO_PORTFOLIO, effectivenessTone, type SettlementLookup } 
 import type { LenderStats } from '@/features/stats/endpoints';
 import { formatCop, formatCopCompact, formatPercent } from '@/lib/amount';
 import { formatBusinessDate } from '@/lib/dates';
-import { getInitials } from '@/lib/initials';
 import type { FigureTone } from '@/lib/tone';
 
 /** Desde qué proporción de cartera en mora el número deja de ser sano (ámbar) o preocupante (grana). */
@@ -33,7 +32,6 @@ export interface ArrearsBucketView {
 
 export interface TopArrearsView {
   readonly clientId: string;
-  readonly initials: string;
   readonly name: string;
   readonly days: string;
   readonly amount: string;
@@ -91,7 +89,6 @@ export function toStatsViewModel(stats: LenderStats, lookup: SettlementLookup = 
     })),
     topArrears: stats.topArrears.map((entry) => ({
       clientId: entry.clientId,
-      initials: getInitials(entry.clientFullName),
       name: entry.clientFullName,
       days: `${plural(entry.overdueDays, 'día', 'días')} en mora`,
       amount: formatCop(entry.overdueAmount),

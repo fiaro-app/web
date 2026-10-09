@@ -52,11 +52,16 @@ se agrega la nueva.
 | W-45 | Quien no administra (Owner o Lender) ve la configuración en solo lectura, con los campos deshabilitados y sin botones | La API devuelve 403 al guardar; la interfaz no ofrece lo que no puede hacer |
 | W-46 | Los formularios solo llaman a la API si hay cambios y mandan una lista de días ordenada (lunes primero) | Evita llamadas inútiles y comparaciones inestables |
 | W-47 | `getShellContext` se memoiza por petición | La barra lateral y Configuración necesitan el rol; así no se repiten las consultas |
+| W-48 | Estadísticas muestra tres indicadores (cartera total, cartera en riesgo y % en mora); no hay tendencias (↑ 4 %) ni "efectividad general" | `QUERY /lenders/me/stats` no las devuelve y no se calculan ni inventan en la web |
+| W-49 | Los filtros de Estadísticas (período, cobrador, cartera) son un formulario GET (`?desde=&hasta=&cobrador=&cartera=`) validado en el servidor (`parseStatsFilters`) | Compartible y sin JavaScript; un período solo vale con las dos fechas reales y en orden, y los ids deben ser UUID |
+| W-50 | El PDF se pide con `callEndpointForFile` (variante de `callEndpoint` para archivos) y se descarga con `saveFile`; el nombre lo sugiere la API | La respuesta no es JSON; se reutilizan cabeceras, errores y la misma ruta `/api` |
+| W-51 | El desempeño por cobrador toma la cartera de `getSettlementLookup` | La API de estadísticas trae el nombre pero no la cartera del cobrador |
 
 ## Pendientes conocidos
 
 - Migrar a `@fiaro-app/contracts`: endpoints de auth/registro y política de contraseña (W-13, W-14).
 - Préstamos: registrar pagos y ver el calendario de cuotas (módulo de cobros pendiente).
+- Estadísticas: el botón de exportar no se ha probado con un PDF real (solo con respuestas simuladas).
 - Notificaciones: contador de no leídas en la barra lateral y notificaciones push (tokens de dispositivo).
 - Recuperar contraseña (la API ya tiene `request-password-reset` y `reset-password`).
 - Cambio de contraseña obligatorio (`mustChangePassword`) para cuentas con contraseña temporal.

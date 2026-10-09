@@ -38,6 +38,10 @@ describe('getStats', () => {
     routeApi({ '/lenders/me/stats': STATS, '/memberships': { data: [COLLECTOR] }, '/portfolios': [{ id: 'p1', name: 'Zona Norte' }] });
     const result = await getStats({ ...EMPTY_STATS_FILTERS, portfolioId: ID });
     expect(result.status === 'ok' && result.stats.collectors[0]?.portfolioName).toBe('Zona Norte');
+    expect(result.status === 'ok' && result.options).toEqual({
+      collectors: [{ id: ID, name: 'Luis Gómez' }],
+      portfolios: [{ id: 'p1', name: 'Zona Norte' }],
+    });
     expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/lenders/me/stats' }), { body: { portfolioId: ID } });
   });
 

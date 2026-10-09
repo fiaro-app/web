@@ -57,7 +57,7 @@ describe('toStatsViewModel', () => {
 
   it('describes the clients with the most arrears', () => {
     expect(toStatsViewModel(STATS).topArrears).toEqual([
-      { clientId: ID, initials: 'MG', name: 'María Gómez', days: '32 días en mora', amount: '$900.000' },
+      { clientId: ID, name: 'María Gómez', days: '32 días en mora', amount: '$900.000' },
     ]);
     const single = toStatsViewModel({ ...STATS, topArrears: [{ clientId: ID, clientFullName: 'Ana Ruiz', overdueDays: 1, overdueAmount: 5 }] });
     expect(single.topArrears[0]?.days).toBe('1 día en mora');
