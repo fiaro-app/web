@@ -9,19 +9,17 @@ export interface ClientsTableProps {
   readonly className?: string;
 }
 
-/** Tabla de clientes (nombre, cédula, teléfono y oficio). Solo presentación. */
+/** Tabla de clientes (nombre y oficio, cédula, teléfono, préstamos activos, saldo y mora). Solo presentación. */
 export function ClientsTable({ rows, className }: Readonly<ClientsTableProps>) {
   return (
-    <ResponsiveTable
-      caption={CLIENTS_TEXT.tableCaption}
-      headers={CLIENTS_TEXT.headers}
-      minWidthClass="md:min-w-150"
-      className={className}
-    >
+    <ResponsiveTable caption={CLIENTS_TEXT.tableCaption} headers={CLIENTS_TEXT.headers} minWidthClass="md:min-w-225" className={className}>
       {rows.map((row) => (
         <tr key={row.id} className={RESPONSIVE_TABLE.row}>
           <th scope="row" className={RESPONSIVE_TABLE.rowHeader}>
-            {row.fullName}
+            <span className="flex flex-col">
+              {row.fullName}
+              <span className="text-caption font-normal text-foreground/60">{row.occupation}</span>
+            </span>
           </th>
           <td className={RESPONSIVE_TABLE.cell} data-label={CLIENTS_TEXT.headers[1]}>
             {row.nationalId}
@@ -30,14 +28,19 @@ export function ClientsTable({ rows, className }: Readonly<ClientsTableProps>) {
             {row.phone}
           </td>
           <td className={RESPONSIVE_TABLE.cell} data-label={CLIENTS_TEXT.headers[3]}>
-            {row.occupation}
+            {row.activeLoans}
+          </td>
+          <td className={RESPONSIVE_TABLE.cell} data-label={CLIENTS_TEXT.headers[4]}>
+            {row.balance}
+          </td>
+          <td className={RESPONSIVE_TABLE.cell} data-label={CLIENTS_TEXT.headers[5]}>
+            <span className="flex flex-col md:items-start">
+              <span className={row.isOverdue ? 'font-semibold text-destructive' : undefined}>{row.overdue}</span>
+              {row.overdueAmount && <span className="text-caption text-foreground/60">{row.overdueAmount}</span>}
+            </span>
           </td>
           <td className={RESPONSIVE_TABLE.action}>
-            <ButtonLink
-              variant="outline"
-              href={`/clientes/${row.id}`}
-              aria-label={`${CLIENTS_TEXT.edit} ${row.fullName}`}
-            >
+            <ButtonLink variant="outline" href={`/clientes/${row.id}`} aria-label={`${CLIENTS_TEXT.edit} ${row.fullName}`}>
               {CLIENTS_TEXT.edit}
             </ButtonLink>
           </td>

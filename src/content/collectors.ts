@@ -62,6 +62,15 @@ export const COLLECTORS_TEXT = {
     passwordLabel: 'Contraseña temporal',
     done: 'Volver a cobradores',
   },
+  performance: {
+    title: 'Desempeño del mes',
+    period: (range: string) => `Del ${range}`,
+    effectiveness: 'Efectividad',
+    collected: 'Cobrado',
+    expected: 'Esperado',
+    visits: 'Visitas',
+    overdue: 'Mora de su cartera',
+  },
   manage: {
     title: 'Gestionar cobrador',
     back: '← Volver a cobradores',

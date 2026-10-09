@@ -25,8 +25,9 @@ beforeEach(() => {
 });
 
 describe('getCollector', () => {
-  it('finds the collector in the list and maps it', async () => {
-    callEndpointAsUser.mockResolvedValue({ data: [ENTRY], meta: {} });
+  it('reads the collaborator detail by id and maps it', async () => {
+    callEndpointAsUser.mockResolvedValue(ENTRY);
+
     expect(await getCollector('m1')).toEqual({
       status: 'ok',
       collector: {
@@ -38,16 +39,22 @@ describe('getCollector', () => {
         active: false,
       },
     });
+    expect(callEndpointAsUser.mock.calls[0]?.[1]).toEqual({ params: { id: 'm1' } });
   });
 
-  it('reports not-found when the id is not in the list', async () => {
-    callEndpointAsUser.mockResolvedValue({ data: [ENTRY], meta: {} });
+  it('reports not-found when the API has no such collaborator or it is not a collector', async () => {
+    callEndpointAsUser.mockRejectedValueOnce(new ApiRequestError({ statusCode: 404, code: 'NOT_FOUND', message: 'x' }));
     expect(await getCollector('other')).toEqual({ status: 'not-found' });
+
+    callEndpointAsUser.mockResolvedValueOnce({ ...ENTRY, roles: ['OWNER'] });
+    expect(await getCollector('m1')).toEqual({ status: 'not-found' });
   });
 
   it('reports forbidden on 403 and propagates other failures', async () => {
     callEndpointAsUser.mockRejectedValueOnce(new ApiRequestError({ statusCode: 403, code: 'FORBIDDEN', message: 'x' }));
     expect(await getCollector('m1')).toEqual({ status: 'forbidden' });
+    callEndpointAsUser.mockRejectedValueOnce(new ApiRequestError({ statusCode: 500, code: 'INTERNAL_ERROR', message: 'x' }));
+    await expect(getCollector('m1')).rejects.toBeInstanceOf(ApiRequestError);
     callEndpointAsUser.mockRejectedValueOnce(new Error('boom'));
     await expect(getCollector('m1')).rejects.toThrow('boom');
   });

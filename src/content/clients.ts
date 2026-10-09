@@ -3,7 +3,9 @@ export const CLIENTS_TEXT = {
   title: 'Clientes',
   newClient: '+ Nuevo cliente',
   tableCaption: 'Clientes del negocio',
-  headers: ['Nombre', 'Cédula', 'Teléfono', 'Oficio'] as const,
+  headers: ['Nombre', 'Cédula', 'Teléfono', 'Préstamos activos', 'Saldo', 'Mora'] as const,
+  onTime: 'Al día',
+  overdueDays: (days: number) => (days === 1 ? '1 día' : `${String(days)} días`),
   edit: 'Editar',
   search: {
     placeholder: 'Buscar por nombre o cédula...',

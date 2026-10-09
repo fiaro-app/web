@@ -5,7 +5,9 @@ export const LOANS_TEXT = {
   title: 'Préstamos',
   newLoan: '+ Nuevo préstamo',
   tableCaption: 'Préstamos del negocio',
-  headers: ['Cliente', 'Monto prestado', 'Cuotas', 'Pagadas', 'Saldo', 'Inicio', 'Estado'] as const,
+  headers: ['Cliente', 'Cobrador', 'Monto prestado', 'Pagadas', 'Saldo', 'Mora', 'Próxima cuota', 'Estado'] as const,
+  onTime: 'Al día',
+  overdueDays: (days: number) => (days === 1 ? '1 día' : `${String(days)} días`),
   view: 'Ver',
   frequency: {
     DAILY: 'Diaria',

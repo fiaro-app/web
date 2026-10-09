@@ -65,6 +65,16 @@ describe('callEndpoint', () => {
     expect(init?.headers).not.toHaveProperty('Content-Type');
   });
 
+  it('appends only the query parameters that carry a value', async () => {
+    fetchMock.mockImplementation(() => Promise.resolve(jsonResponse({ name: 'Una' })));
+
+    await callEndpoint(getThing, { params: { id: 'a' }, query: { from: '2026-10-01', to: '2026-10-09', skipped: undefined, empty: '' } });
+    await callEndpoint(getThing, { params: { id: 'a' }, query: { from: undefined } });
+
+    expect(fetchMock.mock.calls[0]![0]).toBe(`${API_BASE_PATH}/things/a?from=2026-10-01&to=2026-10-09`);
+    expect(fetchMock.mock.calls[1]![0]).toBe(`${API_BASE_PATH}/things/a`);
+  });
+
   it('sends the body as JSON', async () => {
     fetchMock.mockResolvedValue(jsonResponse({ id: '1' }, { status: 201 }));
 

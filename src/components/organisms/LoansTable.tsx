@@ -13,25 +13,23 @@ export interface LoansTableProps {
   readonly className?: string;
 }
 
-/** Tabla de préstamos (cliente, monto, cuotas, frecuencia, inicio y estado). Solo presentación. */
+/** Tabla de préstamos (cliente, cobrador, monto, saldo, mora, próxima cuota y estado). Solo presentación. */
 export function LoansTable({ rows, className }: Readonly<LoansTableProps>) {
   return (
-    <ResponsiveTable
-      caption={LOANS_TEXT.tableCaption}
-      headers={LOANS_TEXT.headers}
-      minWidthClass="md:min-w-210"
-      className={className}
-    >
+    <ResponsiveTable caption={LOANS_TEXT.tableCaption} headers={LOANS_TEXT.headers} minWidthClass="md:min-w-250" className={className}>
       {rows.map((row) => (
         <tr key={row.id} className={RESPONSIVE_TABLE.row}>
           <th scope="row" className={RESPONSIVE_TABLE.rowHeader}>
             {row.clientName}
           </th>
           <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[1]}>
-            {row.principal}
+            {row.collectorName}
           </td>
           <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[2]}>
-            {row.installments}
+            <span className="flex flex-col md:items-start">
+              {row.principal}
+              <span className="text-caption text-foreground/60">{row.installments}</span>
+            </span>
           </td>
           <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[3]}>
             {row.paid}
@@ -40,17 +38,19 @@ export function LoansTable({ rows, className }: Readonly<LoansTableProps>) {
             {row.balance}
           </td>
           <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[5]}>
-            {row.startDate}
+            <span className="flex flex-col md:items-start">
+              <span className={row.isOverdue ? 'font-semibold text-destructive' : undefined}>{row.overdue}</span>
+              {row.overdueAmount && <span className="text-caption text-foreground/60">{row.overdueAmount}</span>}
+            </span>
           </td>
           <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[6]}>
+            {row.nextDue}
+          </td>
+          <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[7]}>
             <StatePill tone={PILL_TONE[row.statusTone]}>{row.status}</StatePill>
           </td>
           <td className={RESPONSIVE_TABLE.action}>
-            <ButtonLink
-              variant="outline"
-              href={`/prestamos/${row.id}`}
-              aria-label={`${LOANS_TEXT.view} préstamo de ${row.clientName}`}
-            >
+            <ButtonLink variant="outline" href={`/prestamos/${row.id}`} aria-label={`${LOANS_TEXT.view} préstamo de ${row.clientName}`}>
               {LOANS_TEXT.view}
             </ButtonLink>
           </td>

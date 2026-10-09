@@ -15,6 +15,22 @@ import { z } from 'zod';
 export const LoanResponseSchema = LoanSchema;
 export type LoanResponse = z.infer<typeof LoanResponseSchema>;
 
+/**
+ * Fila de `QUERY /loans`: el préstamo más su saldo y mora, calculados por la API con el mismo motor
+ * que `GET /loans/:loanId/balance` (D-113). Los campos nuevos son aditivos.
+ */
+export const LoanListItemSchema = LoanSchema.extend({
+  balance: z.int().nonnegative(),
+  /** Lo esperado hasta hoy que sigue sin pagar; cero si está al día o el préstamo cerró. */
+  overdueAmount: z.int().nonnegative(),
+  overdueDays: z.int().nonnegative(),
+  /** Próxima fecha de pago; `null` si el préstamo cerró o no le quedan cuotas. */
+  nextDueDate: z.iso.date().nullable(),
+  /** Quien lo cobra hoy, o `null` si ninguno lo tiene asignado. */
+  collector: z.object({ membershipId: IdSchema, fullName: z.string() }).nullable(),
+});
+export type LoanListItem = z.infer<typeof LoanListItemSchema>;
+
 /** Cuerpo de `POST /loans`. Fiaro no calcula intereses: todos los montos los ingresa el prestamista. */
 export const CreateLoanBodySchema = z.strictObject({
   clientId: IdSchema,
@@ -113,9 +129,9 @@ export const loanEndpoints = {
   list: defineEndpoint({
     method: 'QUERY',
     path: '/loans',
-    summary: 'Lista paginada de préstamos, con filtros por cliente y estado.',
+    summary: 'Lista paginada de préstamos con saldo y mora, con filtros por cliente y estado.',
     body: ListLoansBodySchema,
-    response: paginated(LoanResponseSchema),
+    response: paginated(LoanListItemSchema),
   }),
   cancel: defineEndpoint({
     method: 'POST',

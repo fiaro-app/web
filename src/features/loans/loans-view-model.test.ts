@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { LoanResponse } from './endpoints';
+import type { LoanListItem, LoanResponse } from './endpoints';
 import type { CollectionAssignment, LoanBalance } from './endpoints';
 import { describeInstallments, toLoanDetailView, toLoansViewModel } from './loans-view-model';
 
@@ -17,6 +17,14 @@ const LOAN: LoanResponse = {
   createdAt: '2026-10-01T10:00:00.000Z',
   closedAt: null,
 };
+const ITEM: LoanListItem = {
+  ...LOAN,
+  balance: 380_000,
+  overdueAmount: 60_000,
+  overdueDays: 2,
+  nextDueDate: '2026-10-07',
+  collector: { membershipId: 'm1', fullName: 'Alejo Zuleta' },
+};
 const NAMES = new Map([['c1', 'Carlos Gómez']]);
 const PAGE = { total: 1, page: 1, pageSize: 20 };
 
@@ -27,15 +35,21 @@ describe('describeInstallments', () => {
 });
 
 describe('toLoansViewModel', () => {
-  it('formats the row and resolves the client name', () => {
-    const view = toLoansViewModel([LOAN], NAMES, PAGE, null);
+  it('formats the row with the balance, arrears and collector that the API sends', () => {
+    const view = toLoansViewModel([ITEM], NAMES, PAGE, null);
+    // Pactado 600.000, saldo 380.000 → pagó 220.000 → 7 cuotas completas de 30.000.
     expect(view.rows[0]).toEqual({
       id: 'l1',
       clientName: 'Carlos Gómez',
+      collectorName: 'Alejo Zuleta',
       principal: '$500.000',
       installments: '20 × $30.000',
-      balance: '—',
-      paid: '—',
+      balance: '$380.000',
+      paid: '7/20',
+      overdue: '2 días',
+      overdueAmount: '$60.000',
+      isOverdue: true,
+      nextDue: '07/10/2026',
       frequency: 'Diaria',
       startDate: '01/10/2026',
       status: 'Activo',
@@ -44,27 +58,57 @@ describe('toLoansViewModel', () => {
     expect(view).toMatchObject({ ...PAGE, status: null });
   });
 
-  it('falls back when the client is unknown and maps every status tone', () => {
+  it('shows an up-to-date loan as "Al día" and one day of arrears in the singular', () => {
+    const [onTime, oneDay] = toLoansViewModel(
+      [
+        { ...ITEM, overdueAmount: 0, overdueDays: 0 },
+        { ...ITEM, overdueDays: 1 },
+      ],
+      NAMES,
+      PAGE,
+      null,
+    ).rows;
+    expect(onTime).toMatchObject({ overdue: 'Al día', overdueAmount: null, isOverdue: false });
+    expect(oneDay).toMatchObject({ overdue: '1 día', isOverdue: true });
+  });
+
+  it('falls back when the client or the collector is unknown and maps every status tone', () => {
     const view = toLoansViewModel(
       [
-        { ...LOAN, clientId: 'x' },
-        { ...LOAN, status: 'PAID_OFF' },
-        { ...LOAN, status: 'CANCELED' },
+        { ...ITEM, clientId: 'x', collector: null, nextDueDate: null },
+        { ...ITEM, status: 'PAID_OFF', balance: 0, overdueAmount: 0, overdueDays: 0 },
+        { ...ITEM, status: 'CANCELED' },
       ],
       NAMES,
       PAGE,
       'ACTIVE',
     );
-    expect(view.rows[0]?.clientName).toBe('Cliente no disponible');
+    expect(view.rows[0]).toMatchObject({ clientName: 'Cliente no disponible', collectorName: '—', nextDue: '—' });
     expect(view.rows.map((row) => row.statusTone)).toEqual(['info', 'success', 'muted']);
     expect(view.status).toBe('ACTIVE');
+  });
+
+  it('shows a paid-off loan as fully paid with no arrears, and a canceled one with dashes', () => {
+    const [paidOff, canceled] = toLoansViewModel(
+      [
+        { ...ITEM, status: 'PAID_OFF', balance: 0, overdueAmount: 0, overdueDays: 0, nextDueDate: null },
+        { ...ITEM, status: 'CANCELED' },
+      ],
+      NAMES,
+      PAGE,
+      null,
+    ).rows;
+    expect(paidOff).toMatchObject({ balance: '$0', paid: '20/20', overdue: '—', isOverdue: false });
+    expect(canceled).toMatchObject({ balance: '—', paid: '—', overdue: '—', isOverdue: false });
   });
 });
 
 describe('toLoanDetailView', () => {
   it('is cancelable only while active', () => {
     expect(toLoanDetailView(LOAN, { clientName: 'Carlos' }).cancelable).toBe(true);
-    expect(toLoanDetailView({ ...LOAN, status: 'PAID_OFF', closedAt: '2026-11-01T10:00:00.000Z' }, { clientName: 'Carlos' }).cancelable).toBe(false);
+    expect(
+      toLoanDetailView({ ...LOAN, status: 'PAID_OFF', closedAt: '2026-11-01T10:00:00.000Z' }, { clientName: 'Carlos' }).cancelable,
+    ).toBe(false);
   });
 
   it('reads the closing day in Colombian time', () => {
@@ -97,33 +141,10 @@ const ASSIGNMENT: CollectionAssignment = {
   createdAt: '2026-10-01T10:00:00.000Z',
 };
 
-describe('balance in the list', () => {
-  it('shows the balance and the paid installments from the API balance', () => {
-    const view = toLoansViewModel([LOAN], NAMES, PAGE, null, new Map([['l1', BALANCE]]));
-    // Pactado 600.000, saldo 380.000 → pagó 220.000 → 7 cuotas completas de 30.000.
-    expect(view.rows[0]).toMatchObject({ balance: '$380.000', paid: '7/20' });
-  });
-
-  it('shows a paid-off loan as fully paid without asking the API', () => {
-    const view = toLoansViewModel([{ ...LOAN, status: 'PAID_OFF' }], NAMES, PAGE, null);
-    expect(view.rows[0]).toMatchObject({ balance: '$0', paid: '20/20' });
-  });
-
-  it('shows dashes when the balance is unknown', () => {
-    expect(toLoansViewModel([LOAN], NAMES, PAGE, null).rows[0]).toMatchObject({ balance: '—', paid: '—' });
-    expect(toLoansViewModel([{ ...LOAN, status: 'CANCELED' }], NAMES, PAGE, null).rows[0]).toMatchObject({ balance: '—' });
-  });
-});
-
 describe('canceled loans', () => {
   it('show no balance, paid installments, arrears or next due date, even if the API returned some', () => {
     const view = toLoanDetailView({ ...LOAN, status: 'CANCELED', closedAt: '2026-10-02T15:00:00.000Z' }, { balance: BALANCE });
     expect(view).toMatchObject({ balance: null, paidInstallments: null, overdue: null, nextDueDate: null });
-  });
-
-  it('show dashes in the list even if a balance was passed', () => {
-    const view = toLoansViewModel([{ ...LOAN, status: 'CANCELED' }], NAMES, PAGE, null, new Map([['l1', BALANCE]]));
-    expect(view.rows[0]).toMatchObject({ balance: '—', paid: '—' });
   });
 });
 

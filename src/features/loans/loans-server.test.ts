@@ -6,7 +6,7 @@ const { callEndpointAsUser } = vi.hoisted(() => ({ callEndpointAsUser: vi.fn() }
 vi.mock('@/lib/api/server-call', () => ({ callEndpointAsUser }));
 
 import { getClientLoans } from './get-client-loans.server';
-import { getLoanBalance, getLoanBalances } from './get-balances.server';
+import { getLoanBalance } from './get-balances.server';
 import { getClientNames, getClientOptions } from './get-client-names.server';
 import { getLoan } from './get-loan.server';
 import { getLoans } from './get-loans.server';
@@ -25,6 +25,14 @@ const LOAN = {
   createdByMembershipId: 'm1',
   createdAt: '2026-10-01T10:00:00.000Z',
   closedAt: null,
+};
+const LIST_ITEM = {
+  ...LOAN,
+  balance: 380_000,
+  overdueAmount: 60_000,
+  overdueDays: 2,
+  nextDueDate: '2026-10-07',
+  collector: { membershipId: 'm1', fullName: 'Luis Gómez' },
 };
 const BALANCE = {
   loanId: 'l1',
@@ -68,11 +76,7 @@ describe('getClientNames / getClientOptions', () => {
 
 describe('getLoans', () => {
   it('returns rows with client names and sends the status filter only when set', async () => {
-    routeApi({
-      '/loans': { data: [LOAN], meta: { page: 1, pageSize: 20, total: 1 } },
-      '/clients': { data: [CLIENT] },
-      '/loans/:loanId/balance': BALANCE,
-    });
+    routeApi({ '/loans': { data: [LIST_ITEM], meta: { page: 1, pageSize: 20, total: 1 } }, '/clients': { data: [CLIENT] } });
     const result = await getLoans(1, 'ACTIVE');
     expect(result.status === 'ok' && result.loans.rows[0]?.clientName).toBe('Carlos Gómez');
     expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/loans' }), {
@@ -87,14 +91,16 @@ describe('getLoans', () => {
     expect(await getLoans(1, null)).toEqual({ status: 'forbidden' });
   });
 
-  it('shows the balance in each active row', async () => {
-    routeApi({
-      '/loans': { data: [LOAN], meta: { page: 1, pageSize: 20, total: 1 } },
-      '/clients': { data: [CLIENT] },
-      '/loans/:loanId/balance': BALANCE,
-    });
+  it('shows the balance, arrears and collector that come with each row, without asking per loan', async () => {
+    routeApi({ '/loans': { data: [LIST_ITEM], meta: { page: 1, pageSize: 20, total: 1 } }, '/clients': { data: [CLIENT] } });
     const result = await getLoans(1, null);
-    expect(result.status === 'ok' && result.loans.rows[0]).toMatchObject({ balance: '$380.000', paid: '7/20' });
+    expect(result.status === 'ok' && result.loans.rows[0]).toMatchObject({
+      balance: '$380.000',
+      paid: '7/20',
+      overdue: '2 días',
+      collectorName: 'Luis Gómez',
+    });
+    expect(callEndpointAsUser.mock.calls.map((call) => call[0].path)).not.toContain('/loans/:loanId/balance');
   });
 });
 
@@ -104,7 +110,14 @@ describe('getLoan', () => {
     '/clients': { data: [CLIENT] },
     '/loans/:loanId/balance': BALANCE,
     '/loans/:loanId/collection-assignments': [
-      { id: 'a1', loanId: 'l1', collectorMembershipId: 'm1', effectiveFrom: '2000-01-01', effectiveTo: null, createdAt: '2026-10-01T10:00:00.000Z' },
+      {
+        id: 'a1',
+        loanId: 'l1',
+        collectorMembershipId: 'm1',
+        effectiveFrom: '2000-01-01',
+        effectiveTo: null,
+        createdAt: '2026-10-01T10:00:00.000Z',
+      },
     ],
     '/memberships': { data: [COLLECTOR] },
     '/portfolios': [],
@@ -123,7 +136,11 @@ describe('getLoan', () => {
   });
 
   it('still shows the loan when the balance and the assignments fail', async () => {
-    routeApi({ ...base, '/loans/:loanId/balance': apiError(500, 'INTERNAL_ERROR'), '/loans/:loanId/collection-assignments': apiError(500, 'INTERNAL_ERROR') });
+    routeApi({
+      ...base,
+      '/loans/:loanId/balance': apiError(500, 'INTERNAL_ERROR'),
+      '/loans/:loanId/collection-assignments': apiError(500, 'INTERNAL_ERROR'),
+    });
     const result = await getLoan('l1');
     expect(result.status === 'ok' && result.loan).toMatchObject({ balance: null, collector: null });
   });
@@ -138,32 +155,23 @@ describe('getLoan', () => {
   });
 });
 
-describe('getLoanBalance / getLoanBalances', () => {
+describe('getLoanBalance', () => {
   it('returns null when the API refuses and propagates unknown failures', async () => {
     routeApi({ '/loans/:loanId/balance': apiError(404, 'NOT_FOUND') });
     expect(await getLoanBalance('l1')).toBeNull();
     callEndpointAsUser.mockRejectedValueOnce(new Error('boom'));
     await expect(getLoanBalance('l1')).rejects.toThrow('boom');
   });
-
-  it('only asks for active loans and skips the ones that fail', async () => {
-    routeApi({ '/loans/:loanId/balance': BALANCE });
-    const balances = await getLoanBalances([
-      { ...LOAN, id: 'l1' },
-      { ...LOAN, id: 'l2', status: 'PAID_OFF' },
-      { ...LOAN, id: 'l3', status: 'CANCELED' },
-    ] as never);
-    expect(callEndpointAsUser).toHaveBeenCalledTimes(1);
-    expect([...balances.keys()]).toEqual(['l1']);
-  });
 });
 
 describe('getClientLoans', () => {
   it('returns the rows of one client, filtered in the API, with their balance', async () => {
-    routeApi({ '/loans': { data: [LOAN], meta: { page: 1, pageSize: 20, total: 1 } }, '/loans/:loanId/balance': BALANCE });
+    routeApi({ '/loans': { data: [LIST_ITEM], meta: { page: 1, pageSize: 20, total: 1 } } });
     const rows = await getClientLoans('c1', 'Carlos Gómez');
     expect(rows[0]).toMatchObject({ clientName: 'Carlos Gómez', balance: '$380.000' });
-    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/loans' }), { body: { page: 1, pageSize: 20, clientId: 'c1' } });
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/loans' }), {
+      body: { page: 1, pageSize: 20, clientId: 'c1' },
+    });
   });
 
   it('is empty when the API fails, and propagates unknown failures', async () => {

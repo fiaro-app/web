@@ -1,5 +1,4 @@
 import 'server-only';
-import { getLoanBalances } from '@/features/loans/get-balances.server';
 import { loanEndpoints } from '@/features/loans/endpoints';
 import { toLoansViewModel, type LoanRow } from '@/features/loans/loans-view-model';
 import { isApiRequestError } from '@/lib/api';
@@ -15,8 +14,7 @@ export const CLIENT_LOANS_LIMIT = 20;
 export async function getClientLoans(clientId: string, clientName: string): Promise<readonly LoanRow[]> {
   try {
     const page = await callEndpointAsUser(loanEndpoints.list, { body: { page: 1, pageSize: CLIENT_LOANS_LIMIT, clientId } });
-    const balances = await getLoanBalances(page.data);
-    return toLoansViewModel(page.data, new Map([[clientId, clientName]]), page.meta, null, balances).rows;
+    return toLoansViewModel(page.data, new Map([[clientId, clientName]]), page.meta, null).rows;
   } catch (error) {
     if (isApiRequestError(error)) return [];
     throw error;

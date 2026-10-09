@@ -67,6 +67,13 @@ export const membershipEndpoints = {
     body: ListMembershipsBodySchema,
     response: paginated(MembershipListEntrySchema),
   }),
+  get: defineEndpoint({
+    method: 'GET',
+    path: '/memberships/:id',
+    summary: 'Detalle de un colaborador, con la misma forma que una fila del listado (solo Owner y Lender).',
+    params: MembershipParamsSchema,
+    response: MembershipListEntrySchema,
+  }),
   invite: defineEndpoint({
     method: 'POST',
     path: '/memberships',
