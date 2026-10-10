@@ -7,10 +7,12 @@ import { RESPONSIVE_TABLE } from '@/components/organisms/responsive-table';
 export interface ClientsTableProps {
   readonly rows: readonly ClientRow[];
   readonly className?: string;
+  /** Puede editar clientes: sin esto no se ofrece «Editar». */
+  readonly canManage?: boolean;
 }
 
 /** Tabla de clientes (nombre y oficio, cédula, teléfono, préstamos activos, saldo y mora). Solo presentación. */
-export function ClientsTable({ rows, className }: Readonly<ClientsTableProps>) {
+export function ClientsTable({ rows, className, canManage = true }: Readonly<ClientsTableProps>) {
   return (
     <ResponsiveTable caption={CLIENTS_TEXT.tableCaption} headers={CLIENTS_TEXT.headers} minWidthClass="md:min-w-225" className={className}>
       {rows.map((row) => (
@@ -40,9 +42,11 @@ export function ClientsTable({ rows, className }: Readonly<ClientsTableProps>) {
             </span>
           </td>
           <td className={RESPONSIVE_TABLE.action}>
-            <ButtonLink variant="outline" href={`/clientes/${row.id}`} aria-label={`${CLIENTS_TEXT.edit} ${row.fullName}`}>
-              {CLIENTS_TEXT.edit}
-            </ButtonLink>
+            {canManage && (
+              <ButtonLink variant="outline" href={`/clientes/${row.id}`} aria-label={`${CLIENTS_TEXT.edit} ${row.fullName}`}>
+                {CLIENTS_TEXT.edit}
+              </ButtonLink>
+            )}
           </td>
         </tr>
       ))}

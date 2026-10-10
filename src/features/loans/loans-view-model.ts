@@ -141,6 +141,8 @@ export interface LoanDetailView {
   readonly collector: LoanCollectorView | null;
   /** Solo un préstamo activo admite asignar un cobrador. */
   readonly assignable: boolean;
+  /** Valor de una cuota, para proponerlo como monto al registrar un cobro. */
+  readonly installmentValue: number;
 }
 
 /** Lo que completa el detalle además del préstamo mismo; todo es opcional porque cada pieza puede fallar sola. */
@@ -195,5 +197,6 @@ export function toLoanDetailView(loan: LoanResponse, extras: LoanDetailExtras = 
           }
         : null,
     assignable: loan.status === 'ACTIVE',
+    installmentValue: loan.installmentValue,
   };
 }

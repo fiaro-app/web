@@ -1,13 +1,17 @@
 import { StateIcon } from '@/components/atoms/StateIcon';
 import type { Metadata } from 'next';
+import { Alert } from '@/components/molecules/Alert';
 import { EmptyState } from '@/components/molecules/EmptyState';
+import { CollectionForm } from '@/components/organisms/CollectionForm';
 import { LoanDetail } from '@/components/organisms/LoanDetail';
 import { LoanInstallments } from '@/components/organisms/LoanInstallments';
 import { LoanVisits } from '@/components/organisms/LoanVisits';
 import { LOANS_TEXT } from '@/content/loans';
+import { getAccess } from '@/features/app-shell/get-access.server';
 import { getLoanInstallments } from '@/features/loans/get-installments.server';
 import { getLoan } from '@/features/loans/get-loan.server';
 import { summarizeInstallments, toInstallmentRows } from '@/features/loans/installments-view-model';
+import { VISITS_TEXT } from '@/content/visits';
 import { getLoanVisits } from '@/features/visits/get-visits.server';
 
 export const metadata: Metadata = { title: 'Préstamo' };
@@ -23,12 +27,14 @@ export default async function LoanPage({ params }: PageProps<'/prestamos/[id]'>)
   if (result.status === 'not-found') {
     return <EmptyState icon={<StateIcon name="search" />} {...LOANS_TEXT.notFound} />;
   }
-  const [visits, installments] = await Promise.all([getLoanVisits(id), getLoanInstallments(id)]);
+  const [visits, installments, { canManage }] = await Promise.all([getLoanVisits(id), getLoanInstallments(id), getAccess()]);
   return (
     <>
-      <LoanDetail loan={result.loan} collectors={result.collectorOptions} />
+      <LoanDetail loan={result.loan} collectors={result.collectorOptions} canManage={canManage} />
+      {result.collect === 'available' && <CollectionForm loanId={result.loan.id} installmentValue={result.loan.installmentValue} />}
+      {result.collect === 'unassigned' && <Alert tone="info">{VISITS_TEXT.collect.notAssigned}</Alert>}
       <LoanInstallments rows={toInstallmentRows(installments)} summary={summarizeInstallments(installments)} />
-      <LoanVisits visits={visits} />
+      <LoanVisits visits={visits} canManage={canManage} />
     </>
   );
 }

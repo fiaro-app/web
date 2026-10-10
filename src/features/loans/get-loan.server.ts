@@ -1,4 +1,5 @@
 import 'server-only';
+import { getAccess } from '@/features/app-shell/get-access.server';
 import { currentAssignment, todayBusinessDate } from '@/features/loans/loan-calculations';
 import { getLoanBalance } from '@/features/loans/get-balances.server';
 import { getClientNames } from '@/features/loans/get-client-names.server';
@@ -14,8 +15,20 @@ export interface CollectorOption {
   readonly name: string;
 }
 
+/**
+ * Si la persona puede registrar un cobro en este préstamo desde la web. La API exige el rol Collector y que
+ * el préstamo esté asignado a su membresía ese día ("modo cobrador"); aquí solo se adelanta ese chequeo para
+ * no ofrecer un formulario que la API rechazaría. `unassigned`: cobra en campo pero el préstamo es de otro.
+ */
+export type CollectAvailability = 'available' | 'unassigned' | 'unavailable';
+
 export type LoanResult =
-  | { readonly status: 'ok'; readonly loan: LoanDetailView; readonly collectorOptions: readonly CollectorOption[] }
+  | {
+      readonly status: 'ok';
+      readonly loan: LoanDetailView;
+      readonly collectorOptions: readonly CollectorOption[];
+      readonly collect: CollectAvailability;
+    }
   | { readonly status: 'not-found' }
   | { readonly status: 'forbidden' };
 
@@ -36,16 +49,22 @@ async function loadAssignments(loanId: string): Promise<readonly CollectionAssig
  */
 export async function getLoan(id: string): Promise<LoanResult> {
   try {
-    const [loan, names, balance, assignments, lookup] = await Promise.all([
+    const [loan, names, balance, assignments, lookup, access] = await Promise.all([
       callEndpointAsUser(loanEndpoints.get, { params: { id } }),
       getClientNames(),
       getLoanBalance(id),
       loadAssignments(id),
       getSettlementLookup(),
+      getAccess(),
     ]);
     const assignment = currentAssignment(assignments, todayBusinessDate());
+    let collect: CollectAvailability = 'unavailable';
+    if (loan.status === 'ACTIVE' && access.canCollect && access.membershipId !== null) {
+      collect = assignment?.collectorMembershipId === access.membershipId ? 'available' : 'unassigned';
+    }
     return {
       status: 'ok',
+      collect,
       loan: toLoanDetailView(loan, {
         clientName: names.get(loan.clientId),
         balance,

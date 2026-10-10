@@ -99,11 +99,13 @@ se agrega la nueva.
 | W-92 | «Aplicar» y «Buscar» de los filtros (`FilterForm` + `FilterSubmitButton`) se apagan cuando no hay nada nuevo que aplicar y se activan en cuanto cambia un valor; sin JavaScript siguen activos | Dejar claro cuándo se puede pulsar |
 | W-93 | «Mi cuenta» se reparte como Configuración: datos y contraseña a la izquierda, sesiones y desactivar cuenta a la derecha | Menos scroll; la barra lateral ya no se mueve |
 | W-94 | Los modales de confirmación son más grandes (30rem), llevan un icono y desenfocan el fondo (`backdrop-blur`) | Una decisión importante debe ocupar la atención; el fondo borroso evita distraerse |
+| W-95 | Los permisos de la web siguen la matriz de la API (`PERMISSIONS.md`): Resumen, Cobradores, Cobros del día y Estadísticas son de Owner y Lender; clientes, préstamos, cuadres y configuración se pueden ver con cualquier rol. Quien solo cobra no ve esos módulos en el menú, no ve los botones de crear, editar, anular, revertir, asignar ni revisar, y entra por Préstamos. La API sigue siendo quien autoriza | Ofrecer solo lo que la persona puede hacer; con roles desconocidos se muestra todo y decide la API |
+| W-96 | «Registrar cobro» desde la web (`POST /loans/:loanId/collection-visits`): resultado de la visita, monto y medio si pagó, fecha prometida si reprogramó, con confirmación. Solo se ofrece con el rol Collector y el préstamo asignado hoy a la propia membresía («modo cobrador», D-89); si no, se explica que hay que asignárselo | La API exige ambas cosas y registra la visita a nombre de quien cobra; el `id` es un UUID v7 por formulario, así reintentar no duplica el pago |
+| W-97 | Un cobrador solo (sin Owner ni Lender) no puede listar colaboradores, así que la web no conoce su membresía y no le ofrece cobrar desde la web: su herramienta es la app móvil | Para cobrar desde la web hace falta saber la membresía propia; hoy solo la devuelve el listado de colaboradores |
 
 ## Pendientes conocidos
 
 - Migrar a `@fiaro-app/contracts`: endpoints de auth/registro y política de contraseña (W-13, W-14).
-- Préstamos: registrar pagos desde la web (hoy solo los registra el cobrador en la app móvil).
 - Estadísticas: el botón de exportar no se ha probado con un PDF real (solo con respuestas simuladas).
 - Notificaciones: notificaciones push (tokens de dispositivo).
 - Subir el logo del prestamista desde Configuración: el endpoint está declarado, falta la subida directa (PUT a la URL firmada), que exige permitir ese host en la CSP (`connect-src` e `img-src`) una vez se conozca el almacenamiento.

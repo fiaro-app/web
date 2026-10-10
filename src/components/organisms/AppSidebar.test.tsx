@@ -36,10 +36,12 @@ describe('AppSidebar', () => {
     pathname.mockReturnValue('/resumen');
     render(<AppSidebar businessName="Buen Vecino" userName="Luis Gómez" roleLabel="Cobrador" />);
 
-    for (const name of ['Cobradores', 'Cuadres', 'Estadísticas', 'Configuración']) {
+    for (const name of ['Resumen', 'Cobradores', 'Cobros', 'Estadísticas']) {
       expect(screen.queryByRole('link', { name })).not.toBeInTheDocument();
     }
-    expect(screen.getByRole('link', { name: 'Cobros' })).toBeInTheDocument();
+    for (const name of ['Clientes', 'Préstamos', 'Cuadres', 'Notificaciones', 'Configuración']) {
+      expect(screen.getByRole('link', { name })).toBeInTheDocument();
+    }
   });
 
   it('shows every module to an administrator', () => {

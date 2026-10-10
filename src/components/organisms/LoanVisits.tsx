@@ -12,10 +12,12 @@ import type { VisitRow } from '@/features/visits/visits-view-model';
 
 export interface LoanVisitsProps {
   readonly visits: readonly VisitRow[];
+  /** Puede revertir pagos (Owner o Lender). */
+  readonly canManage?: boolean;
 }
 
 /** Historial de cobros de un préstamo: cada visita con su resultado y, si hubo pago, la opción de revertirlo. */
-export function LoanVisits({ visits }: Readonly<LoanVisitsProps>) {
+export function LoanVisits({ visits, canManage = true }: Readonly<LoanVisitsProps>) {
   const [reversing, setReversing] = useState<string | null>(null);
 
   return (
@@ -53,7 +55,7 @@ export function LoanVisits({ visits }: Readonly<LoanVisitsProps>) {
                 {visit.method}
               </td>
               <td className={RESPONSIVE_TABLE.action}>
-                {visit.reversiblePaymentId && (
+                {canManage && visit.reversiblePaymentId && (
                   <Button
                     variant="outline"
                     onClick={() => setReversing(visit.reversiblePaymentId)}
