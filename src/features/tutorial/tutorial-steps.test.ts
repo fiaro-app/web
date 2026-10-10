@@ -6,7 +6,7 @@ describe('buildTutorialSteps', () => {
     const steps = buildTutorialSteps(['/resumen', '/clientes', '/prestamos']);
 
     expect(steps.map((step) => step.id)).toEqual(['welcome', 'nav/resumen', 'nav/clientes', 'nav/prestamos', 'account', 'sign-out', 'done']);
-    expect(steps.map((step) => step.target)).toEqual([null, 'nav/resumen', 'nav/clientes', 'nav/prestamos', 'account', 'sign-out', null]);
+    expect(steps.map((step) => step.target)).toEqual([null, '[data-tour="nav/resumen"]', '[data-tour="nav/clientes"]', '[data-tour="nav/prestamos"]', '[data-tour="account"]', '[data-tour="sign-out"]', null]);
   });
 
   it('explains what each part is for', () => {
@@ -25,7 +25,7 @@ describe('buildTutorialSteps', () => {
     expect(buildTutorialSteps(['/desconocida']).map((step) => step.id)).toEqual(['welcome', 'account', 'sign-out', 'done']);
   });
 
-  it('builds the data-tour value of a menu option', () => {
-    expect(navTarget('/prestamos')).toBe('nav/prestamos');
+  it('builds the selector of a menu option', () => {
+    expect(navTarget('/prestamos')).toBe('[data-tour="nav/prestamos"]');
   });
 });

@@ -5,7 +5,10 @@ import { TutorialTour } from '@/components/organisms/TutorialTour';
 import { TUTORIAL_TEXT } from '@/content/tutorial';
 import { buildTutorialSteps } from '@/features/tutorial/tutorial-steps';
 import { useTutorial } from '@/features/tutorial/use-tutorial';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
+import { usePathname } from 'next/navigation';
+import { PAGE_GUIDES, guideKeyFor } from '@/content/tutorial-pages';
+import { findVisible } from '@/features/tutorial/tutorial-dom';
 
 export interface OnboardingTutorialProps {
   /** Quién es, para recordar que ya vio el tutorial. */
@@ -20,7 +23,18 @@ export interface OnboardingTutorialProps {
  */
 export function OnboardingTutorial({ userId, navHrefs }: Readonly<OnboardingTutorialProps>) {
   const steps = useMemo(() => buildTutorialSteps(navHrefs), [navHrefs]);
-  const tutorial = useTutorial({ userId, steps });
+  const pathname = usePathname();
+
+  // La guía de la pantalla actual: solo los pasos cuyo elemento está a la vista (p. ej. sin «Registrar» para quien no puede).
+  const resolvePageGuide = useCallback(() => {
+    const key = guideKeyFor(pathname);
+    const guide = key === null ? [] : (PAGE_GUIDES[key] ?? []);
+    return guide
+      .filter((step) => findVisible(step.selector) !== null)
+      .map((step, position) => ({ id: `page${key ?? ''}-${String(position)}`, target: step.selector, title: step.title, body: step.body }));
+  }, [pathname]);
+
+  const tutorial = useTutorial({ userId, steps, resolvePageGuide });
   const invite = TUTORIAL_TEXT.invite;
 
   return (

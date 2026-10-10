@@ -4,6 +4,9 @@ const VERSION = 1;
 /** Evento con el que cualquier parte de la web pide empezar el tutorial («Ver el tutorial» en Mi cuenta). */
 export const START_TUTORIAL_EVENT = 'fiaro:start-tutorial';
 
+/** Evento con el que se pide la guía de la pantalla actual («Guía de esta pantalla» en el menú). */
+export const START_PAGE_GUIDE_EVENT = 'fiaro:start-page-guide';
+
 function keyFor(userId: string): string {
   return `fiaro:tutorial:v${String(VERSION)}:${userId}`;
 }
