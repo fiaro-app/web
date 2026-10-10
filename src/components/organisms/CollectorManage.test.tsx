@@ -65,6 +65,33 @@ describe('CollectorManage', () => {
     expect(actions.deactivate).toHaveBeenCalledTimes(1);
   });
 
+  it('asks to whom the active loans go and hands them to the chosen collector', async () => {
+    const handover = { loans: [{ id: 'l1', clientName: 'Carlos' }], destinations: [{ id: 'm2', name: 'Ana Pérez' }, { id: 'm3', name: 'Mario Ruiz' }] };
+    render(<CollectorManage collector={COLLECTOR} portfolios={PORTFOLIOS} handover={handover} />);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Desactivar cobrador' }));
+    expect(screen.getByText(/Tiene 1 préstamo activo/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('combobox', { name: 'Pasar sus préstamos a' }));
+    await userEvent.click(screen.getByRole('option', { name: 'Mario Ruiz' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Desactivar' }));
+
+    expect(actions.deactivate).toHaveBeenCalledWith('m3');
+  });
+
+  it('does not let it deactivate when there is nobody to receive the loans or the loans could not be checked', async () => {
+    const noOne = { loans: [{ id: 'l1', clientName: 'Carlos' }], destinations: [] };
+    const { unmount } = render(<CollectorManage collector={COLLECTOR} portfolios={PORTFOLIOS} handover={noOne} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Desactivar cobrador' }));
+    expect(screen.getByText(/No hay otro cobrador activo/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Desactivar' })).toBeDisabled();
+    unmount();
+
+    render(<CollectorManage collector={COLLECTOR} portfolios={PORTFOLIOS} handover={null} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Desactivar cobrador' }));
+    expect(screen.getByText(/No pudimos revisar los préstamos/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Desactivar' })).toBeDisabled();
+  });
+
   it('asks for confirmation before resetting the password', async () => {
     render(<CollectorManage collector={COLLECTOR} portfolios={PORTFOLIOS} />);
     await userEvent.click(screen.getByRole('button', { name: 'Restablecer contraseña' }));

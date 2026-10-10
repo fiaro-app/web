@@ -15,7 +15,7 @@ export interface AppShellTemplateProps {
  */
 export function AppShellTemplate({ sidebar, banner, children }: Readonly<AppShellTemplateProps>) {
   return (
-    <div className="flex min-h-screen flex-col bg-background lg:flex-row">
+    <div className="flex min-h-dvh flex-col bg-background lg:flex-row">
       {/* Fija a la altura de la pantalla: la barra lateral siempre queda visible aunque la página haga scroll. */}
       <div className="hidden lg:sticky lg:top-0 lg:flex lg:h-screen lg:self-start">{sidebar}</div>
       <MobileNav>{sidebar}</MobileNav>

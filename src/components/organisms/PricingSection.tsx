@@ -21,7 +21,7 @@ export function PricingSection({ id, eyebrow, title, note, plans }: Readonly<Pri
       <Text id={headingId} variant="section" className="max-w-150 text-center">
         {title}
       </Text>
-      <Text variant="small" className="text-center text-foreground/60">
+      <Text variant="small" className="text-center text-foreground/65">
         {note}
       </Text>
       <div className="mt-6 grid w-full items-stretch gap-6 lg:grid-cols-3">

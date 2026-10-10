@@ -15,7 +15,7 @@ export function NavLink({ active = false, muted = true, className, ...props }: R
     <NextLink
       aria-current={active ? 'page' : undefined}
       className={cn(
-        'rounded-sm text-label font-medium transition-colors',
+        'inline-flex min-h-11 items-center rounded-sm text-label font-medium transition-colors',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         active && 'text-primary',
         !active && (muted ? 'text-foreground/65 hover:text-foreground' : 'text-foreground hover:text-primary'),

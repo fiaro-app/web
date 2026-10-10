@@ -15,7 +15,7 @@ function isContactField(field: string | null): field is ContactField {
 /**
  * Lógica del formulario «Contactar ventas», sin diseño. Valida en el navegador, manda el contacto
  * a `POST /leads` y, si queda recibido, deja `isSent` en `true`. El campo señuelo `website` (que un
- * robot llena y una persona no ve) viaja siempre vacío desde aquí.
+ * robot llena y una persona no ve) viaja solo si alguien lo llenó, y entonces la API descarta el contacto.
  */
 export function useContactForm() {
   const [values, setValues] = useState(EMPTY_VALUES);
@@ -52,12 +52,15 @@ export function useContactForm() {
     setFieldErrors({});
     setFormError(null);
     setIsSubmitting(true);
+    // Señuelo: una persona nunca lo ve ni lo llena; un robot que rellena el formulario sí, y la API descarta el contacto.
+    const decoy = new FormData(event.currentTarget).get('website');
     try {
       await sendLead({
         name: parsed.data.name,
         message: parsed.data.message,
         ...(parsed.data.phone && { phone: parsed.data.phone }),
         ...(parsed.data.email && { email: parsed.data.email }),
+        ...(typeof decoy === 'string' && decoy !== '' && { website: decoy }),
       });
       setIsSent(true);
     } catch (error) {

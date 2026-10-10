@@ -7,6 +7,6 @@ export function filterPillClasses(selected: boolean): string {
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     selected
       ? 'border-primary bg-primary text-primary-foreground hover:opacity-85'
-      : 'border-foreground bg-surface text-foreground hover:bg-black/6 active:bg-black/10',
+      : 'border-foreground bg-surface text-foreground hover:bg-foreground/6 active:bg-foreground/10',
   );
 }

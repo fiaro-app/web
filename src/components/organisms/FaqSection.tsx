@@ -31,7 +31,7 @@ export function FaqSection({ id, eyebrow, title, items }: Readonly<FaqSectionPro
       <div className="mt-6 flex w-full max-w-3xl flex-col gap-3">
         {items.map((item) => (
           <details key={item.question} className="group rounded-md bg-surface px-6 py-4 open:shadow-sm">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-sm text-label font-semibold focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 rounded-sm text-label font-semibold focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
               {item.question}
               <span aria-hidden="true" className="text-primary transition-transform group-open:rotate-45">
                 +

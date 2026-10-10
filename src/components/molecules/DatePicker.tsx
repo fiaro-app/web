@@ -140,7 +140,7 @@ export function DatePicker({ name, value, defaultValue = '', onValueChange, id, 
           <div role="grid" aria-label={monthLabel(month)} className="flex flex-col gap-y-1 text-center">
             <div role="row" className="grid grid-cols-7">
               {WEEKDAY_LETTERS.map((letter) => (
-                <span key={letter} role="columnheader" className="pb-1 text-caption font-semibold text-foreground/60">
+                <span key={letter} role="columnheader" className="pb-1 text-caption font-semibold text-foreground/65">
                   {letter}
                 </span>
               ))}
@@ -167,7 +167,7 @@ export function DatePicker({ name, value, defaultValue = '', onValueChange, id, 
                       onKeyDown={onDayKeyDown}
                       className={cn(
                         'mx-auto grid size-9 place-items-center rounded-full text-label transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
-                        inMonth ? 'text-foreground' : 'text-foreground/35',
+                        inMonth ? 'text-foreground' : 'text-foreground/65',
                         day === today && !isSelected && 'ring-1 ring-primary',
                         isSelected ? 'bg-primary font-semibold text-primary-foreground' : 'hover:bg-foreground/8',
                       )}

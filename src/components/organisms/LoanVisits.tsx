@@ -41,14 +41,14 @@ export function LoanVisits({ visits, canManage = true }: Readonly<LoanVisitsProp
               <td className={RESPONSIVE_TABLE.cell} data-label={VISITS_TEXT.headers[2]}>
                 <span className="flex flex-col items-start gap-1 md:items-start">
                   <StatePill tone={visit.outcomeTone}>{visit.outcome}</StatePill>
-                  {visit.note && <span className="text-caption text-foreground/60">{visit.note}</span>}
+                  {visit.note && <span className="text-caption text-foreground/65">{visit.note}</span>}
                 </span>
               </td>
               <td className={RESPONSIVE_TABLE.cell} data-label={VISITS_TEXT.headers[3]}>
                 {visit.expected}
               </td>
               <td className={RESPONSIVE_TABLE.cell} data-label={VISITS_TEXT.headers[4]}>
-                <span className={visit.reverted ? 'text-foreground/50 line-through' : undefined}>{visit.collected}</span>
+                <span className={visit.reverted ? 'text-foreground/65 line-through' : undefined}>{visit.collected}</span>
                 {visit.reverted && <StatePill tone="muted">{VISITS_TEXT.reversed}</StatePill>}
               </td>
               <td className={RESPONSIVE_TABLE.cell} data-label={VISITS_TEXT.headers[5]}>

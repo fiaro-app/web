@@ -3,7 +3,11 @@
 /* Tokens del sistema de diseño (Penpot › "1 · Fundamentos"). Los nombres de abajo son los del
    diseño traducidos al inglés: anil → primary, cobre → accent, musgo → success, ámbar → warning,
    grana → destructive. El diseño solo define tema claro, por eso no hay variante oscura. */
-:root {
+/* `::backdrop` no hereda de `:root` en navegadores anteriores a Chrome 122 / Safari 17.4: sin esto el telón
+   de los modales saldría sin color. */
+:root,
+::backdrop {
+  color-scheme: light;
   --background: #f6f5fb;
   --surface: #ffffff;
   --surface-2: #f1f0f8;

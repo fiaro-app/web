@@ -54,7 +54,7 @@ export function LoginForm({ redirectTo, forgotPasswordHref }: Readonly<LoginForm
       </FormField>
 
       <div className="flex justify-end">
-        <Link href={forgotPasswordHref} size="caption" className="font-semibold">
+        <Link href={forgotPasswordHref} size="caption" className="inline-flex min-h-11 items-center font-semibold">
           ¿Olvidaste tu contraseña?
         </Link>
       </div>

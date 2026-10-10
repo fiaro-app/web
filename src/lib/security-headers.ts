@@ -60,25 +60,48 @@ export function buildSecurityHeaders({
     { key: 'X-Frame-Options', value: 'DENY' },
     { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
     { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
+    // Nadie más puede incrustar los recursos de la web (scripts, imágenes, datos) desde otro sitio.
+    { key: 'Cross-Origin-Resource-Policy', value: 'same-origin' },
     // La web no usa ninguna de estas capacidades: se cierran para que ningún script las pida.
     { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=()' },
   ];
 }
 
 /** Rutas con datos de la persona: ni el navegador ni un proxy deben guardarlas. */
-export const NO_STORE_SOURCES: readonly string[] = ['/resumen/:path*', '/login', '/registro'];
+export const NO_STORE_SOURCES: readonly string[] = [
+  '/resumen/:path*',
+  '/cobradores/:path*',
+  '/clientes/:path*',
+  '/prestamos/:path*',
+  '/cobros/:path*',
+  '/cuadres/:path*',
+  '/notificaciones/:path*',
+  '/estadisticas/:path*',
+  '/configuracion/:path*',
+  '/cuenta/:path*',
+  '/cambiar-contrasena',
+  '/login',
+  '/registro',
+  '/recuperar-contrasena',
+];
 
 export const NO_STORE_HEADER: HeaderEntry = { key: 'Cache-Control', value: 'private, no-store' };
 
+/** Equipos locales: el único caso donde se admite `http:` (un almacenamiento de pruebas). */
+const LOCAL_HOSTS: readonly string[] = ['localhost', '127.0.0.1', '[::1]'];
+
 /**
- * Origen válido de `STORAGE_ORIGIN` (`https://cdn.fiaro.co`): solo http(s), sin ruta. Cualquier otro
- * valor (vacío, mal escrito, otro protocolo) se ignora para no abrir la CSP a algo inesperado.
+ * Origen válido de `STORAGE_ORIGIN` (`https://cdn.fiaro.co`): `https` y sin ruta; `http` solo para un equipo
+ * local. Cualquier otro valor (vacío, mal escrito, otro protocolo, `http` hacia internet) se ignora para no
+ * abrir la CSP a algo inesperado ni permitir imágenes por un canal sin cifrar.
  */
 export function parseStorageOrigin(raw: string | undefined): string | null {
   if (!raw) return null;
   try {
     const url = new URL(raw);
-    return url.protocol === 'https:' || url.protocol === 'http:' ? url.origin : null;
+    const secure = url.protocol === 'https:';
+    const local = url.protocol === 'http:' && LOCAL_HOSTS.includes(url.hostname);
+    return secure || local ? url.origin : null;
   } catch {
     return null;
   }

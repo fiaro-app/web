@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useRef } from 'react';
+import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { Button } from '@/components/atoms/Button';
 import { Text } from '@/components/atoms/Text';
 
@@ -15,6 +15,10 @@ export interface ConfirmDialogProps {
   readonly onCancel: () => void;
   /** Deshabilita ambas acciones y muestra la carga en "Confirmar" mientras se procesa. */
   readonly loading?: boolean;
+  /** Contenido propio entre la descripción y los botones (p. ej. elegir a quién pasar algo). */
+  readonly children?: ReactNode;
+  /** Apaga «Confirmar» mientras falte algo que decidir. */
+  readonly confirmDisabled?: boolean;
 }
 
 /**
@@ -31,6 +35,8 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
   loading = false,
+  children,
+  confirmDisabled = false,
 }: Readonly<ConfirmDialogProps>) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -69,11 +75,12 @@ export function ConfirmDialog({
           {description}
         </Text>
       </div>
+      {children}
       <div className="flex justify-end gap-3 max-sm:flex-col-reverse">
         <Button variant="outline" size="sm" className="min-w-36 max-sm:w-full" disabled={loading} onClick={onCancel}>
           {cancelLabel}
         </Button>
-        <Button size="sm" className="min-w-36 max-sm:w-full" loading={loading} onClick={onConfirm}>
+        <Button size="sm" className="min-w-36 max-sm:w-full" loading={loading} disabled={confirmDisabled} onClick={onConfirm}>
           {confirmLabel}
         </Button>
       </div>

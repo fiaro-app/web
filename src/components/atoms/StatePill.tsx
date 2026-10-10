@@ -20,7 +20,7 @@ export function StatePill({ tone, children, className }: Readonly<StatePillProps
   return (
     <span
       className={cn(
-        'inline-flex h-6 items-center rounded-full px-2.5 text-[11px] font-semibold whitespace-nowrap',
+        'inline-flex h-6 items-center rounded-full px-2.5 text-caption font-semibold whitespace-nowrap',
         tone === 'muted' ? MUTED : TONE_SURFACE_CLASSES[tone],
         className,
       )}

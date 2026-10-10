@@ -57,7 +57,7 @@ export function LoanDetail({ loan, collectors, canManage = true }: Readonly<Loan
             loan.collector ? (
               <span>
                 {loan.collector.name}{' '}
-                <span className="font-normal text-foreground/60">
+                <span className="font-normal text-foreground/65">
                   {loan.collector.until ? `${text.collectorSince(loan.collector.since)} ${text.collectorUntil(loan.collector.until)}` : text.collectorSince(loan.collector.since)}
                 </span>
               </span>

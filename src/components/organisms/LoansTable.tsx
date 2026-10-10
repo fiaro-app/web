@@ -28,7 +28,7 @@ export function LoansTable({ rows, className }: Readonly<LoansTableProps>) {
           <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[2]}>
             <span className="flex flex-col md:items-start">
               {row.principal}
-              <span className="text-caption text-foreground/60">{row.installments}</span>
+              <span className="text-caption text-foreground/65">{row.installments}</span>
             </span>
           </td>
           <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[3]}>
@@ -40,7 +40,7 @@ export function LoansTable({ rows, className }: Readonly<LoansTableProps>) {
           <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[5]}>
             <span className="flex flex-col md:items-start">
               <span className={row.isOverdue ? 'font-semibold text-destructive' : undefined}>{row.overdue}</span>
-              {row.overdueAmount && <span className="text-caption text-foreground/60">{row.overdueAmount}</span>}
+              {row.overdueAmount && <span className="text-caption text-foreground/65">{row.overdueAmount}</span>}
             </span>
           </td>
           <td className={RESPONSIVE_TABLE.cell} data-label={LOANS_TEXT.headers[6]}>

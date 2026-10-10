@@ -35,12 +35,12 @@ export function Stepper({ steps, current, size = 'md', className }: Readonly<Ste
                   SIZE_CLASSES[size].circle,
                   reached
                     ? 'bg-primary text-primary-foreground'
-                    : 'border-[1.5px] border-foreground/50 bg-surface text-foreground/50',
+                    : 'border-[1.5px] border-foreground/50 bg-surface text-foreground/65',
                 )}
               >
                 {index + 1}
               </span>
-              <span className={cn('text-caption', reached ? 'font-semibold' : 'text-foreground/60')}>
+              <span className={cn('text-caption', reached ? 'font-semibold' : 'text-foreground/65')}>
                 {label}
               </span>
             </span>

@@ -2,8 +2,11 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { SubscriptionBanner } from '@/components/molecules/SubscriptionBanner';
+import { OnboardingTutorial } from '@/components/organisms/OnboardingTutorial';
 import { AppSidebar } from '@/components/organisms/AppSidebar';
 import { AppShellTemplate } from '@/components/templates/AppShellTemplate';
+import { visibleNavItems } from '@/content/app-nav';
+import { COLLECTOR_LABEL } from '@/features/app-shell/role-label';
 import { brandThemeStyle } from '@/features/app-shell/brand-theme';
 import { getShellContext } from '@/features/app-shell/get-shell-context.server';
 import { CHANGE_PASSWORD_PATH } from '@/features/auth/route-guard';
@@ -38,6 +41,7 @@ export default async function AppLayout({ children }: Readonly<{ children: React
       >
         {children}
       </AppShellTemplate>
+      <OnboardingTutorial userId={user.id} navHrefs={visibleNavItems(roleLabel === COLLECTOR_LABEL).filter((item) => item.available).map((item) => item.href)} />
     </div>
   );
 }

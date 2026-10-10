@@ -42,7 +42,8 @@ export function Button({
       aria-busy={loading}
       className={cn(
         buttonClasses(variant, size),
-        'enabled:hover:opacity-85 enabled:active:opacity-70',
+        // El primario oscurece al color de marca (`--primary-hover`, que sigue al color del negocio); el resto atenúa.
+        variant === 'primary' ? 'enabled:hover:bg-primary-hover enabled:active:bg-primary-hover' : 'enabled:hover:opacity-85 enabled:active:opacity-70',
         loading ? 'cursor-wait' : 'disabled:cursor-not-allowed disabled:opacity-40',
         className,
       )}

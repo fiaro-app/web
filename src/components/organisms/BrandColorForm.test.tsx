@@ -9,7 +9,7 @@ vi.mock('@/features/lender/use-settings-forms', () => ({ useBrandColorForm }));
 const reset = vi.fn();
 const chooseColor = vi.fn();
 const state = (overrides = {}) => ({
-  color: '#0F766E',
+  color: '#0D665F',
   fieldError: undefined,
   isSubmitting: false,
   error: null,
@@ -28,7 +28,7 @@ beforeEach(() => {
 
 describe('BrandColorForm', () => {
   it('shows the color picker, a preview and the actions to an administrator', async () => {
-    render(<BrandColorForm brandColor="#0F766E" canEdit />);
+    render(<BrandColorForm brandColor="#0D665F" canEdit />);
 
     expect(screen.getAllByRole('radio')).toHaveLength(6);
     expect(screen.getByRole('radio', { name: 'Verde azulado' })).toBeChecked();
@@ -48,7 +48,7 @@ describe('BrandColorForm', () => {
   });
 
   it('only shows the color without permission', () => {
-    render(<BrandColorForm brandColor="#0F766E" canEdit={false} />);
+    render(<BrandColorForm brandColor="#0D665F" canEdit={false} />);
 
     for (const radio of screen.getAllByRole('radio')) expect(radio).toBeDisabled();
     expect(screen.queryByRole('button', { name: 'Guardar color' })).not.toBeInTheDocument();

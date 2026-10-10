@@ -76,7 +76,7 @@ export function AmountInput({
           aria-invalid={invalid}
           onChange={(event) => onValueChange(parseAmount(event.target.value))}
           className={cn(
-            'col-start-1 row-start-1 w-full min-w-0 bg-transparent text-foreground outline-none placeholder:text-foreground disabled:cursor-not-allowed',
+            'col-start-1 row-start-1 w-full min-w-0 bg-transparent text-foreground outline-none placeholder:text-foreground/65 disabled:cursor-not-allowed',
             sizeClasses.text,
           )}
           {...props}

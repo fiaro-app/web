@@ -1,10 +1,12 @@
 import { Text } from '@/components/atoms/Text';
+import { TutorialLauncher } from '@/components/molecules/TutorialLauncher';
 import { SettingsSection } from '@/components/molecules/SettingsSection';
 import { AccountDeactivate } from '@/components/organisms/AccountDeactivate';
 import { AccountPasswordForm } from '@/components/organisms/AccountPasswordForm';
 import { AccountProfileForm } from '@/components/organisms/AccountProfileForm';
 import { AccountSessions } from '@/components/organisms/AccountSessions';
 import { EmailVerificationForm } from '@/components/organisms/EmailVerificationForm';
+import { TUTORIAL_TEXT } from '@/content/tutorial';
 import { ACCOUNT_TEXT } from '@/content/account';
 import type { SessionRow } from '@/features/account/sessions-view-model';
 
@@ -40,6 +42,9 @@ export function AccountView({ fullName, phoneNumber, contactEmail, contactEmailV
         <div className="flex flex-col gap-7">
           <SettingsSection title={text.sessions.title} description={text.sessions.description}>
             <AccountSessions sessions={sessions} />
+          </SettingsSection>
+          <SettingsSection title={TUTORIAL_TEXT.launcher.title} description={TUTORIAL_TEXT.launcher.description}>
+            <TutorialLauncher />
           </SettingsSection>
           <SettingsSection title={text.danger.title} description={text.danger.description} className="border border-destructive/30">
             <AccountDeactivate />

@@ -16,10 +16,10 @@ describe('KpiTile', () => {
     expect(screen.getByText('18%')).toHaveClass('text-destructive');
   });
 
-  it('has a compact version with a 9px label and a serif value', () => {
+  it('has a compact version with a readable 12px label and a serif value', () => {
     render(<KpiTile label="Cartera" value="$18.4M" compact />);
 
-    expect(screen.getByText('Cartera')).toHaveClass('text-[9px]');
+    expect(screen.getByText('Cartera')).toHaveClass('text-caption');
     expect(screen.getByText('$18.4M')).toHaveClass('font-display', 'text-label');
   });
 });
