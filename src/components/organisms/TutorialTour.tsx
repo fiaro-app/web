@@ -77,7 +77,7 @@ export function TutorialTour({ step, index, total, isFirst, isLast, onNext, onPr
         aria-labelledby={titleId}
         aria-describedby={bodyId}
         tabIndex={-1}
-        className="fixed flex w-[22rem] max-w-[calc(100vw-2rem)] flex-col gap-4 rounded-lg bg-surface p-6 text-foreground shadow-[0_24px_64px_-8px_rgb(28_27_46/0.45)] focus:outline-none"
+        className="fixed flex w-[26rem] max-w-[calc(100vw-2rem)] flex-col gap-4 rounded-lg bg-surface p-6 text-foreground shadow-[0_24px_64px_-8px_rgb(28_27_46/0.45)] focus:outline-none"
         style={position ?? { top: 0, left: 0, visibility: 'hidden' }}
       >
         <Text variant="caption" className="font-semibold text-primary">
@@ -95,7 +95,7 @@ export function TutorialTour({ step, index, total, isFirst, isLast, onNext, onPr
           {isLast ? (
             <span />
           ) : (
-            <Button variant="text" size="sm" className="px-0" onClick={onFinish}>
+            <Button variant="text" size="sm" className="-ml-6" onClick={onFinish}>
               {text.skip}
             </Button>
           )}

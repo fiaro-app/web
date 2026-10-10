@@ -80,6 +80,14 @@ en tiempo de ejecución sin tocar ningún componente.
 Lee [documentacion/ARQUITECTURA.md](./documentacion/ARQUITECTURA.md) antes de agregar código y
 [documentacion/AGREGAR-UN-MODULO.md](./documentacion/AGREGAR-UN-MODULO.md) para sumar un módulo.
 
+## Seguridad y despliegue
+
+- La política de contenido, las cabeceras y el `no-store` de las rutas privadas viven en `src/lib/security-headers.ts`.
+- `STORAGE_ORIGIN` solo admite `https` (o `http` en un equipo local).
+- La API limita el login y los contactos **por IP**, y toda la navegación llega a ella a través del servidor de Next (`/api/*`). Al desplegar, configura `TRUST_PROXY` en la API para que cuente bien los saltos y vea la IP real de cada persona; confirma también que la cookie de sesión sale con `Secure`.
+- Navegadores admitidos (`browserslist`): Chrome y Edge 111, Firefox 115, Safari y iOS 16.4 o más nuevos.
+- `pnpm audit --prod` debe quedar sin vulnerabilidades antes de cada despliegue.
+
 ## Ramas y flujo de trabajo
 
 - `dev` es la rama de integración y la rama por defecto — todo PR apunta aquí.
