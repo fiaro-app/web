@@ -2,12 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import type { Box, Size } from '@/features/tutorial/tutorial-geometry';
-
-/** Elemento visible marcado con `data-tour="<target>"`: el menú existe dos veces (escritorio y móvil) y solo una se ve. */
-function findVisible(target: string): HTMLElement | null {
-  const candidates = document.querySelectorAll<HTMLElement>(`[data-tour="${CSS.escape(target)}"]`);
-  return [...candidates].find((element) => element.getClientRects().length > 0) ?? null;
-}
+import { findVisible } from '@/features/tutorial/tutorial-dom';
 
 function readViewport(): Size {
   return { width: window.innerWidth, height: window.innerHeight };
@@ -18,12 +13,12 @@ function readViewport(): Size {
  * cambios (scroll, tamaño de ventana, relayout). `box` es `null` si el paso no señala nada o el elemento
  * no está a la vista (p. ej. el menú en un celular): la tarjeta sale centrada.
  */
-export function useTargetBox(target: string | null): { readonly box: Box | null; readonly viewport: Size } {
+export function useTargetBox(selector: string | null): { readonly box: Box | null; readonly viewport: Size } {
   const [box, setBox] = useState<Box | null>(null);
   const [viewport, setViewport] = useState<Size>({ width: 0, height: 0 });
 
   useEffect(() => {
-    const element = target === null ? null : findVisible(target);
+    const element = selector === null ? null : findVisible(selector);
     element?.scrollIntoView({ block: 'nearest' });
 
     const measure = () => {
@@ -46,7 +41,7 @@ export function useTargetBox(target: string | null): { readonly box: Box | null;
       window.removeEventListener('scroll', measure, true);
       observer?.disconnect();
     };
-  }, [target]);
+  }, [selector]);
 
   return { box, viewport };
 }

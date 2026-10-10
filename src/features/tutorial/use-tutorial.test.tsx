@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { buildTutorialSteps } from './tutorial-steps';
-import { START_TUTORIAL_EVENT } from './tutorial-storage';
+import { START_PAGE_GUIDE_EVENT, START_TUTORIAL_EVENT } from './tutorial-storage';
 import { useTutorial } from './use-tutorial';
 
 const STEPS = buildTutorialSteps(['/resumen', '/clientes']);
@@ -49,5 +49,27 @@ describe('useTutorial', () => {
     });
     expect(result.current.phase).toBe('tour');
     expect(result.current.index).toBe(0);
+  });
+
+  it('starts the guide of the screen with its own steps', () => {
+    const guide = [{ id: 'g1', target: '#x', title: 'Uno', body: 'Cuerpo' }];
+    window.localStorage.setItem('fiaro:tutorial:v1:u1', 'x');
+    const { result } = renderHook(() => useTutorial({ userId: 'u1', steps: STEPS, resolvePageGuide: () => guide }));
+
+    act(() => {
+      window.dispatchEvent(new Event(START_PAGE_GUIDE_EVENT));
+    });
+    expect(result.current).toMatchObject({ phase: 'tour', total: 1 });
+    expect(result.current.step?.id).toBe('g1');
+  });
+
+  it('falls back to the general tour when the screen has no guide', () => {
+    window.localStorage.setItem('fiaro:tutorial:v1:u1', 'x');
+    const { result } = renderHook(() => useTutorial({ userId: 'u1', steps: STEPS, resolvePageGuide: () => [] }));
+
+    act(() => {
+      window.dispatchEvent(new Event(START_PAGE_GUIDE_EVENT));
+    });
+    expect(result.current.total).toBe(STEPS.length);
   });
 });

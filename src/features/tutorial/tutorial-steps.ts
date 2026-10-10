@@ -3,15 +3,15 @@ import { TUTORIAL_TEXT, type TutorialNavHref } from '@/content/tutorial';
 /** Un paso del tutorial: qué se señala (o nada, si es un paso general) y qué se explica. */
 export interface TutorialStep {
   readonly id: string;
-  /** Valor de `data-tour` del elemento que queda a la vista; `null`: paso general, sin elemento. */
+  /** Selector CSS del elemento que queda a la vista; `null`: paso general, sin elemento. */
   readonly target: string | null;
   readonly title: string;
   readonly body: string;
 }
 
-/** Valor de `data-tour` de una opción del menú. */
+/** Selector de una opción del menú (marcada con `data-tour="nav/<ruta>"`). */
 export function navTarget(href: string): string {
-  return `nav${href}`;
+  return `[data-tour="nav${href}"]`;
 }
 
 function isNavHref(href: string): href is TutorialNavHref {
@@ -33,8 +33,8 @@ export function buildTutorialSteps(navHrefs: readonly string[]): readonly Tutori
   return [
     { id: 'welcome', target: null, ...TUTORIAL_TEXT.welcome },
     ...navSteps,
-    { id: 'account', target: 'account', ...TUTORIAL_TEXT.account },
-    { id: 'sign-out', target: 'sign-out', ...TUTORIAL_TEXT.signOut },
+    { id: 'account', target: '[data-tour="account"]', ...TUTORIAL_TEXT.account },
+    { id: 'sign-out', target: '[data-tour="sign-out"]', ...TUTORIAL_TEXT.signOut },
     { id: 'done', target: null, ...TUTORIAL_TEXT.done },
   ];
 }

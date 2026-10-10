@@ -16,6 +16,11 @@ export const TUTORIAL_TEXT = {
     finish: 'Terminar',
     skip: 'Omitir tutorial',
   },
+  pageGuide: {
+    action: 'Guía de esta pantalla',
+    intro: (title: string) => `Guía: ${title}`,
+    none: 'Esta pantalla no tiene guía propia. Te mostramos el recorrido general.',
+  },
   launcher: {
     title: 'Tutorial',
     description: 'Un recorrido corto por el panel: para qué sirve cada parte y por qué te conviene usarla.',

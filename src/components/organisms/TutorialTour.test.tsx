@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { TutorialTour } from './TutorialTour';
 
-const STEP = { id: 'nav/clientes', target: 'nav/clientes', title: 'Clientes', body: 'Es el directorio. Sirve para tener su historial.' };
+const STEP = { id: 'nav/clientes', target: '[data-tour="nav/clientes"]', title: 'Clientes', body: 'Es el directorio. Sirve para tener su historial.' };
 const handlers = { onNext: vi.fn(), onPrevious: vi.fn(), onFinish: vi.fn() };
 const props = (overrides = {}) => ({ step: STEP, index: 2, total: 8, isFirst: false, isLast: false, ...handlers, ...overrides });
 
