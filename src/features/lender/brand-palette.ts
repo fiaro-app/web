@@ -14,8 +14,8 @@ export const DEFAULT_BRAND_COLOR = '#3B3382';
 export const BRAND_PALETTE: readonly BrandSwatch[] = [
   { value: DEFAULT_BRAND_COLOR, label: 'Índigo Fiaro' },
   { value: '#1D4ED8', label: 'Azul' },
-  { value: '#0F766E', label: 'Verde azulado' },
-  { value: '#B45309', label: 'Cobre' },
+  { value: '#0D665F', label: 'Verde azulado' },
+  { value: '#944407', label: 'Cobre' },
   { value: '#9F1239', label: 'Vino' },
   { value: '#1C1B2E', label: 'Negro' },
 ];

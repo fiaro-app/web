@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { collectorEndpoints } from '@/features/collectors/endpoints';
 import { membershipEndpoints } from '@/features/memberships/endpoints';
 
 const { callEndpoint } = vi.hoisted(() => ({ callEndpoint: vi.fn() }));
@@ -26,10 +27,13 @@ describe('collectors api', () => {
     );
   });
 
-  it('deactivates and resets the password by membership id', async () => {
-    await deactivateCollector('m1');
+  it('deactivates through the collectors route handing over every loan, and resets the password by membership id', async () => {
+    await deactivateCollector('m1', [{ loanId: 'l1', collectorMembershipId: 'm2' }]);
     await resetCollectorPassword('m1');
-    expect(callEndpoint).toHaveBeenNthCalledWith(1, membershipEndpoints.deactivate, { params: { id: 'm1' } });
+    expect(callEndpoint).toHaveBeenNthCalledWith(1, collectorEndpoints.deactivate, {
+      params: { id: 'm1' },
+      body: { reassignments: [{ loanId: 'l1', collectorMembershipId: 'm2' }] },
+    });
     expect(callEndpoint).toHaveBeenNthCalledWith(2, membershipEndpoints.resetPassword, { params: { id: 'm1' } });
   });
 

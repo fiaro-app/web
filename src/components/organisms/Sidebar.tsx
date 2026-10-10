@@ -45,7 +45,7 @@ export function Sidebar({
       <Avatar name={userName} size="base" />
       <div className="flex min-w-0 flex-col">
         <span className="truncate text-small font-semibold">{userName}</span>
-        {roleLabel && <span className="text-[11px] text-foreground/70">{roleLabel}</span>}
+        {roleLabel && <span className="text-caption text-foreground/70">{roleLabel}</span>}
       </div>
     </>
   );
@@ -53,6 +53,7 @@ export function Sidebar({
     <NextLink
       href={accountHref}
       aria-label={`Mi cuenta, ${userName}`}
+      data-tour="account"
       className="flex items-center gap-2.5 rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
     >
       {profile}

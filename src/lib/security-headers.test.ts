@@ -39,6 +39,7 @@ describe('buildSecurityHeaders', () => {
     expect(headers['X-Frame-Options']).toBe('DENY');
     expect(headers['Referrer-Policy']).toBe('strict-origin-when-cross-origin');
     expect(headers['Cross-Origin-Opener-Policy']).toBe('same-origin');
+    expect(headers['Cross-Origin-Resource-Policy']).toBe('same-origin');
     expect(headers['Strict-Transport-Security']).toContain('max-age=63072000');
     expect(headers['Permissions-Policy']).toContain('camera=()');
     expect(headers['Content-Security-Policy']).toContain("default-src 'self'");
@@ -47,7 +48,7 @@ describe('buildSecurityHeaders', () => {
 
 describe('no-store routes', () => {
   it('cover the panel and the access pages', () => {
-    expect(NO_STORE_SOURCES).toEqual(expect.arrayContaining(['/resumen/:path*', '/login', '/registro']));
+    expect(NO_STORE_SOURCES).toEqual(expect.arrayContaining(['/resumen/:path*', '/login', '/registro', '/clientes/:path*', '/prestamos/:path*', '/cuenta/:path*']));
     expect(NO_STORE_HEADER).toEqual({ key: 'Cache-Control', value: 'private, no-store' });
   });
 });
@@ -67,9 +68,14 @@ describe('storage origin', () => {
 });
 
 describe('parseStorageOrigin', () => {
-  it('keeps only the origin of an http(s) URL', () => {
+  it('keeps only the origin of an https URL, and http only for a local machine', () => {
     expect(parseStorageOrigin('https://pub-1.r2.dev/logos/x.png')).toBe('https://pub-1.r2.dev');
     expect(parseStorageOrigin('http://localhost:9000')).toBe('http://localhost:9000');
+    expect(parseStorageOrigin('http://127.0.0.1:9000/x')).toBe('http://127.0.0.1:9000');
+  });
+
+  it('refuses http towards the internet', () => {
+    expect(parseStorageOrigin('http://cdn.fiaro.co')).toBeNull();
   });
 
   it.each([undefined, '', 'no es una url', 'ftp://host', 'javascript:alert(1)'])('ignores %s', (raw) => {

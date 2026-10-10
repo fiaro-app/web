@@ -35,7 +35,7 @@ export function ResponsiveTable({
         <thead className={RESPONSIVE_TABLE.head}>
           <tr className="border-b border-foreground/8">
             {headers.map((header) => (
-              <th key={header} scope="col" className="px-5 py-3.5 text-caption font-semibold text-foreground/60">
+              <th key={header} scope="col" className="px-5 py-3.5 text-caption font-semibold text-foreground/65">
                 {header}
               </th>
             ))}

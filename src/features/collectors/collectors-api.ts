@@ -1,3 +1,4 @@
+import { collectorEndpoints, type DeactivateCollectorBody } from '@/features/collectors/endpoints';
 import { membershipEndpoints } from '@/features/memberships/endpoints';
 import { toInviteCollectorBody, type CollectorValues } from '@/features/collectors/collector-schemas';
 import type { Role } from '@fiaro-app/contracts';
@@ -8,9 +9,12 @@ export function inviteCollector(values: CollectorValues) {
   return callEndpoint(membershipEndpoints.invite, { body: toInviteCollectorBody(values) });
 }
 
-/** Quita el acceso del cobrador de inmediato; su historial se conserva. */
-export function deactivateCollector(membershipId: string) {
-  return callEndpoint(membershipEndpoints.deactivate, { params: { id: membershipId } });
+/**
+ * Da de baja al cobrador: quita su acceso de inmediato y pasa cada uno de sus préstamos activos al cobrador
+ * indicado, en una sola operación (D-97). Su historial se conserva.
+ */
+export function deactivateCollector(collectorId: string, reassignments: DeactivateCollectorBody['reassignments']) {
+  return callEndpoint(collectorEndpoints.deactivate, { params: { id: collectorId }, body: { reassignments } });
 }
 
 /** Genera una contraseña temporal nueva para el cobrador (se muestra una sola vez). */

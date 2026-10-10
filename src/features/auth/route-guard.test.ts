@@ -41,7 +41,20 @@ describe('sanitizeNextPath', () => {
     expect(sanitizeNextPath(path)).toBe(path);
   });
 
-  it.each(['https://malo.com', '//malo.com', '/\\malo.com', 'clientes', '', null, undefined])(
+  it.each([
+    'https://malo.com',
+    '//malo.com',
+    '/\\malo.com',
+    'clientes',
+    '',
+    null,
+    undefined,
+    '/\t/malo.com',
+    '/\n/malo.com',
+    '/\r/malo.com',
+    '/ /malo.com',
+    '/\u0000/malo.com',
+  ])(
     'drops %s so it cannot be an open redirect',
     (candidate) => {
       expect(sanitizeNextPath(candidate)).toBeNull();

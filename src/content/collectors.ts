@@ -93,6 +93,14 @@ export const COLLECTORS_TEXT = {
       confirmDescription: 'Pierde el acceso de inmediato. Su historial de cobros se conserva.',
       confirmLabel: 'Desactivar',
       inactiveNotice: 'Este cobrador está desactivado y no puede ingresar.',
+      handoverIntro: (count: number) =>
+        count === 1
+          ? 'Tiene 1 préstamo activo. Pásalo a otro cobrador: ningún préstamo puede quedar sin cobrador.'
+          : `Tiene ${String(count)} préstamos activos. Pásalos a otro cobrador: ningún préstamo puede quedar sin cobrador.`,
+      destinationLabel: 'Pasar sus préstamos a',
+      destinationPlaceholder: 'Elige un cobrador',
+      noDestinations: 'No hay otro cobrador activo que pueda recibir sus préstamos. Registra o activa uno antes de darlo de baja.',
+      handoverUnavailable: 'No pudimos revisar los préstamos de este cobrador. Recarga la página para intentarlo de nuevo.',
     },
   },
 } as const;

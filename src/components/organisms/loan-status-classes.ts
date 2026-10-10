@@ -4,5 +4,5 @@ import type { LoanStatusTone } from '@/features/loans/loans-view-model';
 export const LOAN_STATUS_CLASSES: Record<LoanStatusTone, string> = {
   info: 'text-foreground',
   success: 'text-success',
-  muted: 'text-foreground/60',
+  muted: 'text-foreground/65',
 };

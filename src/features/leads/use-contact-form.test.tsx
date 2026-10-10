@@ -9,7 +9,15 @@ vi.mock('./leads-api', () => ({ sendLead: vi.fn() }));
 const send = vi.mocked(sendLead);
 
 const typed = (value: string) => ({ target: { value } }) as ChangeEvent<HTMLInputElement>;
-const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as FormEvent<HTMLFormElement>;
+/** Un envío con un formulario real, con el campo señuelo `website` vacío o lleno. */
+function submitEvent(website = '') {
+  const form = document.createElement('form');
+  const decoy = document.createElement('input');
+  decoy.name = 'website';
+  decoy.value = website;
+  form.append(decoy);
+  return { preventDefault: vi.fn(), currentTarget: form } as unknown as FormEvent<HTMLFormElement>;
+}
 
 function fill(
   result: { current: ReturnType<typeof useContactForm> },
@@ -43,6 +51,15 @@ describe('useContactForm', () => {
 
     expect(result.current.fieldErrors.phone).toMatch(/celular o tu correo/);
     expect(send).not.toHaveBeenCalled();
+  });
+
+  it('forwards the decoy field only when a robot filled it in', async () => {
+    const { result } = renderHook(() => useContactForm());
+    fill(result, { name: 'Bot', phone: '300 123 4567', message: 'Compra ya nuestras ofertas imperdibles.' });
+
+    await act(() => result.current.submit(submitEvent('https://spam.example')));
+
+    expect(send).toHaveBeenCalledWith(expect.objectContaining({ website: 'https://spam.example' }));
   });
 
   it('sends only what was filled in and marks the message as sent', async () => {

@@ -25,9 +25,9 @@ export function IconButton({
       type={type}
       aria-label={label}
       className={cn(
-        'inline-flex size-11 shrink-0 items-center justify-center rounded-sm border border-black/15 text-label text-foreground transition-colors',
+        'inline-flex size-11 shrink-0 items-center justify-center rounded-sm border border-foreground/15 text-label text-foreground transition-colors',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-        'enabled:hover:bg-black/6 enabled:active:bg-black/10',
+        'enabled:hover:bg-foreground/6 enabled:active:bg-foreground/10',
         'disabled:cursor-not-allowed disabled:opacity-40',
         className,
       )}

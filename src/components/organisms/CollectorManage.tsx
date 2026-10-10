@@ -12,6 +12,7 @@ import { ConfirmDialog } from '@/components/molecules/ConfirmDialog';
 import { FormField } from '@/components/molecules/FormField';
 import { InfoRow } from '@/components/molecules/InfoRow';
 import { COLLECTORS_TEXT } from '@/content/collectors';
+import type { CollectorHandover } from '@/features/collectors/get-collector-handover.server';
 import type { CollectorDetail } from '@/features/collectors/get-collector.server';
 import type { PortfolioOption } from '@/features/collectors/get-portfolio-options.server';
 import { useCollectorActions } from '@/features/collectors/use-collector-actions';
@@ -19,16 +20,20 @@ import { useCollectorActions } from '@/features/collectors/use-collector-actions
 export interface CollectorManageProps {
   readonly collector: CollectorDetail;
   readonly portfolios: readonly PortfolioOption[];
+  /** Sus préstamos activos y los cobradores que pueden recibirlos; `null` si no se pudieron revisar. */
+  readonly handover?: CollectorHandover | null;
 }
 
 /** Gestión de un cobrador: cambiar su cartera, restablecer su contraseña o desactivarlo. */
-export function CollectorManage({ collector, portfolios }: Readonly<CollectorManageProps>) {
+export function CollectorManage({ collector, portfolios, handover = { loans: [], destinations: [] } }: Readonly<CollectorManageProps>) {
   const text = COLLECTORS_TEXT.manage;
-  const actions = useCollectorActions(collector);
+  const actions = useCollectorActions(collector, handover);
+  const [destinationId, setDestinationId] = useState(handover?.destinations[0]?.id ?? '');
+  const loanCount = handover?.loans.length ?? 0;
   const [confirming, setConfirming] = useState<'reset-password' | 'deactivate' | null>(null);
 
   const confirm = () => {
-    const action = confirming === 'deactivate' ? actions.deactivate : actions.resetPassword;
+    const action = confirming === 'deactivate' ? () => actions.deactivate(destinationId) : actions.resetPassword;
     setConfirming(null);
     void action();
   };
@@ -57,7 +62,7 @@ export function CollectorManage({ collector, portfolios }: Readonly<CollectorMan
 
       {actions.tempPassword !== null && (
         <div className="flex flex-col gap-1 rounded-md bg-surface p-5">
-          <Text variant="caption" className="font-semibold text-foreground/60">
+          <Text variant="caption" className="font-semibold text-foreground/65">
             {text.resetPassword.result}
           </Text>
           <output className="font-mono text-h3 font-semibold break-all text-foreground select-all">{actions.tempPassword}</output>
@@ -105,7 +110,31 @@ export function CollectorManage({ collector, portfolios }: Readonly<CollectorMan
             confirmLabel={dialog.confirmLabel}
             onCancel={() => setConfirming(null)}
             onConfirm={confirm}
-          />
+            confirmDisabled={confirming === 'deactivate' && (handover === null || (loanCount > 0 && destinationId === ''))}
+          >
+            {confirming === 'deactivate' && (
+              <div className="flex flex-col gap-3">
+                {handover === null && <Alert tone="error">{text.deactivate.handoverUnavailable}</Alert>}
+                {handover !== null && loanCount > 0 && handover.destinations.length === 0 && <Alert tone="warning">{text.deactivate.noDestinations}</Alert>}
+                {handover !== null && loanCount > 0 && handover.destinations.length > 0 && (
+                  <>
+                    <Text variant="label" className="text-foreground/75">
+                      {text.deactivate.handoverIntro(loanCount)}
+                    </Text>
+                    <FormField label={text.deactivate.destinationLabel}>
+                      <Select name="destination" value={destinationId} onChange={(event) => setDestinationId(event.target.value)}>
+                        {handover.destinations.map((destination) => (
+                          <option key={destination.id} value={destination.id}>
+                            {destination.name}
+                          </option>
+                        ))}
+                      </Select>
+                    </FormField>
+                  </>
+                )}
+              </div>
+            )}
+          </ConfirmDialog>
         </>
       )}
     </section>

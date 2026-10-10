@@ -29,14 +29,14 @@ export function VisitReportTable({ rows }: Readonly<VisitReportTableProps>) {
           <td className={RESPONSIVE_TABLE.cell} data-label={text.headers[3]}>
             <span className="flex flex-col items-start gap-1">
               <StatePill tone={row.outcomeTone}>{row.outcome}</StatePill>
-              {row.note && <span className="text-caption text-foreground/60">{row.note}</span>}
+              {row.note && <span className="text-caption text-foreground/65">{row.note}</span>}
             </span>
           </td>
           <td className={RESPONSIVE_TABLE.cell} data-label={text.headers[4]}>
             {row.expected}
           </td>
           <td className={RESPONSIVE_TABLE.cell} data-label={text.headers[5]}>
-            <span className={row.reverted ? 'text-foreground/50 line-through' : undefined}>{row.collected}</span>
+            <span className={row.reverted ? 'text-foreground/65 line-through' : undefined}>{row.collected}</span>
             {row.reverted && <StatePill tone="muted">{VISITS_TEXT.reversed}</StatePill>}
           </td>
           <td className={RESPONSIVE_TABLE.cell} data-label={text.headers[6]}>

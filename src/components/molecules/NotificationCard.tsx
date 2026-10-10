@@ -34,7 +34,7 @@ export function NotificationCard({ notification, onMarkRead, busy = false }: Rea
               {NOTIFICATIONS_TEXT.unreadBadge}
             </span>
           )}
-          <time className="ml-auto text-caption text-foreground/60">{date}</time>
+          <time className="ml-auto text-caption text-foreground/65">{date}</time>
         </div>
         <Text variant="label" className="text-foreground/75">
           {body}

@@ -4,3 +4,7 @@ allowBuilds:
 # Paquete propio: se instala en cuanto se publica, sin esperar la edad mínima que pnpm exige a los de terceros.
 minimumReleaseAgeExclude:
   - '@fiaro-app/contracts'
+# Versiones mínimas de dependencias transitivas de `next` con avisos de seguridad (pnpm audit): sharp (librsvg) y source-map-js (DoS).
+overrides:
+  sharp: '>=0.35.5'
+  source-map-js: '>=1.2.2'

@@ -20,7 +20,7 @@ export function ClientsTable({ rows, className, canManage = true }: Readonly<Cli
           <th scope="row" className={RESPONSIVE_TABLE.rowHeader}>
             <span className="flex flex-col">
               {row.fullName}
-              <span className="text-caption font-normal text-foreground/60">{row.occupation}</span>
+              <span className="text-caption font-normal text-foreground/65">{row.occupation}</span>
             </span>
           </th>
           <td className={RESPONSIVE_TABLE.cell} data-label={CLIENTS_TEXT.headers[1]}>
@@ -38,7 +38,7 @@ export function ClientsTable({ rows, className, canManage = true }: Readonly<Cli
           <td className={RESPONSIVE_TABLE.cell} data-label={CLIENTS_TEXT.headers[5]}>
             <span className="flex flex-col md:items-start">
               <span className={row.isOverdue ? 'font-semibold text-destructive' : undefined}>{row.overdue}</span>
-              {row.overdueAmount && <span className="text-caption text-foreground/60">{row.overdueAmount}</span>}
+              {row.overdueAmount && <span className="text-caption text-foreground/65">{row.overdueAmount}</span>}
             </span>
           </td>
           <td className={RESPONSIVE_TABLE.action}>

@@ -73,3 +73,17 @@ Móvil de 390px (cabecera con menú; las tablas pasan a tarjetas; acciones princ
 - Mostrar el cobrador en la lista de préstamos (pide una consulta por préstamo; mejor un campo en la API).
 
 Las decisiones técnicas detrás de cada diferencia están en [DECISIONES.md](./DECISIONES.md).
+
+## Pantallas y componentes nuevos (10 de octubre de 2026)
+
+| Pieza | La web implementa (API) | Penpot |
+|---|---|---|
+| Registrar cobro (detalle de préstamo) | `POST /loans/:loanId/collection-visits`: resultado, monto y medio si pagó, fecha prometida si reprogramó, con confirmación. Solo con el rol Collector y el préstamo asignado hoy a quien cobra | ✅ «Detalle de préstamo — Registrar cobro» |
+| Desactivar cobrador con reasignación | `POST /collectors/:id/deactivate`: pide a quién pasar sus préstamos activos | ✅ «Diálogo — Desactivar cobrador (reasignar préstamos)» |
+| Calendario, menú desplegable y botón «Aplicar» | Componentes propios (`DatePicker`, `Select`, `FilterSubmitButton`); «Aplicar» se apaga si no hay cambios | ✅ «Componente / Calendario, menú desplegable y botón Aplicar» |
+| Diálogos de confirmación | Más grandes, con icono y fondo desenfocado; aprobar/rechazar cuadre, cerrar sesiones, quitar logo, desactivar cuenta | ✅ (el icono quedó suelto sobre cada tablero) |
+| Tutorial de bienvenida | Invitación en el primer ingreso y recorrido que deja nítido solo el elemento explicado | ✅ «Tutorial — Invitación inicial» y «Tutorial — Paso del recorrido» |
+| Permisos por rol | Menú y acciones según la matriz de la API (W-95) | ⏳ falta un tablero con el menú de un cobrador |
+| Configuración y Mi cuenta en dos columnas | Bloques repartidos en dos columnas desde `xl` | ⏳ los tableros siguen apilados |
+| Cobros del día: buscador arriba | Buscador solo arriba y opciones con «Aplicar» abajo | ⏳ el tablero conserva las píldoras |
+

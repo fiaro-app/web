@@ -41,7 +41,7 @@ export function HeroSection({
             {secondaryCta.label}
           </ButtonLink>
         </div>
-        <Text variant="caption" className="text-foreground/60">
+        <Text variant="caption" className="text-foreground/65">
           {footnote}
         </Text>
       </div>

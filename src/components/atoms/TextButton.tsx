@@ -17,7 +17,7 @@ export function TextButton({ ref, type = 'button', className, ...props }: Readon
       className={cn(
         'inline-flex h-8 items-center justify-center rounded-sm px-3 text-body font-medium text-foreground transition-colors',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-        'enabled:hover:bg-black/6 enabled:active:bg-black/10',
+        'enabled:hover:bg-foreground/6 enabled:active:bg-foreground/10',
         'disabled:cursor-not-allowed disabled:opacity-40',
         className,
       )}

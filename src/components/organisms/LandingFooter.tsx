@@ -17,13 +17,13 @@ export function LandingFooter({ links, copyright, brandName = 'Fiaro' }: Readonl
           <NextLink
             key={link.label}
             href={link.href}
-            className="rounded-sm text-small text-foreground/70 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="inline-flex min-h-11 items-center rounded-sm text-small text-foreground/70 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             {link.label}
           </NextLink>
         ))}
       </nav>
-      <p className="text-caption text-foreground/50">{copyright}</p>
+      <p className="text-caption text-foreground/65">{copyright}</p>
     </footer>
   );
 }

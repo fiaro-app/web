@@ -44,7 +44,7 @@ export function SettlementDetail({ settlement, canManage = true }: Readonly<{ se
 
       {settlement.collectorNote && (
         <div className="flex flex-col gap-1 rounded-md bg-surface p-5">
-          <Text variant="caption" className="font-semibold text-foreground/60">
+          <Text variant="caption" className="font-semibold text-foreground/65">
             {text.collectorNote}
           </Text>
           <Text variant="label">{settlement.collectorNote}</Text>
@@ -52,7 +52,7 @@ export function SettlementDetail({ settlement, canManage = true }: Readonly<{ se
       )}
       {settlement.reviewNote && (
         <div className="flex flex-col gap-1 rounded-md bg-surface p-5">
-          <Text variant="caption" className="font-semibold text-foreground/60">
+          <Text variant="caption" className="font-semibold text-foreground/65">
             {text.reviewNote}
           </Text>
           <Text variant="label">{settlement.reviewNote}</Text>

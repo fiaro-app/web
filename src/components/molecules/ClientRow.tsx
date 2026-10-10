@@ -56,7 +56,7 @@ export function ClientRow({
       onClick={onClick}
       className={cn(
         ROW_CLASSES,
-        'transition-colors hover:bg-black/4 active:bg-black/8',
+        'transition-colors hover:bg-foreground/4 active:bg-foreground/8',
         'focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-inset',
         className,
       )}

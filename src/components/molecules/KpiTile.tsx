@@ -15,7 +15,7 @@ export interface KpiTileProps {
 export function KpiTile({ label, value, valueClassName, compact = false, className }: Readonly<KpiTileProps>) {
   return (
     <div className={cn('flex flex-col rounded-sm bg-background', compact ? 'gap-0.5 p-2.5' : 'gap-1 p-3', className)}>
-      <span className={cn('text-foreground/60', compact ? 'text-[9px]' : 'text-[10px]')}>{label}</span>
+      <span className={cn('text-foreground/65', 'text-caption')}>{label}</span>
       {compact ? (
         <span className={cn('font-display text-label leading-tight font-semibold', valueClassName)}>{value}</span>
       ) : (

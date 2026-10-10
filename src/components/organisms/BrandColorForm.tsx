@@ -52,7 +52,7 @@ export function BrandColorForm({ brandColor, canEdit }: Readonly<BrandColorFormP
           <span className="text-small text-foreground/70">{text.preview}</span>
           <span
             aria-hidden="true"
-            className="inline-flex h-11 items-center rounded-md px-5 text-label font-semibold text-white"
+            className="inline-flex h-11 items-center rounded-md px-5 text-label font-semibold text-primary-foreground"
             style={{ backgroundColor: form.color }}
           >
             Fiaro

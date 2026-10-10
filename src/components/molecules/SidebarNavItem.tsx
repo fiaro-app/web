@@ -19,7 +19,7 @@ const BASE = 'flex items-center justify-between gap-2 rounded-sm px-3 py-[8.5px]
 export function SidebarNavItem({ label, href, active = false, disabled = false, badge = 0 }: Readonly<SidebarNavItemProps>) {
   if (disabled) {
     return (
-      <span aria-disabled="true" title="Próximamente" className={cn(BASE, 'cursor-not-allowed text-foreground/40')}>
+      <span aria-disabled="true" title="Próximamente" className={cn(BASE, 'cursor-not-allowed text-foreground/65')}>
         {label}
       </span>
     );
@@ -28,6 +28,7 @@ export function SidebarNavItem({ label, href, active = false, disabled = false, 
   return (
     <NextLink
       href={href}
+      data-tour={`nav${href}`}
       aria-current={active ? 'page' : undefined}
       className={cn(
         BASE,

@@ -15,6 +15,7 @@ export function SignOutButton() {
     <>
       <button
         type="button"
+        data-tour="sign-out"
         onClick={() => setConfirming(true)}
         disabled={isSigningOut}
         className="self-start rounded-sm text-small font-semibold text-destructive hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40"

@@ -16,7 +16,7 @@ describe('BRAND_PALETTE', () => {
 describe('swatchesFor', () => {
   it('shows only the palette when the color is a default or part of it', () => {
     expect(swatchesFor(null, 'Color actual')).toBe(BRAND_PALETTE);
-    expect(swatchesFor('#0f766e', 'Color actual')).toBe(BRAND_PALETTE);
+    expect(swatchesFor('#0d665f', 'Color actual')).toBe(BRAND_PALETTE);
     expect(isPaletteColor('#1d4ed8')).toBe(true);
   });
 

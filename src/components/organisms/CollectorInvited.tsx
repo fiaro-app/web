@@ -28,7 +28,7 @@ export function CollectorInvited({ invited }: Readonly<CollectorInvitedProps>) {
 
       {tempPassword !== null && (
         <div className="flex flex-col gap-1 rounded-md bg-surface p-5">
-          <Text variant="caption" className="font-semibold text-foreground/60">
+          <Text variant="caption" className="font-semibold text-foreground/65">
             {text.passwordLabel}
           </Text>
           <output className="font-mono text-h3 font-semibold break-all text-foreground select-all">{tempPassword}</output>

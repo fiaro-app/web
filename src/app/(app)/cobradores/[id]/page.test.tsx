@@ -2,7 +2,12 @@ import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ManageCollectorPage from './page';
 
-const { getCollector, getCollectorStats } = vi.hoisted(() => ({ getCollector: vi.fn(), getCollectorStats: vi.fn() }));
+const { getCollector, getCollectorStats, getCollectorHandover } = vi.hoisted(() => ({
+  getCollector: vi.fn(),
+  getCollectorStats: vi.fn(),
+  getCollectorHandover: vi.fn(),
+}));
+vi.mock('@/features/collectors/get-collector-handover.server', () => ({ getCollectorHandover }));
 vi.mock('@/features/collectors/get-collector.server', () => ({ getCollector }));
 vi.mock('@/features/collectors/get-collector-stats.server', () => ({ getCollectorStats }));
 vi.mock('@/features/collectors/get-portfolio-options.server', () => ({ getPortfolioOptions: vi.fn().mockResolvedValue([]) }));
@@ -21,7 +26,10 @@ const STATS = {
   overdueTone: 'good',
 };
 
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => {
+  vi.clearAllMocks();
+  getCollectorHandover.mockResolvedValue({ loans: [], destinations: [] });
+});
 
 describe('Manage collector page', () => {
   it('shows the management and the month performance', async () => {
@@ -52,5 +60,17 @@ describe('Manage collector page', () => {
     getCollector.mockResolvedValue({ status: 'forbidden' });
     render(await ManageCollectorPage(props));
     expect(screen.getByRole('heading', { name: 'No tienes acceso a esta sección' })).toBeInTheDocument();
+  });
+
+  it('checks the active loans to hand over only while the collector is still active', async () => {
+    getCollector.mockResolvedValue({ status: 'ok', collector: COLLECTOR });
+    getCollectorStats.mockResolvedValue(null);
+    render(await ManageCollectorPage(props));
+    expect(getCollectorHandover).toHaveBeenCalledWith('m1');
+
+    getCollectorHandover.mockClear();
+    getCollector.mockResolvedValue({ status: 'ok', collector: { ...COLLECTOR, active: false } });
+    render(await ManageCollectorPage(props));
+    expect(getCollectorHandover).not.toHaveBeenCalled();
   });
 });

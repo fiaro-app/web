@@ -5,6 +5,7 @@ import { CollectorManage } from '@/components/organisms/CollectorManage';
 import { CollectorPerformance } from '@/components/organisms/CollectorPerformance';
 import { COLLECTORS_TEXT } from '@/content/collectors';
 import { getCollector } from '@/features/collectors/get-collector.server';
+import { getCollectorHandover } from '@/features/collectors/get-collector-handover.server';
 import { getCollectorStats } from '@/features/collectors/get-collector-stats.server';
 import { getPortfolioOptions } from '@/features/collectors/get-portfolio-options.server';
 
@@ -21,10 +22,14 @@ export default async function ManageCollectorPage({ params }: PageProps<'/cobrad
   if (result.status === 'not-found') {
     return <EmptyState icon={<StateIcon name="search" />} {...COLLECTORS_TEXT.manage.notFound} />;
   }
-  const stats = await getCollectorStats(id);
+  const [stats, handover] = await Promise.all([
+    getCollectorStats(id),
+    // La baja exige pasar sus préstamos activos a otro cobrador: solo se revisan si sigue activo.
+    result.collector.active ? getCollectorHandover(id) : Promise.resolve({ loans: [], destinations: [] }),
+  ]);
   return (
     <>
-      <CollectorManage collector={result.collector} portfolios={portfolios} />
+      <CollectorManage collector={result.collector} portfolios={portfolios} handover={handover} />
       {stats && <CollectorPerformance stats={stats} />}
     </>
   );
