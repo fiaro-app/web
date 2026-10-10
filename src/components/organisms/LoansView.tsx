@@ -15,13 +15,15 @@ import { pageHref } from '@/lib/pagination';
 
 export interface LoansViewProps {
   readonly loans: LoansViewModel;
+  /** Puede registrar préstamos (Owner o Lender). */
+  readonly canManage?: boolean;
 }
 
 /**
  * Préstamos: título, acción de registrar, búsqueda por cliente (formulario GET `?q=`), filtro por
  * estado (enlaces `?estado=`) y tabla. Solo presentación.
  */
-export function LoansView({ loans }: Readonly<LoansViewProps>) {
+export function LoansView({ loans, canManage = true }: Readonly<LoansViewProps>) {
   const { rows, total, page, pageSize, status, search } = loans;
   const pages = Math.max(1, Math.ceil(total / pageSize));
   const hasSearch = search !== '';
@@ -32,7 +34,7 @@ export function LoansView({ loans }: Readonly<LoansViewProps>) {
         <Text variant="title" as="h1" weight="bold" className="text-foreground">
           {LOANS_TEXT.title}
         </Text>
-        <ButtonLink href="/prestamos/nuevo">{LOANS_TEXT.newLoan}</ButtonLink>
+        {canManage && <ButtonLink href="/prestamos/nuevo">{LOANS_TEXT.newLoan}</ButtonLink>}
       </header>
 
       <FilterForm action="/prestamos" role="search" aria-label={LOANS_TEXT.search.label} className="flex max-w-xl gap-3">
@@ -65,7 +67,7 @@ export function LoansView({ loans }: Readonly<LoansViewProps>) {
           {...(hasSearch ? LOANS_TEXT.noResults(search) : status === null ? LOANS_TEXT.empty : LOANS_TEXT.emptyFiltered)}
           action={
             status === null && !hasSearch ? (
-              <ButtonLink href="/prestamos/nuevo">{LOANS_TEXT.newLoan}</ButtonLink>
+              canManage ? <ButtonLink href="/prestamos/nuevo">{LOANS_TEXT.newLoan}</ButtonLink> : undefined
             ) : (
               <ButtonLink href="/prestamos" variant="outline">
                 {hasSearch ? LOANS_TEXT.search.clear : LOANS_TEXT.filters.all}

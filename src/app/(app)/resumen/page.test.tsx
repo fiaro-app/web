@@ -3,7 +3,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { toDashboardViewModel } from '@/features/dashboard/dashboard-view-model';
 import SummaryPage from './page';
 
-const { getLenderDashboard } = vi.hoisted(() => ({ getLenderDashboard: vi.fn() }));
+const { getLenderDashboard, getAccess, redirect } = vi.hoisted(() => ({ getLenderDashboard: vi.fn(), getAccess: vi.fn(), redirect: vi.fn() }));
+vi.mock('@/features/app-shell/get-access.server', () => ({ getAccess }));
+vi.mock('next/navigation', () => ({ redirect }));
 vi.mock('@/features/dashboard/get-dashboard.server', () => ({ getLenderDashboard }));
 
 const SUMMARY = {
@@ -24,7 +26,10 @@ const SUMMARY = {
 const props = (params: Record<string, string> = {}) =>
   ({ searchParams: Promise.resolve(params) }) as unknown as Parameters<typeof SummaryPage>[0];
 
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => {
+  vi.clearAllMocks();
+  getAccess.mockResolvedValue({ canManage: true, canCollect: false, membershipId: null });
+});
 
 describe('Summary page', () => {
   it('paints the dashboard it loads on the server', async () => {
@@ -51,5 +56,16 @@ describe('Summary page', () => {
     render(await SummaryPage(props()));
 
     expect(screen.getByRole('heading', { name: 'Tu cuenta no tiene un negocio activo' })).toBeInTheDocument();
+  });
+
+  it('sends a collector to the loans instead of the business summary', async () => {
+    getAccess.mockResolvedValue({ canManage: false, canCollect: true, membershipId: null });
+    getLenderDashboard.mockResolvedValue({ status: 'ok', dashboard: toDashboardViewModel(SUMMARY) });
+    redirect.mockImplementation(() => {
+      throw new Error('NEXT_REDIRECT');
+    });
+
+    await expect(SummaryPage(props())).rejects.toThrow('NEXT_REDIRECT');
+    expect(redirect).toHaveBeenCalledWith('/prestamos');
   });
 });

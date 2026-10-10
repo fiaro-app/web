@@ -18,10 +18,12 @@ import { cn } from '@/lib/cn';
 export interface LoanDetailProps {
   readonly loan: LoanDetailView;
   readonly collectors: readonly CollectorOption[];
+  /** Puede asignar cobrador y anular (Owner o Lender). */
+  readonly canManage?: boolean;
 }
 
 /** Detalle de un préstamo: saldo, mora, cobrador (con su asignación) y la opción de anularlo mientras siga activo. */
-export function LoanDetail({ loan, collectors }: Readonly<LoanDetailProps>) {
+export function LoanDetail({ loan, collectors, canManage = true }: Readonly<LoanDetailProps>) {
   const text = LOANS_TEXT.detail;
   const { isCanceling, error, cancel } = useCancelLoan(loan.id);
   const [confirming, setConfirming] = useState(false);
@@ -74,9 +76,9 @@ export function LoanDetail({ loan, collectors }: Readonly<LoanDetailProps>) {
 
       {error && <Alert tone="error">{error}</Alert>}
 
-      {loan.assignable && <AssignCollectorForm loanId={loan.id} collectors={collectors} />}
+      {canManage && loan.assignable && <AssignCollectorForm loanId={loan.id} collectors={collectors} />}
 
-      {loan.cancelable && (
+      {canManage && loan.cancelable && (
         <>
           <Button variant="text" loading={isCanceling} onClick={() => setConfirming(true)} className="text-destructive">
             {text.cancel.action}

@@ -14,6 +14,33 @@ export const VISITS_TEXT = {
   } satisfies Record<VisitOutcome, string>,
   method: { CASH: 'Efectivo', NEQUI: 'Nequi', TRANSFER: 'Transferencia' },
   reversed: 'Revertido',
+  collect: {
+    title: 'Registrar cobro',
+    description: 'Registra la visita a este cliente: qué pasó y, si pagó, cuánto y cómo. Queda a tu nombre y se suma al saldo al instante.',
+    outcomeLabel: 'Resultado de la visita',
+    amountLabel: 'Monto recibido',
+    methodLabel: 'Medio de pago',
+    promisedLabel: 'Fecha prometida',
+    submit: 'Registrar cobro',
+    done: 'Cobro registrado.',
+    notAssigned:
+      'Este préstamo no está asignado a ti hoy, así que no puedes registrar cobros aquí. Asígnatelo primero desde «Asignar cobrador».',
+    confirm: {
+      PAID: (amount: string) => ({
+        title: '¿Registrar este pago?',
+        description: `Se registra un pago de ${amount}. Si te equivocas, solo se corrige revirtiéndolo.`,
+        confirmLabel: 'Registrar pago',
+      }),
+      other: { title: '¿Registrar la visita?', description: 'Queda en el historial del préstamo con tu nombre.', confirmLabel: 'Registrar visita' },
+    },
+    errors: {
+      amount: 'Escribe el monto recibido.',
+      promisedDate: 'Elige la fecha en que prometió pagar.',
+      forbidden: 'No puedes registrar cobros en este préstamo: no está asignado a ti hoy o tu cuenta no cobra en campo.',
+      notFound: 'No encontramos el préstamo. Recarga la página.',
+      invalid: 'Los datos del cobro no combinan. Revísalos e intenta de nuevo.',
+    },
+  },
   promised: (date: string) => `Prometió pagar el ${date}`,
   reversal: (reason: string) => `Motivo: ${reason}`,
   reverse: {

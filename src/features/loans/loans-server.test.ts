@@ -4,6 +4,8 @@ import { ApiRequestError } from '@/lib/api';
 vi.mock('server-only', () => ({}));
 const { callEndpointAsUser } = vi.hoisted(() => ({ callEndpointAsUser: vi.fn() }));
 vi.mock('@/lib/api/server-call', () => ({ callEndpointAsUser }));
+const { getAccess } = vi.hoisted(() => ({ getAccess: vi.fn() }));
+vi.mock('@/features/app-shell/get-access.server', () => ({ getAccess }));
 
 import { getClientLoans } from './get-client-loans.server';
 import { getLoanBalance } from './get-balances.server';
@@ -57,6 +59,7 @@ function routeApi(routes: Record<string, unknown>) {
 
 beforeEach(() => {
   callEndpointAsUser.mockReset();
+  getAccess.mockResolvedValue({ canManage: true, canCollect: false, membershipId: null });
 });
 
 describe('getClientNames / getClientOptions', () => {
@@ -149,6 +152,22 @@ describe('getLoan', () => {
       collector: { name: 'Luis Gómez' },
     });
     expect(result.status === 'ok' && result.collectorOptions).toEqual([{ id: 'm1', name: 'Luis Gómez' }]);
+  });
+
+  it('offers to collect only when the person collects in the field and the loan is assigned to them', async () => {
+    routeApi(base);
+    getAccess.mockResolvedValue({ canManage: true, canCollect: true, membershipId: 'm1' });
+    expect((await getLoan('l1')).status === 'ok' && (await getLoan('l1'))).toMatchObject({ collect: 'available' });
+
+    getAccess.mockResolvedValue({ canManage: true, canCollect: true, membershipId: 'otra' });
+    expect(await getLoan('l1')).toMatchObject({ collect: 'unassigned' });
+
+    getAccess.mockResolvedValue({ canManage: true, canCollect: false, membershipId: 'm1' });
+    expect(await getLoan('l1')).toMatchObject({ collect: 'unavailable' });
+
+    getAccess.mockResolvedValue({ canManage: true, canCollect: true, membershipId: 'm1' });
+    routeApi({ ...base, '/loans/:id': { ...LOAN, status: 'PAID_OFF' } });
+    expect(await getLoan('l1')).toMatchObject({ collect: 'unavailable' });
   });
 
   it('still shows the loan when the balance and the assignments fail', async () => {

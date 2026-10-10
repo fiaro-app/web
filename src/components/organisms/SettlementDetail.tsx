@@ -8,7 +8,7 @@ import { cn } from '@/lib/cn';
 import { FIGURE_TEXT_CLASSES } from '@/lib/tone';
 
 /** Detalle de un cuadre: montos por medio de pago, notas y, si está pendiente, el formulario de revisión. */
-export function SettlementDetail({ settlement }: Readonly<{ settlement: SettlementDetailView }>) {
+export function SettlementDetail({ settlement, canManage = true }: Readonly<{ settlement: SettlementDetailView; canManage?: boolean }>) {
   const text = SETTLEMENTS_TEXT.detail;
 
   return (
@@ -59,7 +59,7 @@ export function SettlementDetail({ settlement }: Readonly<{ settlement: Settleme
         </div>
       )}
 
-      {settlement.reviewable && <SettlementReviewForm settlementId={settlement.id} />}
+      {canManage && settlement.reviewable && <SettlementReviewForm settlementId={settlement.id} />}
     </section>
   );
 }

@@ -44,7 +44,16 @@ describe('getShellContext', () => {
       '/memberships': { data: [membership('otro', ['COLLECTOR']), membership('u1', ['OWNER', 'LENDER', 'COLLECTOR'])], meta: { page: 1, pageSize: 100, total: 2 } },
     });
 
-    await expect(getShellContext(USER)).resolves.toEqual({ businessName: 'Financiera Buen Vecino', roleLabel: 'Administrador', brandColor: null, unreadNotifications: 0 });
+    await expect(getShellContext(USER)).resolves.toMatchObject({
+      businessName: 'Financiera Buen Vecino',
+      roleLabel: 'Administrador',
+      brandColor: null,
+      unreadNotifications: 0,
+      roles: ['OWNER', 'LENDER', 'COLLECTOR'],
+      membershipId: 'm-u1',
+      canManage: true,
+      canCollect: true,
+    });
   });
 
   it('passes along the brand color of the business', async () => {
@@ -68,13 +77,21 @@ describe('getShellContext', () => {
   it('treats a 403 on the list as a collector, who cannot list collaborators', async () => {
     routeApi({ '/lender': LENDER, '/memberships': api(403, 'FORBIDDEN') });
 
-    expect((await getShellContext(USER)).roleLabel).toBe('Cobrador');
+    expect(await getShellContext(USER)).toMatchObject({ roleLabel: 'Cobrador', roles: ['COLLECTOR'], canManage: false, canCollect: true, membershipId: null });
   });
 
   it('opens the panel with fallbacks when the API fails on these extras', async () => {
     routeApi({ '/lender': api(503, 'MAINTENANCE'), '/memberships': api(500, 'INTERNAL_ERROR') });
 
-    await expect(getShellContext(USER)).resolves.toEqual({ businessName: FALLBACK_BUSINESS_NAME, roleLabel: null, brandColor: null, unreadNotifications: 0 });
+    await expect(getShellContext(USER)).resolves.toMatchObject({
+      businessName: FALLBACK_BUSINESS_NAME,
+      roleLabel: null,
+      brandColor: null,
+      unreadNotifications: 0,
+      roles: null,
+      canManage: true,
+      canCollect: false,
+    });
   });
 
   it('does not hide an unexpected (non-API) failure', async () => {

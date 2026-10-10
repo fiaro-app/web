@@ -29,6 +29,7 @@ const LOAN: LoanDetailView = {
   nextDueDate: '10/10/2026',
   collector: { name: 'Luis Gómez', since: '01/10/2026', until: null },
   assignable: true,
+  installmentValue: 30_000,
 };
 const COLLECTORS = [{ id: 'm1', name: 'Luis Gómez' }];
 

@@ -64,6 +64,22 @@ export {
 } from '@fiaro-app/contracts';
 
 /**
+ * Cuerpo de `POST /loans/:loanId/collection-visits`. `id` lo genera quien cobra (llave de idempotencia);
+ * `payment` solo con `PAID` y `promisedDate` solo con `RESCHEDULED` (lo valida la API).
+ */
+export const CreateVisitBodySchema = z.strictObject({
+  id: IdSchema,
+  outcome: VisitOutcomeSchema,
+  promisedDate: z.iso.date().nullable().optional(),
+  occurredAt: InstantSchema,
+  payment: z
+    .strictObject({ amount: z.int().positive(), method: PaymentMethodSchema.optional() })
+    .nullable()
+    .optional(),
+});
+export type CreateVisitBody = z.infer<typeof CreateVisitBodySchema>;
+
+/**
  * Visitas de cobro y reversión de pagos. `@fiaro-app/contracts` publica los schemas base pero no
  * estos endpoints: se declaran aquí (mismo plan de migración que W-13).
  */
@@ -81,6 +97,14 @@ export const visitEndpoints = {
     summary: 'Cobros del día: las visitas de todo el negocio, con filtros (solo Owner y Lender).',
     body: VisitReportBodySchema,
     response: CollectionVisitReportSchema,
+  }),
+  create: defineEndpoint({
+    method: 'POST',
+    path: '/loans/:loanId/collection-visits',
+    summary: 'Registra una visita de cobro con su pago, si lo hubo (rol Collector y préstamo asignado a quien cobra).',
+    params: z.object({ loanId: IdSchema }),
+    body: CreateVisitBodySchema,
+    response: CollectionVisitSchema,
   }),
   reversePayment: defineEndpoint({
     method: 'POST',

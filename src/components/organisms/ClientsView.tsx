@@ -13,13 +13,15 @@ import { pageHref } from '@/lib/pagination';
 
 export interface ClientsViewProps {
   readonly clients: ClientsViewModel;
+  /** Puede registrar y editar clientes (Owner o Lender). */
+  readonly canManage?: boolean;
 }
 
 /**
  * Clientes: título, acción de registrar, búsqueda y tabla. La búsqueda es un formulario GET
  * (`?q=`): funciona sin JavaScript y la URL queda compartible. Solo presentación.
  */
-export function ClientsView({ clients }: Readonly<ClientsViewProps>) {
+export function ClientsView({ clients, canManage = true }: Readonly<ClientsViewProps>) {
   const { rows, total, page, pageSize, search } = clients;
   const pages = Math.max(1, Math.ceil(total / pageSize));
   const hasSearch = search !== '';
@@ -30,7 +32,7 @@ export function ClientsView({ clients }: Readonly<ClientsViewProps>) {
         <Text variant="title" as="h1" weight="bold" className="text-foreground">
           {CLIENTS_TEXT.title}
         </Text>
-        <ButtonLink href="/clientes/nuevo">{CLIENTS_TEXT.newClient}</ButtonLink>
+        {canManage && <ButtonLink href="/clientes/nuevo">{CLIENTS_TEXT.newClient}</ButtonLink>}
       </header>
 
       <FilterForm action="/clientes" role="search" className="flex max-w-xl gap-3">
@@ -54,14 +56,14 @@ export function ClientsView({ clients }: Readonly<ClientsViewProps>) {
               <ButtonLink href="/clientes" variant="outline">
                 {CLIENTS_TEXT.search.clear}
               </ButtonLink>
-            ) : (
+            ) : canManage ? (
               <ButtonLink href="/clientes/nuevo">{CLIENTS_TEXT.form.createTitle}</ButtonLink>
-            )
+            ) : undefined
           }
         />
       ) : (
         <>
-          <ClientsTable rows={rows} />
+          <ClientsTable rows={rows} canManage={canManage} />
           <PaginationNav
             page={page}
             pages={pages}
