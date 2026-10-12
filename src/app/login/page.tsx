@@ -10,8 +10,13 @@ import { DEFAULT_AUTHENTICATED_PATH, sanitizeNextPath } from '@/features/auth/ro
 export const metadata: Metadata = {
   title: 'Iniciar sesión',
   description: 'Ingresa a tu panel de Fiaro para ver tu cartera, la mora y el cuadre del día.',
-  // Pantalla de acceso: no aporta nada en los buscadores.
-  robots: { index: false, follow: false },
+  robots: { index: true, follow: true },
+  alternates: { canonical: '/login' },
+  openGraph: {
+    title: 'Iniciar sesión · Fiaro',
+    description: 'Ingresa a tu panel de Fiaro para ver tu cartera, la mora y el cuadre del día.',
+    url: '/login',
+  },
 };
 
 /** Inicio de sesión (`Screen / Web / Login`). */

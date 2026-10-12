@@ -5,8 +5,13 @@ import { DEFAULT_AUTHENTICATED_PATH } from '@/features/auth/route-guard';
 export const metadata: Metadata = {
   title: 'Crear cuenta',
   description: 'Crea tu cuenta en Fiaro y registra tu financiera en minutos.',
-  // El formulario no aporta nada en buscadores; la puerta de entrada pública es la landing.
-  robots: { index: false, follow: false },
+  robots: { index: true, follow: true },
+  alternates: { canonical: '/registro' },
+  openGraph: {
+    title: 'Crear cuenta · Fiaro',
+    description: 'Crea tu cuenta en Fiaro y registra tu financiera en minutos.',
+    url: '/registro',
+  },
 };
 
 /** Registro de un dueño y su financiera (`Screen / Web / Registro`). */

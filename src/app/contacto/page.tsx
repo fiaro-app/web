@@ -6,6 +6,8 @@ import { ContactScreen } from '@/components/organisms/ContactScreen';
 import { LandingFooter } from '@/components/organisms/LandingFooter';
 import { LandingNav } from '@/components/organisms/LandingNav';
 import { LandingTemplate } from '@/components/templates/LandingTemplate';
+import { JsonLd } from '@/components/atoms/JsonLd';
+import { breadcrumbJsonLd } from '@/lib/seo/json-ld';
 import { CONTACT_CONTENT } from '@/content/contact';
 import { FOOTER_LINKS, LANDING_ROUTES, NAV_LINKS } from '@/content/landing';
 
@@ -23,7 +25,16 @@ export default function ContactPage() {
   const content = CONTACT_CONTENT;
 
   return (
-    <LandingTemplate
+    <>
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: 'Inicio', path: '/' },
+            { name: 'Contacto', path: '/contacto' },
+          ]),
+        ]}
+      />
+      <LandingTemplate
       nav={
         <LandingNav
           links={NAV_LINKS.map((link) => ({ ...link, href: `/${link.href}` }))}
@@ -57,5 +68,6 @@ export default function ContactPage() {
         <FormAside title={content.steps.title} steps={content.steps.items} tip={content.steps.tip} />
       </div>
     </LandingTemplate>
-  );
+  </>
+);
 }

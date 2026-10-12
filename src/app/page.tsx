@@ -9,7 +9,7 @@ import { LandingFooter } from '@/components/organisms/LandingFooter';
 import { LandingNav } from '@/components/organisms/LandingNav';
 import { PricingSection } from '@/components/organisms/PricingSection';
 import { LandingTemplate } from '@/components/templates/LandingTemplate';
-import { faqJsonLd, organizationJsonLd, softwareApplicationJsonLd } from '@/lib/seo/json-ld';
+import { faqJsonLd, organizationJsonLd, softwareApplicationJsonLd, websiteJsonLd } from '@/lib/seo/json-ld';
 import {
   CTA_BAND,
   FAQ,
@@ -30,7 +30,7 @@ import {
 export default function Home() {
   return (
     <>
-      <JsonLd data={[organizationJsonLd(), softwareApplicationJsonLd(PRICING.plans), faqJsonLd(FAQ.items)]} />
+      <JsonLd data={[organizationJsonLd(), websiteJsonLd(), softwareApplicationJsonLd(PRICING.plans), faqJsonLd(FAQ.items)]} />
       <LandingTemplate
         nav={<LandingNav links={NAV_LINKS} loginHref={LANDING_ROUTES.login} signupHref={LANDING_ROUTES.signup} />}
         footer={

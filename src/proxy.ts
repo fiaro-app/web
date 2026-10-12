@@ -18,6 +18,8 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Páginas: no pasan por aquí la API (`/api`), los archivos de Next ni los estáticos (con punto).
-  matcher: ['/((?!api|_next/static|_next/image|.*\\..*).*)'],
+  // Páginas: no pasan por aquí la API (`/api`), archivos de Next, recursos de metadatos/iconos ni estáticos (con punto).
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon\\.ico|icon|apple-icon|opengraph-image|twitter-image|manifest\\.webmanifest|.*\\..*).*)',
+  ],
 };

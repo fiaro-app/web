@@ -17,10 +17,48 @@ export function organizationJsonLd(): JsonLdNode {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
+    '@id': `${SITE.url}/#organization`,
     name: SITE.name,
     url: SITE.url,
     logo: `${SITE.url}/icon`,
     description: SITE.description,
+  };
+}
+
+/** El sitio web (`WebSite`) para enriquecer la presencia de la marca en Google. */
+export function websiteJsonLd(): JsonLdNode {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${SITE.url}/#website`,
+    name: SITE.name,
+    url: SITE.url,
+    inLanguage: SITE.language,
+    description: SITE.description,
+    publisher: {
+      '@type': 'Organization',
+      name: SITE.name,
+      url: SITE.url,
+    },
+  };
+}
+
+export interface BreadcrumbItem {
+  readonly name: string;
+  readonly path: string;
+}
+
+/** Migas de pan estructuradas (`BreadcrumbList`) para indicar la jerarquía del sitio a Google. */
+export function breadcrumbJsonLd(items: readonly BreadcrumbItem[]): JsonLdNode {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: `${SITE.url}${item.path}`,
+    })),
   };
 }
 
