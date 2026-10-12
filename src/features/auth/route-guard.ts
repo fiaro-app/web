@@ -4,8 +4,17 @@ export const LOGIN_PATH = '/login';
 export const REGISTER_PATH = '/registro';
 export const CHANGE_PASSWORD_PATH = '/cambiar-contrasena';
 
-/** Páginas abiertas a cualquiera, con o sin sesión. Todo lo demás exige sesión. */
-const PUBLIC_PATHS: readonly string[] = ['/', '/contacto', '/recuperar-contrasena', '/design-system'];
+/** Páginas y recursos abiertos a cualquiera, con o sin sesión. Todo lo demás exige sesión. */
+const PUBLIC_PATHS: readonly string[] = [
+  '/',
+  '/contacto',
+  '/recuperar-contrasena',
+  '/design-system',
+  '/icon',
+  '/apple-icon',
+  '/opengraph-image',
+  '/twitter-image',
+];
 
 /** Páginas que solo tienen sentido sin sesión: con una, se manda a la persona a su panel. */
 const GUEST_ONLY_PATHS: readonly string[] = [LOGIN_PATH, REGISTER_PATH];

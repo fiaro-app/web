@@ -5,8 +5,10 @@ import RegisterPage, { metadata } from './page';
 vi.mock('next/navigation', () => ({ useRouter: () => ({ replace: vi.fn(), refresh: vi.fn() }) }));
 
 describe('Register page', () => {
-  it('is kept out of search engines', () => {
-    expect(metadata.robots).toEqual({ index: false, follow: false });
+  it('defines canonical and open graph metadata for search engines', () => {
+    expect(metadata.robots).toEqual({ index: true, follow: true });
+    expect(metadata.alternates).toEqual({ canonical: '/registro' });
+    expect(metadata.openGraph).toMatchObject({ url: '/registro' });
   });
 
   it('renders the registration form', () => {

@@ -2,10 +2,13 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_AUTHENTICATED_PATH, resolveAccess, sanitizeNextPath } from './route-guard';
 
 describe('resolveAccess', () => {
-  it.each(['/', '/contacto', '/design-system', '/recuperar-contrasena'])('lets anyone into the public page %s', (pathname) => {
-    expect(resolveAccess({ pathname, hasSession: false })).toEqual({ action: 'next' });
-    expect(resolveAccess({ pathname, hasSession: true })).toEqual({ action: 'next' });
-  });
+  it.each(['/', '/contacto', '/design-system', '/recuperar-contrasena', '/icon', '/opengraph-image'])(
+    'lets anyone into the public page %s',
+    (pathname) => {
+      expect(resolveAccess({ pathname, hasSession: false })).toEqual({ action: 'next' });
+      expect(resolveAccess({ pathname, hasSession: true })).toEqual({ action: 'next' });
+    },
+  );
 
   it.each(['/login', '/registro', '/registro/empresa'])('lets guests into %s and sends signed-in people to their panel', (pathname) => {
     expect(resolveAccess({ pathname, hasSession: false })).toEqual({ action: 'next' });

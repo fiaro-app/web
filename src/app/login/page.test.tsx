@@ -9,8 +9,10 @@ async function renderPage(searchParams: Record<string, string | string[] | undef
 }
 
 describe('Login page', () => {
-  it('is kept out of search engines', () => {
-    expect(metadata.robots).toEqual({ index: false, follow: false });
+  it('defines canonical and open graph metadata for search engines', () => {
+    expect(metadata.robots).toEqual({ index: true, follow: true });
+    expect(metadata.alternates).toEqual({ canonical: '/login' });
+    expect(metadata.openGraph).toMatchObject({ url: '/login' });
   });
 
   it('renders the form with its brand panel and the link to register', async () => {

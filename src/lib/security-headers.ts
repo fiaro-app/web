@@ -54,8 +54,10 @@ export function buildSecurityHeaders({
 }): readonly HeaderEntry[] {
   return [
     { key: 'Content-Security-Policy', value: buildContentSecurityPolicy({ isDevelopment, storageOrigin }) },
-    // Solo HTTPS durante 2 años, subdominios incluidos; el navegador ignora esto sobre HTTP.
-    { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+    // Solo HTTPS durante 2 años, subdominios incluidos; en desarrollo sobre HTTP se omite para evitar advertencias del navegador.
+    ...(isDevelopment
+      ? []
+      : [{ key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' }]),
     { key: 'X-Content-Type-Options', value: 'nosniff' },
     { key: 'X-Frame-Options', value: 'DENY' },
     { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },

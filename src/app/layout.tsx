@@ -31,16 +31,54 @@ export const metadata: Metadata = {
   applicationName: SITE.name,
   title: { default: SITE.title, template: `%s · ${SITE.name}` },
   description: SITE.description,
-  alternates: { canonical: "/" },
+  keywords: [
+    'control de cartera',
+    'software para prestamistas',
+    'cobro diario',
+    'gestión de préstamos',
+    'cuadre del día',
+    'mora en tiempo real',
+    'administración de cobradores',
+    'software financiero Colombia',
+  ],
+  authors: [{ name: SITE.name, url: SITE.url }],
+  creator: SITE.name,
+  publisher: SITE.name,
+  category: 'finance',
+  alternates: { canonical: '/' },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
-    type: "website",
+    type: 'website',
     siteName: SITE.name,
     locale: SITE.locale,
     title: SITE.title,
     description: SITE.description,
-    url: "/",
+    url: '/',
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: SITE.title,
+      },
+    ],
   },
-  twitter: { card: "summary_large_image", title: SITE.title, description: SITE.description },
+  twitter: {
+    card: 'summary_large_image',
+    title: SITE.title,
+    description: SITE.description,
+    images: ['/opengraph-image'],
+  },
 };
 
 export const viewport: Viewport = {

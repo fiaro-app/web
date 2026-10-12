@@ -46,8 +46,9 @@ describe('Landing structured data', () => {
     const script = container.querySelector('script[type="application/ld+json"]');
     const nodes = JSON.parse(script?.textContent ?? '[]') as { '@type': string; offers?: unknown[] }[];
 
-    expect(nodes.map((node) => node['@type'])).toEqual(['Organization', 'SoftwareApplication', 'FAQPage']);
-    expect(nodes[1]?.offers).toHaveLength(2);
+    expect(nodes.map((node) => node['@type'])).toEqual(['Organization', 'WebSite', 'SoftwareApplication', 'FAQPage']);
+    const appNode = nodes.find((node) => node['@type'] === 'SoftwareApplication');
+    expect(appNode?.offers).toHaveLength(2);
   });
 
   it('marks up the same questions the page shows', () => {

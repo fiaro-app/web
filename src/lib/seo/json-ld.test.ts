@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { faqJsonLd, organizationJsonLd, serializeJsonLd, softwareApplicationJsonLd } from './json-ld';
+import {
+  breadcrumbJsonLd,
+  faqJsonLd,
+  organizationJsonLd,
+  serializeJsonLd,
+  softwareApplicationJsonLd,
+  websiteJsonLd,
+} from './json-ld';
 
 describe('organizationJsonLd', () => {
   it('describes the organization with absolute URLs', () => {
@@ -8,6 +15,34 @@ describe('organizationJsonLd', () => {
     expect(node).toMatchObject({ '@type': 'Organization', name: 'Fiaro' });
     expect(String(node.url)).toMatch(/^https?:\/\//);
     expect(String(node.logo)).toMatch(/\/icon$/);
+  });
+});
+
+describe('websiteJsonLd', () => {
+  it('describes the website with language and publisher', () => {
+    const node = websiteJsonLd();
+
+    expect(node).toMatchObject({ '@type': 'WebSite', name: 'Fiaro' });
+    expect(String(node.url)).toMatch(/^https?:\/\//);
+    expect(node.inLanguage).toBe('es');
+  });
+});
+
+describe('breadcrumbJsonLd', () => {
+  it('generates an ordered list of breadcrumb items', () => {
+    const node = breadcrumbJsonLd([
+      { name: 'Inicio', path: '/' },
+      { name: 'Contacto', path: '/contacto' },
+    ]);
+
+    expect(node).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: expect.stringMatching(/\/$/) },
+        { '@type': 'ListItem', position: 2, name: 'Contacto', item: expect.stringMatching(/\/contacto$/) },
+      ],
+    });
   });
 });
 
