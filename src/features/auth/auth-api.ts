@@ -18,9 +18,21 @@ export async function signOut(): Promise<void> {
  * Registra a un dueño y su negocio. No abre sesión (la API lo deja así a propósito): quien llama
  * inicia sesión después con el mismo celular y contraseña.
  */
-export async function registerOwner({ phone, fullName, password, nationalId, contactEmail }: AccountValues, { businessName }: CompanyValues) {
+export async function registerOwner(
+  { phone, fullName, password, nationalId, contactEmail }: AccountValues,
+  { businessName }: CompanyValues,
+  turnstileToken?: string,
+) {
   return callEndpoint(authEndpoints.register, {
-    body: { phone, fullName, password, nationalId, businessName, ...(contactEmail && { contactEmail }) },
+    body: {
+      phone,
+      fullName,
+      password,
+      nationalId,
+      businessName,
+      ...(contactEmail && { contactEmail }),
+      ...(turnstileToken && { turnstileToken }),
+    },
   });
 }
 

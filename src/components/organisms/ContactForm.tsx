@@ -6,6 +6,7 @@ import { Textarea } from '@/components/atoms/Textarea';
 import { Alert } from '@/components/molecules/Alert';
 import { FormField } from '@/components/molecules/FormField';
 import { FormFieldset } from '@/components/molecules/FormFieldset';
+import { TurnstileWidget } from '@/components/molecules/TurnstileWidget';
 import { CONTACT_CONTENT } from '@/content/contact';
 import type { useContactForm } from '@/features/leads/use-contact-form';
 
@@ -13,7 +14,17 @@ type ContactFormState = ReturnType<typeof useContactForm>;
 
 /** Formulario «Contactar ventas». Solo diseño: la lógica vive en `useContactForm`. */
 export function ContactForm({ form }: Readonly<{ form: ContactFormState }>) {
-  const { values, fieldErrors, formError, isSubmitting, setField, submit } = form;
+  const {
+    values,
+    fieldErrors,
+    formError,
+    isSubmitting,
+    setField,
+    submit,
+    turnstileResetKey,
+    setTurnstileToken,
+    turnstileError,
+  } = form;
   const text = CONTACT_CONTENT.form;
 
   return (
@@ -52,6 +63,13 @@ export function ContactForm({ form }: Readonly<{ form: ContactFormState }>) {
       <div aria-hidden="true" className="hidden">
         <input type="text" name="website" tabIndex={-1} autoComplete="off" />
       </div>
+
+      <TurnstileWidget
+        action="lead"
+        resetKey={turnstileResetKey}
+        onToken={setTurnstileToken}
+        onError={turnstileError}
+      />
 
       {formError && <Alert tone="error">{formError}</Alert>}
 

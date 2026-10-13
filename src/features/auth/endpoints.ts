@@ -4,6 +4,7 @@ import {
   MobilePhoneSchema,
   NationalIdSchema,
   PersonNameSchema,
+  TurnstileTokenSchema,
   defineEndpoint,
 } from '@fiaro-app/contracts';
 import { z } from 'zod';
@@ -46,6 +47,7 @@ export const RegisterBodySchema = z.strictObject({
   nationalId: NationalIdSchema,
   businessName: BusinessNameSchema,
   contactEmail: z.email().optional(),
+  turnstileToken: TurnstileTokenSchema.optional(),
 });
 
 /** Sesión vigente y su persona. `null` (cuerpo `null`) cuando no hay sesión. */

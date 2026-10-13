@@ -43,6 +43,8 @@ Abre [http://localhost:3001](http://localhost:3001) (el puerto que espera `CORS_
 
 Copia `.env.example` a `.env.local` y ajusta `API_URL` (origen de la API) y `NEXT_PUBLIC_SITE_URL` (URL pública de la web). Para iniciar sesión y registrarte en local, la API debe estar corriendo y tener `http://localhost:3001` en su `CORS_ORIGINS`.
 
+Para activar Cloudflare Turnstile, configura `NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY` con la site key pública del mismo widget cuya secret key configuraste en la API. La web carga el widget en `/contacto` y en el último paso de `/registro`; en producción debe desplegarse junto con la configuración obligatoria de la API, para no publicar formularios que la API vaya a rechazar.
+
 ## Scripts
 
 | Comando | Qué hace |
