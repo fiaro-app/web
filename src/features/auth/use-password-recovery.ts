@@ -5,6 +5,7 @@ import { turnstileEnabled } from '@/components/molecules/TurnstileWidget';
 import { requestPasswordReset, resetPassword } from '@/features/auth/auth-api';
 import { describeAuthError, issueFieldErrors } from '@/features/auth/error-messages';
 import { RequestResetFormSchema, ResetPasswordFormSchema } from '@/features/auth/password-schemas';
+import { fieldInput } from '@/lib/phone-input';
 import { toFieldErrors, type FieldErrors } from '@/lib/forms';
 
 export type RecoveryStep = 'request' | 'reset' | 'done';
@@ -38,7 +39,7 @@ export function usePasswordRecovery() {
   );
 
   const setField = (field: RecoveryField) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues((current) => ({ ...current, [field]: event.target.value }));
+    setValues((current) => ({ ...current, [field]: fieldInput(field, event.target.value) }));
     setFieldErrors((current) => ({ ...current, [field]: undefined }));
   };
 
