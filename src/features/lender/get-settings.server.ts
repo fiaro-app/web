@@ -38,11 +38,11 @@ export type SettingsResult =
  */
 export async function getSettings(): Promise<SettingsResult> {
   try {
-    const user = await requireUser();
+    await requireUser();
     const [lender, portfolios, shell, subscription] = await Promise.all([
       callEndpointAsUser(lenderEndpoints.get, {}),
       callEndpointAsUser(lenderEndpoints.portfolios, {}),
-      getShellContext(user),
+      getShellContext(),
       getSubscription(),
     ]);
     return {

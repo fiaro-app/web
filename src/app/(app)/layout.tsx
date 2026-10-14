@@ -26,7 +26,7 @@ export default async function AppLayout({ children }: Readonly<{ children: React
   // Quien entró con una contraseña temporal debe cambiarla antes de usar el panel (la API también lo exige).
   if (user.mustChangePassword) redirect(CHANGE_PASSWORD_PATH);
   const [{ businessName, brandColor, roleLabel, unreadNotifications }, subscription] = await Promise.all([
-    getShellContext(user),
+    getShellContext(),
     getSubscription(),
   ]);
 

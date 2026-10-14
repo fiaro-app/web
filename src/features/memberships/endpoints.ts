@@ -60,6 +60,12 @@ const MembershipParamsSchema = z.object({ id: IdSchema });
  * un cobrador recibe 403. Los schemas son del contrato; los endpoints se declaran aquí hasta que el paquete los publique.
  */
 export const membershipEndpoints = {
+  me: defineEndpoint({
+    method: 'GET',
+    path: '/memberships/me',
+    summary: 'La membresía de quien llama, con sus roles; la puede pedir cualquier rol (D-124).',
+    response: MembershipSchema,
+  }),
   list: defineEndpoint({
     method: 'QUERY',
     path: '/memberships',
