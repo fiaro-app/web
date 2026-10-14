@@ -1,0 +1,63 @@
+/** Textos de «Mi cuenta» (`Screen / Web / Mi cuenta`). */
+export const ACCOUNT_TEXT = {
+  title: 'Mi cuenta',
+  link: 'Mi cuenta',
+  profile: {
+    title: 'Mis datos',
+    description: 'Tu nombre y el correo donde recibes los códigos de seguridad.',
+    fullName: { label: 'Nombre completo', placeholder: 'Ej: Daniel Rojas' },
+    phone: { label: 'Celular', hint: 'Con este celular inicias sesión. No se puede cambiar desde aquí.' },
+    contactEmail: { label: 'Correo electrónico (opcional)', hint: 'Sirve para recuperar tu contraseña.', placeholder: 'tu@correo.com' },
+    save: 'Guardar cambios',
+  },
+  verification: {
+    verified: 'Correo verificado',
+    pending: 'Correo sin verificar',
+    hint: 'Escribe el código de 6 dígitos que te enviamos.',
+    code: { label: 'Código', placeholder: '123456' },
+    submit: 'Verificar correo',
+    resend: 'Reenviar código',
+  },
+  password: {
+    title: 'Contraseña',
+    description: 'Cámbiala cuando quieras. Necesitas tu contraseña actual.',
+    currentPassword: { label: 'Contraseña actual' },
+    newPassword: { label: 'Contraseña nueva', hint: 'Mínimo 8 caracteres.' },
+    confirmPassword: { label: 'Repite la contraseña nueva' },
+    submit: 'Cambiar contraseña',
+    done: 'Contraseña cambiada.',
+  },
+  sessions: {
+    title: 'Sesiones',
+    description: 'Estos son los equipos donde tienes Fiaro abierto. Si no reconoces alguno, ciérralo.',
+    listLabel: 'Sesiones abiertas',
+    current: 'Esta sesión',
+    detail: (ip: string | null, lastUsed: string) => (ip ? `IP ${ip} · Último uso ${lastUsed}` : `Último uso ${lastUsed}`),
+    close: 'Cerrar',
+    closeOne: (device: string) => `Cerrar la sesión de ${device}`,
+    closeOthers: 'Cerrar las demás sesiones',
+    closeAll: 'Cerrar todas las sesiones',
+    confirm: {
+      one: { confirmTitle: '¿Cerrar esta sesión?', confirmDescription: 'Quien la use tendrá que iniciar sesión de nuevo.', confirmLabel: 'Cerrar sesión' },
+      others: {
+        confirmTitle: '¿Cerrar las demás sesiones?',
+        confirmDescription: 'Se cierran todas menos esta. En los otros equipos tendrán que iniciar sesión de nuevo.',
+        confirmLabel: 'Cerrar las demás',
+      },
+      all: {
+        confirmTitle: '¿Cerrar todas las sesiones?',
+        confirmDescription: 'Se cierran todas, incluida esta: tendrás que iniciar sesión de nuevo.',
+        confirmLabel: 'Cerrar todas',
+      },
+    },
+  },
+  danger: {
+    title: 'Desactivar mi cuenta',
+    description: 'Pierdes el acceso a Fiaro de inmediato. Tu historial se conserva. Confirma con tu contraseña.',
+    password: { label: 'Contraseña' },
+    submit: 'Desactivar mi cuenta',
+    confirmTitle: '¿Desactivar tu cuenta?',
+    confirmDescription: 'Pierdes el acceso a Fiaro de inmediato. Tu historial se conserva.',
+    confirmLabel: 'Desactivar',
+  },
+} as const;

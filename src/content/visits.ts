@@ -1,0 +1,97 @@
+import type { VisitOutcome } from '@fiaro-app/contracts';
+
+/** Textos del historial de cobros de un préstamo (`Detalle de préstamo — Historial de cobros`). */
+export const VISITS_TEXT = {
+  title: 'Historial de cobros',
+  caption: 'Visitas de cobro del préstamo',
+  headers: ['Fecha', 'Cobrador', 'Resultado', 'Esperado', 'Cobrado', 'Medio'] as const,
+  empty: 'Este préstamo todavía no tiene visitas de cobro.',
+  outcome: {
+    PAID: 'Pagó',
+    NOT_FOUND: 'No encontrado',
+    REFUSED: 'Se negó a pagar',
+    RESCHEDULED: 'Reprogramado',
+  } satisfies Record<VisitOutcome, string>,
+  method: { CASH: 'Efectivo', NEQUI: 'Nequi', TRANSFER: 'Transferencia' },
+  reversed: 'Revertido',
+  collect: {
+    title: 'Registrar cobro',
+    description: 'Registra la visita a este cliente: qué pasó y, si pagó, cuánto y cómo. Queda a tu nombre y se suma al saldo al instante.',
+    outcomeLabel: 'Resultado de la visita',
+    amountLabel: 'Monto recibido',
+    methodLabel: 'Medio de pago',
+    promisedLabel: 'Fecha prometida',
+    submit: 'Registrar cobro',
+    done: 'Cobro registrado.',
+    notAssigned:
+      'Este préstamo no está asignado a ti hoy, así que no puedes registrar cobros aquí. Asígnatelo primero desde «Asignar cobrador».',
+    confirm: {
+      PAID: (amount: string) => ({
+        title: '¿Registrar este pago?',
+        description: `Se registra un pago de ${amount}. Si te equivocas, solo se corrige revirtiéndolo.`,
+        confirmLabel: 'Registrar pago',
+      }),
+      other: { title: '¿Registrar la visita?', description: 'Queda en el historial del préstamo con tu nombre.', confirmLabel: 'Registrar visita' },
+    },
+    errors: {
+      amount: 'Escribe el monto recibido.',
+      promisedDate: 'Elige la fecha en que prometió pagar.',
+      forbidden: 'No puedes registrar cobros en este préstamo: no está asignado a ti hoy o tu cuenta no cobra en campo.',
+      notFound: 'No encontramos el préstamo. Recarga la página.',
+      invalid: 'Los datos del cobro no combinan. Revísalos e intenta de nuevo.',
+    },
+  },
+  promised: (date: string) => `Prometió pagar el ${date}`,
+  reversal: (reason: string) => `Motivo: ${reason}`,
+  reverse: {
+    action: 'Revertir pago',
+    title: 'Revertir el pago',
+    description: 'El pago deja de contar en el saldo del préstamo. No se borra: queda registrado con su motivo. Esta acción no se deshace.',
+    reason: { label: 'Motivo', placeholder: 'Ej: El cobrador registró el monto equivocado.' },
+    submit: 'Revertir pago',
+    cancel: 'Cancelar',
+    done: 'Pago revertido.',
+  },
+  report: {
+    title: 'Cobros del día',
+    subtitle: 'Las visitas de todos tus cobradores: qué se cobró, qué se reprogramó y quién no pagó.',
+    tableCaption: 'Visitas de cobro del negocio',
+    headers: ['Hora', 'Cliente', 'Cobrador', 'Resultado', 'Esperado', 'Cobrado', 'Medio'] as const,
+    rangeToday: (date: string) => `Hoy · ${date}`,
+    rangeDay: (date: string) => `El ${date}`,
+    range: (from: string, to: string) => `Del ${from} al ${to}`,
+    viewLoan: 'Ver préstamo',
+    filters: {
+      label: 'Filtrar cobros',
+      from: 'Desde',
+      to: 'Hasta',
+      collector: 'Cobrador',
+      allCollectors: 'Todos los cobradores',
+      outcome: 'Resultado',
+      allOutcomes: 'Todos los resultados',
+      apply: 'Aplicar',
+      clear: 'Limpiar filtros',
+      search: 'Cliente o cobrador',
+      searchPlaceholder: 'Buscar por nombre...',
+      periodHint: 'Sin fechas se muestra solo hoy. Con una sola fecha, ese día.',
+    },
+    empty: {
+      title: 'Todavía no hay cobros hoy',
+      description: 'Cuando tus cobradores registren visitas, las verás aquí al instante, con lo cobrado y lo que quedó pendiente.',
+    },
+    emptyFiltered: {
+      title: 'No hay cobros con esos filtros',
+      description: 'Prueba con otro día o quita algún filtro para ver más visitas.',
+    },
+    searchTruncated: 'Hay más visitas en este período de las que se pueden revisar al buscar. Acota las fechas para ver todas las coincidencias.',
+    forbidden: {
+      title: 'No tienes acceso a esta sección',
+      description: 'Solo quienes administran el negocio pueden ver los cobros de todo el equipo. Tu ruta del día está en la app móvil.',
+    },
+    pagination: {
+      previous: 'Anterior',
+      next: 'Siguiente',
+      summary: (page: number, pages: number, total: number) => `Página ${String(page)} de ${String(pages)} · ${String(total)} visitas`,
+    },
+  },
+} as const;
