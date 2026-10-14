@@ -21,12 +21,12 @@ export const CollectorFormSchema = z.object({
     .transform(normalizeNationalId)
     .pipe(NationalIdSchema),
   phone: phoneField,
-  /** Opcional: vacío se omite; si se escribe, debe ser un correo. */
+  /** Obligatorio (D-120): es por donde le llegan su contraseña temporal y los avisos. */
   contactEmail: z
     .string()
     .trim()
-    .transform((value) => (value === '' ? undefined : value))
-    .pipe(z.email('Escribe un correo válido, por ejemplo cobrador@correo.com.').optional()),
+    .min(1, 'Escribe el correo del cobrador: ahí le llegan su contraseña y los avisos.')
+    .pipe(z.email('Escribe un correo válido, por ejemplo cobrador@correo.com.')),
   portfolioId: z.string().min(1, 'Elige la cartera del cobrador.').pipe(IdSchema),
 });
 
@@ -46,7 +46,7 @@ export function toInviteCollectorBody(values: CollectorValues): z.input<typeof I
     phone: values.phone,
     fullName: values.fullName,
     nationalId: values.nationalId,
-    ...(values.contactEmail !== undefined && { contactEmail: values.contactEmail }),
+    contactEmail: values.contactEmail,
     roles: ['COLLECTOR'],
     portfolioId: values.portfolioId,
   };
