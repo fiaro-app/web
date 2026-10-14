@@ -58,7 +58,7 @@ Para activar Cloudflare Turnstile, configura `NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_S
 
 > **Probar el build de producción en local (`pnpm build && pnpm start`)**: la política de seguridad incluye `upgrade-insecure-requests` solo fuera de desarrollo, así que sobre `http://localhost` el navegador intenta una vez `https` y muestra `ERR_SSL_PROTOCOL_ERROR` en la consola. Es esperado y no ocurre detrás de HTTPS; la navegación sigue funcionando.
 
-El pipeline de CI (`.github/workflows/ci.yml`) corre lint → typecheck → test → build → docs → análisis de Sonar en cada PR y en cada push a `dev`.
+El pipeline de CI (`.github/workflows/ci.yml`) corre lint → typecheck → test → build → docs → análisis de Sonar en cada PR a `dev` o `main` (no en el push al fusionar, ni si el PR solo cambia `.md` o `docs/`; un push nuevo cancela la corrida anterior). La documentación solo se genera en los PRs de release a `main`.
 
 ## Estructura
 
