@@ -5,7 +5,7 @@ export const SETTINGS_TEXT = {
   title: 'Configuración',
   forbidden: {
     title: 'No tienes acceso a esta sección',
-    description: 'Tu cuenta no tiene un negocio activo desde el que ver la configuración.',
+    description: 'La configuración del negocio es de quien lo administra. Tus datos y tu contraseña están en «Cuenta».',
   },
   readOnly: 'Solo quien administra el negocio puede cambiar la configuración.',
   business: {
