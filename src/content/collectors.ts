@@ -58,8 +58,8 @@ export const COLLECTORS_TEXT = {
       placeholder: '300 123 4567',
     },
     contactEmail: {
-      label: 'Correo electrónico (opcional)',
-      hint: 'Sirve para recuperar su contraseña.',
+      label: 'Correo electrónico',
+      hint: 'Ahí le llegan su contraseña temporal y los avisos de la app.',
       placeholder: 'cobrador@correo.com',
     },
     portfolio: { label: 'Cartera asignada', placeholder: 'Elige una cartera' },

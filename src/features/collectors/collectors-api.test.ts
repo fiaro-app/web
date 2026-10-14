@@ -25,7 +25,7 @@ describe('collectors api', () => {
       fullName: 'Luis Gómez',
       nationalId: '1030405060',
       phone: '+573109998877',
-      contactEmail: undefined,
+      contactEmail: 'luis@correo.com',
       portfolioId: '0192f0a4-7c3e-7000-8000-0000000000aa',
     });
     expect(callEndpoint).toHaveBeenCalledWith(
