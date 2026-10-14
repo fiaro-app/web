@@ -124,11 +124,7 @@ export function useRegisterForm({ redirectTo }: UseRegisterFormOptions) {
       return;
     }
     try {
-      if (turnstileToken) {
-        await registerOwner(account.data, company.data, turnstileToken);
-      } else {
-        await registerOwner(account.data, company.data);
-      }
+      await registerOwner(account.data, company.data, turnstileToken ?? undefined);
     } catch (error) {
       setTurnstileToken(null);
       setTurnstileResetKey((current) => current + 1);

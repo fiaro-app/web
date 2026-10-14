@@ -73,6 +73,8 @@ export function describeAuthError(error: unknown): AuthErrorView {
       return { message: 'El código venció. Pide uno nuevo.', field: 'code' };
     case 'INVALID_PASSWORD':
       return { message: 'La contraseña actual no es correcta.', field: 'currentPassword' };
+    case 'TURNSTILE_FAILED':
+      return { message: 'No pudimos verificar que eres una persona. Completa la verificación de nuevo.', field: null };
     case 'MAINTENANCE':
       return { message: 'Fiaro está en mantenimiento. Vuelve a intentarlo en un rato.', field: null };
     case CLIENT_ERROR_CODES.network:
