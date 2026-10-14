@@ -12,7 +12,7 @@ vi.mock('@/features/account/use-session-actions', () => ({
 }));
 
 const SESSIONS: SessionRow[] = [
-  { id: 's1', device: 'Chrome en Windows', isCurrent: true, detail: 'IP 190.1.2.3 · Último uso 09/10/2026' },
+  { id: 's1', device: 'Chrome en Windows', isCurrent: true, detail: 'IP 203.0.113.7 · Último uso 09/10/2026' },
   { id: 's2', device: 'App móvil en Android', isCurrent: false, detail: 'Último uso 05/10/2026' },
 ];
 

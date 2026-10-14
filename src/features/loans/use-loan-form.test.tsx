@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { ChangeEvent, SubmitEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiRequestError } from '@/lib/api';
 import { assignCollector, createLoan } from './loans-api';
@@ -13,7 +13,7 @@ const create = vi.mocked(createLoan);
 const assign = vi.mocked(assignCollector);
 
 const change = (value: string) => ({ target: { value } }) as ChangeEvent<HTMLInputElement>;
-const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as FormEvent<HTMLFormElement>;
+const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as SubmitEvent<HTMLFormElement>;
 const CLIENT_ID = '0192f0a4-7c3e-7000-8000-000000000001';
 
 type Hook = ReturnType<typeof renderHook<ReturnType<typeof useLoanForm>, unknown>>['result'];

@@ -3,7 +3,7 @@ import { SITE, resolveSiteUrl } from './site';
 
 describe('resolveSiteUrl', () => {
   it('falls back to the local site', () => {
-    expect(resolveSiteUrl(undefined)).toBe('http://localhost:3001');
+    expect(resolveSiteUrl()).toBe('http://localhost:3001');
     expect(resolveSiteUrl('')).toBe('http://localhost:3001');
   });
 

@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { ChangeEvent, SubmitEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiRequestError } from '@/lib/api';
 import { reversePayment } from './visits-api';
@@ -11,7 +11,7 @@ vi.mock('./visits-api', () => ({ reversePayment: vi.fn() }));
 
 const reverse = vi.mocked(reversePayment);
 const change = (value: string) => ({ target: { value } }) as ChangeEvent<HTMLTextAreaElement>;
-const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as FormEvent<HTMLFormElement>;
+const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as SubmitEvent<HTMLFormElement>;
 const api = (code: string) => new ApiRequestError({ statusCode: 409, code, message: 'x' });
 
 beforeEach(() => {

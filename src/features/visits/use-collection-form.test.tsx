@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import type { FormEvent } from 'react';
+import type { SubmitEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiRequestError } from '@/lib/api';
 import { useCollectionForm } from './use-collection-form';
@@ -10,7 +10,7 @@ vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh }) }));
 vi.mock('./visits-api', () => ({ createVisit: vi.fn() }));
 
 const create = vi.mocked(createVisit);
-const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as FormEvent<HTMLFormElement>;
+const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as SubmitEvent<HTMLFormElement>;
 const api = (statusCode: number, code: string) => new ApiRequestError({ statusCode, code, message: 'x' });
 const setup = () => renderHook(() => useCollectionForm({ loanId: 'l1', installmentValue: 30_000 })).result;
 

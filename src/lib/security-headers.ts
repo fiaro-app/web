@@ -90,7 +90,7 @@ export const NO_STORE_SOURCES: readonly string[] = [
 export const NO_STORE_HEADER: HeaderEntry = { key: 'Cache-Control', value: 'private, no-store' };
 
 /** Equipos locales: el único caso donde se admite `http:` (un almacenamiento de pruebas). */
-const LOCAL_HOSTS: readonly string[] = ['localhost', '127.0.0.1', '[::1]'];
+const LOCAL_HOSTS: ReadonlySet<string> = new Set(['localhost', '127.0.0.1', '[::1]']);
 
 /**
  * Origen válido de `STORAGE_ORIGIN` (`https://cdn.fiaro.co`): `https` y sin ruta; `http` solo para un equipo
@@ -102,7 +102,7 @@ export function parseStorageOrigin(raw: string | undefined): string | null {
   try {
     const url = new URL(raw);
     const secure = url.protocol === 'https:';
-    const local = url.protocol === 'http:' && LOCAL_HOSTS.includes(url.hostname);
+    const local = url.protocol === 'http:' && LOCAL_HOSTS.has(url.hostname);
     return secure || local ? url.origin : null;
   } catch {
     return null;

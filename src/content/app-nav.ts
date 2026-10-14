@@ -38,5 +38,5 @@ export function isNavItemActive(pathname: string, href: string): boolean {
  * Si no se sabe el rol, se muestra todo y es la API quien decide.
  */
 export function visibleNavItems(isCollector: boolean): readonly AppNavItem[] {
-  return isCollector ? APP_NAV_ITEMS.filter((item) => !item.adminOnly) : APP_NAV_ITEMS;
+  return APP_NAV_ITEMS.filter((item) => !isCollector || !item.adminOnly);
 }

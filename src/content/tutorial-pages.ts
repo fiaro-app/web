@@ -88,10 +88,17 @@ export const PAGE_GUIDES: Readonly<Record<string, readonly PageGuideStep[]>> = {
   ],
 };
 
+/** Quita las barras finales sin regex (evita el backtracking de `/\/+$/` con entradas largas). */
+function withoutTrailingSlashes(path: string): string {
+  let end = path.length;
+  while (end > 0 && path[end - 1] === '/') end -= 1;
+  return path.slice(0, end);
+}
+
 /** Clave de guía de una ruta: `/prestamos/abc123` → `/prestamos/:id`; las rutas de «nuevo» no tienen guía propia. */
 export function guideKeyFor(pathname: string): string | null {
-  const clean = pathname.split('?')[0]!.replace(/\/+$/, '') || '/';
+  const clean = withoutTrailingSlashes(pathname.split('?')[0]) || '/';
   if (clean in PAGE_GUIDES) return clean;
   const detail = /^\/(prestamos)\/(?!nuevo$)[^/]+$/.exec(clean);
-  return detail ? `/${detail[1]!}/:id` : null;
+  return detail ? `/${detail[1]}/:id` : null;
 }

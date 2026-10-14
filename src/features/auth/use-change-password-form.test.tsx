@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { ChangeEvent, SubmitEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiRequestError } from '@/lib/api';
 import { changePassword } from './auth-api';
@@ -15,7 +15,7 @@ const changeMock = vi.mocked(changePassword);
 type Hook = ReturnType<typeof renderHook<ReturnType<typeof useChangePasswordForm>, unknown>>['result'];
 
 const change = (value: string) => ({ target: { value } }) as ChangeEvent<HTMLInputElement>;
-const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as FormEvent<HTMLFormElement>;
+const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as SubmitEvent<HTMLFormElement>;
 
 function type(result: Hook, values: Partial<Record<ChangePasswordField, string>>) {
   for (const [field, value] of Object.entries(values)) {

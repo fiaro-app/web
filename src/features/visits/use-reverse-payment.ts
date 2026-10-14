@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { describeAuthError } from '@/features/auth/error-messages';
 import { reversePayment } from '@/features/visits/visits-api';
 import { isApiRequestError } from '@/lib/api';
@@ -32,7 +32,7 @@ export function useReversePayment(paymentId: string) {
     setReasonError(undefined);
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
     const trimmed = reason.trim();

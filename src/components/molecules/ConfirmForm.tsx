@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type FormEvent, type FormHTMLAttributes } from 'react';
+import { useState, type SubmitEvent, type FormHTMLAttributes } from 'react';
 import { ConfirmDialog } from '@/components/molecules/ConfirmDialog';
 
 export interface FormConfirmation {
@@ -13,7 +13,7 @@ export interface ConfirmFormProps extends Omit<FormHTMLAttributes<HTMLFormElemen
   /** Qué se pregunta antes de guardar. */
   readonly confirmation: FormConfirmation;
   /** El envío de siempre (valida, llama a la API…): solo corre cuando la persona confirma. */
-  readonly onSubmit: (event: FormEvent<HTMLFormElement>) => unknown;
+  readonly onSubmit: (event: SubmitEvent<HTMLFormElement>) => unknown;
 }
 
 /**
@@ -21,7 +21,7 @@ export interface ConfirmFormProps extends Omit<FormHTMLAttributes<HTMLFormElemen
  * lo acepta se ejecuta el `onSubmit` original. Sirve para decisiones que cambian datos del negocio.
  */
 export function ConfirmForm({ confirmation, onSubmit, children, ...props }: Readonly<ConfirmFormProps>) {
-  const [pending, setPending] = useState<FormEvent<HTMLFormElement> | null>(null);
+  const [pending, setPending] = useState<SubmitEvent<HTMLFormElement> | null>(null);
 
   const confirm = () => {
     const event = pending;

@@ -42,7 +42,7 @@ export function toCollectorsViewModel(
     id: entry.id,
     fullName: entry.fullName,
     phone: entry.phone,
-    portfolioName: (entry.portfolioId !== null && portfolioNames.get(entry.portfolioId)) || NO_PORTFOLIO_LABEL,
+    portfolioName: (entry.portfolioId === null ? undefined : portfolioNames.get(entry.portfolioId)) ?? NO_PORTFOLIO_LABEL,
     active: entry.status === 'ACTIVE',
   }));
   return { rows, ...pageInfo };

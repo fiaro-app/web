@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { requestPasswordReset, resetPassword } from '@/features/auth/auth-api';
 import { describeAuthError, issueFieldErrors } from '@/features/auth/error-messages';
 import { RequestResetFormSchema, ResetPasswordFormSchema } from '@/features/auth/password-schemas';
@@ -93,7 +93,7 @@ export function usePasswordRecovery() {
     }
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting || step === 'done') return;
     await (step === 'request' ? submitRequest() : submitReset());

@@ -14,6 +14,25 @@ export interface NotificationsViewProps {
   readonly notifications: NotificationsViewModel;
 }
 
+/** Estado vacío: sin no leídas (con enlace para ver todas) o sin notificaciones. */
+function NotificationsEmptyState({ unreadOnly }: Readonly<{ readonly unreadOnly: boolean }>) {
+  if (unreadOnly) {
+    return (
+      <EmptyState
+        icon={<StateIcon name="bell" />}
+        {...NOTIFICATIONS_TEXT.emptyUnread}
+        action={
+          <ButtonLink href="/notificaciones" variant="outline">
+            {NOTIFICATIONS_TEXT.filters.all}
+          </ButtonLink>
+        }
+      />
+    );
+  }
+
+  return <EmptyState icon={<StateIcon name="bell" />} {...NOTIFICATIONS_TEXT.empty} />;
+}
+
 /** Notificaciones: título, filtro "todas / no leídas" (enlaces `?filtro=`) y la lista. Solo presentación. */
 export function NotificationsView({ notifications }: Readonly<NotificationsViewProps>) {
   const { items, total, page, pageSize, unreadOnly } = notifications;
@@ -35,17 +54,7 @@ export function NotificationsView({ notifications }: Readonly<NotificationsViewP
       </nav>
 
       {items.length === 0 ? (
-        <EmptyState
-          icon={<StateIcon name="bell" />}
-          {...(unreadOnly ? NOTIFICATIONS_TEXT.emptyUnread : NOTIFICATIONS_TEXT.empty)}
-          action={
-            unreadOnly ? (
-              <ButtonLink href="/notificaciones" variant="outline">
-                {NOTIFICATIONS_TEXT.filters.all}
-              </ButtonLink>
-            ) : undefined
-          }
-        />
+        <NotificationsEmptyState unreadOnly={unreadOnly} />
       ) : (
         <>
           <NotificationList items={items} />

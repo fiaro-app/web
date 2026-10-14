@@ -18,7 +18,7 @@ export function RegisterForm({ form }: Readonly<{ form: RegisterState }>) {
   const content = REGISTER_STEP_CONTENT[step];
 
   return (
-    <form onSubmit={submit} noValidate aria-label="Registro" className="flex flex-col gap-5">
+    <form onSubmit={(event) => void submit(event)} noValidate aria-label="Registro" className="flex flex-col gap-5">
       <Stepper steps={REGISTER_STEP_LABELS} current={REGISTER_STEPS.indexOf(step)} size="sm" />
       <div className="flex flex-col gap-1">
         <Text variant="h2" as="h1" className="text-[24px]">

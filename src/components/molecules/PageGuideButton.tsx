@@ -8,7 +8,7 @@ export function PageGuideButton() {
   return (
     <button
       type="button"
-      onClick={() => window.dispatchEvent(new Event(START_PAGE_GUIDE_EVENT))}
+      onClick={() => globalThis.dispatchEvent(new Event(START_PAGE_GUIDE_EVENT))}
       className="inline-flex min-h-11 items-center gap-2 self-start rounded-sm text-small font-semibold text-primary hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
     >
       <span aria-hidden="true" className="grid size-5 place-items-center rounded-full border-[1.5px] border-current text-caption leading-none">

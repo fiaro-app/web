@@ -17,5 +17,5 @@ export function toFieldErrors<TField extends string>(error: z.ZodError): FieldEr
       errors[field] = contractMessage('es', issue.message);
     }
   }
-  return errors as FieldErrors<TField>;
+  return errors;
 }

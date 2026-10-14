@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { describeLoanError } from '@/features/loans/error-messages';
 import { assignCollector } from '@/features/loans/loans-api';
 
@@ -22,7 +22,7 @@ export function useAssignCollector(loanId: string) {
     setNotice(null);
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
     if (collectorId === '') {

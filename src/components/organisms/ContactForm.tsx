@@ -17,7 +17,7 @@ export function ContactForm({ form }: Readonly<{ form: ContactFormState }>) {
   const text = CONTACT_CONTENT.form;
 
   return (
-    <form onSubmit={submit} noValidate aria-label={text.label} className="flex flex-col gap-5">
+    <form onSubmit={(event) => void submit(event)} noValidate aria-label={text.label} className="flex flex-col gap-5">
       <FormFieldset>
         <FormField label={text.name.label} error={fieldErrors.name}>
           <Input name="name" autoComplete="name" placeholder={text.name.placeholder} value={values.name} onChange={setField('name')} />

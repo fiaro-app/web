@@ -8,5 +8,6 @@ export const DEFAULT_API_URL = 'http://localhost:3000';
  * @throws Si `API_URL` no es una URL válida: mejor fallar al arrancar que reenviar a ninguna parte.
  */
 export function resolveApiUrl(value: string | undefined = process.env.API_URL): string {
-  return new URL(value || DEFAULT_API_URL).origin;
+  // Vacío cuenta como «sin configurar» (p. ej. `API_URL=` en el .env).
+  return new URL(value === undefined || value === '' ? DEFAULT_API_URL : value).origin;
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { issueFieldErrors } from '@/features/auth/error-messages';
 import { CollectorFormSchema, type CollectorField } from '@/features/collectors/collector-schemas';
 import { inviteCollector } from '@/features/collectors/collectors-api';
@@ -44,7 +44,7 @@ export function useCollectorForm() {
     setIsSubmitting(false);
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
 

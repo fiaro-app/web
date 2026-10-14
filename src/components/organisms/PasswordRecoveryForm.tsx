@@ -47,7 +47,7 @@ export function PasswordRecoveryForm() {
   const content = isReset ? text.reset : text.request;
 
   return (
-    <form onSubmit={submit} noValidate aria-label={content.title} className="flex flex-col gap-5">
+    <form onSubmit={(event) => void submit(event)} noValidate aria-label={content.title} className="flex flex-col gap-5">
       <Heading title={content.title} subtitle={content.subtitle} />
 
       {isReset ? (
