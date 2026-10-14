@@ -4,6 +4,7 @@ import { FilterPillLink } from '@/components/atoms/FilterPillLink';
 import { Text } from '@/components/atoms/Text';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { PaginationNav } from '@/components/molecules/PaginationNav';
+import { StickyToolbar } from '@/components/molecules/StickyToolbar';
 import { SettlementFilters } from '@/components/organisms/SettlementFilters';
 import { SettlementsTable } from '@/components/organisms/SettlementsTable';
 import { SETTLEMENTS_TEXT } from '@/content/settlements';
@@ -55,18 +56,20 @@ export function SettlementsView({ settlements, options = { collectors: [], portf
         {SETTLEMENTS_TEXT.title}
       </Text>
 
-      <nav aria-label={SETTLEMENTS_TEXT.filters.label} className="flex flex-wrap gap-2">
-        {SETTLEMENT_STATUS_FILTERS.map((filter) => (
-          <FilterPillLink key={filter} href={pageHref('/cuadres', 1, { ...hrefFilters, estado: filter })} selected={status === filter}>
-            {SETTLEMENTS_TEXT.status[filter]}
+      <StickyToolbar className="max-md:static">
+        <nav aria-label={SETTLEMENTS_TEXT.filters.label} className="flex flex-wrap gap-2">
+          {SETTLEMENT_STATUS_FILTERS.map((filter) => (
+            <FilterPillLink key={filter} href={pageHref('/cuadres', 1, { ...hrefFilters, estado: filter })} selected={status === filter}>
+              {SETTLEMENTS_TEXT.status[filter]}
+            </FilterPillLink>
+          ))}
+          <FilterPillLink href={pageHref('/cuadres', 1, { ...hrefFilters, estado: settlementStatusParam(null) })} selected={status === null}>
+            {SETTLEMENTS_TEXT.filters.all}
           </FilterPillLink>
-        ))}
-        <FilterPillLink href={pageHref('/cuadres', 1, { ...hrefFilters, estado: settlementStatusParam(null) })} selected={status === null}>
-          {SETTLEMENTS_TEXT.filters.all}
-        </FilterPillLink>
-      </nav>
+        </nav>
 
-      <SettlementFilters filters={filters} options={options} status={status} />
+        <SettlementFilters filters={filters} options={options} status={status} />
+      </StickyToolbar>
 
       {rows.length === 0 ? (
         <SettlementsEmptyState isFiltered={isFiltered} />

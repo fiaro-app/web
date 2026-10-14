@@ -6,6 +6,7 @@ import { FilterForm } from '@/components/molecules/FilterForm';
 import { FilterSubmitButton } from '@/components/molecules/FilterSubmitButton';
 import { PaginationNav } from '@/components/molecules/PaginationNav';
 import { SearchInput } from '@/components/molecules/SearchInput';
+import { StickyToolbar } from '@/components/molecules/StickyToolbar';
 import { ClientsTable } from '@/components/organisms/ClientsTable';
 import { CLIENTS_TEXT } from '@/content/clients';
 import type { ClientsViewModel } from '@/features/clients/clients-view-model';
@@ -65,17 +66,19 @@ export function ClientsView({ clients, canManage = true }: Readonly<ClientsViewP
         {canManage && <ButtonLink href="/clientes/nuevo">{CLIENTS_TEXT.newClient}</ButtonLink>}
       </header>
 
-      <FilterForm action="/clientes" role="search" className="flex max-w-xl gap-3">
-        <SearchInput name="q" defaultValue={search} placeholder={CLIENTS_TEXT.search.placeholder} className="flex-1" />
-        <FilterSubmitButton size="sm" className="h-11">
-          {CLIENTS_TEXT.search.submit}
-        </FilterSubmitButton>
-        {hasSearch && (
-          <ButtonLink href="/clientes" variant="text" size="sm" className="h-11">
-            {CLIENTS_TEXT.search.clear}
-          </ButtonLink>
-        )}
-      </FilterForm>
+      <StickyToolbar>
+        <FilterForm action="/clientes" role="search" className="flex max-w-xl gap-3">
+          <SearchInput name="q" defaultValue={search} placeholder={CLIENTS_TEXT.search.placeholder} className="flex-1" />
+          <FilterSubmitButton size="sm" className="h-11">
+            {CLIENTS_TEXT.search.submit}
+          </FilterSubmitButton>
+          {hasSearch && (
+            <ButtonLink href="/clientes" variant="text" size="sm" className="h-11">
+              {CLIENTS_TEXT.search.clear}
+            </ButtonLink>
+          )}
+        </FilterForm>
+      </StickyToolbar>
 
       {rows.length === 0 ? (
         <ClientsEmptyState search={search} canManage={canManage} />
