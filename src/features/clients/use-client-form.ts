@@ -7,6 +7,7 @@ import { ClientFormSchema, toClientChanges, type ClientField, type ClientFormInp
 import { createClient, updateClient } from '@/features/clients/clients-api';
 import type { ClientResponse } from '@/features/clients/endpoints';
 import { describeClientError } from '@/features/clients/error-messages';
+import { fieldInput } from '@/lib/phone-input';
 import { toFieldErrors, type FieldErrors } from '@/lib/forms';
 
 const EMPTY_VALUES: ClientFormInput = { fullName: '', nationalId: '', phone: '', occupation: '', address: '' };
@@ -28,7 +29,7 @@ export function useClientForm({ client }: { readonly client?: ClientResponse } =
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const setField = (field: ClientField) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues((current) => ({ ...current, [field]: event.target.value }));
+    setValues((current) => ({ ...current, [field]: fieldInput(field, event.target.value) }));
     setFieldErrors((current) => ({ ...current, [field]: undefined }));
   };
 

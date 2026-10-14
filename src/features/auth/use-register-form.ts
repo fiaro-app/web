@@ -14,6 +14,7 @@ import {
 } from '@/features/auth/register-schemas';
 import { LOGIN_PATH } from '@/features/auth/route-guard';
 import { toFieldErrors, type FieldErrors } from '@/lib/forms';
+import { fieldInput } from '@/lib/phone-input';
 import { turnstileEnabled } from '@/components/molecules/TurnstileWidget';
 
 const EMPTY_VALUES: RegisterFormInput = {
@@ -58,7 +59,7 @@ export function useRegisterForm({ redirectTo }: UseRegisterFormOptions) {
   );
 
   const setField = (field: RegisterField) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues((current) => ({ ...current, [field]: event.target.value }));
+    setValues((current) => ({ ...current, [field]: fieldInput(field, event.target.value) }));
     setFieldErrors((current) => ({ ...current, [field]: undefined }));
   };
 

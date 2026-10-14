@@ -6,6 +6,7 @@ import { CollectorFormSchema, type CollectorField } from '@/features/collectors/
 import { inviteCollector } from '@/features/collectors/collectors-api';
 import { describeCollectorError } from '@/features/collectors/error-messages';
 import type { InvitedMembership } from '@/features/memberships/endpoints';
+import { fieldInput } from '@/lib/phone-input';
 import { toFieldErrors, type FieldErrors } from '@/lib/forms';
 
 const EMPTY_VALUES: Record<CollectorField, string> = {
@@ -28,7 +29,7 @@ export function useCollectorForm() {
   const [invited, setInvited] = useState<InvitedMembership | null>(null);
 
   const setField = (field: CollectorField) => (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setValues((current) => ({ ...current, [field]: event.target.value }));
+    setValues((current) => ({ ...current, [field]: fieldInput(field, event.target.value) }));
     setFieldErrors((current) => ({ ...current, [field]: undefined }));
   };
 
