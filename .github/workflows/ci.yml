@@ -72,6 +72,6 @@ jobs:
       # Requires the SONAR_TOKEN repo secret and Automatic Analysis disabled in Sonar
       # (Administration -> Analysis Method -> keep only CI-based Analysis).
       - name: SonarQube Cloud scan
-        uses: sonarsource/sonarqube-scan-action@v6
+        uses: sonarsource/sonarqube-scan-action@v8
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
