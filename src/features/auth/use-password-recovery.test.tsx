@@ -26,7 +26,7 @@ async function reachResetStep(result: Hook) {
   await act(() => result.current.submit(submitEvent()));
 }
 
-const RESET = { code: '048 213', newPassword: 'nueva-clave-1', confirmPassword: 'nueva-clave-1' };
+const RESET = { code: '048 213', newPassword: 'nueva-clave-segura-1', confirmPassword: 'nueva-clave-segura-1' };
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -75,7 +75,7 @@ describe('usePasswordRecovery — reset step', () => {
   it('validates the code and the confirmation before calling the API', async () => {
     const result = setup();
     await reachResetStep(result);
-    type(result, { code: '12', newPassword: 'nueva-clave-1', confirmPassword: 'otra' });
+    type(result, { code: '12', newPassword: 'nueva-clave-segura-1', confirmPassword: 'otra' });
 
     await act(() => result.current.submit(submitEvent()));
 
@@ -90,7 +90,7 @@ describe('usePasswordRecovery — reset step', () => {
 
     await act(() => result.current.submit(submitEvent()));
 
-    expect(resetMock).toHaveBeenCalledWith({ phone: '+573001234567', code: '048213', newPassword: 'nueva-clave-1' });
+    expect(resetMock).toHaveBeenCalledWith({ phone: '+573001234567', code: '048213', newPassword: 'nueva-clave-segura-1' });
     expect(result.current.step).toBe('done');
   });
 
