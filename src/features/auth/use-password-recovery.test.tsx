@@ -55,7 +55,7 @@ describe('usePasswordRecovery — request step', () => {
 
     await reachResetStep(result);
 
-    expect(requestMock).toHaveBeenCalledWith('+573001234567');
+    expect(requestMock).toHaveBeenCalledWith('+573001234567', undefined);
     expect(result.current.step).toBe('reset');
   });
 

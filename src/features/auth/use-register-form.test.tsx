@@ -116,6 +116,7 @@ describe('useRegisterForm — step 2 (company)', () => {
     expect(registerMock).toHaveBeenCalledWith(
       expect.objectContaining({ phone: '+573001234567', nationalId: '1020304050', fullName: 'Ana Pérez' }),
       { businessName: 'Préstamos Ana' },
+      undefined,
     );
     expect(signInMock).toHaveBeenCalledWith({ phone: '+573001234567', password: 'una-contraseña' });
     expect(replace).toHaveBeenCalledWith('/resumen');

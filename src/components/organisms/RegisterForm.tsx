@@ -4,6 +4,7 @@ import { Button } from '@/components/atoms/Button';
 import { Text } from '@/components/atoms/Text';
 import { Alert } from '@/components/molecules/Alert';
 import { Stepper } from '@/components/molecules/Stepper';
+import { TurnstileWidget } from '@/components/molecules/TurnstileWidget';
 import { RegisterAccountFields } from '@/components/organisms/RegisterAccountFields';
 import { RegisterCompanyFields } from '@/components/organisms/RegisterCompanyFields';
 import { REGISTER_STEP_CONTENT, REGISTER_STEP_LABELS } from '@/content/register';
@@ -14,7 +15,16 @@ type RegisterState = ReturnType<typeof useRegisterForm>;
 
 /** Formulario de registro en dos pasos. Solo diseño: la lógica vive en `useRegisterForm`. */
 export function RegisterForm({ form }: Readonly<{ form: RegisterState }>) {
-  const { step, formError, isSubmitting, goBack, submit } = form;
+  const {
+    step,
+    formError,
+    isSubmitting,
+    goBack,
+    submit,
+    turnstileResetKey,
+    setTurnstileToken,
+    turnstileError,
+  } = form;
   const content = REGISTER_STEP_CONTENT[step];
 
   return (
@@ -30,6 +40,15 @@ export function RegisterForm({ form }: Readonly<{ form: RegisterState }>) {
       </div>
 
       {step === 'account' ? <RegisterAccountFields {...form} /> : <RegisterCompanyFields {...form} />}
+
+      {step === 'company' && (
+        <TurnstileWidget
+          action="register"
+          resetKey={turnstileResetKey}
+          onToken={setTurnstileToken}
+          onError={turnstileError}
+        />
+      )}
 
       {formError && <Alert tone="error">{formError}</Alert>}
 

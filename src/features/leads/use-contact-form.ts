@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useCallback, useState, type ChangeEvent, type FormEvent } from 'react';
 import { describeAuthError, issueFieldErrors } from '@/features/auth/error-messages';
 import { ContactFormSchema, type ContactField } from '@/features/leads/lead-schemas';
 import { sendLead } from '@/features/leads/leads-api';
 import { toFieldErrors, type FieldErrors } from '@/lib/forms';
+import { turnstileEnabled } from '@/components/molecules/TurnstileWidget';
 
 const EMPTY_VALUES: Record<ContactField, string> = { name: '', phone: '', email: '', message: '' };
 
@@ -23,6 +24,15 @@ export function useContactForm() {
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSent, setIsSent] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const turnstileError = useCallback(
+    () =>
+      setFormError(
+        'No pudimos cargar la verificación de seguridad. Recarga la página e inténtalo de nuevo.',
+      ),
+    [],
+  );
 
   const setField = (field: ContactField) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setValues((current) => ({ ...current, [field]: event.target.value }));
@@ -51,6 +61,10 @@ export function useContactForm() {
     }
     setFieldErrors({});
     setFormError(null);
+    if (turnstileEnabled && !turnstileToken) {
+      setFormError('Completa la verificación de seguridad para continuar.');
+      return;
+    }
     setIsSubmitting(true);
     // Señuelo: una persona nunca lo ve ni lo llena; un robot que rellena el formulario sí, y la API descarta el contacto.
     const decoy = new FormData(event.currentTarget).get('website');
@@ -61,13 +75,28 @@ export function useContactForm() {
         ...(parsed.data.phone && { phone: parsed.data.phone }),
         ...(parsed.data.email && { email: parsed.data.email }),
         ...(typeof decoy === 'string' && decoy !== '' && { website: decoy }),
+        ...(turnstileToken && { turnstileToken }),
       });
       setIsSent(true);
     } catch (error) {
       fail(error);
     }
     setIsSubmitting(false);
+    setTurnstileToken(null);
+    setTurnstileResetKey((current) => current + 1);
   };
 
-  return { values, fieldErrors, formError, isSubmitting, isSent, setField, submit };
+  return {
+    values,
+    fieldErrors,
+    formError,
+    isSubmitting,
+    isSent,
+    setField,
+    submit,
+    turnstileToken,
+    turnstileResetKey,
+    setTurnstileToken,
+    turnstileError,
+  };
 }

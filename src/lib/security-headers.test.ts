@@ -24,6 +24,11 @@ describe('buildContentSecurityPolicy', () => {
     expect(directive(production, 'upgrade-insecure-requests')).toBe('upgrade-insecure-requests');
   });
 
+  it('allows only Cloudflare Turnstile scripts and frames from outside the app', () => {
+    expect(directive(production, 'script-src')).toContain('https://challenges.cloudflare.com');
+    expect(directive(production, 'frame-src')).toBe('frame-src https://challenges.cloudflare.com');
+  });
+
   it('relaxes only what development tooling needs', () => {
     expect(directive(development, 'script-src')).toContain("'unsafe-eval'");
     expect(directive(development, 'connect-src')).toContain('ws:');
