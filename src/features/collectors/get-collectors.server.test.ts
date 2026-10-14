@@ -23,7 +23,7 @@ const LIST = {
       phone: '+573109998877',
     },
   ],
-  meta: { page: 1, pageSize: 20, total: 1 },
+  meta: { page: 1, pageSize: 10, total: 1 },
 };
 
 function routeApi(routes: Record<string, unknown>) {
@@ -45,13 +45,26 @@ describe('getCollectors', () => {
     expect(result.status === 'ok' && result.collectors.rows[0]?.portfolioName).toBe('Zona Norte');
   });
 
-  it('asks the API for collectors only, on the requested page', async () => {
+  it('asks the API for active collectors only by default, on the requested page', async () => {
     routeApi({ '/memberships': LIST, '/portfolios': [] });
     await getCollectors(3);
     expect(callEndpointAsUser).toHaveBeenCalledWith(
       expect.objectContaining({ path: '/memberships' }),
-      { body: { page: 3, pageSize: 20, role: 'COLLECTOR' } },
+      { body: { page: 3, pageSize: 10, role: 'COLLECTOR', status: 'ACTIVE' } },
     );
+  });
+
+  it('asks for the inactive ones, or for every status, when filtered', async () => {
+    routeApi({ '/memberships': LIST, '/portfolios': [] });
+    const inactive = await getCollectors(1, 'inactivos');
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/memberships' }), {
+      body: { page: 1, pageSize: 10, role: 'COLLECTOR', status: 'INACTIVE' },
+    });
+    expect(inactive.status === 'ok' && inactive.collectors.filter).toBe('inactivos');
+    await getCollectors(1, 'todos');
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/memberships' }), {
+      body: { page: 1, pageSize: 10, role: 'COLLECTOR' },
+    });
   });
 
   it('reports forbidden when the person cannot list collaborators', async () => {

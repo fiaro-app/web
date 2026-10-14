@@ -5,6 +5,7 @@ import { FilterSelectField } from '@/components/molecules/FilterSelectField';
 import { SETTLEMENTS_TEXT } from '@/content/settlements';
 import type { SettlementFilterOptions } from '@/features/settlements/get-settlements.server';
 import { EMPTY_SETTLEMENT_FILTERS, type SettlementFilters as Filters } from '@/features/settlements/settlement-filters';
+import { ALL_SETTLEMENTS_PARAM } from '@/features/settlements/status-filter';
 
 export interface SettlementFiltersProps {
   readonly filters: Filters;
@@ -24,7 +25,7 @@ export function SettlementFilters({ filters, options, status }: Readonly<Settlem
 
   return (
     <FilterForm action="/cuadres" aria-label={text.form} className="flex flex-col gap-2">
-      {status && <input type="hidden" name="estado" value={status} />}
+      <input type="hidden" name="estado" value={status ?? ALL_SETTLEMENTS_PARAM} />
       <div className="flex flex-wrap items-end gap-4">
         <FilterDateRange from={filters.from} to={filters.to} fromLabel={text.from} toLabel={text.to} />
         <FilterSelectField
@@ -44,7 +45,7 @@ export function SettlementFilters({ filters, options, status }: Readonly<Settlem
         <FilterActions
           applyLabel={text.apply}
           clearLabel={text.clear}
-          clearHref={status ? `/cuadres?estado=${status}` : '/cuadres'}
+          clearHref={`/cuadres?estado=${status ?? ALL_SETTLEMENTS_PARAM}`}
           isFiltered={isFiltered}
         />
       </div>

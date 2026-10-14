@@ -2,7 +2,13 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { changeCollectorPortfolio, deactivateCollector, resetCollectorPassword } from '@/features/collectors/collectors-api';
+import {
+  changeCollectorPortfolio,
+  deactivateCollector,
+  deleteCollector,
+  reactivateCollector,
+  resetCollectorPassword,
+} from '@/features/collectors/collectors-api';
 import { describeCollectorError } from '@/features/collectors/error-messages';
 import type { CollectorHandover } from '@/features/collectors/get-collector-handover.server';
 import type { CollectorDetail } from '@/features/collectors/get-collector.server';
@@ -25,10 +31,10 @@ function describeDeactivationError(error: unknown): string {
 }
 
 /** Acción en curso o confirmada: solo una a la vez. */
-export type CollectorAction = 'portfolio' | 'deactivate' | 'reset-password';
+export type CollectorAction = 'portfolio' | 'deactivate' | 'reset-password' | 'reactivate' | 'remove';
 
 /**
- * Lógica de gestionar un cobrador (cambiar cartera, restablecer contraseña y desactivar), sin
+ * Lógica de gestionar un cobrador (cambiar cartera, restablecer contraseña, desactivar, reactivar y borrar), sin
  * diseño. Cada acción reporta su error en `error` y, si sale bien, refresca la página para traer
  * el estado nuevo; la contraseña temporal queda en `tempPassword` y se muestra una sola vez.
  */
@@ -91,5 +97,22 @@ export function useCollectorActions(collector: Pick<CollectorDetail, 'id' | 'rol
       'Cobrador desactivado.',
     );
 
-  return { pending, error, notice, tempPassword, portfolioId, setPortfolioId, savePortfolio, resetPassword, deactivate };
+  /** Le devuelve el acceso a un cobrador dado de baja (ocupa un cupo del plan). */
+  const reactivate = () =>
+    run(
+      'reactivate',
+      async () => {
+        await reactivateCollector(collector.id);
+      },
+      'Cobrador reactivado.',
+    );
+
+  /** Borra a un cobrador registrado por error y vuelve a la lista; con historial, la API lo rechaza. */
+  const remove = () =>
+    run('remove', async () => {
+      await deleteCollector(collector.id);
+      router.push('/cobradores');
+    });
+
+  return { pending, error, notice, tempPassword, portfolioId, setPortfolioId, savePortfolio, resetPassword, deactivate, reactivate, remove };
 }

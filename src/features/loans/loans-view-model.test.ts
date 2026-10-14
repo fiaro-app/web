@@ -23,9 +23,9 @@ const ITEM: LoanListItem = {
   overdueAmount: 60_000,
   overdueDays: 2,
   nextDueDate: '2026-10-07',
+  clientFullName: 'Carlos Gómez',
   collector: { membershipId: 'm1', fullName: 'Alejo Zuleta' },
 };
-const NAMES = new Map([['c1', 'Carlos Gómez']]);
 const PAGE = { total: 1, page: 1, pageSize: 20 };
 
 describe('describeInstallments', () => {
@@ -36,7 +36,7 @@ describe('describeInstallments', () => {
 
 describe('toLoansViewModel', () => {
   it('formats the row with the balance, arrears and collector that the API sends', () => {
-    const view = toLoansViewModel([ITEM], NAMES, PAGE, null);
+    const view = toLoansViewModel([ITEM], PAGE, null);
     // Pactado 600.000, saldo 380.000 → pagó 220.000 → 7 cuotas completas de 30.000.
     expect(view.rows[0]).toEqual({
       id: 'l1',
@@ -64,7 +64,6 @@ describe('toLoansViewModel', () => {
         { ...ITEM, overdueAmount: 0, overdueDays: 0 },
         { ...ITEM, overdueDays: 1 },
       ],
-      NAMES,
       PAGE,
       null,
     ).rows;
@@ -75,11 +74,10 @@ describe('toLoansViewModel', () => {
   it('falls back when the client or the collector is unknown and maps every status tone', () => {
     const view = toLoansViewModel(
       [
-        { ...ITEM, clientId: 'x', collector: null, nextDueDate: null },
+        { ...ITEM, clientId: 'x', clientFullName: '', collector: null, nextDueDate: null },
         { ...ITEM, status: 'PAID_OFF', balance: 0, overdueAmount: 0, overdueDays: 0 },
         { ...ITEM, status: 'CANCELED' },
       ],
-      NAMES,
       PAGE,
       'ACTIVE',
     );
@@ -94,7 +92,6 @@ describe('toLoansViewModel', () => {
         { ...ITEM, status: 'PAID_OFF', balance: 0, overdueAmount: 0, overdueDays: 0, nextDueDate: null },
         { ...ITEM, status: 'CANCELED' },
       ],
-      NAMES,
       PAGE,
       null,
     ).rows;

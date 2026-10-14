@@ -13,8 +13,8 @@ importers:
   .:
     dependencies:
       '@fiaro-app/contracts':
-        specifier: ^0.8.0
-        version: 0.8.0(zod@4.6.5)
+        specifier: ^0.10.0
+        version: 0.10.0(zod@4.6.5)
       next:
         specifier: 16.3.8
         version: 16.3.8(@babel/core@7.29.7)(@types/node@20.19.43)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -280,8 +280,8 @@ packages:
       '@noble/hashes':
         optional: true
 
-  '@fiaro-app/contracts@0.8.0':
-    resolution: {integrity: sha512-pcFsId59T5XN/NzhhHyV7E1D3AkokiFk4h0hidte2znLxymnVG6gLZTNsAi/RM1PdQ1Mrtl5Z5sfYu9rf7gDqQ==, tarball: https://npm.pkg.github.com/download/@fiaro-app/contracts/0.8.0/1e62728c44b62b65e679a1d267d5c4e52022d06d}
+  '@fiaro-app/contracts@0.10.0':
+    resolution: {integrity: sha512-ng2kpTC0SHz6ncCtD0zySmiB7dKrfAEWPQGtCLhMtfrkPaizyhA60aoCDWcuxCOCPt1lDv1qevx8pNUw7WUHOw==, tarball: https://npm.pkg.github.com/download/@fiaro-app/contracts/0.10.0/3c73d6b5fdc56255d0c422d75891a193a2bd18c3}
     engines: {node: '>=24'}
     peerDependencies:
       zod: ^4.6.5
@@ -2994,7 +2994,7 @@ snapshots:
 
   '@exodus/bytes@1.15.1': {}
 
-  '@fiaro-app/contracts@0.8.0(zod@4.6.5)':
+  '@fiaro-app/contracts@0.10.0(zod@4.6.5)':
     dependencies:
       zod: 4.6.5
 

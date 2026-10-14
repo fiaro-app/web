@@ -3,6 +3,7 @@ import type { SettlementStatus } from '@fiaro-app/contracts';
 import { getPortfolioOptions, type PortfolioOption } from '@/features/collectors/get-portfolio-options.server';
 import { settlementEndpoints } from '@/features/settlements/endpoints';
 import { getSettlementLookup } from '@/features/settlements/get-settlement-lookup.server';
+import { LIST_PAGE_SIZE } from '@/lib/pagination';
 import { EMPTY_SETTLEMENT_FILTERS, toSettlementsBody, type SettlementFilters } from '@/features/settlements/settlement-filters';
 import { toSettlementsViewModel, type SettlementsViewModel } from '@/features/settlements/settlements-view-model';
 import { isApiRequestError } from '@/lib/api';
@@ -31,7 +32,7 @@ export async function getSettlements(
 ): Promise<SettlementsResult> {
   try {
     const [result, lookup, portfolios] = await Promise.all([
-      callEndpointAsUser(settlementEndpoints.list, { body: toSettlementsBody(page, 20, status, filters) }),
+      callEndpointAsUser(settlementEndpoints.list, { body: toSettlementsBody(page, LIST_PAGE_SIZE, status, filters) }),
       getSettlementLookup(),
       getPortfolioOptions(),
     ]);

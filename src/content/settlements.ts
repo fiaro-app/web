@@ -24,11 +24,11 @@ export const SETTLEMENTS_TEXT = {
     allPortfolios: 'Todas las carteras',
     apply: 'Aplicar',
     clear: 'Limpiar filtros',
-    dateHint: 'La fecha es la del cuadre. Con una sola fecha se muestra ese día.',
+    dateHint: 'La fecha es la del cuadre. Con una sola fecha se muestra ese día. Hasta un año, sin fechas futuras.',
   },
   empty: {
-    title: 'Aún no hay cuadres',
-    description: 'Cuando tus cobradores cierren el día, sus cuadres aparecerán aquí para que los revises.',
+    title: 'No hay cuadres por revisar',
+    description: 'Cuando tus cobradores cierren el día, sus cuadres aparecerán aquí. Elige «Todos» para ver los ya revisados.',
   },
   emptyFiltered: {
     title: 'Sin cuadres con estos filtros',

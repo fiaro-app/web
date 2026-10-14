@@ -1,3 +1,8 @@
+import { DEFAULT_PAGE_SIZE } from '@fiaro-app/contracts';
+
+/** Filas por página de todos los listados (10, lo que la API usa por defecto; máximo 50). */
+export const LIST_PAGE_SIZE = DEFAULT_PAGE_SIZE;
+
 /**
  * Número de página a partir del parámetro `?pagina=` de la URL. Cualquier valor que no sea un
  * entero positivo (texto, negativos, decimales, repetidos) cae en la primera página.

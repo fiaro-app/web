@@ -12,8 +12,8 @@ describe('membership endpoints', () => {
   });
 
   it('defaults the page and accepts the status and role filters', () => {
-    expect(ListMembershipsBodySchema.parse({})).toEqual({ page: 1, pageSize: 20 });
-    expect(ListMembershipsBodySchema.parse({ role: 'COLLECTOR', status: 'ACTIVE', pageSize: 100 })).toMatchObject({
+    expect(ListMembershipsBodySchema.parse({})).toEqual({ page: 1, pageSize: 10 });
+    expect(ListMembershipsBodySchema.parse({ role: 'COLLECTOR', status: 'ACTIVE', pageSize: 50 })).toMatchObject({
       role: 'COLLECTOR',
       status: 'ACTIVE',
     });

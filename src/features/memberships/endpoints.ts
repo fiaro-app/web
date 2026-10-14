@@ -96,6 +96,20 @@ export const membershipEndpoints = {
     params: MembershipParamsSchema,
     response: MembershipSchema,
   }),
+  reactivate: defineEndpoint({
+    method: 'POST',
+    path: '/memberships/:id/reactivate',
+    summary: 'Devuelve el acceso con los mismos roles y cartera; si cobra, ocupa un cupo del plan (D-116).',
+    params: MembershipParamsSchema,
+    response: MembershipSchema,
+  }),
+  remove: defineEndpoint({
+    method: 'DELETE',
+    path: '/memberships/:id',
+    summary: 'Borra un registro por error: solo sin asignaciones, visitas ni cuadres (D-116).',
+    params: MembershipParamsSchema,
+    response: z.undefined(),
+  }),
   resetPassword: defineEndpoint({
     method: 'POST',
     path: '/memberships/:id/reset-password',

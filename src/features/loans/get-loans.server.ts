@@ -1,10 +1,10 @@
 import 'server-only';
 import { MAX_PAGE_SIZE, type LoanStatus } from '@fiaro-app/contracts';
 import { clientEndpoints } from '@/features/clients/endpoints';
-import { getClientNames } from '@/features/loans/get-client-names.server';
 import { loanEndpoints, type LoanListItem } from '@/features/loans/endpoints';
 import { toLoansViewModel, type LoansViewModel } from '@/features/loans/loans-view-model';
 import { isApiRequestError } from '@/lib/api';
+import { LIST_PAGE_SIZE } from '@/lib/pagination';
 import { callEndpointAsUser } from '@/lib/api/server-call';
 
 export type LoansResult =
@@ -12,7 +12,7 @@ export type LoansResult =
   /** La persona no tiene un negocio activo con el que ver préstamos (403). */
   | { readonly status: 'forbidden' };
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = LIST_PAGE_SIZE;
 
 /** A cuántos clientes que coinciden con la búsqueda se les traen los préstamos. */
 const MAX_SEARCH_CLIENTS = 10;
@@ -34,20 +34,17 @@ async function searchLoans(search: string, status: LoanStatus | null): Promise<r
 
 /**
  * Trae una página de préstamos con su saldo y mora (los calcula la API), con filtro opcional por
- * estado y búsqueda opcional por cliente, y los nombres de sus clientes.
+ * estado y búsqueda opcional por cliente. Cada fila ya trae el nombre de su cliente.
  */
 export async function getLoans(page: number, status: LoanStatus | null, search = ''): Promise<LoansResult> {
   try {
     if (search !== '') {
-      const [loans, names] = await Promise.all([searchLoans(search, status), getClientNames()]);
+      const loans = await searchLoans(search, status);
       const pageInfo = { total: loans.length, page: 1, pageSize: Math.max(PAGE_SIZE, loans.length) };
-      return { status: 'ok', loans: toLoansViewModel(loans, names, pageInfo, status, search) };
+      return { status: 'ok', loans: toLoansViewModel(loans, pageInfo, status, search) };
     }
-    const [result, names] = await Promise.all([
-      callEndpointAsUser(loanEndpoints.list, { body: { page, pageSize: PAGE_SIZE, ...(status && { status }) } }),
-      getClientNames(),
-    ]);
-    return { status: 'ok', loans: toLoansViewModel(result.data, names, result.meta, status) };
+    const result = await callEndpointAsUser(loanEndpoints.list, { body: { page, pageSize: PAGE_SIZE, ...(status && { status }) } });
+    return { status: 'ok', loans: toLoansViewModel(result.data, result.meta, status) };
   } catch (error) {
     if (isApiRequestError(error) && error.hasCode('FORBIDDEN')) return { status: 'forbidden' };
     throw error;

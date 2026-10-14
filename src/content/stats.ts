@@ -30,6 +30,14 @@ export const STATS_TEXT = {
   },
   noTopArrears: 'Ningún cliente en mora en este período.',
   noCollectors: 'No hay cobradores para los filtros elegidos.',
+  lists: {
+    seeAll: 'Ver todos',
+    showLess: 'Ver solo los 5 primeros',
+    previous: 'Anterior',
+    next: 'Siguiente',
+    arrearsSummary: (page: number, pages: number, total: number) => `Página ${String(page)} de ${String(pages)} · ${String(total)} clientes`,
+    collectorsSummary: (page: number, pages: number, total: number) => `Página ${String(page)} de ${String(pages)} · ${String(total)} cobradores`,
+  },
   collectorLine: (portfolio: string, effectiveness: string) => `${portfolio} · ${effectiveness} efectividad`,
   collectorOverdue: (amount: string) => `${amount} en mora`,
 } as const;

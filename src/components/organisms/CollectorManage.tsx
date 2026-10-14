@@ -24,20 +24,35 @@ export interface CollectorManageProps {
   readonly handover?: CollectorHandover | null;
 }
 
-/** Gestión de un cobrador: cambiar su cartera, restablecer su contraseña o desactivarlo. */
+/** Acciones que piden confirmación. */
+type Confirmable = 'reset-password' | 'deactivate' | 'reactivate' | 'remove';
+
+const DIALOGS = {
+  'reset-password': COLLECTORS_TEXT.manage.resetPassword,
+  deactivate: COLLECTORS_TEXT.manage.deactivate,
+  reactivate: COLLECTORS_TEXT.manage.reactivate,
+  remove: COLLECTORS_TEXT.manage.remove,
+} as const;
+
+/** Gestión de un cobrador: cambiar su cartera, restablecer su contraseña, desactivarlo, reactivarlo o borrarlo. */
 export function CollectorManage({ collector, portfolios, handover = { loans: [], destinations: [] } }: Readonly<CollectorManageProps>) {
   const text = COLLECTORS_TEXT.manage;
   const actions = useCollectorActions(collector, handover);
   const [destinationId, setDestinationId] = useState(handover?.destinations[0]?.id ?? '');
   const loanCount = handover?.loans.length ?? 0;
-  const [confirming, setConfirming] = useState<'reset-password' | 'deactivate' | null>(null);
+  const [confirming, setConfirming] = useState<Confirmable | null>(null);
 
   const confirm = () => {
-    const action = confirming === 'deactivate' ? () => actions.deactivate(destinationId) : actions.resetPassword;
+    const action = {
+      deactivate: () => actions.deactivate(destinationId),
+      'reset-password': actions.resetPassword,
+      reactivate: actions.reactivate,
+      remove: actions.remove,
+    }[confirming ?? 'reset-password'];
     setConfirming(null);
     void action();
   };
-  const dialog = confirming === 'deactivate' ? text.deactivate : text.resetPassword;
+  const dialog = DIALOGS[confirming ?? 'reset-password'];
 
   return (
     <section aria-labelledby="manage-title" className="flex max-w-lg flex-col gap-5">
@@ -103,40 +118,54 @@ export function CollectorManage({ collector, portfolios, handover = { loans: [],
             </Button>
           </div>
 
-          <ConfirmDialog
-            open={confirming !== null}
-            title={dialog.confirmTitle}
-            description={dialog.confirmDescription}
-            confirmLabel={dialog.confirmLabel}
-            onCancel={() => setConfirming(null)}
-            onConfirm={confirm}
-            confirmDisabled={confirming === 'deactivate' && (handover === null || (loanCount > 0 && destinationId === ''))}
-          >
-            {confirming === 'deactivate' && (
-              <div className="flex flex-col gap-3">
-                {handover === null && <Alert tone="error">{text.deactivate.handoverUnavailable}</Alert>}
-                {handover !== null && loanCount > 0 && handover.destinations.length === 0 && <Alert tone="warning">{text.deactivate.noDestinations}</Alert>}
-                {handover !== null && loanCount > 0 && handover.destinations.length > 0 && (
-                  <>
-                    <Text variant="label" className="text-foreground/75">
-                      {text.deactivate.handoverIntro(loanCount)}
-                    </Text>
-                    <FormField label={text.deactivate.destinationLabel}>
-                      <Select name="destination" value={destinationId} onChange={(event) => setDestinationId(event.target.value)}>
-                        {handover.destinations.map((destination) => (
-                          <option key={destination.id} value={destination.id}>
-                            {destination.name}
-                          </option>
-                        ))}
-                      </Select>
-                    </FormField>
-                  </>
-                )}
-              </div>
-            )}
-          </ConfirmDialog>
         </>
       )}
+
+      {!collector.active && (
+        <div className="flex flex-col gap-3">
+          <Button disabled={actions.pending !== null} loading={actions.pending === 'reactivate'} onClick={() => setConfirming('reactivate')}>
+            {text.reactivate.action}
+          </Button>
+        </div>
+      )}
+      {!collector.roles.includes('OWNER') && (
+        <Button variant="text" disabled={actions.pending !== null} onClick={() => setConfirming('remove')} className="self-start text-destructive">
+          {text.remove.action}
+        </Button>
+      )}
+
+      <ConfirmDialog
+        open={confirming !== null}
+        title={dialog.confirmTitle}
+        description={dialog.confirmDescription}
+        confirmLabel={dialog.confirmLabel}
+        onCancel={() => setConfirming(null)}
+        onConfirm={confirm}
+        confirmDisabled={confirming === 'deactivate' && (handover === null || (loanCount > 0 && destinationId === ''))}
+      >
+        {confirming === 'deactivate' && (
+          <div className="flex flex-col gap-3">
+            {handover === null && <Alert tone="error">{text.deactivate.handoverUnavailable}</Alert>}
+            {handover !== null && loanCount > 0 && handover.destinations.length === 0 && <Alert tone="warning">{text.deactivate.noDestinations}</Alert>}
+            {handover !== null && loanCount > 0 && handover.destinations.length > 0 && (
+              <>
+                <Text variant="label" className="text-foreground/75">
+                  {text.deactivate.handoverIntro(loanCount)}
+                </Text>
+                <FormField label={text.deactivate.destinationLabel}>
+                  <Select name="destination" value={destinationId} onChange={(event) => setDestinationId(event.target.value)}>
+                    {handover.destinations.map((destination) => (
+                      <option key={destination.id} value={destination.id}>
+                        {destination.name}
+                      </option>
+                    ))}
+                  </Select>
+                </FormField>
+              </>
+            )}
+          </div>
+        )}
+      </ConfirmDialog>
     </section>
   );
 }

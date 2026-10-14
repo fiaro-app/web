@@ -21,13 +21,13 @@ describe('getVisitReport', () => {
   it('asks for the page with the filters and offers the collectors', async () => {
     callEndpointAsUser.mockResolvedValue({
       data: [],
-      meta: { page: 2, pageSize: 20, total: 0 },
+      meta: { page: 2, pageSize: 10, total: 0 },
       range: { from: '2026-10-09', to: '2026-10-09' },
     });
 
     const result = await getVisitReport({ ...EMPTY_VISIT_REPORT_FILTERS, outcome: 'PAID' }, 2);
 
-    expect(callEndpointAsUser.mock.calls[0]?.[1]).toEqual({ body: { page: 2, pageSize: 20, outcome: 'PAID' } });
+    expect(callEndpointAsUser.mock.calls[0]?.[1]).toEqual({ body: { page: 2, pageSize: 10, outcome: 'PAID' } });
     expect(result).toMatchObject({
       status: 'ok',
       collectors: [{ id: ID, name: 'Luis Pérez' }],

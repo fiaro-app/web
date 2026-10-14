@@ -9,7 +9,7 @@ vi.mock('@/features/app-shell/get-access.server', () => ({ getAccess }));
 
 import { getClientLoans } from './get-client-loans.server';
 import { getLoanBalance } from './get-balances.server';
-import { getClientNames, getClientOptions } from './get-client-names.server';
+import { getClientName, getClientOptions } from './get-client-names.server';
 import { getLoan } from './get-loan.server';
 import { getLoans } from './get-loans.server';
 
@@ -34,6 +34,7 @@ const LIST_ITEM = {
   overdueAmount: 60_000,
   overdueDays: 2,
   nextDueDate: '2026-10-07',
+  clientFullName: 'Carlos Gómez',
   collector: { membershipId: 'm1', fullName: 'Luis Gómez' },
 };
 const BALANCE = {
@@ -62,18 +63,30 @@ beforeEach(() => {
   getAccess.mockResolvedValue({ canManage: true, canCollect: false, membershipId: null });
 });
 
-describe('getClientNames / getClientOptions', () => {
-  it('maps clients to names and to labeled options', async () => {
-    routeApi({ '/clients': { data: [CLIENT] } });
-    expect(await getClientNames()).toEqual(new Map([['c1', 'Carlos Gómez']]));
+describe('getClientName / getClientOptions', () => {
+  it('reads one client name and maps the first page to labeled options', async () => {
+    routeApi({ '/clients': { data: [CLIENT] }, '/clients/:id': CLIENT });
+    expect(await getClientName('c1')).toBe('Carlos Gómez');
     expect(await getClientOptions()).toEqual([{ id: 'c1', label: 'Carlos Gómez · 1020304050' }]);
   });
 
-  it('falls back to no names on an API error but propagates unknown failures', async () => {
-    routeApi({ '/clients': apiError(500, 'INTERNAL_ERROR') });
-    expect((await getClientNames()).size).toBe(0);
+  it('adds the client the form starts with when it is not on the first page', async () => {
+    routeApi({ '/clients': { data: [] }, '/clients/:id': CLIENT });
+    expect(await getClientOptions('c1')).toEqual([{ id: 'c1', label: 'Carlos Gómez · 1020304050' }]);
+    routeApi({ '/clients': { data: [CLIENT] }, '/clients/:id': apiError(500, 'INTERNAL_ERROR') });
+    expect(await getClientOptions('c1')).toHaveLength(1);
+    routeApi({ '/clients': { data: [] }, '/clients/:id': apiError(404, 'NOT_FOUND') });
+    expect(await getClientOptions('c9')).toEqual([]);
+  });
+
+  it('falls back to no name on an API error but propagates unknown failures', async () => {
+    routeApi({ '/clients/:id': apiError(500, 'INTERNAL_ERROR') });
+    expect(await getClientName('c1')).toBeUndefined();
     callEndpointAsUser.mockRejectedValueOnce(new Error('boom'));
-    await expect(getClientNames()).rejects.toThrow('boom');
+    await expect(getClientName('c1')).rejects.toThrow('boom');
+    routeApi({ '/clients': { data: [] } });
+    callEndpointAsUser.mockImplementationOnce(() => Promise.resolve({ data: [] })).mockRejectedValueOnce(new Error('boom'));
+    await expect(getClientOptions('c9')).rejects.toThrow('boom');
   });
 });
 
@@ -83,18 +96,18 @@ describe('getLoans', () => {
     const result = await getLoans(1, 'ACTIVE');
     expect(result.status === 'ok' && result.loans.rows[0]?.clientName).toBe('Carlos Gómez');
     expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/loans' }), {
-      body: { page: 1, pageSize: 20, status: 'ACTIVE' },
+      body: { page: 1, pageSize: 10, status: 'ACTIVE' },
     });
     await getLoans(2, null);
-    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/loans' }), { body: { page: 2, pageSize: 20 } });
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/loans' }), { body: { page: 2, pageSize: 10 } });
   });
 
   it('searches by client: finds the matching clients first, then their loans', async () => {
-    routeApi({ '/loans': { data: [LIST_ITEM], meta: { page: 1, pageSize: 100, total: 1 } }, '/clients': { data: [CLIENT] } });
+    routeApi({ '/loans': { data: [LIST_ITEM], meta: { page: 1, pageSize: 50, total: 1 } }, '/clients': { data: [CLIENT] } });
     const result = await getLoans(3, 'ACTIVE', 'carlos');
     expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/clients' }), { body: { page: 1, pageSize: 10, search: 'carlos' } });
     expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/loans' }), {
-      body: { page: 1, pageSize: 100, clientId: 'c1', status: 'ACTIVE' },
+      body: { page: 1, pageSize: 50, clientId: 'c1', status: 'ACTIVE' },
     });
     expect(result.status === 'ok' && result.loans).toMatchObject({ total: 1, page: 1, search: 'carlos' });
   });
@@ -126,7 +139,7 @@ describe('getLoans', () => {
 describe('getLoan', () => {
   const base = {
     '/loans/:id': LOAN,
-    '/clients': { data: [CLIENT] },
+    '/clients/:id': CLIENT,
     '/loans/:loanId/balance': BALANCE,
     '/loans/:loanId/collection-assignments': [
       {
@@ -202,7 +215,7 @@ describe('getLoanBalance', () => {
 describe('getClientLoans', () => {
   it('returns the rows of one client, filtered in the API, with their balance', async () => {
     routeApi({ '/loans': { data: [LIST_ITEM], meta: { page: 1, pageSize: 20, total: 1 } } });
-    const rows = await getClientLoans('c1', 'Carlos Gómez');
+    const rows = await getClientLoans('c1');
     expect(rows[0]).toMatchObject({ clientName: 'Carlos Gómez', balance: '$380.000' });
     expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/loans' }), {
       body: { page: 1, pageSize: 20, clientId: 'c1' },
@@ -211,8 +224,8 @@ describe('getClientLoans', () => {
 
   it('is empty when the API fails, and propagates unknown failures', async () => {
     routeApi({ '/loans': apiError(500, 'INTERNAL_ERROR') });
-    expect(await getClientLoans('c1', 'Carlos')).toEqual([]);
+    expect(await getClientLoans('c1')).toEqual([]);
     callEndpointAsUser.mockRejectedValueOnce(new Error('boom'));
-    await expect(getClientLoans('c1', 'Carlos')).rejects.toThrow('boom');
+    await expect(getClientLoans('c1')).rejects.toThrow('boom');
   });
 });

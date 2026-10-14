@@ -39,4 +39,18 @@ describe('CollectorsView', () => {
     rerender(<CollectorsView collectors={view({ total: 45, page: 3 })} />);
     expect(screen.queryByRole('link', { name: 'Siguiente' })).not.toBeInTheDocument();
   });
+
+  it('filters by status: active by default, with the status kept in the pagination', () => {
+    const { rerender } = render(<CollectorsView collectors={view({})} />);
+    expect(screen.getByRole('link', { name: 'Activos' })).toHaveAttribute('aria-current', 'true');
+    expect(screen.getByRole('link', { name: 'Inactivos' })).toHaveAttribute('href', '/cobradores?estado=inactivos');
+    expect(screen.getByRole('link', { name: 'Todos' })).toHaveAttribute('href', '/cobradores?estado=todos');
+    rerender(<CollectorsView collectors={view({ total: 45, filter: 'inactivos' })} />);
+    expect(screen.getByRole('link', { name: 'Siguiente' })).toHaveAttribute('href', '/cobradores?pagina=2&estado=inactivos');
+  });
+
+  it('says that no collector has the chosen status', () => {
+    render(<CollectorsView collectors={view({ rows: [], total: 0, filter: 'inactivos' })} />);
+    expect(screen.getByText('Sin cobradores con este estado')).toBeInTheDocument();
+  });
 });

@@ -25,13 +25,13 @@ beforeEach(() => {
 
 describe('getClients', () => {
   it('returns the rows and sends the search only when there is one', async () => {
-    callEndpointAsUser.mockResolvedValue({ data: [CLIENT], meta: { page: 2, pageSize: 20, total: 21 } });
+    callEndpointAsUser.mockResolvedValue({ data: [CLIENT], meta: { page: 2, pageSize: 10, total: 21 } });
     const result = await getClients(2, 'Gómez');
-    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.anything(), { body: { page: 2, pageSize: 20, search: 'Gómez' } });
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.anything(), { body: { page: 2, pageSize: 10, search: 'Gómez' } });
     expect(result).toMatchObject({ status: 'ok', clients: { total: 21, page: 2, search: 'Gómez' } });
 
     await getClients(1, '');
-    expect(callEndpointAsUser).toHaveBeenLastCalledWith(expect.anything(), { body: { page: 1, pageSize: 20 } });
+    expect(callEndpointAsUser).toHaveBeenLastCalledWith(expect.anything(), { body: { page: 1, pageSize: 10 } });
   });
 
   it('reports forbidden on 403 and propagates other failures', async () => {

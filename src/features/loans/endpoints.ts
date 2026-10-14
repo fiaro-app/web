@@ -43,6 +43,8 @@ export const CreateLoanBodySchema = z.strictObject({
 export const ListLoansBodySchema = PageQuerySchema.extend({
   clientId: IdSchema.optional(),
   status: LoanStatusSchema.optional(),
+  /** Solo los préstamos que este cobrador tiene asignados hoy (D-117). */
+  collectorMembershipId: IdSchema.optional(),
 });
 
 const LoanParamsSchema = z.object({ id: IdSchema });
