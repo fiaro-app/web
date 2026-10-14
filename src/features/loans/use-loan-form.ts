@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { issueFieldErrors } from '@/features/auth/error-messages';
 import { suggestTotalPayable, todayBusinessDate } from '@/features/loans/loan-calculations';
 import { LoanFormSchema, type LoanField, type LoanFormInput } from '@/features/loans/loan-schemas';
@@ -9,7 +9,7 @@ import { describeLoanError } from '@/features/loans/error-messages';
 import { assignCollector, createLoan } from '@/features/loans/loans-api';
 import { toFieldErrors, type FieldErrors } from '@/lib/forms';
 
-const FIELDS: readonly LoanField[] = ['clientId', 'principalAmount', 'installmentCount', 'installmentValue', 'totalPayable', 'frequency', 'startDate', 'collectorId'];
+const FIELDS: ReadonlySet<string> = new Set<LoanField>(['clientId', 'principalAmount', 'installmentCount', 'installmentValue', 'totalPayable', 'frequency', 'startDate', 'collectorId']);
 
 function emptyValues(initialClientId: string): LoanFormInput {
   return {
@@ -60,15 +60,15 @@ export function useLoanForm({ initialClientId = '' }: { readonly initialClientId
     const { message, field } = describeLoanError(error);
     const errors: FieldErrors<LoanField> = {};
     for (const [issueField, text] of Object.entries(issueFieldErrors(error))) {
-      if (FIELDS.includes(issueField as LoanField)) errors[issueField as LoanField] = text;
+      if (FIELDS.has(issueField)) errors[issueField as LoanField] = text;
     }
-    if (field && FIELDS.includes(field as LoanField)) errors[field as LoanField] = message;
+    if (field && FIELDS.has(field)) errors[field as LoanField] = message;
     setFieldErrors(errors);
     setFormError(Object.keys(errors).length === 0 ? message : null);
     setIsSubmitting(false);
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting || createdLoanId !== null) return;
 

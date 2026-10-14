@@ -36,7 +36,7 @@ export function markTutorialSeen(userId: string, storage: Pick<Storage, 'setItem
 
 function safeStorage(): Storage | null {
   try {
-    return typeof window === 'undefined' ? null : window.localStorage;
+    return typeof window === 'undefined' ? null : globalThis.localStorage;
   } catch {
     return null;
   }

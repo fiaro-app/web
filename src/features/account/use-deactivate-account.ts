@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { deactivateAccount } from '@/features/account/account-api';
 import { DeactivateFormSchema } from '@/features/account/account-schemas';
 import { describeAccountError } from '@/features/account/error-messages';
@@ -21,7 +21,7 @@ export function useDeactivateAccount() {
   };
 
   /** Valida la contraseña y, si es válida, pide confirmar: desactivar la cuenta es una decisión importante. */
-  const submit = (event: FormEvent<HTMLFormElement>) => {
+  const submit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
     const parsed = DeactivateFormSchema.safeParse({ password });

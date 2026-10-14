@@ -20,9 +20,8 @@ interface TurnstileApi {
 }
 
 declare global {
-  interface Window {
-    turnstile?: TurnstileApi;
-  }
+  // `var` es la única forma de tipar una global de `globalThis` (la que inyecta el script de Cloudflare).
+  var turnstile: TurnstileApi | undefined;
 }
 
 export const turnstileEnabled = Boolean(SITE_KEY);
@@ -42,8 +41,8 @@ export function TurnstileWidget({ action, resetKey, onToken, onError }: Readonly
   const widgetId = useRef<string | null>(null);
 
   const render = useCallback(() => {
-    if (!SITE_KEY || !container.current || !window.turnstile || widgetId.current) return;
-    widgetId.current = window.turnstile.render(container.current, {
+    if (!SITE_KEY || !container.current || !globalThis.turnstile || widgetId.current) return;
+    widgetId.current = globalThis.turnstile.render(container.current, {
       sitekey: SITE_KEY,
       action,
       callback: (token) => onToken(token),
@@ -58,7 +57,7 @@ export function TurnstileWidget({ action, resetKey, onToken, onError }: Readonly
   useEffect(() => {
     render();
     return () => {
-      if (widgetId.current && window.turnstile) window.turnstile.remove(widgetId.current);
+      if (widgetId.current && globalThis.turnstile) globalThis.turnstile.remove(widgetId.current);
       widgetId.current = null;
     };
   }, [render, resetKey]);

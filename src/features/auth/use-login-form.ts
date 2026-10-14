@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { signIn } from '@/features/auth/auth-api';
 import { describeAuthError } from '@/features/auth/error-messages';
 import { SignInFormSchema, type SignInField, type SignInFormInput } from '@/features/auth/schemas';
@@ -32,7 +32,7 @@ export function useLoginForm({ redirectTo }: UseLoginFormOptions) {
     setFieldErrors((current) => ({ ...current, [field]: undefined }));
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
 

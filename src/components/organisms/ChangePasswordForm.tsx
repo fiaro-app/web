@@ -14,7 +14,7 @@ export function ChangePasswordForm({ redirectTo }: Readonly<{ redirectTo: string
   const text = CHANGE_PASSWORD_CONTENT.form;
 
   return (
-    <form onSubmit={submit} noValidate aria-label={text.title} className="flex flex-col gap-5">
+    <form onSubmit={(event) => void submit(event)} noValidate aria-label={text.title} className="flex flex-col gap-5">
       <div className="flex flex-col gap-1">
         <Text variant="h2" as="h1">
           {text.title}

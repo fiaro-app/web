@@ -23,9 +23,14 @@ function toneOf(direction: Trend['direction'], polarity: TrendPolarity): FigureT
   return improves ? 'good' : 'bad';
 }
 
+function directionOf(change: number): Trend['direction'] {
+  if (Math.abs(change) < FLAT_BELOW) return 'flat';
+  return change > 0 ? 'up' : 'down';
+}
+
 function build(change: number, unit: string, polarity: TrendPolarity): Trend {
   const magnitude = Math.round(Math.abs(change));
-  const direction = Math.abs(change) < FLAT_BELOW ? 'flat' : change > 0 ? 'up' : 'down';
+  const direction = directionOf(change);
   const tone = toneOf(direction, polarity);
   if (direction === 'flat') return { direction, label: '= igual', description: 'Sin cambio frente al período anterior', tone };
   const text = `${String(magnitude)} ${unit}`;

@@ -19,7 +19,7 @@ export function ReversePaymentForm({ paymentId, onCancel }: Readonly<ReversePaym
   const { reason, reasonError, error, isSubmitting, changeReason, submit } = useReversePayment(paymentId);
 
   return (
-    <form onSubmit={submit} noValidate aria-label={text.title} className="flex max-w-lg flex-col gap-4 rounded-md bg-surface p-6">
+    <form onSubmit={(event) => void submit(event)} noValidate aria-label={text.title} className="flex max-w-lg flex-col gap-4 rounded-md bg-surface p-6">
       <div className="flex flex-col gap-1">
         <Text variant="h3" as="h3">
           {text.title}

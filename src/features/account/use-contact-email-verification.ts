@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { requestContactEmailVerification, verifyContactEmail } from '@/features/account/account-api';
 import { EmailCodeFormSchema } from '@/features/account/account-schemas';
 import { describeAccountError } from '@/features/account/error-messages';
@@ -34,7 +34,7 @@ export function useContactEmailVerification() {
     setIsBusy(false);
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isBusy) return;
     const parsed = EmailCodeFormSchema.safeParse({ code });

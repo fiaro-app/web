@@ -30,7 +30,8 @@ export function idParam(value: string | string[] | undefined): string {
 export function dateRangeParams(params: SearchParams): { readonly from: string; readonly to: string } {
   const rawFrom = singleParam(params.desde);
   const rawTo = singleParam(params.hasta);
-  const from = isCalendarDate(rawFrom) ? rawFrom : isCalendarDate(rawTo) ? rawTo : '';
-  const to = isCalendarDate(rawTo) ? rawTo : from;
+  const validTo = isCalendarDate(rawTo) ? rawTo : '';
+  const from = isCalendarDate(rawFrom) ? rawFrom : validTo;
+  const to = validTo === '' ? from : validTo;
   return from !== '' && from <= to ? { from, to } : { from: '', to: '' };
 }

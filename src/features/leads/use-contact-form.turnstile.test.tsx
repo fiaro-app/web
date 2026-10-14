@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { ChangeEvent, SubmitEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { sendLead } from './leads-api';
 import { useContactForm } from './use-contact-form';
@@ -10,7 +10,7 @@ const send = vi.mocked(sendLead);
 
 const typed = (value: string) => ({ target: { value } }) as ChangeEvent<HTMLInputElement>;
 const submitEvent = () =>
-  ({ preventDefault: vi.fn(), currentTarget: document.createElement('form') }) as unknown as FormEvent<HTMLFormElement>;
+  ({ preventDefault: vi.fn(), currentTarget: document.createElement('form') }) as unknown as SubmitEvent<HTMLFormElement>;
 
 function setup() {
   const { result } = renderHook(() => useContactForm());

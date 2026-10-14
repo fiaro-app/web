@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { ChangeEvent, SubmitEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiRequestError } from '@/lib/api';
 import { createPortfolio, updateBrandColor, updateBusinessName, updateCollectionDays } from './lender-api';
@@ -16,7 +16,7 @@ const updateColor = vi.mocked(updateBrandColor);
 
 const typed = (value: string) => ({ target: { value } }) as ChangeEvent<HTMLInputElement>;
 const checked = (value: boolean) => ({ target: { checked: value } }) as ChangeEvent<HTMLInputElement>;
-const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as FormEvent<HTMLFormElement>;
+const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as SubmitEvent<HTMLFormElement>;
 
 beforeEach(() => {
   vi.clearAllMocks();

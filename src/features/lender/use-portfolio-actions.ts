@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { describePortfolioDeleteError, describeSettingsError } from '@/features/lender/error-messages';
 import { deletePortfolio, renamePortfolio } from '@/features/lender/lender-api';
 import { PortfolioFormSchema } from '@/features/lender/settings-schemas';
@@ -31,7 +31,7 @@ export function usePortfolioActions(portfolio: { readonly id: string; readonly n
     setFieldError(undefined);
   };
 
-  const submitRename = async (event: FormEvent<HTMLFormElement>) => {
+  const submitRename = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isBusy) return;
     const parsed = PortfolioFormSchema.safeParse({ name });

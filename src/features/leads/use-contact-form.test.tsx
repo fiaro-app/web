@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { ChangeEvent, SubmitEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiRequestError } from '@/lib/api';
 import { sendLead } from './leads-api';
@@ -16,7 +16,7 @@ function submitEvent(website = '') {
   decoy.name = 'website';
   decoy.value = website;
   form.append(decoy);
-  return { preventDefault: vi.fn(), currentTarget: form } as unknown as FormEvent<HTMLFormElement>;
+  return { preventDefault: vi.fn(), currentTarget: form } as unknown as SubmitEvent<HTMLFormElement>;
 }
 
 function fill(

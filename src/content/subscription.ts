@@ -1,3 +1,8 @@
+/** «1 día» o «N días». */
+function daysLabel(days: number): string {
+  return days === 1 ? '1 día' : `${String(days)} días`;
+}
+
 /** Textos del plan del negocio (aviso del panel y bloque «Tu plan» de Configuración). */
 export const SUBSCRIPTION_TEXT = {
   plan: { TRIAL: 'Prueba gratis' },
@@ -5,10 +10,8 @@ export const SUBSCRIPTION_TEXT = {
   banner: {
     /** Se avisa cuando faltan estos días o menos. */
     warnFromDays: 7,
-    trialEnding: (days: number) =>
-      days === 0 ? 'Tu prueba gratis termina hoy.' : `Tu prueba gratis termina en ${days === 1 ? '1 día' : `${String(days)} días`}.`,
-    grace: (days: number) =>
-      `Tu prueba terminó. Tienes ${days === 1 ? '1 día' : `${String(days)} días`} para activar tu plan antes de pasar a solo lectura.`,
+    trialEnding: (days: number) => (days === 0 ? 'Tu prueba gratis termina hoy.' : `Tu prueba gratis termina en ${daysLabel(days)}.`),
+    grace: (days: number) => `Tu prueba terminó. Tienes ${daysLabel(days)} para activar tu plan antes de pasar a solo lectura.`,
     readOnly: 'Tu negocio está en modo de solo lectura: puedes consultar tus datos, pero no hacer cambios.',
     action: 'Contactar ventas',
     actionHref: '/contacto',

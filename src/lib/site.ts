@@ -10,7 +10,8 @@ const DEFAULT_SITE_URL = 'http://localhost:3001';
  * @throws Si el valor no es una URL válida.
  */
 export function resolveSiteUrl(value: string | undefined = process.env.NEXT_PUBLIC_SITE_URL): string {
-  return new URL(value || DEFAULT_SITE_URL).origin;
+  // Vacío cuenta como «sin configurar» (p. ej. `NEXT_PUBLIC_SITE_URL=` en el .env).
+  return new URL(value === undefined || value === '' ? DEFAULT_SITE_URL : value).origin;
 }
 
 export const SITE = {

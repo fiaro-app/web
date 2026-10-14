@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { ChangeEvent, SubmitEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiRequestError } from '@/lib/api';
 import { registerOwner, signIn } from './auth-api';
@@ -12,7 +12,7 @@ vi.mock('./auth-api', () => ({ registerOwner: vi.fn(), signIn: vi.fn() }));
 const registerMock = vi.mocked(registerOwner);
 
 const change = (value: string) => ({ target: { value } }) as ChangeEvent<HTMLInputElement>;
-const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as FormEvent<HTMLFormElement>;
+const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as SubmitEvent<HTMLFormElement>;
 
 async function reachCompanyStep() {
   const { result } = renderHook(() => useRegisterForm({ redirectTo: '/resumen' }));

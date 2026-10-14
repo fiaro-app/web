@@ -3,7 +3,12 @@ import { hasSeenTutorial, markTutorialSeen } from './tutorial-storage';
 
 const memory = () => {
   const data = new Map<string, string>();
-  return { getItem: (key: string) => data.get(key) ?? null, setItem: (key: string, value: string) => void data.set(key, value) };
+  return {
+    getItem: (key: string) => data.get(key) ?? null,
+    setItem: (key: string, value: string) => {
+      data.set(key, value);
+    },
+  };
 };
 
 describe('tutorial storage', () => {

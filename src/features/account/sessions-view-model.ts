@@ -9,7 +9,7 @@ export interface SessionRow {
   readonly device: string;
   /** Es la sesión de este navegador: no se puede cerrar desde aquí. */
   readonly isCurrent: boolean;
-  /** «IP 190.1.2.3 · Último uso 09/10/2026». */
+  /** «IP 203.0.113.7 · Último uso 09/10/2026». */
   readonly detail: string;
 }
 

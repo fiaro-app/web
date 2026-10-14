@@ -19,5 +19,5 @@ export function canManageBusiness(roles: readonly Role[] | null): boolean {
 
 /** Quien puede cobrar en campo (registrar visitas y pagos): tiene el rol Collector. */
 export function canCollectPayments(roles: readonly Role[] | null): boolean {
-  return roles !== null && roles.includes('COLLECTOR');
+  return roles?.includes('COLLECTOR') === true;
 }

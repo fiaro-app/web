@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useCallback, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { turnstileEnabled } from '@/components/molecules/TurnstileWidget';
 import { requestPasswordReset, resetPassword } from '@/features/auth/auth-api';
 import { describeAuthError, issueFieldErrors } from '@/features/auth/error-messages';
@@ -107,7 +107,7 @@ export function usePasswordRecovery() {
     }
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting || step === 'done') return;
     await (step === 'request' ? submitRequest() : submitReset());

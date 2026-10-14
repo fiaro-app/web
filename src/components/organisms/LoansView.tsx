@@ -19,6 +19,41 @@ export interface LoansViewProps {
   readonly canManage?: boolean;
 }
 
+interface LoansEmptyStateProps {
+  readonly search: string;
+  readonly status: LoansViewModel['status'];
+  readonly canManage: boolean;
+}
+
+/**
+ * Estado vacío: sin resultados para la búsqueda, sin préstamos en el estado filtrado (ambos con
+ * un enlace para limpiar) o cartera sin préstamos (con acción de registrar si puede).
+ */
+function LoansEmptyState({ search, status, canManage }: Readonly<LoansEmptyStateProps>) {
+  if (search !== '' || status !== null) {
+    const hasSearch = search !== '';
+    return (
+      <EmptyState
+        icon={<StateIcon name="search" />}
+        {...(hasSearch ? LOANS_TEXT.noResults(search) : LOANS_TEXT.emptyFiltered)}
+        action={
+          <ButtonLink href="/prestamos" variant="outline">
+            {hasSearch ? LOANS_TEXT.search.clear : LOANS_TEXT.filters.all}
+          </ButtonLink>
+        }
+      />
+    );
+  }
+
+  return (
+    <EmptyState
+      icon={<StateIcon name="wallet" />}
+      {...LOANS_TEXT.empty}
+      action={canManage ? <ButtonLink href="/prestamos/nuevo">{LOANS_TEXT.newLoan}</ButtonLink> : undefined}
+    />
+  );
+}
+
 /**
  * Préstamos: título, acción de registrar, búsqueda por cliente (formulario GET `?q=`), filtro por
  * estado (enlaces `?estado=`) y tabla. Solo presentación.
@@ -62,19 +97,7 @@ export function LoansView({ loans, canManage = true }: Readonly<LoansViewProps>)
       </nav>
 
       {rows.length === 0 ? (
-        <EmptyState
-          icon={<StateIcon name={status === null && !hasSearch ? 'wallet' : 'search'} />}
-          {...(hasSearch ? LOANS_TEXT.noResults(search) : status === null ? LOANS_TEXT.empty : LOANS_TEXT.emptyFiltered)}
-          action={
-            status === null && !hasSearch ? (
-              canManage ? <ButtonLink href="/prestamos/nuevo">{LOANS_TEXT.newLoan}</ButtonLink> : undefined
-            ) : (
-              <ButtonLink href="/prestamos" variant="outline">
-                {hasSearch ? LOANS_TEXT.search.clear : LOANS_TEXT.filters.all}
-              </ButtonLink>
-            )
-          }
-        />
+        <LoansEmptyState search={search} status={status} canManage={canManage} />
       ) : (
         <>
           <LoansTable rows={rows} />

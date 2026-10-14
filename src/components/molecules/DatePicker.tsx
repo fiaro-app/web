@@ -90,7 +90,7 @@ export function DatePicker({ name, value, defaultValue = '', onValueChange, id, 
       triggerRef.current?.focus();
     } else if (moves[event.key]) {
       event.preventDefault();
-      goTo(moves[event.key]!);
+      goTo(moves[event.key]);
     }
   };
 

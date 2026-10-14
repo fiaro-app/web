@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { ChangeEvent, SubmitEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiRequestError } from '@/lib/api';
 import { assignCollector } from './loans-api';
@@ -11,7 +11,7 @@ vi.mock('./loans-api', () => ({ assignCollector: vi.fn() }));
 const assignMock = vi.mocked(assignCollector);
 
 const picked = (value: string) => ({ target: { value } }) as ChangeEvent<HTMLSelectElement>;
-const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as FormEvent<HTMLFormElement>;
+const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as SubmitEvent<HTMLFormElement>;
 
 beforeEach(() => {
   vi.clearAllMocks();

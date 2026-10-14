@@ -3,7 +3,7 @@ import { DEFAULT_API_URL, resolveApiUrl } from './api-url';
 
 describe('resolveApiUrl', () => {
   it('falls back to the local API', () => {
-    expect(resolveApiUrl(undefined)).toBe(DEFAULT_API_URL);
+    expect(resolveApiUrl()).toBe(DEFAULT_API_URL);
     expect(resolveApiUrl('')).toBe(DEFAULT_API_URL);
   });
 

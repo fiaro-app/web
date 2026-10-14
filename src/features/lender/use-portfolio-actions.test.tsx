@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { ChangeEvent, SubmitEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiRequestError } from '@/lib/api';
 import { deletePortfolio, renamePortfolio } from './lender-api';
@@ -12,7 +12,7 @@ vi.mock('./lender-api', () => ({ renamePortfolio: vi.fn(), deletePortfolio: vi.f
 const rename = vi.mocked(renamePortfolio);
 const remove = vi.mocked(deletePortfolio);
 const PORTFOLIO = { id: 'p2', name: 'Zona Norte' };
-const submitEvent = { preventDefault: vi.fn() } as unknown as FormEvent<HTMLFormElement>;
+const submitEvent = { preventDefault: vi.fn() } as unknown as SubmitEvent<HTMLFormElement>;
 const typed = (value: string) => ({ target: { value } }) as ChangeEvent<HTMLInputElement>;
 const conflict = new ApiRequestError({ statusCode: 409, code: 'CONFLICT', message: 'x' });
 

@@ -21,7 +21,7 @@ export function LoginForm({ redirectTo, forgotPasswordHref }: Readonly<LoginForm
   const { values, fieldErrors, formError, isSubmitting, setField, submit } = useLoginForm({ redirectTo });
 
   return (
-    <form onSubmit={submit} noValidate aria-label="Inicio de sesión" className="flex flex-col gap-5">
+    <form onSubmit={(event) => void submit(event)} noValidate aria-label="Inicio de sesión" className="flex flex-col gap-5">
       <div className="flex flex-col gap-1">
         <Text variant="h2" as="h1">
           Inicia sesión

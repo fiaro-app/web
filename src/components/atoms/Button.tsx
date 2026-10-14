@@ -3,7 +3,7 @@ import { cn } from '@/lib/cn';
 import { LoadingDots } from '@/components/atoms/LoadingDots';
 import { buttonClasses, type ButtonSize, type ButtonVariant } from '@/components/atoms/button-styles';
 
-export type { ButtonSize, ButtonVariant };
+export type { ButtonSize, ButtonVariant } from '@/components/atoms/button-styles';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   readonly variant?: ButtonVariant;

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { updateProfile } from '@/features/account/account-api';
 import { ProfileFormSchema, toProfileChanges, type ProfileFormValues } from '@/features/account/account-schemas';
 import { describeAccountError } from '@/features/account/error-messages';
@@ -24,7 +24,7 @@ export function useProfileForm(current: { readonly fullName: string; readonly co
     setNotice(null);
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
 

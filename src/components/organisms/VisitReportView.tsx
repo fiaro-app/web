@@ -25,6 +25,25 @@ function describeRange(report: VisitReportViewModel, filters: Filters): string {
   return report.rangeFrom === report.rangeTo ? text.rangeDay(report.rangeFrom) : text.range(report.rangeFrom, report.rangeTo);
 }
 
+/** Estado vacío: sin resultados para los filtros (con enlace para limpiarlos) o sin cobros en el día. */
+function VisitReportEmptyState({ isFiltered }: Readonly<{ readonly isFiltered: boolean }>) {
+  if (isFiltered) {
+    return (
+      <EmptyState
+        icon={<StateIcon name="search" />}
+        {...VISITS_TEXT.report.emptyFiltered}
+        action={
+          <ButtonLink href="/cobros" variant="outline">
+            {VISITS_TEXT.report.filters.clear}
+          </ButtonLink>
+        }
+      />
+    );
+  }
+
+  return <EmptyState icon={<StateIcon name="wallet" />} {...VISITS_TEXT.report.empty} />;
+}
+
 /** Cobros del día (`Screen / Web / Cobros del día`): título, filtros, tabla y paginación. Solo presentación. */
 export function VisitReportView({ report, filters, collectors }: Readonly<VisitReportViewProps>) {
   const text = VISITS_TEXT.report;
@@ -50,17 +69,7 @@ export function VisitReportView({ report, filters, collectors }: Readonly<VisitR
       {report.searchTruncated && <Alert tone="info">{text.searchTruncated}</Alert>}
 
       {rows.length === 0 ? (
-        <EmptyState
-          icon={<StateIcon name={isFiltered ? 'search' : 'wallet'} />}
-          {...(isFiltered ? text.emptyFiltered : text.empty)}
-          action={
-            isFiltered ? (
-              <ButtonLink href="/cobros" variant="outline">
-                {text.filters.clear}
-              </ButtonLink>
-            ) : undefined
-          }
-        />
+        <VisitReportEmptyState isFiltered={isFiltered} />
       ) : (
         <>
           <VisitReportTable rows={rows} />

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import type { Weekday } from '@fiaro-app/contracts';
 import { DEFAULT_BRAND_COLOR } from '@/features/lender/brand-palette';
 import { describeSettingsError } from '@/features/lender/error-messages';
@@ -42,11 +42,10 @@ function useSaveState() {
   return { isSubmitting, error, notice, setError, setNotice, save };
 }
 
-/** Lógica de "Datos del negocio" (el nombre), sin diseño. */
-export function useBusinessForm(current: { readonly name: string }) {
-  const [name, setName] = useState(current.name);
+/** Campo de nombre con su error de validación: al escribir se limpian el error y el aviso. */
+function useNameField(initial: string, setNotice: (notice: string | null) => void) {
+  const [name, setName] = useState(initial);
   const [fieldError, setFieldError] = useState<string | undefined>();
-  const { isSubmitting, error, notice, setNotice, save } = useSaveState();
 
   const changeName = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -54,7 +53,15 @@ export function useBusinessForm(current: { readonly name: string }) {
     setNotice(null);
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  return { name, setName, fieldError, setFieldError, changeName };
+}
+
+/** Lógica de "Datos del negocio" (el nombre), sin diseño. */
+export function useBusinessForm(current: { readonly name: string }) {
+  const { isSubmitting, error, notice, setNotice, save } = useSaveState();
+  const { name, fieldError, setFieldError, changeName } = useNameField(current.name, setNotice);
+
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
     const parsed = BusinessFormSchema.safeParse({ name });
@@ -90,7 +97,7 @@ export function useCollectionDaysForm(current: {
     setNotice(null);
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
     if (sameWeekdays(weekdays, current.nonWorkingWeekdays) && skipHolidays === current.skipNationalHolidays) {
@@ -105,17 +112,10 @@ export function useCollectionDaysForm(current: {
 
 /** Lógica de "Nueva cartera", sin diseño. Al crearla vacía el campo. */
 export function usePortfolioForm() {
-  const [name, setName] = useState('');
-  const [fieldError, setFieldError] = useState<string | undefined>();
   const { isSubmitting, error, notice, setNotice, save } = useSaveState();
+  const { name, setName, fieldError, setFieldError, changeName } = useNameField('', setNotice);
 
-  const changeName = (event: ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-    setFieldError(undefined);
-    setNotice(null);
-  };
-
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
     const parsed = PortfolioFormSchema.safeParse({ name });
@@ -142,7 +142,7 @@ export function useBrandColorForm(current: { readonly brandColor: string | null 
     setNotice(null);
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
     const parsed = BrandColorFormSchema.safeParse({ color });

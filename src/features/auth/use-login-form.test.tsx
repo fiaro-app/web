@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { ChangeEvent, SubmitEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiRequestError } from '@/lib/api';
 import { signIn } from './auth-api';
@@ -14,7 +14,7 @@ vi.mock('./auth-api', () => ({ signIn: vi.fn() }));
 const signInMock = vi.mocked(signIn);
 
 const change = (value: string) => ({ target: { value } }) as ChangeEvent<HTMLInputElement>;
-const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as FormEvent<HTMLFormElement>;
+const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as SubmitEvent<HTMLFormElement>;
 
 function fill(result: ReturnType<typeof renderHook<ReturnType<typeof useLoginForm>, unknown>>['result'], phone: string, password: string) {
   act(() => result.current.setField('phone')(change(phone)));

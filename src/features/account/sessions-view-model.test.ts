@@ -6,7 +6,7 @@ const session = (id: string, overrides: Partial<AccountSession> = {}): AccountSe
   id,
   isCurrent: false,
   device: { client: 'Chrome', os: 'Windows', label: 'Chrome en Windows' },
-  ipAddress: '190.1.2.3',
+  ipAddress: '203.0.113.7',
   createdAt: '2026-10-01T10:00:00.000Z',
   lastUsedAt: '2026-10-05T15:00:00.000Z',
   expiresAt: '2026-11-04T15:00:00.000Z',
@@ -28,7 +28,7 @@ describe('toSessionRows', () => {
   it('describes the IP and the last use as read in Colombia, with or without IP', () => {
     const [withIp, withoutIp] = toSessionRows([session('a'), session('b', { ipAddress: null, lastUsedAt: '2026-10-04T15:00:00.000Z' })]);
 
-    expect(withIp?.detail).toBe('IP 190.1.2.3 · Último uso 05/10/2026');
+    expect(withIp?.detail).toBe('IP 203.0.113.7 · Último uso 05/10/2026');
     expect(withoutIp?.detail).toBe('Último uso 04/10/2026');
   });
 });

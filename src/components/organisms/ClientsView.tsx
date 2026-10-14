@@ -17,6 +17,36 @@ export interface ClientsViewProps {
   readonly canManage?: boolean;
 }
 
+interface ClientsEmptyStateProps {
+  readonly search: string;
+  readonly canManage: boolean;
+}
+
+/** Estado vacío: sin resultados para la búsqueda o cartera sin clientes (con acción de registrar si puede). */
+function ClientsEmptyState({ search, canManage }: Readonly<ClientsEmptyStateProps>) {
+  if (search !== '') {
+    return (
+      <EmptyState
+        icon={<StateIcon name="search" />}
+        {...CLIENTS_TEXT.noResults(search)}
+        action={
+          <ButtonLink href="/clientes" variant="outline">
+            {CLIENTS_TEXT.search.clear}
+          </ButtonLink>
+        }
+      />
+    );
+  }
+
+  return (
+    <EmptyState
+      icon={<StateIcon name="user-plus" />}
+      {...CLIENTS_TEXT.empty}
+      action={canManage ? <ButtonLink href="/clientes/nuevo">{CLIENTS_TEXT.form.createTitle}</ButtonLink> : undefined}
+    />
+  );
+}
+
 /**
  * Clientes: título, acción de registrar, búsqueda y tabla. La búsqueda es un formulario GET
  * (`?q=`): funciona sin JavaScript y la URL queda compartible. Solo presentación.
@@ -48,19 +78,7 @@ export function ClientsView({ clients, canManage = true }: Readonly<ClientsViewP
       </FilterForm>
 
       {rows.length === 0 ? (
-        <EmptyState
-          icon={<StateIcon name={hasSearch ? 'search' : 'user-plus'} />}
-          {...(hasSearch ? CLIENTS_TEXT.noResults(search) : CLIENTS_TEXT.empty)}
-          action={
-            hasSearch ? (
-              <ButtonLink href="/clientes" variant="outline">
-                {CLIENTS_TEXT.search.clear}
-              </ButtonLink>
-            ) : canManage ? (
-              <ButtonLink href="/clientes/nuevo">{CLIENTS_TEXT.form.createTitle}</ButtonLink>
-            ) : undefined
-          }
-        />
+        <ClientsEmptyState search={search} canManage={canManage} />
       ) : (
         <>
           <ClientsTable rows={rows} canManage={canManage} />

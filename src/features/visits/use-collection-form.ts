@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import type { PaymentMethod, VisitOutcome } from '@fiaro-app/contracts';
-import { useState, type FormEvent } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { VISITS_TEXT } from '@/content/visits';
 import { describeAuthError } from '@/features/auth/error-messages';
 import { CollectionFormSchema, type CollectionField } from '@/features/visits/collection-schemas';
@@ -47,7 +47,7 @@ export function useCollectionForm({ loanId, installmentValue }: { readonly loanI
     setNotice(null);
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
     const parsed = CollectionFormSchema.safeParse({ outcome, amount, method, promisedDate });

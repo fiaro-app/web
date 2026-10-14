@@ -13,7 +13,7 @@ export function EmailVerificationForm({ email }: Readonly<{ email: string }>) {
   const { code, codeError, formError, notice, isBusy, changeCode, resend, submit } = useContactEmailVerification();
 
   return (
-    <form onSubmit={submit} noValidate aria-label={text.pending} className="flex flex-col gap-3 rounded-md bg-surface-2 p-4">
+    <form onSubmit={(event) => void submit(event)} noValidate aria-label={text.pending} className="flex flex-col gap-3 rounded-md bg-surface-2 p-4">
       <p className="text-small font-semibold text-warning">
         {text.pending}: {email}
       </p>

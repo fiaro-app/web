@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useCallback, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { describeAuthError, issueFieldErrors } from '@/features/auth/error-messages';
 import { ContactFormSchema, type ContactField } from '@/features/leads/lead-schemas';
 import { sendLead } from '@/features/leads/leads-api';
@@ -50,7 +50,7 @@ export function useContactForm() {
     setFormError(Object.keys(errors).length === 0 ? message : null);
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
     const parsed = ContactFormSchema.safeParse(values);

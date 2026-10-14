@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { issueFieldErrors } from '@/features/auth/error-messages';
 import { ClientFormSchema, toClientChanges, type ClientField, type ClientFormInput } from '@/features/clients/client-schemas';
 import { createClient, updateClient } from '@/features/clients/clients-api';
@@ -44,7 +44,7 @@ export function useClientForm({ client }: { readonly client?: ClientResponse } =
     setIsSubmitting(false);
   };
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) return;
 

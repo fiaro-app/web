@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import type { ChangeEvent, FormEvent } from 'react';
+import type { ChangeEvent, SubmitEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { requestPasswordReset, resetPassword } from './auth-api';
 import { usePasswordRecovery } from './use-password-recovery';
@@ -9,7 +9,7 @@ vi.mock('./auth-api', () => ({ requestPasswordReset: vi.fn(), resetPassword: vi.
 const requestMock = vi.mocked(requestPasswordReset);
 
 const change = (value: string) => ({ target: { value } }) as ChangeEvent<HTMLInputElement>;
-const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as FormEvent<HTMLFormElement>;
+const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as SubmitEvent<HTMLFormElement>;
 
 function setup() {
   const { result } = renderHook(() => usePasswordRecovery());

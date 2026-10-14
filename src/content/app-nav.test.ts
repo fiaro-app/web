@@ -46,6 +46,6 @@ describe('visibleNavItems', () => {
   });
 
   it('gives everyone else the whole menu', () => {
-    expect(visibleNavItems(false)).toBe(APP_NAV_ITEMS);
+    expect(visibleNavItems(false)).toEqual(APP_NAV_ITEMS);
   });
 });

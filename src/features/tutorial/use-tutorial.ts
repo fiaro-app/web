@@ -46,11 +46,11 @@ export function useTutorial({
       const guide = resolveRef.current?.() ?? [];
       start(guide.length > 0 ? guide : generalRef.current);
     };
-    window.addEventListener(START_TUTORIAL_EVENT, startGeneral);
-    window.addEventListener(START_PAGE_GUIDE_EVENT, startPage);
+    globalThis.addEventListener(START_TUTORIAL_EVENT, startGeneral);
+    globalThis.addEventListener(START_PAGE_GUIDE_EVENT, startPage);
     return () => {
-      window.removeEventListener(START_TUTORIAL_EVENT, startGeneral);
-      window.removeEventListener(START_PAGE_GUIDE_EVENT, startPage);
+      globalThis.removeEventListener(START_TUTORIAL_EVENT, startGeneral);
+      globalThis.removeEventListener(START_PAGE_GUIDE_EVENT, startPage);
     };
   }, []);
 

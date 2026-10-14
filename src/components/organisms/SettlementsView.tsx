@@ -19,6 +19,25 @@ export interface SettlementsViewProps {
   readonly options?: SettlementFilterOptions;
 }
 
+/** Estado vacío: sin resultados para los filtros (con enlace para quitarlos) o sin cuadres. */
+function SettlementsEmptyState({ isFiltered }: Readonly<{ readonly isFiltered: boolean }>) {
+  if (isFiltered) {
+    return (
+      <EmptyState
+        icon={<StateIcon name="search" />}
+        {...SETTLEMENTS_TEXT.emptyFiltered}
+        action={
+          <ButtonLink href="/cuadres" variant="outline">
+            {SETTLEMENTS_TEXT.filters.all}
+          </ButtonLink>
+        }
+      />
+    );
+  }
+
+  return <EmptyState icon={<StateIcon name="clipboard" />} {...SETTLEMENTS_TEXT.empty} />;
+}
+
 /** Cuadres: título, filtro por estado (enlaces `?estado=`), filtros de fecha, cobrador y cartera, y tabla. Solo presentación. */
 export function SettlementsView({ settlements, options = { collectors: [], portfolios: [] } }: Readonly<SettlementsViewProps>) {
   const { rows, total, page, pageSize, status, filters } = settlements;
@@ -46,17 +65,7 @@ export function SettlementsView({ settlements, options = { collectors: [], portf
       <SettlementFilters filters={filters} options={options} status={status} />
 
       {rows.length === 0 ? (
-        <EmptyState
-          icon={<StateIcon name={isFiltered ? 'search' : 'clipboard'} />}
-          {...(isFiltered ? SETTLEMENTS_TEXT.emptyFiltered : SETTLEMENTS_TEXT.empty)}
-          action={
-            isFiltered ? (
-              <ButtonLink href="/cuadres" variant="outline">
-                {SETTLEMENTS_TEXT.filters.all}
-              </ButtonLink>
-            ) : undefined
-          }
-        />
+        <SettlementsEmptyState isFiltered={isFiltered} />
       ) : (
         <>
           <SettlementsTable rows={rows} />
