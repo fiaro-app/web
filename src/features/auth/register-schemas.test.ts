@@ -6,7 +6,7 @@ const VALID_ACCOUNT = {
   phone: '300 123 4567',
   nationalId: '1.020.304.050',
   contactEmail: '',
-  password: 'una-contraseña',
+  password: 'una-contraseña-segura',
 };
 
 function messages(result: { success: boolean; error?: { issues: { path: PropertyKey[]; message: string }[] } }) {
@@ -22,7 +22,7 @@ describe('AccountStepSchema', () => {
       phone: '+573001234567',
       nationalId: '1020304050',
       contactEmail: undefined,
-      password: 'una-contraseña',
+      password: 'una-contraseña-segura',
     });
   });
 
@@ -39,7 +39,7 @@ describe('AccountStepSchema', () => {
       fullName: 'Escribe tu nombre completo.',
       phone: 'Escribe tu celular.',
       nationalId: 'Escribe tu cédula.',
-      password: 'Usa al menos 8 caracteres.',
+      password: 'Usa al menos 15 caracteres.',
     });
     expect(messages(result)).not.toHaveProperty('contactEmail');
   });
@@ -60,8 +60,8 @@ describe('AccountStepSchema', () => {
   });
 
   it('bounds the password length like the API does', () => {
-    expect(AccountStepSchema.safeParse({ ...VALID_ACCOUNT, password: 'a'.repeat(7) }).success).toBe(false);
-    expect(AccountStepSchema.safeParse({ ...VALID_ACCOUNT, password: 'a'.repeat(8) }).success).toBe(true);
+    expect(AccountStepSchema.safeParse({ ...VALID_ACCOUNT, password: 'a'.repeat(14) }).success).toBe(false);
+    expect(AccountStepSchema.safeParse({ ...VALID_ACCOUNT, password: 'a'.repeat(15) }).success).toBe(true);
     expect(AccountStepSchema.safeParse({ ...VALID_ACCOUNT, password: 'a'.repeat(129) }).success).toBe(false);
   });
 });

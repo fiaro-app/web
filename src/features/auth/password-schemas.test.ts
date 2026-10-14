@@ -27,7 +27,7 @@ describe('verificationCodeSchema', () => {
 });
 
 describe('ResetPasswordFormSchema', () => {
-  const VALID = { code: '048213', newPassword: 'nueva-clave-1', confirmPassword: 'nueva-clave-1' };
+  const VALID = { code: '048213', newPassword: 'nueva-clave-segura-1', confirmPassword: 'nueva-clave-segura-1' };
 
   it('accepts a code and a confirmed password', () => {
     expect(ResetPasswordFormSchema.safeParse(VALID).success).toBe(true);
@@ -41,13 +41,13 @@ describe('ResetPasswordFormSchema', () => {
 
   it('applies the password length of the API', () => {
     expect(messages(ResetPasswordFormSchema.safeParse({ ...VALID, newPassword: 'corta', confirmPassword: 'corta' }))).toMatchObject({
-      newPassword: 'Usa al menos 8 caracteres.',
+      newPassword: 'Usa al menos 15 caracteres.',
     });
   });
 });
 
 describe('ChangePasswordFormSchema', () => {
-  const VALID = { currentPassword: 'temporal-1', newPassword: 'nueva-clave-1', confirmPassword: 'nueva-clave-1' };
+  const VALID = { currentPassword: 'temporal-1', newPassword: 'nueva-clave-segura-1', confirmPassword: 'nueva-clave-segura-1' };
 
   it('accepts a different, confirmed password', () => {
     expect(ChangePasswordFormSchema.safeParse(VALID).success).toBe(true);
@@ -60,7 +60,7 @@ describe('ChangePasswordFormSchema', () => {
   });
 
   it('does not accept the same password again', () => {
-    const same = { currentPassword: 'misma-clave-1', newPassword: 'misma-clave-1', confirmPassword: 'misma-clave-1' };
+    const same = { currentPassword: 'misma-clave-segura-1', newPassword: 'misma-clave-segura-1', confirmPassword: 'misma-clave-segura-1' };
 
     expect(messages(ChangePasswordFormSchema.safeParse(same))).toEqual({
       newPassword: 'La contraseña nueva debe ser distinta de la actual.',

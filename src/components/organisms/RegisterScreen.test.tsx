@@ -22,7 +22,7 @@ async function fillAccount() {
   await userEvent.type(screen.getByLabelText(/Nombre completo/), 'Ana Pérez');
   await userEvent.type(screen.getByLabelText(/^Celular/), '300 123 4567');
   await userEvent.type(screen.getByLabelText(/Cédula/), '1020304050');
-  await userEvent.type(screen.getByLabelText(/^Contraseña/), 'una-contraseña');
+  await userEvent.type(screen.getByLabelText(/^Contraseña/), 'una-contraseña-segura');
 }
 
 describe('RegisterScreen', () => {
@@ -64,7 +64,7 @@ describe('RegisterScreen', () => {
 
     await waitFor(() => expect(replace).toHaveBeenCalledWith('/resumen'));
     expect(registerMock).toHaveBeenCalledOnce();
-    expect(signInMock).toHaveBeenCalledWith({ phone: '+573001234567', password: 'una-contraseña' });
+    expect(signInMock).toHaveBeenCalledWith({ phone: '+573001234567', password: 'una-contraseña-segura' });
   });
 
   it('brings the person back to step 1 when the phone is already registered', async () => {

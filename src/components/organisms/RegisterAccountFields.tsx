@@ -22,7 +22,7 @@ export function RegisterAccountFields({ values, fieldErrors, setField }: Readonl
       <FormField label="Correo electrónico (opcional)" hint="Sirve para recuperar tu contraseña." error={fieldErrors.contactEmail}>
         <Input name="contactEmail" type="email" inputMode="email" autoComplete="email" placeholder="tu@correo.com" value={values.contactEmail} onChange={setField('contactEmail')} />
       </FormField>
-      <FormField label="Contraseña" hint="Mínimo 8 caracteres." error={fieldErrors.password}>
+      <FormField label="Contraseña" hint="Mínimo 15 caracteres. Sirve una frase fácil de recordar, como «la tienda abre a las seis»." error={fieldErrors.password}>
         <PasswordInput name="password" autoComplete="new-password" placeholder="••••••••" value={values.password} onChange={setField('password')} />
       </FormField>
     </FormFieldset>

@@ -29,7 +29,7 @@ const ACCOUNT = {
   fullName: 'Ana Pérez',
   phone: '300 123 4567',
   nationalId: '1.020.304.050',
-  password: 'una-contraseña',
+  password: 'una-contraseña-segura',
 };
 
 async function reachCompanyStep(result: Hook) {
@@ -118,7 +118,7 @@ describe('useRegisterForm — step 2 (company)', () => {
       { businessName: 'Préstamos Ana' },
       undefined,
     );
-    expect(signInMock).toHaveBeenCalledWith({ phone: '+573001234567', password: 'una-contraseña' });
+    expect(signInMock).toHaveBeenCalledWith({ phone: '+573001234567', password: 'una-contraseña-segura' });
     expect(replace).toHaveBeenCalledWith('/resumen');
     expect(refresh).toHaveBeenCalled();
   });
