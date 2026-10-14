@@ -4,9 +4,13 @@
  * delante (`data-label`). Clases literales para que Tailwind las detecte.
  */
 export const RESPONSIVE_TABLE = {
-  wrapper: 'rounded-md md:overflow-x-auto md:bg-surface',
+  /**
+   * Desde `md` la tabla se desplaza sola (en ambos ejes, por eso la cabecera queda fija). En un listado (va después de
+   * `StickyToolbar`) se encoge hasta caber en la pantalla, con un mínimo de `15rem` para pantallas muy bajas.
+   */
+  wrapper: 'rounded-md md:overflow-auto md:bg-surface md:[[data-list-toolbar]~&]:min-h-60',
   table: 'w-full border-collapse text-left text-label max-md:block',
-  head: 'max-md:sr-only',
+  head: 'max-md:sr-only md:sticky md:top-0 md:z-10 md:bg-surface md:shadow-[inset_0_-1px_0] md:shadow-foreground/8',
   body: 'divide-y divide-foreground/8 max-md:flex max-md:flex-col max-md:gap-3 max-md:divide-y-0',
   row: 'max-md:flex max-md:flex-col max-md:gap-2 max-md:rounded-md max-md:bg-surface max-md:p-4',
   rowHeader: 'px-5 py-5 font-normal max-md:p-0 max-md:text-body max-md:font-semibold',

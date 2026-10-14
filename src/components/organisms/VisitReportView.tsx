@@ -4,6 +4,7 @@ import { Text } from '@/components/atoms/Text';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { Alert } from '@/components/molecules/Alert';
 import { PaginationNav } from '@/components/molecules/PaginationNav';
+import { StickyToolbar } from '@/components/molecules/StickyToolbar';
 import { VisitReportFilters } from '@/components/organisms/VisitReportFilters';
 import { VisitReportTable } from '@/components/organisms/VisitReportTable';
 import { VISITS_TEXT } from '@/content/visits';
@@ -63,7 +64,9 @@ export function VisitReportView({ report, filters, collectors }: Readonly<VisitR
         </Text>
       </div>
 
-      <VisitReportFilters filters={filters} collectors={collectors} />
+      <StickyToolbar className="max-md:static">
+        <VisitReportFilters filters={filters} collectors={collectors} />
+      </StickyToolbar>
 
       <p className="text-label font-semibold text-foreground">{describeRange(report, filters)}</p>
       {report.searchTruncated && <Alert tone="info">{text.searchTruncated}</Alert>}

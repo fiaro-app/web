@@ -7,6 +7,7 @@ import { FilterForm } from '@/components/molecules/FilterForm';
 import { FilterSubmitButton } from '@/components/molecules/FilterSubmitButton';
 import { PaginationNav } from '@/components/molecules/PaginationNav';
 import { SearchInput } from '@/components/molecules/SearchInput';
+import { StickyToolbar } from '@/components/molecules/StickyToolbar';
 import { LoansTable } from '@/components/organisms/LoansTable';
 import { LOANS_TEXT } from '@/content/loans';
 import { LOAN_STATUS_FILTERS } from '@/features/loans/status-filter';
@@ -72,29 +73,31 @@ export function LoansView({ loans, canManage = true }: Readonly<LoansViewProps>)
         {canManage && <ButtonLink href="/prestamos/nuevo">{LOANS_TEXT.newLoan}</ButtonLink>}
       </header>
 
-      <FilterForm action="/prestamos" role="search" aria-label={LOANS_TEXT.search.label} className="flex max-w-xl gap-3">
-        {status !== null && <input type="hidden" name="estado" value={status} />}
-        <SearchInput name="q" defaultValue={search} placeholder={LOANS_TEXT.search.placeholder} className="flex-1" />
-        <FilterSubmitButton size="sm" className="h-11">
-          {LOANS_TEXT.search.submit}
-        </FilterSubmitButton>
-        {hasSearch && (
-          <ButtonLink href={pageHref('/prestamos', 1, { estado: status ?? undefined })} variant="text" size="sm" className="h-11">
-            {LOANS_TEXT.search.clear}
-          </ButtonLink>
-        )}
-      </FilterForm>
+      <StickyToolbar>
+        <FilterForm action="/prestamos" role="search" aria-label={LOANS_TEXT.search.label} className="flex max-w-xl gap-3">
+          {status !== null && <input type="hidden" name="estado" value={status} />}
+          <SearchInput name="q" defaultValue={search} placeholder={LOANS_TEXT.search.placeholder} className="flex-1" />
+          <FilterSubmitButton size="sm" className="h-11">
+            {LOANS_TEXT.search.submit}
+          </FilterSubmitButton>
+          {hasSearch && (
+            <ButtonLink href={pageHref('/prestamos', 1, { estado: status ?? undefined })} variant="text" size="sm" className="h-11">
+              {LOANS_TEXT.search.clear}
+            </ButtonLink>
+          )}
+        </FilterForm>
 
-      <nav aria-label={LOANS_TEXT.filters.label} className="flex flex-wrap gap-2">
-        <FilterPillLink href={pageHref('/prestamos', 1, { q: search })} selected={status === null}>
-          {LOANS_TEXT.filters.all}
-        </FilterPillLink>
-        {LOAN_STATUS_FILTERS.map((filter) => (
-          <FilterPillLink key={filter} href={pageHref('/prestamos', 1, { estado: filter, q: search })} selected={status === filter}>
-            {LOANS_TEXT.status[filter]}
+        <nav aria-label={LOANS_TEXT.filters.label} className="flex flex-wrap gap-2">
+          <FilterPillLink href={pageHref('/prestamos', 1, { q: search })} selected={status === null}>
+            {LOANS_TEXT.filters.all}
           </FilterPillLink>
-        ))}
-      </nav>
+          {LOAN_STATUS_FILTERS.map((filter) => (
+            <FilterPillLink key={filter} href={pageHref('/prestamos', 1, { estado: filter, q: search })} selected={status === filter}>
+              {LOANS_TEXT.status[filter]}
+            </FilterPillLink>
+          ))}
+        </nav>
+      </StickyToolbar>
 
       {rows.length === 0 ? (
         <LoansEmptyState search={search} status={status} canManage={canManage} />
