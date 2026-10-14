@@ -18,9 +18,21 @@ export async function signOut(): Promise<void> {
  * Registra a un dueño y su negocio. No abre sesión (la API lo deja así a propósito): quien llama
  * inicia sesión después con el mismo celular y contraseña.
  */
-export async function registerOwner({ phone, fullName, password, nationalId, contactEmail }: AccountValues, { businessName }: CompanyValues) {
+export async function registerOwner(
+  { phone, fullName, password, nationalId, contactEmail }: AccountValues,
+  { businessName }: CompanyValues,
+  turnstileToken?: string,
+) {
   return callEndpoint(authEndpoints.register, {
-    body: { phone, fullName, password, nationalId, businessName, ...(contactEmail && { contactEmail }) },
+    body: {
+      phone,
+      fullName,
+      password,
+      nationalId,
+      businessName,
+      ...(contactEmail && { contactEmail }),
+      ...(turnstileToken && { turnstileToken }),
+    },
   });
 }
 
@@ -29,8 +41,8 @@ export async function registerOwner({ phone, fullName, password, nationalId, con
  * tenga o no correo (no revela qué celulares están registrados), así que un éxito no garantiza que
  * se haya mandado nada.
  */
-export async function requestPasswordReset(phone: string): Promise<void> {
-  await callEndpoint(authEndpoints.requestPasswordReset, { body: { phoneNumber: phone } });
+export async function requestPasswordReset(phone: string, turnstileToken?: string): Promise<void> {
+  await callEndpoint(authEndpoints.requestPasswordReset, { body: { phoneNumber: phone, ...(turnstileToken && { turnstileToken }) } });
 }
 
 /** Canjea el código por una contraseña nueva. La API cierra todas las sesiones de la persona. */

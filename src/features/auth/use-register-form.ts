@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, type ChangeEvent, type SubmitEvent } from 'react';
+import { useCallback, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { registerOwner, signIn } from '@/features/auth/auth-api';
 import { describeAuthError, issueFieldErrors } from '@/features/auth/error-messages';
 import {
@@ -14,6 +14,7 @@ import {
 } from '@/features/auth/register-schemas';
 import { LOGIN_PATH } from '@/features/auth/route-guard';
 import { toFieldErrors, type FieldErrors } from '@/lib/forms';
+import { turnstileEnabled } from '@/components/molecules/TurnstileWidget';
 
 const EMPTY_VALUES: RegisterFormInput = {
   fullName: '',
@@ -46,6 +47,15 @@ export function useRegisterForm({ redirectTo }: UseRegisterFormOptions) {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors<RegisterField>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const turnstileError = useCallback(
+    () =>
+      setFormError(
+        'No pudimos cargar la verificación de seguridad. Recarga la página e inténtalo de nuevo.',
+      ),
+    [],
+  );
 
   const setField = (field: RegisterField) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues((current) => ({ ...current, [field]: event.target.value }));
@@ -108,14 +118,33 @@ export function useRegisterForm({ redirectTo }: UseRegisterFormOptions) {
     setIsSubmitting(true);
     setFieldErrors({});
     setFormError(null);
+    if (turnstileEnabled && !turnstileToken) {
+      setFormError('Completa la verificación de seguridad para continuar.');
+      setIsSubmitting(false);
+      return;
+    }
     try {
-      await registerOwner(account.data, company.data);
+      await registerOwner(account.data, company.data, turnstileToken ?? undefined);
     } catch (error) {
+      setTurnstileToken(null);
+      setTurnstileResetKey((current) => current + 1);
       fail(error);
       return;
     }
     await finish(account.data.phone, account.data.password);
   };
 
-  return { step, values, fieldErrors, formError, isSubmitting, setField, goBack, submit };
+  return {
+    step,
+    values,
+    fieldErrors,
+    formError,
+    isSubmitting,
+    setField,
+    goBack,
+    submit,
+    turnstileResetKey,
+    setTurnstileToken,
+    turnstileError,
+  };
 }

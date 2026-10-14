@@ -25,12 +25,13 @@ export function buildContentSecurityPolicy({
   const directives: Record<string, readonly string[]> = {
     'default-src': ["'self'"],
     // React usa eval para reconstruir errores del servidor en desarrollo; en producción no hace falta.
-    'script-src': ["'self'", "'unsafe-inline'", ...(isDevelopment ? ["'unsafe-eval'"] : [])],
+    'script-src': ["'self'", "'unsafe-inline'", 'https://challenges.cloudflare.com', ...(isDevelopment ? ["'unsafe-eval'"] : [])],
     'style-src': ["'self'", "'unsafe-inline'"],
     'img-src': ["'self'", 'data:', 'blob:', ...(storageOrigin ? [storageOrigin] : [])],
     'font-src': ["'self'"],
     // El recargado en caliente de desarrollo usa WebSocket.
     'connect-src': ["'self'", ...(storageOrigin ? [storageOrigin] : []), ...(isDevelopment ? ['ws:', 'wss:'] : [])],
+    'frame-src': ['https://challenges.cloudflare.com'],
     'manifest-src': ["'self'"],
     'object-src': ["'none'"],
     'base-uri': ["'self'"],

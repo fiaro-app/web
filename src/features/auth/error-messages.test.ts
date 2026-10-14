@@ -14,6 +14,13 @@ describe('describeAuthError', () => {
     });
   });
 
+  it('asks to retry the bot check when Turnstile rejects the token', () => {
+    expect(describeAuthError(errorWith('TURNSTILE_FAILED'))).toEqual({
+      message: 'No pudimos verificar que eres una persona. Completa la verificación de nuevo.',
+      field: null,
+    });
+  });
+
   it.each([
     [30, '1 minuto'],
     [60, '1 minuto'],
