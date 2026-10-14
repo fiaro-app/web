@@ -8,6 +8,7 @@ import { Text } from '@/components/atoms/Text';
 import { TextButton } from '@/components/atoms/TextButton';
 import { PasswordInput } from '@/components/molecules/PasswordInput';
 import { FormField } from '@/components/molecules/FormField';
+import { TurnstileWidget } from '@/components/molecules/TurnstileWidget';
 import { RECOVERY_CONTENT } from '@/content/password';
 import { usePasswordRecovery } from '@/features/auth/use-password-recovery';
 
@@ -29,7 +30,21 @@ function Heading({ title, subtitle }: Readonly<{ title: string; subtitle: string
  * aviso final. Solo diseño: la lógica vive en `usePasswordRecovery`.
  */
 export function PasswordRecoveryForm() {
-  const { step, values, fieldErrors, formError, isSubmitting, codeResent, setField, submit, resendCode, changePhone } = usePasswordRecovery();
+  const {
+    step,
+    values,
+    fieldErrors,
+    formError,
+    isSubmitting,
+    codeResent,
+    setField,
+    submit,
+    resendCode,
+    changePhone,
+    turnstileResetKey,
+    setTurnstileToken,
+    turnstileError,
+  } = usePasswordRecovery();
   const text = RECOVERY_CONTENT;
 
   if (step === 'done') {
@@ -72,6 +87,9 @@ export function PasswordRecoveryForm() {
           </Text>
         </>
       )}
+
+      {/* En el paso 2 sirve para "reenviar el código", que vuelve a mandar un correo. */}
+      <TurnstileWidget action="password-reset" resetKey={turnstileResetKey} onToken={setTurnstileToken} onError={turnstileError} />
 
       {codeResent && <Alert tone="success">{text.reset.resent}</Alert>}
       {formError && <Alert tone="error">{formError}</Alert>}

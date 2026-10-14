@@ -41,8 +41,8 @@ export async function registerOwner(
  * tenga o no correo (no revela qué celulares están registrados), así que un éxito no garantiza que
  * se haya mandado nada.
  */
-export async function requestPasswordReset(phone: string): Promise<void> {
-  await callEndpoint(authEndpoints.requestPasswordReset, { body: { phoneNumber: phone } });
+export async function requestPasswordReset(phone: string, turnstileToken?: string): Promise<void> {
+  await callEndpoint(authEndpoints.requestPasswordReset, { body: { phoneNumber: phone, ...(turnstileToken && { turnstileToken }) } });
 }
 
 /** Canjea el código por una contraseña nueva. La API cierra todas las sesiones de la persona. */

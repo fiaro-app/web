@@ -29,7 +29,7 @@ export const turnstileEnabled = Boolean(SITE_KEY);
 
 export interface TurnstileWidgetProps {
   /** Acción estable que el backend valida contra la respuesta de Siteverify. */
-  readonly action: 'lead' | 'register';
+  readonly action: 'lead' | 'register' | 'password-reset';
   /** Fuerza un desafío nuevo después de un envío: los tokens son de un solo uso. */
   readonly resetKey: number;
   readonly onToken: (token: string | null) => void;

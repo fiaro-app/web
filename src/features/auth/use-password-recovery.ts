@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useCallback, useState, type ChangeEvent, type FormEvent } from 'react';
+import { turnstileEnabled } from '@/components/molecules/TurnstileWidget';
 import { requestPasswordReset, resetPassword } from '@/features/auth/auth-api';
 import { describeAuthError, issueFieldErrors } from '@/features/auth/error-messages';
 import { RequestResetFormSchema, ResetPasswordFormSchema } from '@/features/auth/password-schemas';
@@ -29,6 +30,12 @@ export function usePasswordRecovery() {
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [codeResent, setCodeResent] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const turnstileError = useCallback(
+    () => setFormError('No pudimos cargar la verificación de seguridad. Recarga la página e inténtalo de nuevo.'),
+    [],
+  );
 
   const setField = (field: RecoveryField) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues((current) => ({ ...current, [field]: event.target.value }));
@@ -50,10 +57,17 @@ export function usePasswordRecovery() {
   };
 
   const requestCode = async (phone: string) => {
+    if (turnstileEnabled && !turnstileToken) {
+      setFormError('Completa la verificación de seguridad para continuar.');
+      return false;
+    }
     setIsSubmitting(true);
     setFormError(null);
+    // Cada token sirve una vez: el siguiente pedido (reenviar el código) necesita un desafío nuevo.
+    setTurnstileToken(null);
+    setTurnstileResetKey((current) => current + 1);
     try {
-      await requestPasswordReset(phone);
+      await requestPasswordReset(phone, turnstileToken ?? undefined);
       setStep('reset');
       setIsSubmitting(false);
       return true;
@@ -116,5 +130,19 @@ export function usePasswordRecovery() {
     setCodeResent(false);
   };
 
-  return { step, values, fieldErrors, formError, isSubmitting, codeResent, setField, submit, resendCode, changePhone };
+  return {
+    step,
+    values,
+    fieldErrors,
+    formError,
+    isSubmitting,
+    codeResent,
+    setField,
+    submit,
+    resendCode,
+    changePhone,
+    turnstileResetKey,
+    setTurnstileToken,
+    turnstileError,
+  };
 }

@@ -89,6 +89,14 @@ describe('password recovery and change', () => {
     expect(JSON.parse(init?.body as string)).toEqual({ phoneNumber: '+573001234567' });
   });
 
+  it('sends the Turnstile token with the request when there is one', async () => {
+    fetchMock.mockResolvedValue(OK());
+
+    await requestPasswordReset('+573001234567', 'tok');
+
+    expect(JSON.parse(fetchMock.mock.calls[0]![1]?.body as string)).toEqual({ phoneNumber: '+573001234567', turnstileToken: 'tok' });
+  });
+
   it('redeems the code for a new password', async () => {
     fetchMock.mockResolvedValue(OK());
 

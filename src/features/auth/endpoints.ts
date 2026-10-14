@@ -56,7 +56,10 @@ export const SessionSchema = z
   .nullable();
 
 /** Cuerpo de `POST /auth/request-password-reset`. */
-export const RequestPasswordResetBodySchema = z.strictObject({ phoneNumber: MobilePhoneSchema });
+export const RequestPasswordResetBodySchema = z.strictObject({
+  phoneNumber: MobilePhoneSchema,
+  turnstileToken: TurnstileTokenSchema.optional(),
+});
 
 /** Cuerpo de `POST /auth/reset-password`. */
 export const ResetPasswordBodySchema = z.strictObject({
