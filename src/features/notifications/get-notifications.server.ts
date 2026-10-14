@@ -1,6 +1,7 @@
 import 'server-only';
 import { notificationEndpoints } from '@/features/notifications/endpoints';
 import { toNotificationsViewModel, type NotificationsViewModel } from '@/features/notifications/notifications-view-model';
+import { LIST_PAGE_SIZE } from '@/lib/pagination';
 import { callEndpointAsUser } from '@/lib/api/server-call';
 
 /**
@@ -9,7 +10,7 @@ import { callEndpointAsUser } from '@/lib/api/server-call';
  */
 export async function getNotifications(page: number, unreadOnly: boolean): Promise<NotificationsViewModel> {
   const result = await callEndpointAsUser(notificationEndpoints.list, {
-    body: { page, pageSize: 20, ...(unreadOnly && { unreadOnly }) },
+    body: { page, pageSize: LIST_PAGE_SIZE, ...(unreadOnly && { unreadOnly }) },
   });
   return toNotificationsViewModel(result.data, result.meta, unreadOnly);
 }

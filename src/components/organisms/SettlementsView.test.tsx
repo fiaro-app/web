@@ -42,8 +42,8 @@ describe('SettlementsView', () => {
   });
 
   it('shows the empty state, with a different message when filtered', () => {
-    const { rerender } = render(<SettlementsView settlements={view({ rows: [], total: 0 })} />);
-    expect(screen.getByText('Aún no hay cuadres')).toBeInTheDocument();
+    const { rerender } = render(<SettlementsView settlements={view({ rows: [], total: 0, status: 'PENDING' })} />);
+    expect(screen.getByText('No hay cuadres por revisar')).toBeInTheDocument();
     rerender(<SettlementsView settlements={view({ rows: [], total: 0, status: 'APPROVED' })} />);
     expect(screen.getByText('Sin cuadres con estos filtros')).toBeInTheDocument();
   });
@@ -72,6 +72,7 @@ describe('SettlementsView', () => {
 
     const query = 'desde=2026-10-01&hasta=2026-10-09&cobrador=c1';
     expect(screen.getByRole('link', { name: 'Pendiente' })).toHaveAttribute('href', `/cuadres?${query}&estado=PENDING`);
-    expect(screen.getByRole('link', { name: 'Siguiente' })).toHaveAttribute('href', `/cuadres?pagina=2&${query}`);
+    expect(screen.getByRole('link', { name: 'Siguiente' })).toHaveAttribute('href', `/cuadres?pagina=2&${query}&estado=TODOS`);
+    expect(screen.getByRole('link', { name: 'Todos' })).toHaveAttribute('href', `/cuadres?${query}&estado=TODOS`);
   });
 });

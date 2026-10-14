@@ -84,4 +84,12 @@ describe('DatePicker', () => {
     await userEvent.click(document.body);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
+
+  it('does not let pick a day after max', async () => {
+    render(<DatePicker name="hasta" defaultValue="2026-10-09" max="2026-10-10" />);
+    await userEvent.click(screen.getByRole('button'));
+
+    expect(screen.getByRole('gridcell', { name: '10 de octubre de 2026' })).toBeEnabled();
+    expect(screen.getByRole('gridcell', { name: '11 de octubre de 2026' })).toBeDisabled();
+  });
 });

@@ -20,7 +20,7 @@ const RESPONSE = {
       createdAt: '2026-10-09T15:00:00.000Z',
     },
   ],
-  meta: { page: 2, pageSize: 20, total: 21 },
+  meta: { page: 2, pageSize: 10, total: 21 },
 };
 
 beforeEach(() => {
@@ -37,9 +37,9 @@ describe('getNotifications', () => {
 
   it('sends unreadOnly only when asked', async () => {
     await getNotifications(1, true);
-    expect(callEndpointAsUser).toHaveBeenLastCalledWith(expect.anything(), { body: { page: 1, pageSize: 20, unreadOnly: true } });
+    expect(callEndpointAsUser).toHaveBeenLastCalledWith(expect.anything(), { body: { page: 1, pageSize: 10, unreadOnly: true } });
     await getNotifications(1, false);
-    expect(callEndpointAsUser).toHaveBeenLastCalledWith(expect.anything(), { body: { page: 1, pageSize: 20 } });
+    expect(callEndpointAsUser).toHaveBeenLastCalledWith(expect.anything(), { body: { page: 1, pageSize: 10 } });
   });
 
   it('propagates API failures to the error boundary', async () => {

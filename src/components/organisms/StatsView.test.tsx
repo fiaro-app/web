@@ -67,4 +67,21 @@ describe('StatsView', () => {
     expect(screen.getByText('Todavía no hay datos')).toBeInTheDocument();
     expect(screen.queryByRole('region', { name: 'Indicadores' })).not.toBeInTheDocument();
   });
+
+  it('offers the full list when the first five rows came in, and pages it once open', () => {
+    const five = Array.from({ length: 5 }, (_, index) => ({ ...STATS.topArrears[0]!, clientId: `c${String(index)}` }));
+    const { rerender } = render(<StatsView stats={{ ...STATS, topArrears: five }} filters={EMPTY_STATS_FILTERS} options={OPTIONS} />);
+    expect(screen.getByRole('link', { name: 'Ver todos' })).toHaveAttribute('href', '/estadisticas?mora=1');
+
+    rerender(
+      <StatsView
+        stats={{ ...STATS, topArrears: five, topArrearsPage: { page: 1, pages: 2, total: 12 } }}
+        filters={EMPTY_STATS_FILTERS}
+        options={OPTIONS}
+      />,
+    );
+    expect(screen.getByText('Página 1 de 2 · 12 clientes')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Siguiente' })).toHaveAttribute('href', '/estadisticas?mora=2');
+    expect(screen.getByRole('link', { name: 'Ver solo los 5 primeros' })).toHaveAttribute('href', '/estadisticas');
+  });
 });

@@ -1,5 +1,6 @@
 import type { Portfolio } from '@fiaro-app/contracts';
 import type { MembershipListEntry } from '@/features/memberships/endpoints';
+import type { CollectorStatusFilter } from '@/features/collectors/status-filter';
 
 /** Nombre que se muestra cuando el cobrador no tiene cartera (o no se pudo resolver). */
 export const NO_PORTFOLIO_LABEL = 'Sin cartera';
@@ -16,6 +17,8 @@ export interface CollectorRow {
 
 export interface CollectorsViewModel {
   readonly rows: readonly CollectorRow[];
+  /** El filtro de estado con que se pidió la página; ausente equivale a `activos`. */
+  readonly filter?: CollectorStatusFilter;
   readonly total: number;
   readonly page: number;
   readonly pageSize: number;

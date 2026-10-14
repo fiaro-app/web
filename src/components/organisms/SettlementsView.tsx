@@ -9,7 +9,11 @@ import { SettlementsTable } from '@/components/organisms/SettlementsTable';
 import { SETTLEMENTS_TEXT } from '@/content/settlements';
 import type { SettlementFilterOptions } from '@/features/settlements/get-settlements.server';
 import { EMPTY_SETTLEMENT_FILTERS } from '@/features/settlements/settlement-filters';
-import { SETTLEMENT_STATUS_FILTERS } from '@/features/settlements/status-filter';
+import {
+  DEFAULT_SETTLEMENT_STATUS,
+  SETTLEMENT_STATUS_FILTERS,
+  settlementStatusParam,
+} from '@/features/settlements/status-filter';
 import type { SettlementsViewModel } from '@/features/settlements/settlements-view-model';
 import { pageHref } from '@/lib/pagination';
 
@@ -41,7 +45,7 @@ function SettlementsEmptyState({ isFiltered }: Readonly<{ readonly isFiltered: b
 /** Cuadres: título, filtro por estado (enlaces `?estado=`), filtros de fecha, cobrador y cartera, y tabla. Solo presentación. */
 export function SettlementsView({ settlements, options = { collectors: [], portfolios: [] } }: Readonly<SettlementsViewProps>) {
   const { rows, total, page, pageSize, status, filters } = settlements;
-  const isFiltered = status !== null || JSON.stringify(filters) !== JSON.stringify(EMPTY_SETTLEMENT_FILTERS);
+  const isFiltered = status !== DEFAULT_SETTLEMENT_STATUS || JSON.stringify(filters) !== JSON.stringify(EMPTY_SETTLEMENT_FILTERS);
   const hrefFilters = { desde: filters.from, hasta: filters.to, cobrador: filters.collectorId, cartera: filters.portfolioId };
   const pages = Math.max(1, Math.ceil(total / pageSize));
 
@@ -52,14 +56,14 @@ export function SettlementsView({ settlements, options = { collectors: [], portf
       </Text>
 
       <nav aria-label={SETTLEMENTS_TEXT.filters.label} className="flex flex-wrap gap-2">
-        <FilterPillLink href={pageHref('/cuadres', 1, hrefFilters)} selected={status === null}>
-          {SETTLEMENTS_TEXT.filters.all}
-        </FilterPillLink>
         {SETTLEMENT_STATUS_FILTERS.map((filter) => (
           <FilterPillLink key={filter} href={pageHref('/cuadres', 1, { ...hrefFilters, estado: filter })} selected={status === filter}>
             {SETTLEMENTS_TEXT.status[filter]}
           </FilterPillLink>
         ))}
+        <FilterPillLink href={pageHref('/cuadres', 1, { ...hrefFilters, estado: settlementStatusParam(null) })} selected={status === null}>
+          {SETTLEMENTS_TEXT.filters.all}
+        </FilterPillLink>
       </nav>
 
       <SettlementFilters filters={filters} options={options} status={status} />
@@ -73,7 +77,7 @@ export function SettlementsView({ settlements, options = { collectors: [], portf
             page={page}
             pages={pages}
             summary={SETTLEMENTS_TEXT.pagination.summary(page, pages, total)}
-            hrefFor={(target) => pageHref('/cuadres', target, { ...hrefFilters, estado: status ?? undefined })}
+            hrefFor={(target) => pageHref('/cuadres', target, { ...hrefFilters, estado: settlementStatusParam(status) })}
           />
         </>
       )}

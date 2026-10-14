@@ -15,8 +15,9 @@ export const metadata: Metadata = { title: 'Registrar préstamo' };
 export default async function NewLoanPage({ searchParams }: PageProps<'/prestamos/nuevo'>) {
   if (!(await getAccess()).canManage) return <EmptyState icon={<StateIcon name="lock" />} {...LOANS_TEXT.forbidden} />;
   const { cliente } = await searchParams;
-  const [clients, collectors] = await Promise.all([getClientOptions(), getCollectorOptions()]);
-  const loanForm = <LoanForm clients={clients} collectors={collectors} initialClientId={parseInitialClient(cliente)} />;
+  const initialClientId = parseInitialClient(cliente);
+  const [clients, collectors] = await Promise.all([getClientOptions(initialClientId === '' ? null : initialClientId), getCollectorOptions()]);
+  const loanForm = <LoanForm clients={clients} collectors={collectors} initialClientId={initialClientId} />;
   // Sin clientes la vista muestra el estado vacío a página completa, sin panel lateral.
   return clients.length > 0 ? <FormWithAside aside={LOANS_TEXT.form.aside}>{loanForm}</FormWithAside> : loanForm;
 }

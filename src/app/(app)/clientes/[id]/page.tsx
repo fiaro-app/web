@@ -23,7 +23,7 @@ export default async function EditClientPage({ params }: PageProps<'/clientes/[i
   }
   // Editar clientes y registrarles préstamos es de quien administra el negocio.
   if (!canManage) return <EmptyState icon={<StateIcon name="lock" />} {...CLIENTS_TEXT.forbidden} />;
-  const loans = await getClientLoans(result.client.id, result.client.fullName);
+  const loans = await getClientLoans(result.client.id);
   return (
     <>
       <ClientForm client={result.client} />

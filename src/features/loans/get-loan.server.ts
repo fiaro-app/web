@@ -2,7 +2,7 @@ import 'server-only';
 import { getAccess } from '@/features/app-shell/get-access.server';
 import { currentAssignment, todayBusinessDate } from '@/features/loans/loan-calculations';
 import { getLoanBalance } from '@/features/loans/get-balances.server';
-import { getClientNames } from '@/features/loans/get-client-names.server';
+import { getClientName } from '@/features/loans/get-client-names.server';
 import { loanEndpoints, type CollectionAssignment } from '@/features/loans/endpoints';
 import { toLoanDetailView, type LoanDetailView } from '@/features/loans/loans-view-model';
 import { getSettlementLookup } from '@/features/settlements/get-settlement-lookup.server';
@@ -49,9 +49,8 @@ async function loadAssignments(loanId: string): Promise<readonly CollectionAssig
  */
 export async function getLoan(id: string): Promise<LoanResult> {
   try {
-    const [loan, names, balance, assignments, lookup, access] = await Promise.all([
+    const [loan, balance, assignments, lookup, access] = await Promise.all([
       callEndpointAsUser(loanEndpoints.get, { params: { id } }),
-      getClientNames(),
       getLoanBalance(id),
       loadAssignments(id),
       getSettlementLookup(),
@@ -66,7 +65,7 @@ export async function getLoan(id: string): Promise<LoanResult> {
       status: 'ok',
       collect,
       loan: toLoanDetailView(loan, {
-        clientName: names.get(loan.clientId),
+        clientName: await getClientName(loan.clientId),
         balance,
         assignment,
         collectorName: assignment ? lookup.collectorNames.get(assignment.collectorMembershipId) : null,

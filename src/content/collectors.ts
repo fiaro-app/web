@@ -10,6 +10,16 @@ export const COLLECTORS_TEXT = {
     title: 'Aún no tienes cobradores',
     description: 'Registra a tu primer cobrador para asignarle una cartera y empezar a repartir cobros.',
   },
+  emptyFiltered: {
+    title: 'Sin cobradores con este estado',
+    description: 'Prueba con otro estado para ver a los demás cobradores.',
+  },
+  statusFilter: {
+    label: 'Filtrar cobradores por estado',
+    activos: 'Activos',
+    inactivos: 'Inactivos',
+    todos: 'Todos',
+  },
   forbidden: {
     title: 'No tienes acceso a esta sección',
     description: 'Solo quienes administran el negocio pueden ver y registrar cobradores.',
@@ -101,6 +111,19 @@ export const COLLECTORS_TEXT = {
       destinationPlaceholder: 'Elige un cobrador',
       noDestinations: 'No hay otro cobrador activo que pueda recibir sus préstamos. Registra o activa uno antes de darlo de baja.',
       handoverUnavailable: 'No pudimos revisar los préstamos de este cobrador. Recarga la página para intentarlo de nuevo.',
+    },
+    reactivate: {
+      action: 'Reactivar cobrador',
+      confirmTitle: '¿Reactivar al cobrador?',
+      confirmDescription: 'Vuelve a ingresar con su misma cartera y ocupa un cupo de tu plan. Sus préstamos se le asignan aparte.',
+      confirmLabel: 'Reactivar',
+      done: 'Cobrador reactivado.',
+    },
+    remove: {
+      action: 'Borrar cobrador',
+      confirmTitle: '¿Borrar al cobrador?',
+      confirmDescription: 'Solo se puede si nunca tuvo préstamos asignados, cobros ni cuadres (un registro por error). No se puede deshacer.',
+      confirmLabel: 'Borrar',
     },
   },
 } as const;
