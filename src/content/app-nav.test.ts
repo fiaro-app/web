@@ -42,7 +42,7 @@ describe('isNavItemActive', () => {
 
 describe('visibleNavItems', () => {
   it('gives a collector only the modules that are not administration', () => {
-    expect(visibleNavItems(true).map((item) => item.label)).toEqual(['Clientes', 'Préstamos', 'Cuadres', 'Notificaciones', 'Configuración']);
+    expect(visibleNavItems(true).map((item) => item.label)).toEqual(['Clientes', 'Préstamos', 'Cuadres', 'Notificaciones']);
   });
 
   it('gives everyone else the whole menu', () => {

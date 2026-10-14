@@ -4,7 +4,7 @@ export interface AppNavItem {
   readonly href: string;
   /** `false` mientras el módulo no exista: se muestra apagado y sin enlace. */
   readonly available: boolean;
-  /** `true` si es de administración: quien solo es cobrador no lo ve en el menú (según la matriz de permisos de la API: el resumen, los cobradores, los cobros del día y las estadísticas son de Owner y Lender). */
+  /** `true` si es de administración: quien solo es cobrador no lo ve en el menú (según la matriz de permisos de la API: el resumen, los cobradores, los cobros del día, las estadísticas y la configuración del negocio son de Owner y Lender). */
   readonly adminOnly?: boolean;
 }
 
@@ -21,7 +21,7 @@ export const APP_NAV_ITEMS: readonly AppNavItem[] = [
   { label: 'Cuadres', href: '/cuadres', available: true },
   { label: 'Notificaciones', href: '/notificaciones', available: true },
   { label: 'Estadísticas', href: '/estadisticas', available: true, adminOnly: true },
-  { label: 'Configuración', href: '/configuracion', available: true },
+  { label: 'Configuración', href: '/configuracion', available: true, adminOnly: true },
 ];
 
 /** Ruta de Notificaciones: la opción que lleva la insignia de no leídas. */
