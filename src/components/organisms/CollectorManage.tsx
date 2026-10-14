@@ -22,6 +22,8 @@ export interface CollectorManageProps {
   readonly portfolios: readonly PortfolioOption[];
   /** Sus préstamos activos y los cobradores que pueden recibirlos; `null` si no se pudieron revisar. */
   readonly handover?: CollectorHandover | null;
+  /** Es la propia persona: la API no deja administrarse a uno mismo, así que no se ofrecen las acciones. */
+  readonly isSelf?: boolean;
 }
 
 /** Acciones que piden confirmación. */
@@ -35,7 +37,7 @@ const DIALOGS = {
 } as const;
 
 /** Gestión de un cobrador: cambiar su cartera, restablecer su contraseña, desactivarlo, reactivarlo o borrarlo. */
-export function CollectorManage({ collector, portfolios, handover = { loans: [], destinations: [] } }: Readonly<CollectorManageProps>) {
+export function CollectorManage({ collector, portfolios, handover = { loans: [], destinations: [] }, isSelf = false }: Readonly<CollectorManageProps>) {
   const text = COLLECTORS_TEXT.manage;
   const actions = useCollectorActions(collector, handover);
   const [destinationId, setDestinationId] = useState(handover?.destinations[0]?.id ?? '');
@@ -84,7 +86,9 @@ export function CollectorManage({ collector, portfolios, handover = { loans: [],
         </div>
       )}
 
-      {collector.active && (
+      {isSelf && <Alert tone="info">{text.selfNotice}</Alert>}
+
+      {collector.active && !isSelf && (
         <>
           <ConfirmForm
             confirmation={COMMON_TEXT.confirm.save}
@@ -128,7 +132,7 @@ export function CollectorManage({ collector, portfolios, handover = { loans: [],
           </Button>
         </div>
       )}
-      {!collector.roles.includes('OWNER') && (
+      {!collector.roles.includes('OWNER') && !isSelf && (
         <Button variant="text" disabled={actions.pending !== null} onClick={() => setConfirming('remove')} className="self-start text-destructive">
           {text.remove.action}
         </Button>

@@ -51,6 +51,15 @@ describe('CollectorManage', () => {
     expect(screen.getByRole('button', { name: 'Desactivar cobrador' })).toBeInTheDocument();
   });
 
+  it('does not offer managing yourself, and says why', () => {
+    render(<CollectorManage collector={COLLECTOR} portfolios={PORTFOLIOS} isSelf />);
+    expect(screen.getByText(/Eres tú/)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Guardar cartera' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Restablecer contraseña' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Desactivar cobrador' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Borrar cobrador' })).not.toBeInTheDocument();
+  });
+
   it('saves the portfolio through the hook', async () => {
     render(<CollectorManage collector={COLLECTOR} portfolios={PORTFOLIOS} />);
     await userEvent.click(screen.getByRole('button', { name: 'Guardar cartera' }));
