@@ -14,7 +14,7 @@ export interface Access {
 
 /** Permisos de la persona de la sesión (memoizado por petición con `getShellContext`). */
 export async function getAccess(): Promise<Access> {
-  const user = await requireUser();
-  const { canManage, canCollect, membershipId } = await getShellContext(user);
+  await requireUser();
+  const { canManage, canCollect, membershipId } = await getShellContext();
   return { canManage, canCollect, membershipId };
 }

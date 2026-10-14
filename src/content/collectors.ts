@@ -97,6 +97,7 @@ export const COLLECTORS_TEXT = {
       confirmLabel: 'Restablecer',
       result: 'Contraseña temporal nueva',
     },
+    selfNotice: 'Eres tú. Tu contraseña la cambias en «Mi cuenta», y tu cartera o tu baja, otra persona que administre el negocio.',
     deactivate: {
       action: 'Desactivar cobrador',
       confirmTitle: '¿Desactivar al cobrador?',

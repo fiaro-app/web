@@ -4,6 +4,7 @@ import { EmptyState } from '@/components/molecules/EmptyState';
 import { CollectorManage } from '@/components/organisms/CollectorManage';
 import { CollectorPerformance } from '@/components/organisms/CollectorPerformance';
 import { COLLECTORS_TEXT } from '@/content/collectors';
+import { getAccess } from '@/features/app-shell/get-access.server';
 import { getCollector } from '@/features/collectors/get-collector.server';
 import { getCollectorHandover } from '@/features/collectors/get-collector-handover.server';
 import { getCollectorStats } from '@/features/collectors/get-collector-stats.server';
@@ -14,7 +15,7 @@ export const metadata: Metadata = { title: 'Gestionar cobrador' };
 /** Gestionar cobrador: trae al cobrador y las carteras en el servidor. */
 export default async function ManageCollectorPage({ params }: PageProps<'/cobradores/[id]'>) {
   const { id } = await params;
-  const [result, portfolios] = await Promise.all([getCollector(id), getPortfolioOptions()]);
+  const [result, portfolios, access] = await Promise.all([getCollector(id), getPortfolioOptions(), getAccess()]);
 
   if (result.status === 'forbidden') {
     return <EmptyState icon={<StateIcon name="lock" />} {...COLLECTORS_TEXT.forbidden} />;
@@ -29,7 +30,7 @@ export default async function ManageCollectorPage({ params }: PageProps<'/cobrad
   ]);
   return (
     <>
-      <CollectorManage collector={result.collector} portfolios={portfolios} handover={handover} />
+      <CollectorManage collector={result.collector} portfolios={portfolios} handover={handover} isSelf={access.membershipId === id} />
       {stats && <CollectorPerformance stats={stats} />}
     </>
   );

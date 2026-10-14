@@ -7,7 +7,6 @@ vi.mock('@/lib/api/server-call', () => ({ callEndpointAsUser }));
 
 import { FALLBACK_BUSINESS_NAME, getShellContext } from './get-shell-context.server';
 
-const USER = { id: 'u1', name: 'Daniel Rojas', phoneNumber: '+573001234567', contactEmail: null, mustChangePassword: false };
 const LENDER = { id: 'l1', tenantId: 't1', name: 'Financiera Buen Vecino', logoUrl: null, nonWorkingWeekdays: ['SUNDAY'], skipNationalHolidays: true, createdAt: '2026-10-01T10:00:00.000Z' };
 
 const membership = (userId: string, roles: string[]) => ({
@@ -41,10 +40,10 @@ describe('getShellContext', () => {
   it('gives the business name and the role of the signed-in person', async () => {
     routeApi({
       '/lender': LENDER,
-      '/memberships': { data: [membership('otro', ['COLLECTOR']), membership('u1', ['OWNER', 'LENDER', 'COLLECTOR'])], meta: { page: 1, pageSize: 100, total: 2 } },
+      '/memberships/me': membership('u1', ['OWNER', 'LENDER', 'COLLECTOR']),
     });
 
-    await expect(getShellContext(USER)).resolves.toMatchObject({
+    await expect(getShellContext()).resolves.toMatchObject({
       businessName: 'Financiera Buen Vecino',
       roleLabel: 'Administrador',
       brandColor: null,
@@ -57,33 +56,27 @@ describe('getShellContext', () => {
   });
 
   it('passes along the brand color of the business', async () => {
-    routeApi({ '/lender': { ...LENDER, brandColor: '#0F766E' }, '/memberships': api(403, 'FORBIDDEN') });
+    routeApi({ '/lender': { ...LENDER, brandColor: '#0F766E' }, '/memberships/me': membership('u1', ['COLLECTOR']) });
 
-    expect((await getShellContext(USER)).brandColor).toBe('#0F766E');
+    expect((await getShellContext()).brandColor).toBe('#0F766E');
   });
 
   it('reports the unread notifications for the sidebar badge', async () => {
-    routeApi({ '/lender': LENDER, '/memberships': api(403, 'FORBIDDEN'), '/notifications/unread-count': { count: 4 } });
+    routeApi({ '/lender': LENDER, '/memberships/me': membership('u1', ['COLLECTOR']), '/notifications/unread-count': { count: 4 } });
 
-    expect((await getShellContext(USER)).unreadNotifications).toBe(4);
+    expect((await getShellContext()).unreadNotifications).toBe(4);
   });
 
-  it('has no role when the person is not in the list', async () => {
-    routeApi({ '/lender': LENDER, '/memberships': { data: [], meta: { page: 1, pageSize: 100, total: 0 } } });
+  it('reads the role of a collector from their own membership', async () => {
+    routeApi({ '/lender': LENDER, '/memberships/me': membership('u1', ['COLLECTOR']) });
 
-    expect((await getShellContext(USER)).roleLabel).toBeNull();
-  });
-
-  it('treats a 403 on the list as a collector, who cannot list collaborators', async () => {
-    routeApi({ '/lender': LENDER, '/memberships': api(403, 'FORBIDDEN') });
-
-    expect(await getShellContext(USER)).toMatchObject({ roleLabel: 'Cobrador', roles: ['COLLECTOR'], canManage: false, canCollect: true, membershipId: null });
+    expect(await getShellContext()).toMatchObject({ roleLabel: 'Cobrador', roles: ['COLLECTOR'], canManage: false, canCollect: true, membershipId: 'm-u1' });
   });
 
   it('opens the panel with fallbacks when the API fails on these extras', async () => {
-    routeApi({ '/lender': api(503, 'MAINTENANCE'), '/memberships': api(500, 'INTERNAL_ERROR') });
+    routeApi({ '/lender': api(503, 'MAINTENANCE'), '/memberships/me': api(500, 'INTERNAL_ERROR') });
 
-    await expect(getShellContext(USER)).resolves.toMatchObject({
+    await expect(getShellContext()).resolves.toMatchObject({
       businessName: FALLBACK_BUSINESS_NAME,
       roleLabel: null,
       brandColor: null,
@@ -96,8 +89,8 @@ describe('getShellContext', () => {
 
   it('does not hide an unexpected (non-API) failure', async () => {
     const bug = new TypeError('bug');
-    routeApi({ '/lender': bug, '/memberships': { data: [], meta: { page: 1, pageSize: 100, total: 0 } } });
+    routeApi({ '/lender': bug, '/memberships/me': membership('u1', ['OWNER']) });
 
-    await expect(getShellContext(USER)).rejects.toBe(bug);
+    await expect(getShellContext()).rejects.toBe(bug);
   });
 });
