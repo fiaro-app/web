@@ -92,20 +92,29 @@ describe('LoanForm', () => {
   });
 });
 
-describe('LoanForm risk warning', () => {
-  it('warns, without blocking, when the chosen client has very high risk', () => {
-    useClientRisk.mockReturnValue({ level: 'VERY_HIGH' });
+const RISK = { score: 80, level: 'VERY_HIGH', levelLabel: 'muy alto', tone: 'error', ariaLabel: 'Riesgo muy alto: 80 de 100', factors: ['Tiene un préstamo con 40 días de atraso.'], hasHistory: true };
+
+describe('LoanForm risk', () => {
+  it('shows the risk card with its factors once a client is chosen', () => {
+    useClientRisk.mockReturnValue({ ...RISK, level: 'HIGH', levelLabel: 'alto' });
+    render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
+
+    expect(screen.getByRole('region', { name: 'Riesgo del cliente' })).toBeInTheDocument();
+    expect(screen.getByText('Tiene un préstamo con 40 días de atraso.')).toBeInTheDocument();
+    expect(screen.queryByText(/riesgo muy alto con tu negocio/i)).not.toBeInTheDocument();
+  });
+
+  it('also warns, without blocking, when the chosen client has very high risk', () => {
+    useClientRisk.mockReturnValue(RISK);
     render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
 
     expect(screen.getByText(/riesgo muy alto con tu negocio/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /registrar/i })).toBeEnabled();
   });
 
-  it('shows nothing for a lower risk', () => {
-    useClientRisk.mockReturnValue({ level: 'HIGH' });
+  it('shows no card while there is no risk to show', () => {
     render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
 
-    expect(screen.queryByText(/riesgo muy alto/i)).not.toBeInTheDocument();
+    expect(screen.queryByRole('region', { name: 'Riesgo del cliente' })).not.toBeInTheDocument();
   });
 });
-

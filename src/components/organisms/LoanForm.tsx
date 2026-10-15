@@ -11,6 +11,7 @@ import { Select } from '@/components/atoms/Select';
 import { StateIcon } from '@/components/atoms/StateIcon';
 import { Text } from '@/components/atoms/Text';
 import { Alert } from '@/components/molecules/Alert';
+import { ClientRiskCard } from '@/components/organisms/ClientRiskCard';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { FormField } from '@/components/molecules/FormField';
 import { FormFieldset } from '@/components/molecules/FormFieldset';
@@ -71,6 +72,7 @@ export function LoanForm({ clients, collectors, initialClientId }: Readonly<Loan
             ))}
           </Select>
         </FormField>
+        {risk && <ClientRiskCard risk={risk} />}
         {risk?.level === 'VERY_HIGH' && <Alert tone="warning">{RISK_TEXT.loanWarning}</Alert>}
         <FormField label={text.principalAmount.label} error={fieldErrors.principalAmount}>
           <AmountInput size="field" name="principalAmount" value={values.principalAmount} onValueChange={setAmount('principalAmount')} />
