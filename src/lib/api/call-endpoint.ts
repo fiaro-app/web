@@ -7,6 +7,7 @@ import {
   type EndpointResponse,
 } from '@fiaro-app/contracts';
 import { ApiRequestError, CLIENT_ERROR_CODES } from '@/lib/api/api-error';
+import { traceHeaders } from '@/lib/api/trace-headers';
 
 /**
  * Prefijo bajo el que `next.config.ts` reenvía las peticiones a la API (`rewrites`). Así el
@@ -58,13 +59,22 @@ async function readJson(response: Response): Promise<unknown> {
   }
 }
 
+function textField(body: unknown, key: string): string | null {
+  if (typeof body !== 'object' || body === null) return null;
+  const value = (body as Record<string, unknown>)[key];
+  return typeof value === 'string' ? value : null;
+}
+
 async function toRequestError(response: Response): Promise<ApiRequestError> {
-  const parsed = ApiErrorSchema.safeParse(await readJson(response));
+  const json = await readJson(response);
+  const parsed = ApiErrorSchema.safeParse(json);
+  const errorCode = textField(json, 'errorCode');
+  const requestId = textField(json, 'requestId');
   const retryAfterSeconds = parseRetryAfter(response.headers.get('Retry-After'));
 
   if (parsed.success) {
     const { statusCode, code, message, issues } = parsed.data;
-    return new ApiRequestError({ statusCode, code, message, issues, retryAfterSeconds });
+    return new ApiRequestError({ statusCode, code, message, issues, retryAfterSeconds, errorCode, requestId });
   }
   return new ApiRequestError({
     statusCode: response.status,
@@ -109,6 +119,7 @@ async function sendRequest(endpoint: EndpointDefinition, input: RawInput, accept
         Accept: accept,
         'Accept-Language': API_LANGUAGE,
         'API-Version': API_VERSION,
+        ...traceHeaders(),
         ...(hasBody && { 'Content-Type': 'application/json' }),
         ...headers,
       },
