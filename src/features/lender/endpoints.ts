@@ -19,9 +19,10 @@ export const UpdateLenderBodySchema = z
     message: 'Debes enviar al menos un campo para actualizar.',
   });
 
-/** Cuerpo de `POST /lender/logo-upload-url`: el logo solo puede ser PNG o JPEG. */
+/** Cuerpo de `POST /lender/logo-upload-url`: el logo solo puede ser PNG o JPEG de hasta 2 MB; la URL firma el peso exacto. */
 export const LogoUploadUrlBodySchema = z.strictObject({
   contentType: z.enum(['image/png', 'image/jpeg']),
+  sizeBytes: z.int().min(1).max(2 * 1024 * 1024),
 });
 
 /** Respuesta de `POST /lender/logo-upload-url`: a dónde subir el archivo y cuál será su URL pública. */

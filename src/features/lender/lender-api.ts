@@ -32,9 +32,9 @@ export function deletePortfolio(id: string) {
   return callEndpoint(lenderEndpoints.deletePortfolio, { params: { id } });
 }
 
-/** Pide la URL firmada para subir un logo del tipo dado. */
-export function requestLogoUploadUrl(contentType: 'image/png' | 'image/jpeg') {
-  return callEndpoint(lenderEndpoints.logoUploadUrl, { body: { contentType } });
+/** Pide la URL firmada para subir un logo del tipo y el peso exactos dados: el almacenamiento rechaza otra subida. */
+export function requestLogoUploadUrl(contentType: 'image/png' | 'image/jpeg', sizeBytes: number) {
+  return callEndpoint(lenderEndpoints.logoUploadUrl, { body: { contentType, sizeBytes } });
 }
 
 /** Guarda la URL pública del logo ya subido; `null` lo quita. */
@@ -48,7 +48,7 @@ export function saveLogoUrl(logoUrl: string | null) {
  */
 export async function uploadLogoFile(file: File): Promise<string> {
   const contentType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
-  const { uploadUrl, publicUrl } = await requestLogoUploadUrl(contentType);
+  const { uploadUrl, publicUrl } = await requestLogoUploadUrl(contentType, file.size);
   const response = await fetch(uploadUrl, { method: 'PUT', headers: { 'Content-Type': contentType }, body: file });
   if (!response.ok) throw new Error(`Falló la subida del logo (${String(response.status)}).`);
   return publicUrl;

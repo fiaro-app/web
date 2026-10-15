@@ -20,7 +20,7 @@ describe('uploadLogoFile', () => {
 
     await expect(uploadLogoFile(FILE)).resolves.toBe('https://cdn.fiaro.co/logos/a.png');
 
-    expect(callEndpoint.mock.calls[0]?.[1]).toEqual({ body: { contentType: 'image/png' } });
+    expect(callEndpoint.mock.calls[0]?.[1]).toEqual({ body: { contentType: 'image/png', sizeBytes: 1 } });
     expect(fetchMock).toHaveBeenCalledWith('https://cdn.fiaro.co/up?sig=1', { method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: FILE });
   });
 
