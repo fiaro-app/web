@@ -7,6 +7,7 @@ export const CLIENTS_TEXT = {
   onTime: 'Al día',
   overdueDays: (days: number) => (days === 1 ? '1 día' : `${String(days)} días`),
   edit: 'Editar',
+  riskLabel: (level: string) => `Riesgo ${level}`,
   search: {
     placeholder: 'Buscar por nombre o cédula...',
     submit: 'Buscar',

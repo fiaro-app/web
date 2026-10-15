@@ -3,8 +3,9 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LoanForm } from './LoanForm';
 
-const { useLoanForm } = vi.hoisted(() => ({ useLoanForm: vi.fn() }));
+const { useLoanForm, useClientRisk } = vi.hoisted(() => ({ useLoanForm: vi.fn(), useClientRisk: vi.fn() }));
 vi.mock('@/features/loans/use-loan-form', () => ({ useLoanForm }));
+vi.mock('@/features/risk/use-client-risk', () => ({ useClientRisk }));
 
 const submit = vi.fn((event: { preventDefault: () => void }) => event.preventDefault());
 const state = (overrides = {}) => ({
@@ -24,6 +25,7 @@ const COLLECTORS = [{ id: 'm1', name: 'Luis Gómez' }];
 beforeEach(() => {
   vi.clearAllMocks();
   useLoanForm.mockReturnValue(state());
+  useClientRisk.mockReturnValue(null);
 });
 
 describe('LoanForm', () => {
@@ -89,3 +91,21 @@ describe('LoanForm', () => {
     expect(screen.getByLabelText('Total a pagar')).toHaveAttribute('readonly');
   });
 });
+
+describe('LoanForm risk warning', () => {
+  it('warns, without blocking, when the chosen client has very high risk', () => {
+    useClientRisk.mockReturnValue({ level: 'VERY_HIGH' });
+    render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
+
+    expect(screen.getByText(/riesgo muy alto con tu negocio/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /registrar/i })).toBeEnabled();
+  });
+
+  it('shows nothing for a lower risk', () => {
+    useClientRisk.mockReturnValue({ level: 'HIGH' });
+    render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
+
+    expect(screen.queryByText(/riesgo muy alto/i)).not.toBeInTheDocument();
+  });
+});
+
