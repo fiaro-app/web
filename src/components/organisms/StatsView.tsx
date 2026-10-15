@@ -9,6 +9,8 @@ import { PaginationNav } from '@/components/molecules/PaginationNav';
 import { Link } from '@/components/atoms/Link';
 import { StatTile } from '@/components/molecules/StatTile';
 import { StatsBucketRow } from '@/components/molecules/StatsBucketRow';
+import { InsightsSection } from '@/components/organisms/InsightsSection';
+import type { InsightsViewModel } from '@/features/insights/insights-view-model';
 import { StatsExportButton } from '@/components/organisms/StatsExportButton';
 import { StatsFilters } from '@/components/organisms/StatsFilters';
 import { STATS_TEXT } from '@/content/stats';
@@ -22,6 +24,8 @@ export interface StatsViewProps {
   readonly stats: StatsViewModel;
   readonly filters: Filters;
   readonly options: StatsFilterOptions;
+  /** «Cómo va tu negocio»; `null` si no se pudo traer (la pantalla se pinta igual). */
+  readonly insights?: InsightsViewModel | null;
 }
 
 function Section({ id, title, children }: Readonly<{ id: string; title: string; children: ReactNode }>) {
@@ -75,7 +79,7 @@ function ListFooter({
 }
 
 /** Estadísticas: filtros, indicadores, mora por antigüedad, mayor mora y desempeño por cobrador. Solo presentación. */
-export function StatsView({ stats, filters, options }: Readonly<StatsViewProps>) {
+export function StatsView({ stats, filters, options, insights = null }: Readonly<StatsViewProps>) {
   return (
     <>
       <header className="flex flex-wrap items-center justify-between gap-3 max-sm:flex-col max-sm:items-stretch max-sm:[&>a]:w-full">
@@ -91,6 +95,8 @@ export function StatsView({ stats, filters, options }: Readonly<StatsViewProps>)
       </header>
 
       <StatsFilters filters={filters} options={options} />
+
+      {insights && <InsightsSection insights={insights} />}
 
       {stats.isEmpty ? (
         <EmptyState
