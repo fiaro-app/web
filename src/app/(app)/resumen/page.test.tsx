@@ -3,10 +3,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { toDashboardViewModel } from '@/features/dashboard/dashboard-view-model';
 import SummaryPage from './page';
 
-const { getLenderDashboard, getAccess, redirect } = vi.hoisted(() => ({ getLenderDashboard: vi.fn(), getAccess: vi.fn(), redirect: vi.fn() }));
+const { getLenderDashboard, getCollectorsToday, getAccess, redirect } = vi.hoisted(() => ({
+  getLenderDashboard: vi.fn(),
+  getCollectorsToday: vi.fn(),
+  getAccess: vi.fn(),
+  redirect: vi.fn(),
+}));
 vi.mock('@/features/app-shell/get-access.server', () => ({ getAccess }));
 vi.mock('next/navigation', () => ({ redirect }));
 vi.mock('@/features/dashboard/get-dashboard.server', () => ({ getLenderDashboard }));
+vi.mock('@/features/collectors-today/get-collectors-today.server', () => ({ getCollectorsToday }));
 
 const SUMMARY = {
   totalPortfolio: 1000,
@@ -29,6 +35,7 @@ const props = (params: Record<string, string> = {}) =>
 beforeEach(() => {
   vi.clearAllMocks();
   getAccess.mockResolvedValue({ canManage: true, canCollect: false, membershipId: null });
+  getCollectorsToday.mockResolvedValue(null);
 });
 
 describe('Summary page', () => {
