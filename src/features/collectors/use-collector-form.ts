@@ -5,7 +5,6 @@ import { issueFieldErrors } from '@/features/auth/error-messages';
 import { CollectorFormSchema, type CollectorField } from '@/features/collectors/collector-schemas';
 import { inviteCollector } from '@/features/collectors/collectors-api';
 import { describeCollectorError } from '@/features/collectors/error-messages';
-import type { InvitedMembership } from '@/features/memberships/endpoints';
 import { fieldInput } from '@/lib/phone-input';
 import { toFieldErrors, type FieldErrors } from '@/lib/forms';
 
@@ -26,7 +25,7 @@ export function useCollectorForm() {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors<CollectorField>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [invited, setInvited] = useState<InvitedMembership | null>(null);
+  const [invited, setInvited] = useState<{ fullName: string; tempPassword: string | null } | null>(null);
 
   const setField = (field: CollectorField) => (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setValues((current) => ({ ...current, [field]: fieldInput(field, event.target.value) }));
@@ -60,7 +59,8 @@ export function useCollectorForm() {
     setFieldErrors({});
     setFormError(null);
     try {
-      setInvited(await inviteCollector(parsed.data));
+      const { tempPassword } = await inviteCollector(parsed.data);
+      setInvited({ fullName: parsed.data.fullName, tempPassword });
     } catch (error) {
       fail(error);
       return;

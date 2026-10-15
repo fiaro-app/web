@@ -1,10 +1,9 @@
 import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { Text } from '@/components/atoms/Text';
 import { COLLECTORS_TEXT } from '@/content/collectors';
-import type { InvitedMembership } from '@/features/memberships/endpoints';
 
 export interface CollectorInvitedProps {
-  readonly invited: Pick<InvitedMembership, 'fullName' | 'tempPassword'>;
+  readonly invited: { readonly fullName: string; readonly tempPassword: string | null };
 }
 
 /**
