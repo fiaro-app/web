@@ -14,6 +14,8 @@ import { Alert } from '@/components/molecules/Alert';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { FormField } from '@/components/molecules/FormField';
 import { FormFieldset } from '@/components/molecules/FormFieldset';
+import { RISK_TEXT } from '@/content/risk';
+import { useClientRisk } from '@/features/risk/use-client-risk';
 import { LOANS_TEXT } from '@/content/loans';
 import type { ClientOption } from '@/features/loans/get-client-names.server';
 import type { CollectorOption } from '@/features/loans/get-loan.server';
@@ -33,6 +35,7 @@ export interface LoanFormProps {
 export function LoanForm({ clients, collectors, initialClientId }: Readonly<LoanFormProps>) {
   const { values, fieldErrors, formError, isSubmitting, createdLoanId, setText, setAmount, setStartDate, submit } = useLoanForm({ initialClientId });
   const text = LOANS_TEXT.form;
+  const risk = useClientRisk(values.clientId);
 
   if (clients.length === 0) {
     return (
@@ -68,6 +71,7 @@ export function LoanForm({ clients, collectors, initialClientId }: Readonly<Loan
             ))}
           </Select>
         </FormField>
+        {risk?.level === 'VERY_HIGH' && <Alert tone="warning">{RISK_TEXT.loanWarning}</Alert>}
         <FormField label={text.principalAmount.label} error={fieldErrors.principalAmount}>
           <AmountInput size="field" name="principalAmount" value={values.principalAmount} onValueChange={setAmount('principalAmount')} />
         </FormField>

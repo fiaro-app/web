@@ -1,5 +1,6 @@
 import { CLIENTS_TEXT } from '@/content/clients';
 import type { ClientListItem } from '@/features/clients/endpoints';
+import type { RiskView } from '@/features/risk/risk-view-model';
 import { formatCop } from '@/lib/amount';
 
 /** Una fila de la tabla de clientes, lista para pintar. */
@@ -20,6 +21,8 @@ export interface ClientRow {
   readonly overdueAmount: string | null;
   /** `true` si tiene mora, para pintarla en rojo. */
   readonly isOverdue: boolean;
+  /** Riesgo del cliente en el negocio; ausente si no se pudo consultar. */
+  readonly risk?: RiskView;
 }
 
 export interface ClientsViewModel {

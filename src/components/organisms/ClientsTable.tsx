@@ -1,3 +1,5 @@
+import { cn } from '@/lib/cn';
+import { TONE_TEXT_CLASSES } from '@/lib/tone';
 import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { CLIENTS_TEXT } from '@/content/clients';
 import type { ClientRow } from '@/features/clients/clients-view-model';
@@ -21,6 +23,11 @@ export function ClientsTable({ rows, className, canManage = true }: Readonly<Cli
             <span className="flex flex-col">
               {row.fullName}
               <span className="text-caption font-normal text-foreground/65">{row.occupation}</span>
+              {row.risk && (
+                <span className={cn('text-caption font-medium', TONE_TEXT_CLASSES[row.risk.tone])}>
+                  {CLIENTS_TEXT.riskLabel(row.risk.levelLabel)}
+                </span>
+              )}
             </span>
           </th>
           <td className={RESPONSIVE_TABLE.cell} data-label={CLIENTS_TEXT.headers[1]}>
