@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { StateIcon } from '@/components/atoms/StateIcon';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { getAccess } from '@/features/app-shell/get-access.server';
-import { FormWithAside } from '@/components/molecules/FormWithAside';
 import { LoanForm } from '@/components/organisms/LoanForm';
 import { LOANS_TEXT } from '@/content/loans';
 import { getClientOptions } from '@/features/loans/get-client-names.server';
@@ -17,7 +16,5 @@ export default async function NewLoanPage({ searchParams }: PageProps<'/prestamo
   const { cliente } = await searchParams;
   const initialClientId = parseInitialClient(cliente);
   const [clients, collectors] = await Promise.all([getClientOptions(initialClientId === '' ? null : initialClientId), getCollectorOptions()]);
-  const loanForm = <LoanForm clients={clients} collectors={collectors} initialClientId={initialClientId} />;
-  // Sin clientes la vista muestra el estado vacío a página completa, sin panel lateral.
-  return clients.length > 0 ? <FormWithAside aside={LOANS_TEXT.form.aside}>{loanForm}</FormWithAside> : loanForm;
+  return <LoanForm clients={clients} collectors={collectors} initialClientId={initialClientId} />;
 }

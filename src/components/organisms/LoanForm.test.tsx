@@ -112,6 +112,16 @@ describe('LoanForm risk', () => {
     expect(screen.getByRole('button', { name: /registrar/i })).toBeEnabled();
   });
 
+  it('puts the card in the right column, under the informative aside', () => {
+    useClientRisk.mockReturnValue(RISK);
+    render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
+
+    const aside = screen.getByRole('complementary', { hidden: true });
+    const card = screen.getByRole('region', { name: 'Riesgo del cliente' });
+    expect(aside.parentElement).toBe(card.parentElement);
+    expect(aside.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
   it('shows no card while there is no risk to show', () => {
     render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
 
