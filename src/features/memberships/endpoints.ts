@@ -43,9 +43,8 @@ export const ChangeMembershipRolesBodySchema = z.strictObject({
  * Respuesta de invitar: la membresía y, solo si la persona no tenía cuenta, la contraseña
  * temporal en claro. Se muestra una sola vez (la API no la vuelve a entregar).
  */
-export const InvitedMembershipSchema = MembershipSchema.extend({
-  fullName: z.string(),
-  phone: z.string(),
+export const InvitedMembershipSchema = z.object({
+  membership: MembershipSchema,
   tempPassword: z.string().nullable(),
 });
 export type InvitedMembership = z.infer<typeof InvitedMembershipSchema>;
