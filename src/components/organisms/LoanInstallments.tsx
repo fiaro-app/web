@@ -28,7 +28,7 @@ export function LoanInstallments({ rows, summary }: Readonly<LoanInstallmentsPro
       {rows.length === 0 ? (
         <p className="text-label text-foreground/70">{text.empty}</p>
       ) : (
-        <ResponsiveTable caption={text.caption} headers={text.headers} minWidthClass="md:min-w-150" withActions={false}>
+        <ResponsiveTable caption={text.caption} headers={text.headers} minWidthClass="md:min-w-150" withActions={false} className="max-h-112 overflow-y-auto">
           {rows.map((row) => (
             <tr key={row.number} className={RESPONSIVE_TABLE.row}>
               <th scope="row" className={RESPONSIVE_TABLE.rowHeader}>
