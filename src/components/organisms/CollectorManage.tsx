@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/atoms/Button';
-import { Link } from '@/components/atoms/Link';
+import { BackLink } from '@/components/molecules/BackLink';
 import { Select } from '@/components/atoms/Select';
 import { Text } from '@/components/atoms/Text';
 import { Alert } from '@/components/molecules/Alert';
@@ -58,7 +58,7 @@ export function CollectorManage({ collector, portfolios, handover = { loans: [],
 
   return (
     <section aria-labelledby="manage-title" className="flex max-w-lg flex-col gap-5">
-      <Link href="/cobradores">{text.back}</Link>
+      <BackLink href="/cobradores">{text.back}</BackLink>
       <div className="flex flex-col gap-1">
         <Text variant="title" as="h1" weight="bold" id="manage-title" className="text-foreground">
           {collector.fullName}

@@ -1,3 +1,4 @@
+import { RememberList } from '@/components/molecules/BackLink';
 import { StateIcon } from '@/components/atoms/StateIcon';
 import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { FilterPillLink } from '@/components/atoms/FilterPillLink';
@@ -22,6 +23,7 @@ export function CollectorsView({ collectors }: Readonly<CollectorsViewProps>) {
 
   return (
     <>
+      <RememberList path="/cobradores" />
       <header className="flex flex-wrap items-center justify-between gap-3 max-sm:flex-col max-sm:items-stretch max-sm:[&>a]:w-full">
         <Text variant="title" as="h1" weight="bold" className="text-foreground">
           {COLLECTORS_TEXT.title}

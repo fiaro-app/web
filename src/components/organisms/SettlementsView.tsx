@@ -1,3 +1,4 @@
+import { RememberList } from '@/components/molecules/BackLink';
 import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { StateIcon } from '@/components/atoms/StateIcon';
 import { FilterPillLink } from '@/components/atoms/FilterPillLink';
@@ -52,6 +53,7 @@ export function SettlementsView({ settlements, options = { collectors: [], portf
 
   return (
     <>
+      <RememberList path="/cuadres" />
       <Text variant="title" as="h1" weight="bold" className="text-foreground">
         {SETTLEMENTS_TEXT.title}
       </Text>
