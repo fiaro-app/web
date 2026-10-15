@@ -123,6 +123,12 @@ describe('callEndpoint', () => {
     });
   });
 
+  it('keeps the unique errorCode and requestId of the error body', async () => {
+    fetchMock.mockResolvedValue(jsonResponse({ ...API_ERROR, errorCode: 'L003A', requestId: 'req-1' }, { status: 409 }));
+
+    await expect(callEndpoint(getThing, { params: { id: '1' } })).rejects.toMatchObject({ errorCode: 'L003A', requestId: 'req-1' });
+  });
+
   it('ignores a Retry-After that is not a number', async () => {
     fetchMock.mockResolvedValue(jsonResponse(API_ERROR, { status: 409, headers: { 'Retry-After': 'pronto' } }));
 
