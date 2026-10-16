@@ -60,6 +60,10 @@ export const TUTORIAL_TEXT = {
       title: 'Solicitudes',
       body: 'Los préstamos que tus cobradores sugieren en campo, con un cliente nuevo o uno que ya tienes. Los aceptas (puedes ajustar los datos) y se crean y se asignan solos, o los rechazas con un motivo. Sirve para que el cobrador proponga sin ver datos que no le tocan.',
     },
+    '/rutas': {
+      title: 'Registro de rutas',
+      body: 'Lo que hizo cada cobrador cada día: cuándo empezó y terminó su ruta, cuántas visitas hizo y cuánto cobró. Desde cada renglón abres el detalle de sus visitas. Sirve para revisar el trabajo en campo día por día.',
+    },
     '/cuadres': {
       title: 'Cuadres',
       body: 'Al cerrar el día, cada cobrador entrega su cuadre: lo esperado frente a lo que entrega. Aquí lo revisas y lo apruebas o lo rechazas. Sirve para que el dinero que entra coincida con lo que se cobró.',
