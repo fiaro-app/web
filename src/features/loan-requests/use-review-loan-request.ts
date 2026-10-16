@@ -96,8 +96,8 @@ export function useReviewLoanRequest(request: LoanRequest) {
       await (decision === 'approve' ? approveLoanRequest(request.id, buildApproveBody(values, request)) : rejectLoanRequest(request.id, reason));
       setNotice(decision === 'approve' ? LOAN_REQUESTS_TEXT.review.approved : LOAN_REQUESTS_TEXT.review.rejected);
       router.refresh();
-    } catch (failure) {
-      setError(describeLoanRequestError(failure).message);
+    } catch (error_) {
+      setError(describeLoanRequestError(error_).message);
     } finally {
       setPending(null);
     }

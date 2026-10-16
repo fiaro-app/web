@@ -10,7 +10,7 @@ import { parsePageParam } from '@/lib/pagination';
 export const metadata: Metadata = { title: 'Solicitudes' };
 
 /** Solicitudes de préstamo de los cobradores: trae la página y el filtro de estado pedidos en el servidor y los pinta. */
-export default async function LoanRequestsPage({ searchParams }: PageProps<'/solicitudes'>) {
+export default async function LoanRequestsPage({ searchParams }: Readonly<PageProps<'/solicitudes'>>) {
   const params = await searchParams;
   const result = await getLoanRequests(parsePageParam(params.pagina), parseLoanRequestStatusParam(params.estado));
 
