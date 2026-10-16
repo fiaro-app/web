@@ -1,4 +1,5 @@
 import { describeAuthError, type AuthErrorView } from '@/features/auth/error-messages';
+import { describePlanLimit } from '@/features/subscription/plan-limit-message';
 import { isApiRequestError } from '@/lib/api';
 
 /** Mensaje de un error al invitar o cambiar a un administrador. Reutiliza los generales y agrega los propios. */
@@ -7,6 +8,8 @@ export function describeAdminError(error: unknown): AuthErrorView {
     switch (error.code) {
       case 'FORBIDDEN':
         return { message: 'No tienes permiso para administrar administradores, o intentaste cambiar tu propio acceso.', field: null };
+      case 'PLAN_LIMIT_REACHED':
+        return { message: describePlanLimit(error.errorCode ?? 'M007A'), field: null };
       case 'SUBSCRIPTION_READ_ONLY':
         return { message: 'Tu suscripción está en modo de solo lectura. Renuévala para hacer cambios.', field: null };
       case 'NOT_FOUND':
