@@ -9,10 +9,16 @@ export const INSIGHTS_TEXT = {
   },
   daily: {
     title: "Cobro día a día",
-    legendCollected: "Cobrado",
-    legendExpected: "Lo que vencía",
-    summary: (collected: string, expected: string) =>
-      `En el período cobraste ${collected} de ${expected} que vencían según el calendario.`,
+    legendCollected: "Lo que cobraste",
+    legendExpected: "Lo que tocaba cobrar",
+    reachedGoal: "Llegaste a la meta del día",
+    hint: "Cada día: la barra clara es lo que tocaba cobrar según el calendario de cuotas y la barra de color, lo que de verdad cobraste.",
+    summary: (collected: string, expected: string, percent: string) =>
+      `En el período cobraste ${collected} de ${expected} que tocaba cobrar (${percent}).`,
+    summaryNothingDue: (collected: string) =>
+      `En el período cobraste ${collected}; según el calendario no había nada por cobrar.`,
+    dayLabel: (label: string, collected: string, expected: string) =>
+      `${label}: cobraste ${collected} de ${expected} que tocaba`,
   },
   income: {
     title: "De lo cobrado, ¿cuánto es ganancia?",
@@ -55,8 +61,10 @@ export const INSIGHTS_TEXT = {
     empty: "No se enviaron cuadres en este período.",
   },
   forecast: {
-    title: "Lo que vence en los próximos 7 días",
-    total: (value: string) => `Total esperado: ${value}`,
+    title: "Lo que te toca cobrar en los próximos 7 días",
+    total: (value: string) => `En total te toca cobrar ${value}.`,
+    tomorrow: "Mañana",
+    nothing: "Nada por cobrar",
   },
   failed:
     "No pudimos cargar estas estadísticas. El resto de la pantalla sigue disponible.",

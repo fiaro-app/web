@@ -1,7 +1,7 @@
 import { INSIGHTS_TEXT as T } from "@/content/insights";
 import type { Insights } from "@/features/insights/endpoints";
 import { formatCop, formatCopCompact, formatPercent } from "@/lib/amount";
-import { formatBusinessDate } from "@/lib/dates";
+import { formatWeekdayDay } from "@/lib/dates";
 import type { FigureTone } from "@/lib/tone";
 import { relativeTrend, type Trend } from "@/lib/trend";
 
@@ -36,6 +36,8 @@ export interface InsightsViewModel {
   readonly kpis: readonly InsightKpi[];
   readonly daily: readonly DailyBar[];
   readonly dailySummary: string;
+  /** Lo cobrado frente a lo que tocaba cobrar, de 0 a 1; `null` si no había nada por cobrar. */
+  readonly dailyProgress: number | null;
   readonly income: readonly Segment[];
   readonly methods: readonly Segment[];
   readonly lending: {
@@ -131,7 +133,15 @@ function settlements(data: Insights["settlements"]): readonly string[] | null {
   ];
 }
 
-const dayLabel = (date: string) => formatBusinessDate(date).slice(0, 5);
+const dayLabel = (date: string) => formatWeekdayDay(date);
+
+function dailyOverview(collected: number, expected: number) {
+  if (expected === 0) {
+    return { summary: T.daily.summaryNothingDue(formatCop(collected)), progress: null };
+  }
+  const progress = Math.min(1, collected / expected);
+  return { summary: T.daily.summary(formatCop(collected), formatCop(expected), formatPercent(progress)), progress };
+}
 
 /** Convierte lo que responde la API en lo que pinta la sección. */
 export function toInsightsViewModel(data: Insights): InsightsViewModel {
@@ -181,10 +191,8 @@ export function toInsightsViewModel(data: Insights): InsightsViewModel {
       },
     ],
     daily: data.daily.map((day) => ({ ...day, label: dayLabel(day.date) })),
-    dailySummary: T.daily.summary(
-      formatCop(data.income.collected),
-      formatCop(expectedTotal),
-    ),
+    dailySummary: dailyOverview(data.income.collected, expectedTotal).summary,
+    dailyProgress: dailyOverview(data.income.collected, expectedTotal).progress,
     income:
       data.income.collected === 0
         ? []
@@ -229,9 +237,9 @@ export function toInsightsViewModel(data: Insights): InsightsViewModel {
     visits: visits(data.visits),
     settlements: settlements(data.settlements),
     forecast: {
-      days: data.forecast.map((day) => ({
+      days: data.forecast.map((day, index) => ({
         date: day.date,
-        label: dayLabel(day.date),
+        label: index === 0 ? `${T.forecast.tomorrow} · ${dayLabel(day.date)}` : dayLabel(day.date),
         collected: 0,
         expected: day.expected,
       })),
