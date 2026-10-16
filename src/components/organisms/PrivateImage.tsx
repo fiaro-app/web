@@ -1,11 +1,10 @@
 'use client';
 
-import { useId, useState } from 'react';
 import { Alert } from '@/components/molecules/Alert';
 import { Button } from '@/components/atoms/Button';
 import { Skeleton } from '@/components/atoms/Skeleton';
 import { Text } from '@/components/atoms/Text';
-import { ConfirmDialog } from '@/components/molecules/ConfirmDialog';
+import { ImageActions } from '@/components/molecules/ImageActions';
 import { ATTACHMENTS_TEXT } from '@/content/attachments';
 import type { AttachmentTarget } from '@/features/attachments/endpoints';
 import { IMAGE_CONTENT_TYPES } from '@/features/attachments/image-file';
@@ -24,9 +23,7 @@ export interface PrivateImageProps {
 
 /** Una imagen privada (foto de cliente, comprobante): carga, error, vacío, subir, cambiar y quitar. Lógica en `useAttachment`. */
 export function PrivateImage({ target, id, title, description, alt, none, canEdit }: Readonly<PrivateImageProps>) {
-  const inputId = useId();
   const { status, url, isBusy, error, notice, chooseFile, remove, retry } = useAttachment(target, id);
-  const [confirmingRemove, setConfirmingRemove] = useState(false);
   const text = ATTACHMENTS_TEXT;
 
   return (
@@ -67,36 +64,15 @@ export function PrivateImage({ target, id, title, description, alt, none, canEdi
       {notice && <Alert tone="success">{notice}</Alert>}
 
       {canEdit && status === 'ready' && (
-        <div className="flex flex-wrap gap-3">
-          <input
-            id={inputId}
-            type="file"
-            accept={IMAGE_CONTENT_TYPES.join(',')}
-            className="sr-only"
-            disabled={isBusy}
-            onChange={(event) => void chooseFile(event)}
-          />
-          <Button type="button" loading={isBusy} onClick={() => document.getElementById(inputId)?.click()}>
-            {url ? text.change : text.upload}
-          </Button>
-          {url && (
-            <Button type="button" variant="outline" disabled={isBusy} onClick={() => setConfirmingRemove(true)}>
-              {text.remove}
-            </Button>
-          )}
-        </div>
+        <ImageActions
+          accept={IMAGE_CONTENT_TYPES.join(',')}
+          hasImage={Boolean(url)}
+          isBusy={isBusy}
+          onChoose={chooseFile}
+          onRemove={remove}
+          labels={{ upload: text.upload, change: text.change, remove: text.remove, confirmTitle: text.confirmTitle, confirmDescription: text.confirmDescription, confirmLabel: text.confirmLabel }}
+        />
       )}
-      <ConfirmDialog
-        open={confirmingRemove}
-        title={text.confirmTitle}
-        description={text.confirmDescription}
-        confirmLabel={text.confirmLabel}
-        onCancel={() => setConfirmingRemove(false)}
-        onConfirm={() => {
-          setConfirmingRemove(false);
-          void remove();
-        }}
-      />
     </section>
   );
 }
