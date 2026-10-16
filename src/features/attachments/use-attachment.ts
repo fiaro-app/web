@@ -21,11 +21,11 @@ function describeAttachmentError(error: unknown): string {
 export function useAttachment(target: AttachmentTarget, id: string) {
   const [status, setStatus] = useState<Status>('loading');
   const [url, setUrl] = useState<string | null>(null);
-  const [isBusy, setIsBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
-
   const [attempt, setAttempt] = useState(0);
+  const [feedback, setFeedback] = useState<{ error: string | null; notice: string | null }>({ error: null, notice: null });
+  const [isBusy, setIsBusy] = useState(false);
+  const setError = (error: string | null) => setFeedback((current) => ({ ...current, error }));
+  const setNotice = (notice: string | null) => setFeedback((current) => ({ ...current, notice }));
 
   useEffect(() => {
     let cancelled = false;
@@ -48,19 +48,21 @@ export function useAttachment(target: AttachmentTarget, id: string) {
     setAttempt((count) => count + 1);
   };
 
-  const run = async (operation: () => Promise<unknown>, success: string) => {
+  const run = (operation: () => Promise<unknown>, success: string) => {
     setIsBusy(true);
     setError(null);
     setNotice(null);
-    try {
-      await operation();
-      setUrl(await getAttachmentUrl(target, id));
-      setNotice(success);
-    } catch (error_) {
-      // Un fallo del almacenamiento (red, permiso del bucket) no es un error de la API: mensaje propio.
-      setError(isApiRequestError(error_) ? describeAttachmentError(error_) : 'No pudimos subir la imagen. Inténtalo de nuevo.');
-    }
-    setIsBusy(false);
+    return operation()
+      .then(() => getAttachmentUrl(target, id))
+      .then((current) => {
+        setUrl(current);
+        setNotice(success);
+      })
+      .catch((cause: unknown) => {
+        // Un fallo del almacenamiento (red, permiso del bucket) no es un error de la API: mensaje propio.
+        setError(isApiRequestError(cause) ? describeAttachmentError(cause) : 'No pudimos subir la imagen. Inténtalo de nuevo.');
+      })
+      .finally(() => setIsBusy(false));
   };
 
   const chooseFile = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -75,5 +77,5 @@ export function useAttachment(target: AttachmentTarget, id: string) {
 
   const remove = () => (isBusy ? Promise.resolve() : run(() => removeAttachment(target, id), 'Imagen quitada.'));
 
-  return { status, url, isBusy, error, notice, chooseFile, remove, retry };
+  return { status, url, isBusy, error: feedback.error, notice: feedback.notice, chooseFile, remove, retry };
 }
