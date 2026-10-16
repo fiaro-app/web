@@ -52,6 +52,7 @@ export const SETTINGS_TEXT = {
     nameLabel: 'Nueva cartera',
     namePlaceholder: 'Ej: Zona Norte',
     create: 'Crear cartera',
+    limitReached: (max: number) => `Llegaste al máximo de ${String(max)} carteras. Borra una que no uses para poder crear otra.`,
     rename: {
       action: 'Renombrar',
       actionFor: (name: string) => `Renombrar la cartera ${name}`,

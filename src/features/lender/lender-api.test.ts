@@ -38,6 +38,7 @@ describe('describeSettingsError', () => {
     ['CONFLICT', /cartera con ese nombre/],
     ['FORBIDDEN', /No tienes permiso/],
     ['SUBSCRIPTION_READ_ONLY', /solo lectura/],
+    ['PLAN_LIMIT_REACHED', /máximo de carteras/],
   ])('maps %s', (code, message) => {
     expect(describeSettingsError(apiError(code)).message).toMatch(message);
   });
