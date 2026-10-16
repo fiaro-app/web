@@ -13,9 +13,10 @@ const FULL: InsightsViewModel = {
       trend: null,
     },
   ],
-  daily: [{ date: "2026-10-01", label: "01/10", collected: 1, expected: 2 }],
+  daily: [{ date: "2026-10-01", label: "jue 1", collected: 1, expected: 2 }],
   dailySummary:
-    "En el período cobraste $80.000 de $200.000 que vencían según el calendario.",
+    "En el período cobraste $80.000 de $200.000 que tocaba cobrar (40 %).",
+  dailyProgress: 0.4,
   income: [
     {
       id: "principal",
@@ -49,9 +50,9 @@ const FULL: InsightsViewModel = {
   settlements: ["3 cuadres enviados", "1 cuadraron exacto"],
   forecast: {
     days: [
-      { date: "2026-10-04", label: "04/10", collected: 0, expected: 70000 },
+      { date: "2026-10-04", label: "Mañana · dom 4", collected: 0, expected: 70000 },
     ],
-    total: "Total esperado: $70.000",
+    total: "En total te toca cobrar $70.000.",
   },
 };
 
@@ -67,7 +68,21 @@ describe("InsightsSection", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("2 préstamos nuevos")).toBeInTheDocument();
     expect(screen.getByText("3 cuadres enviados")).toBeInTheDocument();
-    expect(screen.getByText("Total esperado: $70.000")).toBeInTheDocument();
+    expect(screen.getByText("En total te toca cobrar $70.000.")).toBeInTheDocument();
+    expect(screen.getByRole("meter")).toHaveAttribute("aria-valuenow", "40");
+    expect(screen.getByRole("list", { name: /próximos 7 días/ })).toBeInTheDocument();
+  });
+
+  it("sin nada por cobrar no dibuja la barra de avance", () => {
+    render(<InsightsSection insights={{ ...FULL, dailyProgress: null }} />);
+
+    expect(screen.queryByRole("meter")).not.toBeInTheDocument();
+  });
+
+  it("la barra de avance se pone verde al llegar a la meta", () => {
+    render(<InsightsSection insights={{ ...FULL, dailyProgress: 1 }} />);
+
+    expect(screen.getByRole("meter").firstElementChild).toHaveClass("bg-success");
   });
 
   it("sin datos explica cada tarjeta en vez de dejarla vacía", () => {

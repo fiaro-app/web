@@ -1,5 +1,6 @@
 import { StatTile } from "@/components/molecules/StatTile";
 import { DailyBarChart } from "@/components/molecules/DailyBarChart";
+import { UpcomingBars } from "@/components/molecules/UpcomingBars";
 import { ProportionBar } from "@/components/molecules/ProportionBar";
 import { INSIGHTS_TEXT as T } from "@/content/insights";
 import type { InsightsViewModel } from "@/features/insights/insights-view-model";
@@ -53,12 +54,28 @@ export function InsightsSection({
 
       <Card id="insights-daily" title={T.daily.title}>
         <Note>{insights.dailySummary}</Note>
+        {insights.dailyProgress !== null && (
+          <div
+            role="meter"
+            aria-label={insights.dailySummary}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(insights.dailyProgress * 100)}
+            className="h-3 w-full overflow-hidden rounded-full bg-foreground/10"
+          >
+            <div
+              className={insights.dailyProgress >= 1 ? "h-3 rounded-full bg-success" : "h-3 rounded-full bg-primary"}
+              style={{ width: `${String(Math.round(insights.dailyProgress * 100))}%` }}
+            />
+          </div>
+        )}
         <DailyBarChart
           bars={insights.daily}
           label={insights.dailySummary}
           legendCollected={T.daily.legendCollected}
           legendExpected={T.daily.legendExpected}
         />
+        <Note>{T.daily.hint}</Note>
       </Card>
 
       <div className="grid gap-4 xl:grid-cols-2">
@@ -125,13 +142,7 @@ export function InsightsSection({
         </Card>
         <Card id="insights-forecast" title={T.forecast.title}>
           <Note>{insights.forecast.total}</Note>
-          <DailyBarChart
-            bars={insights.forecast.days}
-            label={`${T.forecast.title}. ${insights.forecast.total}`}
-            legendCollected=""
-            legendExpected={T.daily.legendExpected}
-            showCollected={false}
-          />
+          <UpcomingBars days={insights.forecast.days} label={`${T.forecast.title}. ${insights.forecast.total}`} />
         </Card>
       </div>
     </section>

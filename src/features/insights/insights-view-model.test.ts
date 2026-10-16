@@ -74,13 +74,31 @@ describe("toInsightsViewModel", () => {
     const view = toInsightsViewModel(INSIGHTS);
 
     expect(view.dailySummary).toBe(
-      "En el período cobraste $80.000 de $200.000 que vencían según el calendario.",
+      "En el período cobraste $80.000 de $200.000 que tocaba cobrar (40 %).",
     );
+    expect(view.dailyProgress).toBe(0.4);
     expect(view.daily.map((day) => day.label)).toEqual([
-      "01/10",
-      "02/10",
-      "03/10",
+      "jue 1",
+      "vie 2",
+      "sáb 3",
     ]);
+  });
+
+  it("la barra de avance no pasa de 100 % aunque se cobre de más, y no hay avance si nada tocaba cobrar", () => {
+    const over = toInsightsViewModel({
+      ...INSIGHTS,
+      income: { ...INSIGHTS.income, collected: 500000 },
+    });
+    expect(over.dailyProgress).toBe(1);
+
+    const nothingDue = toInsightsViewModel({
+      ...INSIGHTS,
+      daily: INSIGHTS.daily.map((day) => ({ ...day, expected: 0 })),
+    });
+    expect(nothingDue.dailyProgress).toBeNull();
+    expect(nothingDue.dailySummary).toBe(
+      "En el período cobraste $80.000; según el calendario no había nada por cobrar.",
+    );
   });
 
   it("parte lo cobrado en capital e interés y por medio de pago", () => {
@@ -114,8 +132,10 @@ describe("toInsightsViewModel", () => {
       "1 cuadraron exacto",
       "2 con diferencia: faltaron $40.000 y sobraron $5.000",
     ]);
-    expect(view.forecast.total).toBe("Total esperado: $70.000");
+    expect(view.forecast.total).toBe("En total te toca cobrar $70.000.");
     expect(view.forecast.days).toHaveLength(7);
+    expect(view.forecast.days[0]?.label).toBe("Mañana · dom 4");
+    expect(view.forecast.days[1]?.label).toBe("lun 5");
   });
 
   it("sin movimiento, las secciones vacías salen como null o vacías, no como ceros", () => {
