@@ -2,10 +2,19 @@ import { ButtonLink } from '@/components/atoms/ButtonLink';
 import { Text } from '@/components/atoms/Text';
 import { COLLECTORS_TEXT } from '@/content/collectors';
 
+/** Los textos de la confirmación de un alta. */
+export interface InvitedText {
+  readonly title: string;
+  readonly withPassword: (name: string) => string;
+  readonly existingAccount: (name: string) => string;
+  readonly passwordLabel: string;
+  readonly done: string;
+}
+
 export interface CollectorInvitedProps {
   readonly invited: { readonly fullName: string; readonly tempPassword: string | null };
   /** Los textos de la confirmación; por defecto, los de «Cobrador registrado». */
-  readonly text?: Pick<typeof COLLECTORS_TEXT.invited, 'title' | 'withPassword' | 'existingAccount' | 'passwordLabel' | 'done'>;
+  readonly text?: InvitedText;
   /** A dónde vuelve el botón final; por defecto, a cobradores. */
   readonly backHref?: string;
 }
