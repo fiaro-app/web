@@ -6,7 +6,9 @@ import { StatePill } from '@/components/atoms/StatePill';
 import { Text } from '@/components/atoms/Text';
 import { ResponsiveTable } from '@/components/organisms/ResponsiveTable';
 import { RESPONSIVE_TABLE } from '@/components/organisms/responsive-table';
+import { PrivateImage } from '@/components/organisms/PrivateImage';
 import { ReversePaymentForm } from '@/components/organisms/ReversePaymentForm';
+import { ATTACHMENTS_TEXT } from '@/content/attachments';
 import { VISITS_TEXT } from '@/content/visits';
 import type { VisitRow } from '@/features/visits/visits-view-model';
 
@@ -19,6 +21,7 @@ export interface LoanVisitsProps {
 /** Historial de cobros de un préstamo: cada visita con su resultado y, si hubo pago, la opción de revertirlo. */
 export function LoanVisits({ visits, canManage = true }: Readonly<LoanVisitsProps>) {
   const [reversing, setReversing] = useState<string | null>(null);
+  const [proofOf, setProofOf] = useState<{ paymentId: string; date: string } | null>(null);
 
   return (
     <section aria-labelledby="visits-title" className="flex flex-col gap-4">
@@ -55,6 +58,15 @@ export function LoanVisits({ visits, canManage = true }: Readonly<LoanVisitsProp
                 {visit.method}
               </td>
               <td className={RESPONSIVE_TABLE.action}>
+                {visit.paymentId && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setProofOf({ paymentId: visit.paymentId ?? '', date: visit.date })}
+                    aria-label={`${ATTACHMENTS_TEXT.paymentProof.action} del ${visit.date}`}
+                  >
+                    {ATTACHMENTS_TEXT.paymentProof.action}
+                  </Button>
+                )}
                 {canManage && visit.reversiblePaymentId && (
                   <Button
                     variant="outline"
@@ -68,6 +80,24 @@ export function LoanVisits({ visits, canManage = true }: Readonly<LoanVisitsProp
             </tr>
           ))}
         </ResponsiveTable>
+      )}
+
+      {proofOf && (
+        <div className="flex flex-col items-start gap-3">
+          <PrivateImage
+            key={proofOf.paymentId}
+            target="paymentProof"
+            id={proofOf.paymentId}
+            canEdit={canManage}
+            title={ATTACHMENTS_TEXT.paymentProof.title}
+            description={ATTACHMENTS_TEXT.paymentProof.description}
+            alt={ATTACHMENTS_TEXT.paymentProof.alt(proofOf.date)}
+            none={ATTACHMENTS_TEXT.paymentProof.none}
+          />
+          <Button variant="outline" onClick={() => setProofOf(null)}>
+            {ATTACHMENTS_TEXT.paymentProof.close}
+          </Button>
+        </div>
       )}
 
       {reversing && <ReversePaymentForm key={reversing} paymentId={reversing} onCancel={() => setReversing(null)} />}

@@ -3,8 +3,10 @@ import type { Metadata } from 'next';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { ClientForm } from '@/components/organisms/ClientForm';
 import { ClientRiskCard } from '@/components/organisms/ClientRiskCard';
+import { PrivateImage } from '@/components/organisms/PrivateImage';
 import { ClientLoans } from '@/components/organisms/ClientLoans';
 import { CLIENTS_TEXT } from '@/content/clients';
+import { ATTACHMENTS_TEXT } from '@/content/attachments';
 import { getAccess } from '@/features/app-shell/get-access.server';
 import { getClient } from '@/features/clients/get-client.server';
 import { getClientsRisk } from '@/features/risk/get-clients-risk.server';
@@ -30,6 +32,15 @@ export default async function EditClientPage({ params }: PageProps<'/clientes/[i
   return (
     <>
       <ClientForm client={result.client} />
+      <PrivateImage
+        target="clientPhoto"
+        id={result.client.id}
+        canEdit
+        title={ATTACHMENTS_TEXT.clientPhoto.title}
+        description={ATTACHMENTS_TEXT.clientPhoto.description}
+        alt={ATTACHMENTS_TEXT.clientPhoto.alt(result.client.fullName)}
+        none={ATTACHMENTS_TEXT.clientPhoto.none}
+      />
       {risk && <ClientRiskCard risk={risk} />}
       <ClientLoans clientId={result.client.id} loans={loans} />
     </>

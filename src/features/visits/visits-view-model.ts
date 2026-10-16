@@ -19,6 +19,8 @@ export interface VisitRow {
   readonly note: string | null;
   /** Id del pago que se puede revertir; `null` si no hubo pago o ya está revertido. */
   readonly reversiblePaymentId: string | null;
+  /** Id del pago de la visita (aunque esté revertido), al que se le adjunta el comprobante; `null` si no hubo pago. */
+  readonly paymentId: string | null;
   readonly reverted: boolean;
 }
 
@@ -55,6 +57,7 @@ export function toVisitRows(visits: readonly CollectionVisit[], collectorNames: 
         method: payment ? VISITS_TEXT.method[payment.method] : '—',
         note,
         reversiblePaymentId: payment && !reverted ? payment.id : null,
+        paymentId: payment?.id ?? null,
         reverted,
       };
     });

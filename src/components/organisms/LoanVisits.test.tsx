@@ -2,6 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
+vi.mock('@/components/organisms/PrivateImage', () => ({ PrivateImage: ({ id }: { id: string }) => <div>proof of {id}</div> }));
 vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
 
 import type { VisitRow } from '@/features/visits/visits-view-model';
@@ -17,6 +18,7 @@ const ROW: VisitRow = {
   collected: '$30.000',
   method: 'Efectivo',
   note: null,
+  paymentId: 'pay-1',
   reversiblePaymentId: 'p1',
   reverted: false,
 };
@@ -46,5 +48,15 @@ describe('LoanVisits', () => {
     expect(screen.getByText('Revertido')).toBeInTheDocument();
     expect(screen.getByText('Motivo: Monto equivocado')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Revertir pago/ })).not.toBeInTheDocument();
+  });
+
+  it('opens the payment proof of a visit and closes it', async () => {
+    render(<LoanVisits visits={[ROW]} />);
+
+    await userEvent.click(screen.getByRole('button', { name: /Comprobante del/ }));
+    expect(screen.getByText('proof of pay-1')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Cerrar' }));
+    expect(screen.queryByText('proof of pay-1')).not.toBeInTheDocument();
   });
 });
