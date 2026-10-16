@@ -12,11 +12,11 @@ export function ListSkeleton() {
         <Skeleton className="h-5 w-full rounded-sm" />
         <ul className="mt-6 flex flex-col">
           {ROW_IDS.map((id) => (
-            <li key={id} className="flex items-center gap-12 border-t border-foreground/8 py-7 first:border-t-0">
-              <Skeleton className="h-4 w-64 rounded-sm" />
-              <Skeleton className="h-4 w-40 rounded-sm" />
-              <Skeleton className="h-4 w-36 rounded-sm" />
-              <Skeleton className="h-6 w-24 rounded-full" />
+            <li key={id} className="flex items-center gap-4 border-t border-foreground/8 py-5 first:border-t-0 md:gap-12 md:py-7">
+              <Skeleton className="h-4 w-40 max-w-full rounded-sm md:w-64" />
+              <Skeleton className="hidden h-4 w-40 rounded-sm md:block" />
+              <Skeleton className="hidden h-4 w-36 rounded-sm md:block" />
+              <Skeleton className="h-6 w-24 rounded-full max-md:ml-auto" />
             </li>
           ))}
         </ul>
