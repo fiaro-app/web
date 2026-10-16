@@ -46,7 +46,7 @@ export const CLIENTS_TEXT = {
       steps: [
         'Corrige el celular o la dirección: tus cobradores los ven al instante.',
         'Sube una foto para reconocer al cliente en la calle.',
-        'Revisa su riesgo y registra un préstamo nuevo desde sus préstamos.',
+        'Mira cómo paga y registra un préstamo nuevo desde sus préstamos.',
       ],
       tip: {
         title: 'Un consejo',
