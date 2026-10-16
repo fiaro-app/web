@@ -1,3 +1,4 @@
+import { DayFlowSection } from '@/components/organisms/DayFlowSection';
 import { JsonLd } from '@/components/atoms/JsonLd';
 import { CtaBand } from '@/components/organisms/CtaBand';
 import { DashboardPreview } from '@/components/organisms/DashboardPreview';
@@ -12,6 +13,7 @@ import { LandingTemplate } from '@/components/templates/LandingTemplate';
 import { faqJsonLd, organizationJsonLd, softwareApplicationJsonLd, websiteJsonLd } from '@/lib/seo/json-ld';
 import {
   CTA_BAND,
+  DAY_FLOW,
   FAQ,
   FEATURES,
   FOOTER_LINKS,
@@ -44,6 +46,7 @@ export default function Home() {
           {...HERO}
           visual={<DashboardPreview kpis={PREVIEW_KPIS} chartTitle={PREVIEW_CHART_TITLE} bars={PREVIEW_BARS} />}
         />
+        <DayFlowSection id={LANDING_SECTION_IDS.day} content={DAY_FLOW} />
         <FeaturesSection id={LANDING_SECTION_IDS.product} title={FEATURES.title} subtitle={FEATURES.subtitle} features={FEATURES.items} />
         <HowItWorksSection id={LANDING_SECTION_IDS.howItWorks} {...HOW_IT_WORKS} />
         <PricingSection id={LANDING_SECTION_IDS.pricing} {...PRICING} />
