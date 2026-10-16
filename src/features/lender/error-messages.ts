@@ -10,6 +10,8 @@ export function describeSettingsError(error: unknown): AuthErrorView {
     switch (error.code) {
       case 'CONFLICT':
         return { message: 'Ya tienes una cartera con ese nombre.', field: null };
+      case 'PLAN_LIMIT_REACHED':
+        return { message: 'Tu negocio ya tiene el máximo de carteras. Borra una que no uses antes de crear otra.', field: null };
       case 'FORBIDDEN':
         return { message: 'No tienes permiso para cambiar la configuración del negocio.', field: null };
       case 'SUBSCRIPTION_READ_ONLY':
