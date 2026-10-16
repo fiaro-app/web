@@ -69,7 +69,7 @@ describe("InsightsSection", () => {
     expect(screen.getByText("2 préstamos nuevos")).toBeInTheDocument();
     expect(screen.getByText("3 cuadres enviados")).toBeInTheDocument();
     expect(screen.getByText("En total te toca cobrar $70.000.")).toBeInTheDocument();
-    expect(screen.getByRole("meter")).toHaveAttribute("aria-valuenow", "40");
+    expect(screen.getByRole("meter")).toHaveAttribute("value", "40");
     expect(screen.getByRole("list", { name: /próximos 7 días/ })).toBeInTheDocument();
   });
 
@@ -82,7 +82,7 @@ describe("InsightsSection", () => {
   it("la barra de avance se pone verde al llegar a la meta", () => {
     render(<InsightsSection insights={{ ...FULL, dailyProgress: 1 }} />);
 
-    expect(screen.getByRole("meter").firstElementChild).toHaveClass("bg-success");
+    expect(screen.getByRole("meter")).toHaveClass("accent-success");
   });
 
   it("sin datos explica cada tarjeta en vez de dejarla vacía", () => {

@@ -55,19 +55,13 @@ export function InsightsSection({
       <Card id="insights-daily" title={T.daily.title}>
         <Note>{insights.dailySummary}</Note>
         {insights.dailyProgress !== null && (
-          <div
-            role="meter"
+          <meter
             aria-label={insights.dailySummary}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={Math.round(insights.dailyProgress * 100)}
-            className="h-3 w-full overflow-hidden rounded-full bg-foreground/10"
-          >
-            <div
-              className={insights.dailyProgress >= 1 ? "h-3 rounded-full bg-success" : "h-3 rounded-full bg-primary"}
-              style={{ width: `${String(Math.round(insights.dailyProgress * 100))}%` }}
-            />
-          </div>
+            min={0}
+            max={100}
+            value={Math.round(insights.dailyProgress * 100)}
+            className={insights.dailyProgress >= 1 ? "h-3 w-full accent-success" : "h-3 w-full accent-primary"}
+          />
         )}
         <DailyBarChart
           bars={insights.daily}
