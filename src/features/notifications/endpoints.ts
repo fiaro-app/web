@@ -25,6 +25,9 @@ export const ListNotificationsBodySchema = PageQuerySchema.extend({
 /** Cuerpo de `POST /notifications/read-all`: `lenderId` opcional; vacío marca las de todos los negocios. */
 export const MarkAllReadBodySchema = z.strictObject({ lenderId: IdSchema.optional() });
 
+/** Cuerpo de `POST /notifications/clear`: borra de una vez las propias, todas o solo las leídas. */
+export const ClearNotificationsBodySchema = z.strictObject({ lenderId: IdSchema.optional(), onlyRead: z.boolean().optional() });
+
 const NotificationParamsSchema = z.object({ id: IdSchema });
 
 /**
@@ -52,6 +55,20 @@ export const notificationEndpoints = {
     summary: 'Marca como leídas, en una sola operación, todas las notificaciones sin leer de la persona.',
     body: MarkAllReadBodySchema,
     response: MarkAllReadResultSchema,
+  }),
+  remove: defineEndpoint({
+    method: 'DELETE',
+    path: '/notifications/:id',
+    summary: 'Borra una notificación propia (D-142 de la API).',
+    params: NotificationParamsSchema,
+    response: z.undefined(),
+  }),
+  clear: defineEndpoint({
+    method: 'POST',
+    path: '/notifications/clear',
+    summary: 'Borra de una vez las notificaciones propias: todas o solo las leídas (D-142 de la API).',
+    body: ClearNotificationsBodySchema,
+    response: z.object({ deleted: z.int().nonnegative() }),
   }),
   unreadCount: defineEndpoint({
     method: 'GET',
