@@ -73,7 +73,8 @@ export function DayFlowSection({ id, content }: Readonly<DayFlowSectionProps>) {
         </Text>
       </div>
 
-      <div role="group" aria-label={content.title} className="inline-flex rounded-full bg-surface-2 p-1">
+      <fieldset className="inline-flex rounded-full border-0 bg-surface-2 p-1">
+        <legend className="sr-only">{content.title}</legend>
         {(['notebook', 'fiaro'] as const).map((key) => (
           <button
             key={key}
@@ -88,7 +89,7 @@ export function DayFlowSection({ id, content }: Readonly<DayFlowSectionProps>) {
             {content.modes[key]}
           </button>
         ))}
-      </div>
+      </fieldset>
 
       {mode === 'notebook' ? (
         <div className="grid w-full max-w-5xl items-center gap-8 lg:grid-cols-2">

@@ -56,9 +56,9 @@ export function useAttachment(target: AttachmentTarget, id: string) {
       await operation();
       setUrl(await getAttachmentUrl(target, id));
       setNotice(success);
-    } catch (failure) {
+    } catch (error_) {
       // Un fallo del almacenamiento (red, permiso del bucket) no es un error de la API: mensaje propio.
-      setError(isApiRequestError(failure) ? describeAttachmentError(failure) : 'No pudimos subir la imagen. Inténtalo de nuevo.');
+      setError(isApiRequestError(error_) ? describeAttachmentError(error_) : 'No pudimos subir la imagen. Inténtalo de nuevo.');
     }
     setIsBusy(false);
   };

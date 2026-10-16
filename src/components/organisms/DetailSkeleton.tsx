@@ -9,7 +9,7 @@ const FIELD_IDS = ['a', 'b', 'c', 'd'] as const;
  */
 export function DetailSkeleton() {
   return (
-    <div role="status" aria-label="Cargando" className="flex flex-col gap-7">
+    <output aria-label="Cargando" className="flex flex-col gap-7">
       <Skeleton className="h-9 w-64 max-w-full rounded-sm" />
       <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,32rem)_minmax(0,26rem)]">
         <div className="flex max-w-lg flex-col gap-5">
@@ -24,6 +24,6 @@ export function DetailSkeleton() {
         <Skeleton className="hidden h-72 w-full rounded-lg lg:block" />
       </div>
       <span className="sr-only">Cargando…</span>
-    </div>
+    </output>
   );
 }

@@ -3,8 +3,8 @@ import { z } from 'zod';
 
 const ParamsSchema = z.object({ id: IdSchema });
 const UploadBodySchema = z.strictObject({ contentType: z.enum(['image/png', 'image/jpeg']), sizeBytes: z.number().int().positive() });
-const UploadUrlSchema = z.object({ uploadUrl: z.string().url(), key: z.string(), expiresAt: z.string() });
-const ViewSchema = z.object({ url: z.string().url().nullable(), expiresAt: z.string().nullable() });
+const UploadUrlSchema = z.object({ uploadUrl: z.url(), key: z.string(), expiresAt: z.string() });
+const ViewSchema = z.object({ url: z.url().nullable(), expiresAt: z.string().nullable() });
 
 /** Lo que se adjunta: la foto de un cliente o el comprobante de un pago (D-145 de la API). */
 export type AttachmentTarget = 'clientPhoto' | 'paymentProof';

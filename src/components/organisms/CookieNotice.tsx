@@ -37,7 +37,7 @@ export function CookieNotice() {
     for (const listener of listeners) listener();
   };
   return (
-    <div role="region" aria-label="Aviso de cookies" className="fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-2xl flex-col gap-3 rounded-lg bg-foreground p-4 text-background shadow-lg sm:flex-row sm:items-center">
+    <section aria-label="Aviso de cookies" className="fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-2xl flex-col gap-3 rounded-lg bg-foreground p-4 text-background shadow-lg sm:flex-row sm:items-center">
       <p className="flex-1 text-label">
         {COOKIE_NOTICE.text}{' '}
         <NextLink href={COOKIES.path} className="font-semibold underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
@@ -47,6 +47,6 @@ export function CookieNotice() {
       <Button size="sm" onClick={dismiss}>
         {COOKIE_NOTICE.accept}
       </Button>
-    </div>
+    </section>
   );
 }

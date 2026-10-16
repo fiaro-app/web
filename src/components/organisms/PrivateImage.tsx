@@ -41,15 +41,15 @@ export function PrivateImage({ target, id, title, description, alt, none, canEdi
       </div>
 
       {status === 'loading' && (
-        <div role="status">
+        <output>
           <span className="sr-only">{text.loading}</span>
           <Skeleton className="h-40 w-full rounded-md" />
-        </div>
+        </output>
       )}
       {status === 'error' && (
         <Alert tone="error">
           {text.error}{' '}
-          <Button type="button" variant="outline" onClick={() => void retry()}>
+          <Button type="button" variant="outline" onClick={retry}>
             {text.retry}
           </Button>
         </Alert>
