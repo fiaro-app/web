@@ -4,14 +4,17 @@ import { COLLECTORS_TEXT } from '@/content/collectors';
 
 export interface CollectorInvitedProps {
   readonly invited: { readonly fullName: string; readonly tempPassword: string | null };
+  /** Los textos de la confirmación; por defecto, los de «Cobrador registrado». */
+  readonly text?: Pick<typeof COLLECTORS_TEXT.invited, 'title' | 'withPassword' | 'existingAccount' | 'passwordLabel' | 'done'>;
+  /** A dónde vuelve el botón final; por defecto, a cobradores. */
+  readonly backHref?: string;
 }
 
 /**
  * Confirmación de "Cobrador registrado". Si la persona no tenía cuenta muestra la contraseña
  * temporal, que la API entrega una sola vez; si ya tenía, solo avisa que quedó vinculada.
  */
-export function CollectorInvited({ invited }: Readonly<CollectorInvitedProps>) {
-  const text = COLLECTORS_TEXT.invited;
+export function CollectorInvited({ invited, text = COLLECTORS_TEXT.invited, backHref = '/cobradores' }: Readonly<CollectorInvitedProps>) {
   const { fullName, tempPassword } = invited;
 
   return (
@@ -34,7 +37,7 @@ export function CollectorInvited({ invited }: Readonly<CollectorInvitedProps>) {
         </div>
       )}
 
-      <ButtonLink href="/cobradores">{text.done}</ButtonLink>
+      <ButtonLink href={backHref}>{text.done}</ButtonLink>
     </section>
   );
 }

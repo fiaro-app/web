@@ -27,8 +27,8 @@ export function useAdminActions(promotable: readonly PromotableOption[]) {
       await operation();
       setNotice(success);
       router.refresh();
-    } catch (failure) {
-      setError(describeAdminError(failure).message);
+    } catch (error_) {
+      setError(describeAdminError(error_).message);
     } finally {
       setPending(false);
     }
