@@ -5,6 +5,18 @@ export const SETTLEMENTS_TEXT = {
   title: 'Cuadres',
   tableCaption: 'Cuadres de los cobradores',
   headers: ['Cobrador', 'Cartera', 'Fecha', 'Esperado', 'Cobrado', 'Diferencia', 'Estado'] as const,
+  detailAside: {
+    title: 'Cómo se revisa un cuadre',
+    steps: [
+      'Compara lo esperado con lo que el cobrador entrega.',
+      'Si coincide, apruébalo: el día queda cerrado.',
+      'Si no, recházalo con el motivo y el cobrador lo corrige.',
+    ],
+    tip: {
+      title: 'Un consejo',
+      body: 'Una diferencia pequeña casi siempre es un pago sin registrar: revisa los cobros del día antes de rechazar.',
+    },
+  },
   review: 'Revisar',
   view: 'Ver',
   status: {

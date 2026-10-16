@@ -6,6 +6,9 @@ import { registerOwner, signIn } from '@/features/auth/auth-api';
 import { describeAuthError, issueFieldErrors } from '@/features/auth/error-messages';
 import {
   AccountStepSchema,
+  EMPTY_CONSENTS,
+  missingConsents,
+  type RegisterConsents,
   CompanyStepSchema,
   REGISTER_STEP_FIELDS,
   type RegisterField,
@@ -45,6 +48,8 @@ export function useRegisterForm({ redirectTo }: UseRegisterFormOptions) {
   const router = useRouter();
   const [step, setStep] = useState<RegisterStep>('account');
   const [values, setValues] = useState<RegisterFormInput>(EMPTY_VALUES);
+  const [consents, setConsents] = useState<RegisterConsents>(EMPTY_CONSENTS);
+  const [consentErrors, setConsentErrors] = useState<readonly (keyof RegisterConsents)[]>([]);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors<RegisterField>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,6 +66,11 @@ export function useRegisterForm({ redirectTo }: UseRegisterFormOptions) {
   const setField = (field: RegisterField) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues((current) => ({ ...current, [field]: fieldInput(field, event.target.value) }));
     setFieldErrors((current) => ({ ...current, [field]: undefined }));
+  };
+
+  const setConsent = (key: keyof RegisterConsents) => (event: ChangeEvent<HTMLInputElement>) => {
+    setConsents((current) => ({ ...current, [key]: event.target.checked }));
+    setConsentErrors((current) => current.filter((item) => item !== key));
   };
 
   const goBack = () => {
@@ -116,6 +126,12 @@ export function useRegisterForm({ redirectTo }: UseRegisterFormOptions) {
       return;
     }
 
+    const missing = missingConsents(consents);
+    if (missing.length > 0) {
+      setConsentErrors(missing);
+      return;
+    }
+
     setIsSubmitting(true);
     setFieldErrors({});
     setFormError(null);
@@ -125,7 +141,7 @@ export function useRegisterForm({ redirectTo }: UseRegisterFormOptions) {
       return;
     }
     try {
-      await registerOwner(account.data, company.data, turnstileToken ?? undefined);
+      await registerOwner(account.data, company.data, consents.marketing, turnstileToken ?? undefined);
     } catch (error) {
       setTurnstileToken(null);
       setTurnstileResetKey((current) => current + 1);
@@ -138,6 +154,9 @@ export function useRegisterForm({ redirectTo }: UseRegisterFormOptions) {
   return {
     step,
     values,
+    consents,
+    consentErrors,
+    setConsent,
     fieldErrors,
     formError,
     isSubmitting,

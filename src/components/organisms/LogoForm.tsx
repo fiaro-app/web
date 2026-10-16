@@ -1,10 +1,8 @@
 'use client';
 
-import { useId, useState } from 'react';
 import { Alert } from '@/components/molecules/Alert';
 import { Avatar } from '@/components/atoms/Avatar';
-import { Button } from '@/components/atoms/Button';
-import { ConfirmDialog } from '@/components/molecules/ConfirmDialog';
+import { ImageActions } from '@/components/molecules/ImageActions';
 import { SettingsSection } from '@/components/molecules/SettingsSection';
 import { SETTINGS_TEXT } from '@/content/settings';
 import { LOGO_CONTENT_TYPES } from '@/features/lender/logo-file';
@@ -21,9 +19,7 @@ export interface LogoFormProps {
 /** Logo del negocio: vista previa, subir/cambiar y quitar. Lógica en `useLogoForm`. */
 export function LogoForm({ businessName, logoUrl, canEdit, uploadAvailable }: Readonly<LogoFormProps>) {
   const text = SETTINGS_TEXT.logo;
-  const inputId = useId();
   const { isBusy, error, notice, chooseFile, removeLogo } = useLogoForm();
-  const [confirmingRemove, setConfirmingRemove] = useState(false);
 
   return (
     <SettingsSection title={text.title} description={text.description}>
@@ -43,36 +39,15 @@ export function LogoForm({ businessName, logoUrl, canEdit, uploadAvailable }: Re
 
       {canEdit && !uploadAvailable && <Alert tone="info">{text.unavailable}</Alert>}
       {canEdit && uploadAvailable && (
-        <div className="flex flex-wrap gap-3">
-          <input
-            id={inputId}
-            type="file"
-            accept={LOGO_CONTENT_TYPES.join(',')}
-            className="sr-only"
-            disabled={isBusy}
-            onChange={(event) => void chooseFile(event)}
-          />
-          <Button type="button" loading={isBusy} onClick={() => document.getElementById(inputId)?.click()}>
-            {logoUrl ? text.change : text.upload}
-          </Button>
-          {logoUrl && (
-            <Button type="button" variant="outline" disabled={isBusy} onClick={() => setConfirmingRemove(true)}>
-              {text.remove}
-            </Button>
-          )}
-        </div>
+        <ImageActions
+          accept={LOGO_CONTENT_TYPES.join(',')}
+          hasImage={Boolean(logoUrl)}
+          isBusy={isBusy}
+          onChoose={chooseFile}
+          onRemove={removeLogo}
+          labels={{ upload: text.upload, change: text.change, remove: text.remove, confirmTitle: text.confirmTitle, confirmDescription: text.confirmDescription, confirmLabel: text.confirmLabel }}
+        />
       )}
-      <ConfirmDialog
-        open={confirmingRemove}
-        title={text.confirmTitle}
-        description={text.confirmDescription}
-        confirmLabel={text.confirmLabel}
-        onCancel={() => setConfirmingRemove(false)}
-        onConfirm={() => {
-          setConfirmingRemove(false);
-          void removeLogo();
-        }}
-      />
     </SettingsSection>
   );
 }

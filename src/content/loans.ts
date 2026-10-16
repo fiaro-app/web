@@ -93,6 +93,18 @@ export const LOANS_TEXT = {
     },
     viewCreated: 'Ver el préstamo creado',
   },
+  detailAside: {
+    title: 'Qué puedes hacer desde aquí',
+    steps: [
+      'Registra el cobro de la visita: queda a tu nombre y baja el saldo al instante.',
+      'Cambia el cobrador asignado si la ruta cambió.',
+      'Revisa abajo el calendario de cuotas y el historial de cobros.',
+    ],
+    tip: {
+      title: 'Un consejo',
+      body: 'Si un pago se registró mal, no lo borres: revíertelo con un motivo y queda el rastro.',
+    },
+  },
   detail: {
     back: '← Volver a préstamos',
     rows: {
