@@ -30,8 +30,8 @@ export function useDeleteNotifications() {
     try {
       await operation();
       router.refresh();
-    } catch (failure) {
-      setError(describeDeleteError(failure));
+    } catch (error_) {
+      setError(describeDeleteError(error_));
     } finally {
       finish();
     }
