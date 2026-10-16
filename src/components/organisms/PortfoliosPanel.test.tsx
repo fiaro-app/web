@@ -28,7 +28,7 @@ beforeEach(() => {
 
 describe('PortfoliosPanel', () => {
   it('lists the portfolios and flags the default one', () => {
-    render(<PortfoliosPanel portfolios={PORTFOLIOS} canEdit />);
+    render(<PortfoliosPanel portfolios={PORTFOLIOS} canEdit maxPortfolios={4} />);
     const items = within(screen.getByRole('list', { name: 'Carteras del negocio' })).getAllByRole('listitem');
     expect(items).toHaveLength(2);
     expect(within(items[0]!).getByText('Por defecto')).toBeInTheDocument();
@@ -36,27 +36,38 @@ describe('PortfoliosPanel', () => {
   });
 
   it('offers the create form to an administrator', () => {
-    render(<PortfoliosPanel portfolios={PORTFOLIOS} canEdit />);
+    render(<PortfoliosPanel portfolios={PORTFOLIOS} canEdit maxPortfolios={4} />);
     expect(screen.getByLabelText('Nueva cartera')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Crear cartera' })).toBeInTheDocument();
   });
 
   it('replaces the create form with a note once the business has the maximum of portfolios', () => {
     const four = [...PORTFOLIOS, { id: 'p3', name: 'Sur', isDefault: false }, { id: 'p4', name: 'Centro', isDefault: false }];
-    render(<PortfoliosPanel portfolios={four} canEdit />);
+    render(<PortfoliosPanel portfolios={four} canEdit maxPortfolios={4} />);
     expect(screen.queryByRole('button', { name: 'Crear cartera' })).not.toBeInTheDocument();
     expect(screen.getByText(/máximo de 4 carteras/)).toBeInTheDocument();
   });
 
+  it('takes the cap from the plan, not a fixed number', () => {
+    render(<PortfoliosPanel portfolios={PORTFOLIOS} canEdit maxPortfolios={2} />);
+    expect(screen.queryByRole('button', { name: 'Crear cartera' })).not.toBeInTheDocument();
+    expect(screen.getByText(/máximo de 2 carteras/)).toBeInTheDocument();
+  });
+
+  it('keeps the create form when the plan could not be read: the API enforces the cap anyway', () => {
+    render(<PortfoliosPanel portfolios={PORTFOLIOS} canEdit maxPortfolios={null} />);
+    expect(screen.getByRole('button', { name: 'Crear cartera' })).toBeInTheDocument();
+  });
+
   it('only lists them without permission', () => {
-    render(<PortfoliosPanel portfolios={PORTFOLIOS} canEdit={false} />);
+    render(<PortfoliosPanel portfolios={PORTFOLIOS} canEdit={false} maxPortfolios={4} />);
     expect(screen.queryByRole('button', { name: 'Crear cartera' })).not.toBeInTheDocument();
     expect(screen.getByText('Zona Norte')).toBeInTheDocument();
   });
 
   it('shows field errors, API errors and notices', () => {
     usePortfolioForm.mockReturnValue(state({ fieldError: 'Escribe el nombre', error: 'Repetida', notice: 'Cartera creada.' }));
-    render(<PortfoliosPanel portfolios={PORTFOLIOS} canEdit />);
+    render(<PortfoliosPanel portfolios={PORTFOLIOS} canEdit maxPortfolios={4} />);
     expect(screen.getByText('Escribe el nombre')).toBeInTheDocument();
     expect(screen.getByText('Repetida')).toBeInTheDocument();
     expect(screen.getByText('Cartera creada.')).toBeInTheDocument();

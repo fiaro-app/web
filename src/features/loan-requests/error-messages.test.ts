@@ -9,6 +9,7 @@ describe('describeLoanRequestError', () => {
     ['CONFLICT', /ya fue resuelta/],
     ['FORBIDDEN', /No tienes permiso/],
     ['SUBSCRIPTION_READ_ONLY', /solo lectura/],
+    ['PLAN_LIMIT_REACHED', /préstamos activos/],
     ['NOT_FOUND', /ya no existe/],
     ['VALIDATION_FAILED', /Revisa los datos/],
   ])('explains %s', (code, message) => {

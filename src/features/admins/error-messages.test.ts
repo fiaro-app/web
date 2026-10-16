@@ -8,6 +8,7 @@ describe('describeAdminError', () => {
   it.each([
     ['FORBIDDEN', /No tienes permiso/, null],
     ['SUBSCRIPTION_READ_ONLY', /solo lectura/, null],
+    ['PLAN_LIMIT_REACHED', /cupos de administrador/, null],
     ['NOT_FOUND', /ya no existe/, null],
     ['CONFLICT', /ya trabaja/, 'phone'],
     ['COLLABORATOR_NATIONAL_ID_TAKEN', /con esa cédula/, 'nationalId'],

@@ -1,4 +1,5 @@
 import { describeAuthError, type AuthErrorView } from '@/features/auth/error-messages';
+import { describePlanLimit } from '@/features/subscription/plan-limit-message';
 import { isApiRequestError } from '@/lib/api';
 
 /**
@@ -12,6 +13,8 @@ export function describeLoanError(error: unknown): AuthErrorView {
         return { message: 'Este préstamo ya no se puede anular porque dejó de estar activo.', field: null };
       case 'FORBIDDEN':
         return { message: 'No tienes permiso para administrar préstamos.', field: null };
+      case 'PLAN_LIMIT_REACHED':
+        return { message: describePlanLimit(error.errorCode ?? 'L004A'), field: null };
       case 'SUBSCRIPTION_READ_ONLY':
         return { message: 'Tu suscripción está en modo de solo lectura. Renuévala para hacer cambios.', field: null };
       case 'NOT_FOUND':

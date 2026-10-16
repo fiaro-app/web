@@ -1,4 +1,5 @@
 import { describeAuthError, type AuthErrorView } from '@/features/auth/error-messages';
+import { describePlanLimit } from '@/features/subscription/plan-limit-message';
 import { isApiRequestError } from '@/lib/api';
 
 /**
@@ -19,7 +20,7 @@ export function describeCollectorError(error: unknown): AuthErrorView {
       case 'COLLABORATOR_NATIONAL_ID_TAKEN':
         return { message: 'Ya hay un colaborador con esa cédula en tu negocio.', field: 'nationalId' };
       case 'PLAN_LIMIT_REACHED':
-        return { message: 'Tu plan ya no tiene cupos de cobrador. Da de baja a uno o mejora tu plan.', field: null };
+        return { message: describePlanLimit(error.errorCode ?? 'M003A'), field: null };
       case 'COLLECTOR_HAS_HISTORY':
         return { message: 'Este cobrador ya tiene historial: dalo de baja en lugar de borrarlo.', field: null };
       default:

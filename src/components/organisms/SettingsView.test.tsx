@@ -48,8 +48,8 @@ describe('SettingsView', () => {
       statusLabel: 'Activo',
       endsOn: '08/11/2026',
       daysRemaining: '30',
-      collectors: '1 de 5',
-      collectorsPercent: 20,
+      usage: [{ key: 'collectors' as const, label: 'Cobradores activos', value: '1 de 5', percent: 20 }],
+      maxPortfolios: 4,
       notice: null,
     };
     const { rerender } = render(<SettingsView settings={SETTINGS} />);

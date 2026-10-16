@@ -9,37 +9,87 @@ export interface SubscriptionNotice {
   readonly message: string;
 }
 
+/** Una fila de «Tu plan»: cuánto se usa de un tope. `percent` es `null` cuando no hay barra que pintar. */
+export interface UsageRow {
+  readonly key: 'collectors' | 'admins' | 'loans' | 'portfolios';
+  readonly label: string;
+  readonly value: string;
+  /** Qué porción del tope se usa (0–100), para la barra. */
+  readonly percent: number | null;
+}
+
 /** El plan del negocio listo para pintar. */
 export interface SubscriptionView {
   readonly planName: string;
   readonly statusLabel: string;
   readonly endsOn: string;
   readonly daysRemaining: string;
-  /** Cobradores activos sobre el tope del plan («3 de 5»). */
-  readonly collectors: string;
-  /** Qué porción del tope de cobradores se usa (0–100), para la barra. */
-  readonly collectorsPercent: number;
+  /** Cobradores, administradores, préstamos activos y carteras sobre el tope del plan. */
+  readonly usage: readonly UsageRow[];
+  /** Cuántas carteras admite el plan, la «General» incluida. */
+  readonly maxPortfolios: number;
   readonly notice: SubscriptionNotice | null;
 }
 
 function toNotice(subscription: Subscription): SubscriptionNotice | null {
   const text = SUBSCRIPTION_TEXT.banner;
   if (subscription.isReadOnly || subscription.status === 'READ_ONLY') return { tone: 'error', message: text.readOnly };
-  if (subscription.status === 'GRACE_PERIOD') return { tone: 'warning', message: text.grace(subscription.graceDaysRemaining) };
-  if (subscription.daysRemaining <= text.warnFromDays) return { tone: 'warning', message: text.trialEnding(subscription.daysRemaining) };
+  const isTrial = subscription.planCode === 'TRIAL';
+  if (subscription.status === 'GRACE_PERIOD') {
+    const grace = isTrial ? text.grace : text.paidGrace;
+    return { tone: 'warning', message: grace(subscription.graceDaysRemaining) };
+  }
+  if (subscription.daysRemaining <= text.warnFromDays) {
+    const ending = isTrial ? text.trialEnding : text.paidEnding;
+    return { tone: 'warning', message: ending(subscription.daysRemaining) };
+  }
   return null;
+}
+
+/** Qué porción de un tope se usa (0–100); un tope de cero no pinta barra. */
+function percentOf(used: number, max: number): number {
+  return max === 0 ? 0 : Math.min(100, Math.round((used / max) * 100));
+}
+
+function toUsageRows(subscription: Subscription): readonly UsageRow[] {
+  const text = SUBSCRIPTION_TEXT.panel;
+  const { usage, limits } = subscription;
+  const loans: UsageRow =
+    limits.maxActiveLoans === null
+      ? { key: 'loans', label: text.loans, value: text.unlimitedUsage(usage.activeLoans), percent: null }
+      : {
+          key: 'loans',
+          label: text.loans,
+          value: text.usage(usage.activeLoans, limits.maxActiveLoans),
+          percent: percentOf(usage.activeLoans, limits.maxActiveLoans),
+        };
+  return [
+    {
+      key: 'collectors',
+      label: text.collectors,
+      value: text.usage(usage.activeCollectors, limits.maxCollectors),
+      percent: percentOf(usage.activeCollectors, limits.maxCollectors),
+    },
+    {
+      key: 'admins',
+      label: text.admins,
+      value: text.usage(usage.activeAdmins, limits.maxAdmins),
+      percent: percentOf(usage.activeAdmins, limits.maxAdmins),
+    },
+    loans,
+    { key: 'portfolios', label: text.portfolios, value: text.upTo(limits.maxPortfolios), percent: null },
+  ];
 }
 
 /** Convierte la suscripción de la API en lo que muestran el aviso del panel y el bloque «Tu plan». */
 export function toSubscriptionView(subscription: Subscription): SubscriptionView {
-  const { usage, limits } = subscription;
   return {
     planName: SUBSCRIPTION_TEXT.plan[subscription.planCode],
     statusLabel: SUBSCRIPTION_TEXT.status[subscription.status],
     endsOn: formatInstantDate(subscription.currentPeriodEndsAt),
     daysRemaining: String(subscription.daysRemaining),
-    collectors: SUBSCRIPTION_TEXT.panel.collectorsUsage(usage.activeCollectors, limits.maxCollectors),
-    collectorsPercent: limits.maxCollectors === 0 ? 0 : Math.min(100, Math.round((usage.activeCollectors / limits.maxCollectors) * 100)),
+    usage: toUsageRows(subscription),
+    maxPortfolios: subscription.limits.maxPortfolios,
     notice: toNotice(subscription),
   };
 }

@@ -1,4 +1,5 @@
 import { describeAuthError, type AuthErrorView } from '@/features/auth/error-messages';
+import { describePlanLimit } from '@/features/subscription/plan-limit-message';
 import { isApiRequestError } from '@/lib/api';
 
 /**
@@ -11,7 +12,7 @@ export function describeSettingsError(error: unknown): AuthErrorView {
       case 'CONFLICT':
         return { message: 'Ya tienes una cartera con ese nombre.', field: null };
       case 'PLAN_LIMIT_REACHED':
-        return { message: 'Tu negocio ya tiene el máximo de carteras. Borra una que no uses antes de crear otra.', field: null };
+        return { message: describePlanLimit(error.errorCode ?? 'B007A'), field: null };
       case 'FORBIDDEN':
         return { message: 'No tienes permiso para cambiar la configuración del negocio.', field: null };
       case 'SUBSCRIPTION_READ_ONLY':
