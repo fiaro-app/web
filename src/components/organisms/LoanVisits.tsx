@@ -32,7 +32,7 @@ export function LoanVisits({ visits, canManage = true }: Readonly<LoanVisitsProp
       {visits.length === 0 ? (
         <p className="text-label text-foreground/70">{VISITS_TEXT.empty}</p>
       ) : (
-        <ResponsiveTable caption={VISITS_TEXT.caption} headers={VISITS_TEXT.headers} minWidthClass="md:min-w-190">
+        <ResponsiveTable caption={VISITS_TEXT.caption} headers={VISITS_TEXT.headers} minWidthClass="md:min-w-190" className="max-h-112 overflow-y-auto">
           {visits.map((visit) => (
             <tr key={visit.id} className={RESPONSIVE_TABLE.row}>
               <th scope="row" className={RESPONSIVE_TABLE.rowHeader}>
