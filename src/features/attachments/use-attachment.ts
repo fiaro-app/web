@@ -64,17 +64,13 @@ export function useAttachment(target: AttachmentTarget, id: string) {
   };
 
   const chooseFile = async (event: ChangeEvent<HTMLInputElement>) => {
-    const input = event.target;
-    const file = input.files?.[0];
-    input.value = '';
+    const file = event.target.files?.[0];
+    event.target.value = '';
     if (!file || isBusy) return;
     const problem = validateImageFile(file);
-    if (problem) {
-      setNotice(null);
-      setError(problem);
-      return;
-    }
-    await run(() => uploadAttachment(target, id, file), 'Imagen guardada.');
+    setNotice(null);
+    setError(problem);
+    if (problem === null) await run(() => uploadAttachment(target, id, file), 'Imagen guardada.');
   };
 
   const remove = () => (isBusy ? Promise.resolve() : run(() => removeAttachment(target, id), 'Imagen quitada.'));
