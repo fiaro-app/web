@@ -72,6 +72,10 @@ export const TUTORIAL_TEXT = {
       title: 'Estadísticas',
       body: 'Reportes de cartera en riesgo, mora por antigüedad y desempeño de cada cobrador, que puedes descargar en PDF. Sirve para tomar decisiones con datos: a quién reforzar y dónde está el riesgo.',
     },
+    '/administradores': {
+      title: 'Administradores',
+      body: 'Quiénes administran tu negocio contigo. Puedes subir de rango a un cobrador, invitar a un administrador nuevo o quitarle el rol. Sirve para tener más de una persona al frente sin compartir una sola cuenta.',
+    },
     '/configuracion': {
       title: 'Configuración',
       body: 'El nombre y el logo del negocio, el color de marca, los días en que no se cobra y las carteras. Sirve para que Fiaro se vea y funcione como tu negocio.',
