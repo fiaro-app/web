@@ -1,3 +1,4 @@
+import { CookieNotice } from '@/components/organisms/CookieNotice';
 import type { Metadata, Viewport } from "next";
 import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { SITE } from "@/lib/site";
@@ -102,6 +103,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Saltar al contenido
         </a>
         {children}
+        <CookieNotice />
       </body>
     </html>
   );

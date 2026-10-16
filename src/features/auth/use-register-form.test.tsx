@@ -25,6 +25,10 @@ function type(result: Hook, values: Partial<Record<RegisterField, string>>) {
   }
 }
 
+function accept(result: Hook, keys: readonly ('terms' | 'privacy' | 'responsibility' | 'marketing')[] = ['terms', 'privacy', 'responsibility']) {
+  for (const key of keys) act(() => result.current.setConsent(key)({ target: { checked: true } } as ChangeEvent<HTMLInputElement>));
+}
+
 const ACCOUNT = {
   fullName: 'Ana Pérez',
   phone: '300 123 4567',
@@ -110,12 +114,14 @@ describe('useRegisterForm — step 2 (company)', () => {
     const result = setup();
     await reachCompanyStep(result);
     type(result, { businessName: 'Préstamos Ana' });
+    accept(result);
 
     await act(() => result.current.submit(submitEvent()));
 
     expect(registerMock).toHaveBeenCalledWith(
       expect.objectContaining({ phone: '+573001234567', nationalId: '1020304050', fullName: 'Ana Pérez' }),
       { businessName: 'Préstamos Ana' },
+      false,
       undefined,
     );
     expect(signInMock).toHaveBeenCalledWith({ phone: '+573001234567', password: 'una-contraseña-segura' });
@@ -128,6 +134,7 @@ describe('useRegisterForm — step 2 (company)', () => {
     const result = setup();
     await reachCompanyStep(result);
     type(result, { businessName: 'Préstamos Ana' });
+    accept(result);
 
     await act(() => result.current.submit(submitEvent()));
 
@@ -139,6 +146,7 @@ describe('useRegisterForm — step 2 (company)', () => {
     const result = setup();
     await reachCompanyStep(result);
     type(result, { businessName: 'Préstamos Ana' });
+    accept(result);
 
     await act(() => result.current.submit(submitEvent()));
 
@@ -153,6 +161,7 @@ describe('useRegisterForm — step 2 (company)', () => {
     const result = setup();
     await reachCompanyStep(result);
     type(result, { businessName: 'Préstamos Ana' });
+    accept(result);
 
     await act(() => result.current.submit(submitEvent()));
 
@@ -172,6 +181,7 @@ describe('useRegisterForm — step 2 (company)', () => {
     const result = setup();
     await reachCompanyStep(result);
     type(result, { businessName: 'Préstamos Ana' });
+    accept(result);
 
     await act(() => result.current.submit(submitEvent()));
 
@@ -184,6 +194,7 @@ describe('useRegisterForm — step 2 (company)', () => {
     const result = setup();
     await reachCompanyStep(result);
     type(result, { businessName: 'Préstamos Ana' });
+    accept(result);
 
     await act(() => result.current.submit(submitEvent()));
 
@@ -198,6 +209,7 @@ describe('useRegisterForm — step 2 (company)', () => {
     const result = setup();
     await reachCompanyStep(result);
     type(result, { businessName: 'Préstamos Ana' });
+    accept(result);
 
     let first!: Promise<void>;
     act(() => {
@@ -210,5 +222,31 @@ describe('useRegisterForm — step 2 (company)', () => {
     });
 
     expect(registerMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not register until the three required authorizations are checked', async () => {
+    const result = setup();
+    await reachCompanyStep(result);
+    type(result, { businessName: 'Préstamos Ana' });
+    accept(result, ['terms']);
+
+    await act(() => result.current.submit(submitEvent()));
+
+    expect(result.current.consentErrors).toEqual(['privacy', 'responsibility']);
+    expect(registerMock).not.toHaveBeenCalled();
+
+    accept(result, ['privacy']);
+    expect(result.current.consentErrors).toEqual(['responsibility']);
+  });
+
+  it('sends the optional marketing authorization only when checked', async () => {
+    const result = setup();
+    await reachCompanyStep(result);
+    type(result, { businessName: 'Préstamos Ana' });
+    accept(result, ['terms', 'privacy', 'responsibility', 'marketing']);
+
+    await act(() => result.current.submit(submitEvent()));
+
+    expect(registerMock).toHaveBeenCalledWith(expect.anything(), expect.anything(), true, undefined);
   });
 });

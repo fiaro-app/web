@@ -1,3 +1,4 @@
+import { LEGAL_VERSION } from '@/content/legal';
 import { callEndpoint } from '@/lib/api';
 import { authEndpoints } from '@/features/auth/endpoints';
 import type { AccountValues, CompanyValues } from '@/features/auth/register-schemas';
@@ -21,6 +22,7 @@ export async function signOut(): Promise<void> {
 export async function registerOwner(
   { phone, fullName, password, nationalId, contactEmail }: AccountValues,
   { businessName }: CompanyValues,
+  marketingConsent: boolean,
   turnstileToken?: string,
 ) {
   return callEndpoint(authEndpoints.register, {
@@ -30,6 +32,11 @@ export async function registerOwner(
       password,
       nationalId,
       businessName,
+      acceptedTerms: true,
+      acceptedPrivacy: true,
+      acceptedDataResponsibility: true,
+      marketingConsent,
+      legalVersion: LEGAL_VERSION,
       ...(contactEmail && { contactEmail }),
       ...(turnstileToken && { turnstileToken }),
     },

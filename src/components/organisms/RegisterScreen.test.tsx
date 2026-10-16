@@ -25,6 +25,12 @@ async function fillAccount() {
   await userEvent.type(screen.getByLabelText(/^Contraseña/), 'una-contraseña-segura');
 }
 
+async function acceptRequired() {
+  await userEvent.click(screen.getByLabelText(/Leí y acepto los/));
+  await userEvent.click(screen.getByLabelText(/Autorizo el tratamiento/));
+  await userEvent.click(screen.getByLabelText(/Declaro que tengo la autorización/));
+}
+
 describe('RegisterScreen', () => {
   it('starts on step 1: personal data, the progress and the matching brand message', () => {
     render(<RegisterScreen redirectTo="/resumen" />);
@@ -60,6 +66,7 @@ describe('RegisterScreen', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Continuar' }));
 
     await userEvent.type(screen.getByLabelText(/Nombre de la financiera/), 'Préstamos Ana');
+    await acceptRequired();
     await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }));
 
     await waitFor(() => expect(replace).toHaveBeenCalledWith('/resumen'));
@@ -73,9 +80,23 @@ describe('RegisterScreen', () => {
     await fillAccount();
     await userEvent.click(screen.getByRole('button', { name: 'Continuar' }));
     await userEvent.type(screen.getByLabelText(/Nombre de la financiera/), 'Préstamos Ana');
+    await acceptRequired();
     await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }));
 
     expect(await screen.findByText(/Ya existe una cuenta con ese celular/)).toBeInTheDocument();
     expect(screen.getByLabelText(/^Celular/)).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('asks to accept the required authorizations before creating the account', async () => {
+    render(<RegisterScreen redirectTo="/resumen" />);
+    await fillAccount();
+    await userEvent.click(screen.getByRole('button', { name: 'Continuar' }));
+    await userEvent.type(screen.getByLabelText(/Nombre de la financiera/), 'Préstamos Ana');
+    await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }));
+
+    expect(await screen.findAllByText('Debes aceptar esto para crear tu cuenta.')).toHaveLength(3);
+    expect(registerMock).not.toHaveBeenCalled();
+    expect(screen.getByRole('link', { name: 'Términos y Condiciones' })).toHaveAttribute('href', '/terminos');
+    expect(screen.getByRole('link', { name: 'Política de Privacidad' })).toHaveAttribute('href', '/privacidad');
   });
 });

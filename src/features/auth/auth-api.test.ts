@@ -54,7 +54,7 @@ describe('registerOwner', () => {
   it('posts the account and the business to /register, leaving out an empty email', async () => {
     fetchMock.mockResolvedValue(new Response(JSON.stringify(CREATED), { status: 201 }));
 
-    await registerOwner(ACCOUNT, { businessName: 'Préstamos Ana' });
+    await registerOwner(ACCOUNT, { businessName: 'Préstamos Ana' }, false);
 
     const [url, init] = fetchMock.mock.calls[0]!;
     expect(url).toBe('/api/register');
@@ -64,13 +64,18 @@ describe('registerOwner', () => {
       password: 'una-contraseña-segura',
       nationalId: '1020304050',
       businessName: 'Préstamos Ana',
+      acceptedTerms: true,
+      acceptedPrivacy: true,
+      acceptedDataResponsibility: true,
+      marketingConsent: false,
+      legalVersion: '2026-10-16',
     });
   });
 
   it('sends the email when there is one', async () => {
     fetchMock.mockResolvedValue(new Response(JSON.stringify(CREATED), { status: 201 }));
 
-    await registerOwner({ ...ACCOUNT, contactEmail: 'ana@correo.com' }, { businessName: 'X Y' });
+    await registerOwner({ ...ACCOUNT, contactEmail: 'ana@correo.com' }, { businessName: 'X Y' }, true);
 
     expect(JSON.parse(fetchMock.mock.calls[0]![1]?.body as string)).toMatchObject({ contactEmail: 'ana@correo.com' });
   });

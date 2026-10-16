@@ -33,6 +33,9 @@ export const FOOTER_LINKS: readonly LandingNavLink[] = [
   { label: 'Producto', href: `#${LANDING_SECTION_IDS.product}` },
   { label: 'Precios', href: `#${LANDING_SECTION_IDS.pricing}` },
   { label: 'Contacto', href: LANDING_ROUTES.contact },
+  { label: 'Términos', href: '/terminos' },
+  { label: 'Privacidad', href: '/privacidad' },
+  { label: 'Cookies', href: '/cookies' },
 ];
 
 export const HERO = {

@@ -25,6 +25,7 @@ async function reachCompanyStep() {
   for (const [field, value] of Object.entries(values)) act(() => result.current.setField(field as RegisterField)(change(value)));
   await act(() => result.current.submit(submitEvent()));
   act(() => result.current.setField('businessName')(change('Préstamos Ana')));
+  for (const key of ['terms', 'privacy', 'responsibility'] as const) act(() => result.current.setConsent(key)({ target: { checked: true } } as ChangeEvent<HTMLInputElement>));
   return result;
 }
 
@@ -52,7 +53,7 @@ describe('useRegisterForm with Turnstile on', () => {
 
     await act(() => result.current.submit(submitEvent()));
 
-    expect(registerMock).toHaveBeenCalledWith(expect.anything(), { businessName: 'Préstamos Ana' }, 'tok');
+    expect(registerMock).toHaveBeenCalledWith(expect.anything(), { businessName: 'Préstamos Ana' }, false, 'tok');
     expect(result.current.turnstileResetKey).toBe(before + 1);
     expect(result.current.formError).toMatch(/verificar que eres una persona/);
   });

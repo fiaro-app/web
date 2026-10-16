@@ -67,3 +67,18 @@ export const REGISTER_STEP_FIELDS = {
 } as const satisfies Record<string, readonly RegisterField[]>;
 export type RegisterStep = keyof typeof REGISTER_STEP_FIELDS;
 export const REGISTER_STEPS: readonly RegisterStep[] = ['account', 'company'];
+
+/** Lo que se marca al registrarse: las tres primeras son obligatorias; las novedades son opcionales. */
+export interface RegisterConsents {
+  readonly terms: boolean;
+  readonly privacy: boolean;
+  readonly responsibility: boolean;
+  readonly marketing: boolean;
+}
+
+export const EMPTY_CONSENTS: RegisterConsents = { terms: false, privacy: false, responsibility: false, marketing: false };
+
+/** Casillas obligatorias que faltan por marcar. */
+export function missingConsents(consents: RegisterConsents): readonly ('terms' | 'privacy' | 'responsibility')[] {
+  return (['terms', 'privacy', 'responsibility'] as const).filter((key) => !consents[key]);
+}
