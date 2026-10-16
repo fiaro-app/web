@@ -1,5 +1,6 @@
 import { StateIcon } from '@/components/atoms/StateIcon';
 import type { Metadata } from 'next';
+import { FormWithAside } from '@/components/molecules/FormWithAside';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { CollectorManage } from '@/components/organisms/CollectorManage';
 import { CollectorPerformance } from '@/components/organisms/CollectorPerformance';
@@ -29,9 +30,8 @@ export default async function ManageCollectorPage({ params }: PageProps<'/cobrad
     result.collector.active ? getCollectorHandover(id) : Promise.resolve({ loans: [], destinations: [] }),
   ]);
   return (
-    <>
+    <FormWithAside aside={COLLECTORS_TEXT.manageAside} belowAside={stats && <CollectorPerformance stats={stats} />}>
       <CollectorManage collector={result.collector} portfolios={portfolios} handover={handover} isSelf={access.membershipId === id} />
-      {stats && <CollectorPerformance stats={stats} />}
-    </>
+    </FormWithAside>
   );
 }

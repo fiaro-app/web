@@ -1,5 +1,6 @@
 import { StateIcon } from '@/components/atoms/StateIcon';
 import type { Metadata } from 'next';
+import { FormWithAside } from '@/components/molecules/FormWithAside';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { ClientForm } from '@/components/organisms/ClientForm';
 import { ClientRiskCard } from '@/components/organisms/ClientRiskCard';
@@ -29,20 +30,31 @@ export default async function EditClientPage({ params }: PageProps<'/clientes/[i
   if (!canManage) return <EmptyState icon={<StateIcon name="lock" />} {...CLIENTS_TEXT.forbidden} />;
   const [loans, risks] = await Promise.all([getClientLoans(result.client.id), getClientsRisk([result.client.id])]);
   const risk = risks.get(result.client.id);
+  const photo = (
+    <PrivateImage
+      target="clientPhoto"
+      id={result.client.id}
+      canEdit
+      title={ATTACHMENTS_TEXT.clientPhoto.title}
+      description={ATTACHMENTS_TEXT.clientPhoto.description}
+      alt={ATTACHMENTS_TEXT.clientPhoto.alt(result.client.fullName)}
+      none={ATTACHMENTS_TEXT.clientPhoto.none}
+    />
+  );
   return (
-    <>
-      <ClientForm client={result.client} />
-      <PrivateImage
-        target="clientPhoto"
-        id={result.client.id}
-        canEdit
-        title={ATTACHMENTS_TEXT.clientPhoto.title}
-        description={ATTACHMENTS_TEXT.clientPhoto.description}
-        alt={ATTACHMENTS_TEXT.clientPhoto.alt(result.client.fullName)}
-        none={ATTACHMENTS_TEXT.clientPhoto.none}
-      />
-      {risk && <ClientRiskCard risk={risk} />}
-      <ClientLoans clientId={result.client.id} loans={loans} />
-    </>
+    <FormWithAside
+      aside={CLIENTS_TEXT.form.editAside}
+      belowAside={
+        <>
+          {photo}
+          {risk && <ClientRiskCard risk={risk} />}
+        </>
+      }
+    >
+      <div className="flex flex-col gap-8">
+        <ClientForm client={result.client} />
+        <ClientLoans clientId={result.client.id} loans={loans} />
+      </div>
+    </FormWithAside>
   );
 }

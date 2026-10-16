@@ -29,6 +29,18 @@ export const COLLECTORS_TEXT = {
     next: 'Siguiente',
     summary: (page: number, pages: number, total: number) => `Página ${String(page)} de ${String(pages)} · ${String(total)} cobradores`,
   },
+  manageAside: {
+    title: 'Qué puedes hacer desde aquí',
+    steps: [
+      'Cambia su cartera o su celular cuando lo necesite.',
+      'Genera una contraseña temporal si la olvidó.',
+      'Si deja el trabajo, desactívalo pasando antes sus préstamos a otro cobrador.',
+    ],
+    tip: {
+      title: 'Un consejo',
+      body: 'Revisa su desempeño aquí al lado antes de reasignarle clientes: el porcentaje de cobro dice quién rinde mejor.',
+    },
+  },
   form: {
     aside: {
       title: '¿Qué pasa después?',

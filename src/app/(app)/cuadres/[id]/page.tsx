@@ -1,5 +1,6 @@
 import { StateIcon } from '@/components/atoms/StateIcon';
 import type { Metadata } from 'next';
+import { FormWithAside } from '@/components/molecules/FormWithAside';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { SettlementDetail } from '@/components/organisms/SettlementDetail';
 import { SETTLEMENTS_TEXT } from '@/content/settlements';
@@ -19,5 +20,9 @@ export default async function SettlementPage({ params }: PageProps<'/cuadres/[id
   if (result.status === 'not-found') {
     return <EmptyState icon={<StateIcon name="search" />} {...SETTLEMENTS_TEXT.notFound} />;
   }
-  return <SettlementDetail settlement={result.settlement} canManage={canManage} />;
+  return (
+    <FormWithAside aside={SETTLEMENTS_TEXT.detailAside}>
+      <SettlementDetail settlement={result.settlement} canManage={canManage} />
+    </FormWithAside>
+  );
 }

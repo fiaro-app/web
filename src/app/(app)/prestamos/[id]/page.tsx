@@ -1,6 +1,7 @@
 import { StateIcon } from '@/components/atoms/StateIcon';
 import type { Metadata } from 'next';
 import { Alert } from '@/components/molecules/Alert';
+import { FormWithAside } from '@/components/molecules/FormWithAside';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { CollectionForm } from '@/components/organisms/CollectionForm';
 import { LoanDetail } from '@/components/organisms/LoanDetail';
@@ -30,9 +31,13 @@ export default async function LoanPage({ params }: PageProps<'/prestamos/[id]'>)
   const [visits, installments, { canManage }] = await Promise.all([getLoanVisits(id), getLoanInstallments(id), getAccess()]);
   return (
     <>
-      <LoanDetail loan={result.loan} collectors={result.collectorOptions} canManage={canManage} />
-      {result.collect === 'available' && <CollectionForm loanId={result.loan.id} installmentValue={result.loan.installmentValue} />}
-      {result.collect === 'unassigned' && <Alert tone="info">{VISITS_TEXT.collect.notAssigned}</Alert>}
+      <FormWithAside aside={LOANS_TEXT.detailAside}>
+        <div className="flex flex-col gap-8">
+          <LoanDetail loan={result.loan} collectors={result.collectorOptions} canManage={canManage} />
+          {result.collect === 'available' && <CollectionForm loanId={result.loan.id} installmentValue={result.loan.installmentValue} />}
+          {result.collect === 'unassigned' && <Alert tone="info">{VISITS_TEXT.collect.notAssigned}</Alert>}
+        </div>
+      </FormWithAside>
       <LoanInstallments rows={toInstallmentRows(installments)} summary={summarizeInstallments(installments)} />
       <LoanVisits visits={visits} canManage={canManage} />
     </>
