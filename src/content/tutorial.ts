@@ -56,6 +56,10 @@ export const TUTORIAL_TEXT = {
       title: 'Cobros del día',
       body: 'Muestra todas las visitas de cobro de tu equipo: qué se cobró, qué se reprogramó y quién no pagó. Sirve para vigilar el trabajo en campo en tiempo real y corregir un pago si hubo un error.',
     },
+    '/solicitudes': {
+      title: 'Solicitudes',
+      body: 'Los préstamos que tus cobradores sugieren en campo, con un cliente nuevo o uno que ya tienes. Los aceptas (puedes ajustar los datos) y se crean y se asignan solos, o los rechazas con un motivo. Sirve para que el cobrador proponga sin ver datos que no le tocan.',
+    },
     '/cuadres': {
       title: 'Cuadres',
       body: 'Al cerrar el día, cada cobrador entrega su cuadre: lo esperado frente a lo que entrega. Aquí lo revisas y lo apruebas o lo rechazas. Sirve para que el dinero que entra coincida con lo que se cobró.',
