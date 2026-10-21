@@ -1,4 +1,5 @@
 import { DayFlowSection } from '@/components/organisms/DayFlowSection';
+import { ProofStrip } from '@/components/organisms/ProofStrip';
 import { JsonLd } from '@/components/atoms/JsonLd';
 import { CtaBand } from '@/components/organisms/CtaBand';
 import { DashboardPreview } from '@/components/organisms/DashboardPreview';
@@ -18,6 +19,7 @@ import {
   FEATURES,
   FOOTER_LINKS,
   HERO,
+  HERO_CHIPS,
   HOW_IT_WORKS,
   LANDING_ROUTES,
   LANDING_SECTION_IDS,
@@ -26,6 +28,7 @@ import {
   PREVIEW_CHART_TITLE,
   PREVIEW_KPIS,
   PRICING,
+  PROOF_STRIP,
 } from '@/content/landing';
 
 /** Landing pública de Fiaro (`Screen / Web / Landing` en Penpot). */
@@ -44,8 +47,10 @@ export default function Home() {
       >
         <HeroSection
           {...HERO}
+          chips={HERO_CHIPS}
           visual={<DashboardPreview kpis={PREVIEW_KPIS} chartTitle={PREVIEW_CHART_TITLE} bars={PREVIEW_BARS} />}
         />
+        <ProofStrip items={PROOF_STRIP} />
         <DayFlowSection id={LANDING_SECTION_IDS.day} content={DAY_FLOW} />
         <FeaturesSection id={LANDING_SECTION_IDS.product} title={FEATURES.title} subtitle={FEATURES.subtitle} features={FEATURES.items} />
         <HowItWorksSection id={LANDING_SECTION_IDS.howItWorks} {...HOW_IT_WORKS} />

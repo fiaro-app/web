@@ -63,17 +63,17 @@ export function DayFlowSection({ id, content }: Readonly<DayFlowSectionProps>) {
   };
 
   return (
-    <section id={id} aria-labelledby={headingId} className="flex flex-col items-center gap-10 bg-surface px-6 py-16 lg:px-16 lg:py-24">
+    <section id={id} aria-labelledby={headingId} className="mx-3 flex flex-col items-center gap-10 rounded-[32px] bg-[#14112b] px-6 py-16 text-white lg:mx-6 lg:px-16 lg:py-24">
       <div className="flex max-w-175 flex-col items-center gap-3 text-center">
-        <Text id={headingId} variant="section">
+        <Text id={headingId} variant="section" className="text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.05] tracking-[-0.03em] text-white">
           {content.title}
         </Text>
-        <Text variant="body" className="text-foreground/75">
+        <Text variant="body" className="text-white/80">
           {content.subtitle}
         </Text>
       </div>
 
-      <fieldset className="inline-flex rounded-full border-0 bg-surface-2 p-1">
+      <fieldset className="inline-flex rounded-full border-0 bg-white/10 p-1">
         <legend className="sr-only">{content.title}</legend>
         {(['notebook', 'fiaro'] as const).map((key) => (
           <button
@@ -82,8 +82,8 @@ export function DayFlowSection({ id, content }: Readonly<DayFlowSectionProps>) {
             aria-pressed={mode === key}
             onClick={() => setMode(key)}
             className={cn(
-              'h-11 rounded-full px-5 text-label font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-              mode === key ? 'bg-primary text-primary-foreground' : 'text-foreground/75 hover:text-foreground',
+              'h-11 rounded-full px-5 text-label font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-offset-2 focus-visible:outline-white',
+              mode === key ? 'bg-white text-[#14112b]' : 'text-white/80 hover:text-white',
             )}
           >
             {content.modes[key]}
@@ -93,7 +93,7 @@ export function DayFlowSection({ id, content }: Readonly<DayFlowSectionProps>) {
 
       {mode === 'notebook' ? (
         <div className="grid w-full max-w-5xl items-center gap-8 lg:grid-cols-2">
-          <div className="rotate-[-1deg] rounded-md border border-foreground/10 bg-warning-soft/30 p-6 font-mono shadow-sm">
+          <div className="rotate-[-1deg] rounded-md border border-foreground/10 bg-warning-soft p-6 font-mono text-foreground shadow-sm">
             <p className="mb-4 text-label font-semibold">{content.notebook.heading}</p>
             <ul className="flex flex-col gap-4">
               {content.notebook.lines.map((line) => (
@@ -106,7 +106,7 @@ export function DayFlowSection({ id, content }: Readonly<DayFlowSectionProps>) {
           </div>
           <ul className="flex flex-col gap-4">
             {content.notebook.problems.map((problem) => (
-              <li key={problem} className="flex items-start gap-3 text-body text-foreground/85">
+              <li key={problem} className="flex items-start gap-3 text-body text-white/90">
                 <span aria-hidden="true" className="mt-1 flex size-6 shrink-0 items-center justify-center rounded-full bg-destructive/10 text-caption font-bold text-destructive">
                   ?
                 </span>
@@ -129,8 +129,8 @@ export function DayFlowSection({ id, content }: Readonly<DayFlowSectionProps>) {
                   aria-controls={`${id}-panel`}
                   onClick={() => pickStep(index)}
                   className={cn(
-                    'h-11 rounded-md px-4 text-label font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
-                    index === step ? 'bg-primary text-primary-foreground' : 'bg-surface-2 text-foreground/80 hover:bg-surface-3',
+                    'h-11 rounded-md px-4 text-label font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-offset-2 focus-visible:outline-white',
+                    index === step ? 'bg-white text-[#14112b]' : 'bg-white/10 text-white/85 hover:bg-white/20',
                   )}
                 >
                   <span aria-hidden="true" className="mr-2 opacity-70">
@@ -141,19 +141,19 @@ export function DayFlowSection({ id, content }: Readonly<DayFlowSectionProps>) {
               ))}
             </div>
             <div id={`${id}-panel`} role="tabpanel" aria-labelledby={`${id}-tab-${String(step)}`} className="flex flex-col gap-3">
-              <Text variant="h3" as="h3">
+              <Text variant="h3" as="h3" className="text-[26px] tracking-[-0.02em] text-white">
                 {current.title}
               </Text>
-              <Text variant="body" className="text-foreground/75">
+              <Text variant="body" className="text-white/80">
                 {current.description}
               </Text>
             </div>
-            <ButtonLink href={content.cta.href} className="w-fit">
+            <ButtonLink href={content.cta.href} variant="inverse" className="w-fit rounded-full px-8">
               {content.cta.label}
             </ButtonLink>
           </div>
 
-          <div aria-live="polite" className="rounded-lg bg-background p-5 shadow-[0_20px_50px_-10px_rgb(28_27_46/0.2)]">
+          <div aria-live="polite" className="rounded-[24px] bg-background p-5 text-foreground shadow-[0_30px_80px_-20px_rgb(0_0_0/0.6)]">
             <p className="mb-3 text-label font-semibold">{current.mock.heading}</p>
             <ul key={step} className="flex flex-col gap-2">
               {current.mock.rows.map((row, index) => (
