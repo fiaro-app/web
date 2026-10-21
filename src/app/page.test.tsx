@@ -17,7 +17,7 @@ describe('Landing (Home)', () => {
   it('offers the three plans, with the middle one as the recommended', () => {
     render(<Home />);
 
-    for (const plan of ['Básico', 'Profesional', 'Empresarial']) {
+    for (const plan of ['Individual', 'Pro', 'Team']) {
       expect(screen.getByRole('heading', { level: 3, name: plan })).toBeInTheDocument();
     }
   });
@@ -48,7 +48,7 @@ describe('Landing structured data', () => {
 
     expect(nodes.map((node) => node['@type'])).toEqual(['Organization', 'WebSite', 'SoftwareApplication', 'FAQPage']);
     const appNode = nodes.find((node) => node['@type'] === 'SoftwareApplication');
-    expect(appNode?.offers).toHaveLength(2);
+    expect(appNode?.offers).toHaveLength(3);
   });
 
   it('marks up the same questions the page shows', () => {
