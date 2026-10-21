@@ -48,13 +48,6 @@ export const HERO = {
   footnote: 'Sin tarjeta de crédito · Configura tu financiera en 5 minutos',
 } as const;
 
-/** Avisos que flotan junto a la maqueta del panel: ejemplos de lo que ves en tu cartera. */
-export const HERO_CHIPS = [
-  { label: 'Cobrado hoy', value: '+$3,2M', className: '-top-2 left-2 sm:-left-6' },
-  { label: 'Cuadre', value: 'Aprobado ✓', className: 'right-0 -bottom-2 sm:-right-4' },
-  { label: 'Mora de Don Pedro', value: '12 días', className: 'top-1/2 -right-1 hidden sm:block lg:-right-8' },
-] as const;
-
 /** Tira de pruebas bajo la portada: lo que cambia en la práctica, sin cifras inventadas. */
 export const PROOF_STRIP = [
   { value: '5 min', label: 'para dejar tu financiera lista' },

@@ -25,7 +25,7 @@ export function FaqSection({ id, eyebrow, title, items }: Readonly<FaqSectionPro
       <Text variant="caption" as="p" weight="semibold" className="font-mono tracking-[0.06em] text-primary uppercase">
         {eyebrow}
       </Text>
-      <Text id={headingId} variant="section" className="max-w-150 text-center text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.05] tracking-[-0.03em]">
+      <Text id={headingId} variant="section" className="max-w-150 text-center text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.1] tracking-[-0.02em]">
         {title}
       </Text>
       <div className="mt-6 flex w-full max-w-3xl flex-col gap-3">
