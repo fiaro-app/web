@@ -19,6 +19,7 @@ describe('toSubscriptionView', () => {
   it('formats the plan, the end date in Colombian time and the use of every limit', () => {
     expect(toSubscriptionView(SUBSCRIPTION)).toEqual({
       planName: 'Prueba gratis',
+      advancedStats: true,
       statusLabel: 'Activo',
       endsOn: '08/11/2026',
       daysRemaining: '30',
@@ -42,6 +43,7 @@ describe('toSubscriptionView', () => {
     });
 
     expect(view.planName).toBe('Individual');
+    expect(view.advancedStats).toBe(false);
     expect(view.maxPortfolios).toBe(2);
     expect(view.usage.find((row) => row.key === 'loans')).toEqual({
       key: 'loans',

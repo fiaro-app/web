@@ -1,5 +1,6 @@
 import { SUBSCRIPTION_TEXT } from '@/content/subscription';
 import type { Subscription } from '@/features/subscription/endpoints';
+import { hasAdvancedStats } from '@/features/subscription/plan-features';
 import { formatInstantDate } from '@/lib/dates';
 import type { Tone } from '@/lib/tone';
 
@@ -21,6 +22,8 @@ export interface UsageRow {
 /** El plan del negocio listo para pintar. */
 export interface SubscriptionView {
   readonly planName: string;
+  /** Si el plan trae las estadísticas avanzadas (PDF, comparativo y reportes de riesgo, mora y desempeño). */
+  readonly advancedStats: boolean;
   readonly statusLabel: string;
   readonly endsOn: string;
   readonly daysRemaining: string;
@@ -85,6 +88,7 @@ function toUsageRows(subscription: Subscription): readonly UsageRow[] {
 export function toSubscriptionView(subscription: Subscription): SubscriptionView {
   return {
     planName: SUBSCRIPTION_TEXT.plan[subscription.planCode],
+    advancedStats: hasAdvancedStats(subscription.planCode),
     statusLabel: SUBSCRIPTION_TEXT.status[subscription.status],
     endsOn: formatInstantDate(subscription.currentPeriodEndsAt),
     daysRemaining: String(subscription.daysRemaining),

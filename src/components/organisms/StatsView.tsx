@@ -4,6 +4,7 @@ import { StateIcon } from '@/components/atoms/StateIcon';
 import type { ReactNode } from 'react';
 import { Avatar } from '@/components/atoms/Avatar';
 import { Text } from '@/components/atoms/Text';
+import { Alert } from '@/components/molecules/Alert';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { PaginationNav } from '@/components/molecules/PaginationNav';
 import { Link } from '@/components/atoms/Link';
@@ -26,6 +27,8 @@ export interface StatsViewProps {
   readonly options: StatsFilterOptions;
   /** «Cómo va tu negocio»; `null` si no se pudo traer (la pantalla se pinta igual). */
   readonly insights?: InsightsViewModel | null;
+  /** Si el plan trae las estadísticas avanzadas; sin ellas solo se ven los indicadores y se ofrece subir de plan. */
+  readonly advanced?: boolean;
 }
 
 function Section({ id, title, children }: Readonly<{ id: string; title: string; children: ReactNode }>) {
@@ -78,8 +81,24 @@ function ListFooter({
   );
 }
 
+/** Aviso para quien tiene el plan Individual: lo que trae Pro y el camino a «Plan y pagos». */
+function UpgradeNotice() {
+  const text = STATS_TEXT.upgrade;
+  return (
+    <Alert tone="info" className="flex flex-wrap items-center justify-between gap-3">
+      <span className="flex flex-col gap-1">
+        <strong>{text.title}</strong>
+        <span className="font-normal">{text.description}</span>
+      </span>
+      <ButtonLink href="/plan" variant="outline">
+        {text.action}
+      </ButtonLink>
+    </Alert>
+  );
+}
+
 /** Estadísticas: filtros, indicadores, mora por antigüedad, mayor mora y desempeño por cobrador. Solo presentación. */
-export function StatsView({ stats, filters, options, insights = null }: Readonly<StatsViewProps>) {
+export function StatsView({ stats, filters, options, insights = null, advanced = true }: Readonly<StatsViewProps>) {
   return (
     <>
       <header className="flex flex-wrap items-center justify-between gap-3 max-sm:flex-col max-sm:items-stretch max-sm:[&>a]:w-full">
@@ -91,12 +110,14 @@ export function StatsView({ stats, filters, options, insights = null }: Readonly
             {STATS_TEXT.period(stats.period)}
           </Text>
         </div>
-        <StatsExportButton filters={filters} />
+        {advanced && <StatsExportButton filters={filters} />}
       </header>
 
       <StatsFilters filters={filters} options={options} />
 
-      {insights && <InsightsSection insights={insights} />}
+      {!advanced && <UpgradeNotice />}
+
+      {advanced && insights && <InsightsSection insights={insights} />}
 
       {stats.isEmpty ? (
         <EmptyState
@@ -112,69 +133,73 @@ export function StatsView({ stats, filters, options, insights = null }: Readonly
             ))}
           </section>
 
-          <div className="grid gap-4 xl:grid-cols-2">
-            <Section id="arrears-title" title={STATS_TEXT.sections.arrears}>
-              {stats.arrearsByAge.map((bucket) => (
-                <StatsBucketRow key={bucket.label} bucket={bucket} />
-              ))}
-            </Section>
+          {advanced && (
+            <>
+            <div className="grid gap-4 xl:grid-cols-2">
+              <Section id="arrears-title" title={STATS_TEXT.sections.arrears}>
+                {stats.arrearsByAge.map((bucket) => (
+                  <StatsBucketRow key={bucket.label} bucket={bucket} />
+                ))}
+              </Section>
 
-            <Section id="top-arrears-title" title={STATS_TEXT.sections.topArrears}>
-              {stats.topArrears.length === 0 ? (
-                <p className="text-label text-foreground/70">{STATS_TEXT.noTopArrears}</p>
+              <Section id="top-arrears-title" title={STATS_TEXT.sections.topArrears}>
+                {stats.topArrears.length === 0 ? (
+                  <p className="text-label text-foreground/70">{STATS_TEXT.noTopArrears}</p>
+                ) : (
+                  <ul className="flex flex-col gap-3">
+                    {stats.topArrears.map((entry) => (
+                      <li key={entry.clientId} className="flex items-center gap-3">
+                        <Avatar name={entry.name} />
+                        <div className="flex flex-1 flex-col text-label">
+                          <span className="font-medium">{entry.name}</span>
+                          <span className="text-foreground/70">{entry.days}</span>
+                        </div>
+                        <span className="font-semibold text-destructive">{entry.amount}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <ListFooter
+                  name="mora"
+                  filters={filters}
+                  listPage={stats.topArrearsPage}
+                  shown={stats.topArrears.length}
+                  summary={STATS_TEXT.lists.arrearsSummary}
+                />
+              </Section>
+            </div>
+
+            <Section id="collectors-title" title={STATS_TEXT.sections.collectors}>
+              {stats.collectors.length === 0 ? (
+                <p className="text-label text-foreground/70">{STATS_TEXT.noCollectors}</p>
               ) : (
-                <ul className="flex flex-col gap-3">
-                  {stats.topArrears.map((entry) => (
-                    <li key={entry.clientId} className="flex items-center gap-3">
-                      <Avatar name={entry.name} />
-                      <div className="flex flex-1 flex-col text-label">
-                        <span className="font-medium">{entry.name}</span>
-                        <span className="text-foreground/70">{entry.days}</span>
+                <ul className="flex flex-col divide-y divide-foreground/8">
+                  {stats.collectors.map((collector) => (
+                    <li key={collector.collectorId} className="flex flex-wrap items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
+                      <div className="flex items-center gap-3">
+                        <Avatar name={collector.name} />
+                        <div className="flex flex-col text-label">
+                          <span className="font-medium">{collector.name}</span>
+                          <span className={cn('font-medium', FIGURE_TEXT_CLASSES[collector.effectivenessTone])}>
+                            {STATS_TEXT.collectorLine(collector.portfolioName, collector.effectiveness)}
+                          </span>
+                        </div>
                       </div>
-                      <span className="font-semibold text-destructive">{entry.amount}</span>
+                      <span className="text-label text-foreground/70">{STATS_TEXT.collectorOverdue(collector.overdue)}</span>
                     </li>
                   ))}
                 </ul>
               )}
               <ListFooter
-                name="mora"
+                name="desempeno"
                 filters={filters}
-                listPage={stats.topArrearsPage}
-                shown={stats.topArrears.length}
-                summary={STATS_TEXT.lists.arrearsSummary}
+                listPage={stats.collectorsPage}
+                shown={stats.collectors.length}
+                summary={STATS_TEXT.lists.collectorsSummary}
               />
             </Section>
-          </div>
-
-          <Section id="collectors-title" title={STATS_TEXT.sections.collectors}>
-            {stats.collectors.length === 0 ? (
-              <p className="text-label text-foreground/70">{STATS_TEXT.noCollectors}</p>
-            ) : (
-              <ul className="flex flex-col divide-y divide-foreground/8">
-                {stats.collectors.map((collector) => (
-                  <li key={collector.collectorId} className="flex flex-wrap items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
-                    <div className="flex items-center gap-3">
-                      <Avatar name={collector.name} />
-                      <div className="flex flex-col text-label">
-                        <span className="font-medium">{collector.name}</span>
-                        <span className={cn('font-medium', FIGURE_TEXT_CLASSES[collector.effectivenessTone])}>
-                          {STATS_TEXT.collectorLine(collector.portfolioName, collector.effectiveness)}
-                        </span>
-                      </div>
-                    </div>
-                    <span className="text-label text-foreground/70">{STATS_TEXT.collectorOverdue(collector.overdue)}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-            <ListFooter
-              name="desempeno"
-              filters={filters}
-              listPage={stats.collectorsPage}
-              shown={stats.collectors.length}
-              summary={STATS_TEXT.lists.collectorsSummary}
-            />
-          </Section>
+            </>
+          )}
         </>
       )}
     </>
