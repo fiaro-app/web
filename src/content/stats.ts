@@ -17,6 +17,11 @@ export const STATS_TEXT = {
     clear: 'Limpiar filtros',
     periodHint: 'Sin fechas se muestra el mes actual.',
   },
+  upgrade: {
+    title: 'Estadísticas completas desde el plan Pro',
+    description: 'Con Pro ves el comparativo con el período anterior, la mora por antigüedad, los clientes con mayor mora, el desempeño de cada cobrador, «Cómo va tu negocio» y descargas el reporte en PDF con tu logo.',
+    action: 'Ver planes',
+  },
   period: (period: string) => `Período: ${period}`,
   export: { action: 'Exportar reporte (PDF)', busy: 'Generando…' },
   sections: {

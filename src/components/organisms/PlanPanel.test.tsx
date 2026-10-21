@@ -5,6 +5,7 @@ import { PlanPanel } from './PlanPanel';
 
 const SUBSCRIPTION: SubscriptionView = {
   planName: 'Prueba gratis',
+  advancedStats: true,
   statusLabel: 'Activo',
   endsOn: '08/11/2026',
   daysRemaining: '30',

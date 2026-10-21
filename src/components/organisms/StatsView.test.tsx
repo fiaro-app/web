@@ -84,4 +84,39 @@ describe('StatsView', () => {
     expect(screen.getByRole('link', { name: 'Siguiente' })).toHaveAttribute('href', '/estadisticas?mora=2');
     expect(screen.getByRole('link', { name: 'Ver solo los 5 primeros' })).toHaveAttribute('href', '/estadisticas');
   });
+
+  describe('con el plan Individual', () => {
+    it('muestra los indicadores y ofrece subir de plan, sin PDF ni listas de riesgo', () => {
+      render(<StatsView stats={STATS} filters={EMPTY_STATS_FILTERS} options={OPTIONS} advanced={false} />);
+
+      expect(within(screen.getByRole('region', { name: 'Indicadores' })).getByText('$7.1M')).toBeInTheDocument();
+      expect(screen.getByText('Estadísticas completas desde el plan Pro')).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: 'Ver planes' })).toHaveAttribute('href', '/plan');
+      expect(screen.queryByRole('button', { name: 'Exportar reporte (PDF)' })).not.toBeInTheDocument();
+      for (const section of ['Mora por antigüedad', 'Clientes con mayor mora', 'Desempeño por cobrador']) {
+        expect(screen.queryByRole('region', { name: section })).not.toBeInTheDocument();
+      }
+    });
+
+    it('no pinta «Cómo va tu negocio» aunque llegue', () => {
+      render(
+        <StatsView
+          stats={STATS}
+          filters={EMPTY_STATS_FILTERS}
+          options={OPTIONS}
+          advanced={false}
+          insights={{ collection: { title: 'x' } } as never}
+        />,
+      );
+
+      expect(screen.queryByText('Cómo va tu negocio')).not.toBeInTheDocument();
+    });
+  });
+
+  it('con el plan completo no ofrece subir de plan', () => {
+    render(<StatsView stats={STATS} filters={EMPTY_STATS_FILTERS} options={OPTIONS} />);
+
+    expect(screen.queryByText('Estadísticas completas desde el plan Pro')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Exportar reporte (PDF)' })).toBeInTheDocument();
+  });
 });

@@ -45,6 +45,7 @@ describe('SettingsView', () => {
   it('shows the plan block only when the subscription could be loaded', () => {
     const subscription = {
       planName: 'Prueba gratis',
+  advancedStats: true,
       statusLabel: 'Activo',
       endsOn: '08/11/2026',
       daysRemaining: '30',

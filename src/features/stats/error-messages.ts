@@ -7,6 +7,8 @@ export function describeStatsError(error: unknown): AuthErrorView {
     switch (error.code) {
       case 'FORBIDDEN':
         return { message: 'No tienes permiso para exportar las estadísticas.', field: null };
+      case 'PLAN_FEATURE_UNAVAILABLE':
+        return { message: 'El reporte en PDF viene con el plan Pro. Cambia de plan en «Plan y pagos» para descargarlo.', field: null };
       case 'VALIDATION_FAILED':
         return { message: 'El período o los filtros no son válidos. Revísalos e inténtalo de nuevo.', field: null };
       default:
