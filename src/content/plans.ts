@@ -59,6 +59,13 @@ export const PLANS_TEXT = {
     note: 'Aceptamos tarjeta, PSE, Nequi y Bancolombia. Fiaro no guarda los datos de tu tarjeta.',
     help: 'Hablar con ventas',
   },
+  history: {
+    title: 'Historial de pagos',
+    empty: 'Todavía no has pagado ningún plan.',
+    columns: { date: 'Fecha', plan: 'Plan', amount: 'Valor', method: 'Medio', status: 'Estado' },
+    status: { PENDING: 'En proceso', APPROVED: 'Pagado', DECLINED: 'Rechazado', VOIDED: 'Anulado', ERROR: 'Con error' },
+    method: { PSE: 'PSE', CARD: 'Tarjeta', NEQUI: 'Nequi', BANCOLOMBIA_TRANSFER: 'Bancolombia' },
+  },
   result: {
     pending: {
       title: 'Estamos confirmando tu pago',
