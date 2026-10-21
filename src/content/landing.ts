@@ -1,3 +1,5 @@
+import { PLAN_OFFERS } from '@/content/plans';
+import { formatCop } from '@/lib/amount';
 import type { LandingNavLink } from '@/components/organisms/LandingNav';
 import type { PreviewBar, PreviewKpi } from '@/components/organisms/DashboardPreview';
 import type { FeatureItem } from '@/components/organisms/FeaturesSection';
@@ -201,50 +203,21 @@ export const HOW_IT_WORKS = {
   ],
 } satisfies { title: string; steps: readonly StepItem[] };
 
+/** Los planes de la portada salen de `PLAN_OFFERS`, la misma lista que ve quien paga en «Plan y pagos»: un solo lugar para precios y topes. */
 export const PRICING = {
   eyebrow: 'Precios',
   title: 'Un plan para cada tamaño de negocio',
-  note: 'Precios de referencia — se confirman antes del lanzamiento.',
-  plans: [
-    {
-      name: 'Básico',
-      price: '$79.000',
-      period: '/mes',
-      description: 'Para prestamistas con 1 financiera y hasta 3 cobradores.',
-      features: ['1 financiera', 'Hasta 3 cobradores', 'App móvil de cobro', 'Cuadre diario'],
-      ctaLabel: 'Comenzar gratis',
-      ctaHref: LANDING_ROUTES.signup,
-    },
-    {
-      name: 'Profesional',
-      price: '$149.000',
-      period: '/mes',
-      description: 'Para negocios que ya necesitan estadísticas y varios cobradores.',
-      features: [
-        '1 financiera',
-        'Hasta 10 cobradores',
-        'Estadísticas y mora por antigüedad',
-        'Exportes en PDF',
-        'Soporte prioritario',
-      ],
-      ctaLabel: 'Comenzar gratis',
-      ctaHref: LANDING_ROUTES.signup,
-      highlighted: true,
-    },
-    {
-      name: 'Empresarial',
-      price: 'Hablemos',
-      description: 'Para quienes operan varias financieras o carteras grandes.',
-      features: [
-        'Financieras ilimitadas',
-        'Cobradores ilimitados',
-        'Soporte dedicado',
-        'Onboarding asistido',
-      ],
-      ctaLabel: 'Contactar ventas',
-      ctaHref: LANDING_ROUTES.contact,
-    },
-  ],
+  note: 'Pesos colombianos por mes. Empiezas con 30 días de prueba y pagas un mes a la vez.',
+  plans: PLAN_OFFERS.map((offer) => ({
+    name: offer.name,
+    price: formatCop(offer.monthlyPrice),
+    period: '/mes',
+    description: offer.tagline,
+    features: offer.features,
+    ctaLabel: 'Comenzar gratis',
+    ctaHref: LANDING_ROUTES.signup,
+    highlighted: offer.code === 'PRO',
+  })),
 } satisfies { eyebrow: string; title: string; note: string; plans: readonly PlanCardProps[] };
 
 export const CTA_BAND = {
