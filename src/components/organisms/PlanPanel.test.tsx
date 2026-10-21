@@ -33,9 +33,9 @@ describe('PlanPanel', () => {
     expect(screen.getAllByRole('progressbar')).toHaveLength(2);
   });
 
-  it('offers to talk to sales', () => {
+  it('offers to renew or change the plan', () => {
     render(<PlanPanel subscription={SUBSCRIPTION} />);
 
-    expect(screen.getByRole('link', { name: 'Hablar con ventas' })).toHaveAttribute('href', '/contacto');
+    expect(screen.getByRole('link', { name: 'Renovar o cambiar de plan' })).toHaveAttribute('href', '/plan');
   });
 });

@@ -24,6 +24,7 @@ export const APP_NAV_ITEMS: readonly AppNavItem[] = [
   { label: 'Notificaciones', href: '/notificaciones', available: true },
   { label: 'Estadísticas', href: '/estadisticas', available: true, adminOnly: true },
   { label: 'Administradores', href: '/administradores', available: true, adminOnly: true },
+  { label: 'Plan y pagos', href: '/plan', available: true, adminOnly: true },
   { label: 'Configuración', href: '/configuracion', available: true, adminOnly: true },
 ];
 

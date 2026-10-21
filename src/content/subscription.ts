@@ -15,8 +15,8 @@ export const SUBSCRIPTION_TEXT = {
     paidEnding: (days: number) => (days === 0 ? 'Tu plan vence hoy.' : `Tu plan vence en ${daysLabel(days)}.`),
     paidGrace: (days: number) => `Tu plan venció. Tienes ${daysLabel(days)} para renovarlo antes de pasar a solo lectura.`,
     readOnly: 'Tu negocio está en modo de solo lectura: puedes consultar tus datos y seguir registrando cobros y cuadres, pero no hacer otros cambios.',
-    action: 'Contactar ventas',
-    actionHref: '/contacto',
+    action: 'Renovar plan',
+    actionHref: '/plan',
   },
   /** Qué tope del plan se alcanzó al crear algo (`PLAN_LIMIT_REACHED`). */
   limitReached: {
@@ -40,6 +40,6 @@ export const SUBSCRIPTION_TEXT = {
     usage: (used: number, max: number) => `${String(used)} de ${String(max)}`,
     unlimitedUsage: (used: number) => `${String(used)} (sin tope)`,
     upTo: (max: number) => `Hasta ${String(max)}`,
-    contact: 'Hablar con ventas',
+    contact: 'Renovar o cambiar de plan',
   },
 } as const;

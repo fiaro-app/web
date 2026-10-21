@@ -15,6 +15,7 @@ describe('APP_NAV_ITEMS', () => {
       'Notificaciones',
       'Estadísticas',
       'Administradores',
+      'Plan y pagos',
       'Configuración',
     ]);
     expect(APP_NAV_ITEMS.filter((item) => item.available).map((item) => item.href)).toEqual([
@@ -29,6 +30,7 @@ describe('APP_NAV_ITEMS', () => {
       '/notificaciones',
       '/estadisticas',
       '/administradores',
+      '/plan',
       '/configuracion',
     ]);
   });
