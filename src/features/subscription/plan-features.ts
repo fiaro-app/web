@@ -11,3 +11,13 @@
 export function hasAdvancedStats(planCode: string | null): boolean {
   return planCode !== 'INDIVIDUAL';
 }
+
+/**
+ * ¿El plan trae la importación desde Excel? (`EXCEL_IMPORT`, D-152 de la API.) Mismo criterio y mismo
+ * atajo que {@link hasAdvancedStats}: solo Individual no la trae, y sin plan conocido se asume que sí.
+ *
+ * @param planCode - El plan del negocio, o `null` si no se conoce.
+ */
+export function hasExcelImport(planCode: string | null): boolean {
+  return planCode !== 'INDIVIDUAL';
+}

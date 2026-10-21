@@ -20,6 +20,7 @@ describe('toSubscriptionView', () => {
     expect(toSubscriptionView(SUBSCRIPTION)).toEqual({
       planName: 'Prueba gratis',
       advancedStats: true,
+      excelImport: true,
       statusLabel: 'Activo',
       endsOn: '08/11/2026',
       daysRemaining: '30',
@@ -44,6 +45,7 @@ describe('toSubscriptionView', () => {
 
     expect(view.planName).toBe('Individual');
     expect(view.advancedStats).toBe(false);
+    expect(view.excelImport).toBe(false);
     expect(view.maxPortfolios).toBe(2);
     expect(view.usage.find((row) => row.key === 'loans')).toEqual({
       key: 'loans',

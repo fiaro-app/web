@@ -46,6 +46,7 @@ describe('SettingsView', () => {
     const subscription = {
       planName: 'Prueba gratis',
   advancedStats: true,
+  excelImport: true,
       statusLabel: 'Activo',
       endsOn: '08/11/2026',
       daysRemaining: '30',
