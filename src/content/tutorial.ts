@@ -80,6 +80,10 @@ export const TUTORIAL_TEXT = {
       title: 'Administradores',
       body: 'Quiénes administran tu negocio contigo. Puedes subir de rango a un cobrador, invitar a un administrador nuevo o quitarle el rol. Sirve para tener más de una persona al frente sin compartir una sola cuenta.',
     },
+    '/plan': {
+      title: 'Plan y pagos',
+      body: 'Tu plan actual, cuánto del plan usas y los planes que puedes pagar con Wompi. Sirve para renovar o cambiar de plan sin salir del panel.',
+    },
     '/configuracion': {
       title: 'Configuración',
       body: 'El nombre y el logo del negocio, el color de marca, los días en que no se cobra y las carteras. Sirve para que Fiaro se vea y funcione como tu negocio.',

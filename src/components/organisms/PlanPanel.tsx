@@ -35,7 +35,7 @@ export function PlanPanel({ subscription }: Readonly<{ subscription: Subscriptio
             </div>
           ),
       )}
-      <ButtonLink href="/contacto" variant="outline" className="self-start">
+      <ButtonLink href="/plan" variant="outline" className="self-start">
         {text.contact}
       </ButtonLink>
     </SettingsSection>
