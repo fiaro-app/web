@@ -75,8 +75,8 @@ function locateColumns(header: readonly Cell[]): Partial<Record<ColumnKey, numbe
   const names = header.map((cell) => normalize(asText(cell)));
   const found: Partial<Record<ColumnKey, number>> = {};
   for (const key of Object.keys(COLUMNS) as ColumnKey[]) {
-    const accepted = [COLUMNS[key].title, ...COLUMNS[key].aliases].map(normalize);
-    const index = names.findIndex((name) => accepted.includes(name));
+    const accepted = new Set([COLUMNS[key].title, ...COLUMNS[key].aliases].map(normalize));
+    const index = names.findIndex((name) => accepted.has(name));
     if (index >= 0) found[key] = index;
   }
   return found;

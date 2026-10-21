@@ -58,7 +58,7 @@ describe('useImport', () => {
 
     await act(() => hook.current.choose(file));
 
-    expect((runImport.mock.calls[0]?.[0] as unknown[]).length).toBe(1);
+    expect(runImport.mock.calls[0]?.[0] as unknown[]).toHaveLength(1);
     expect(hook.current.state).toMatchObject({ phase: 'review', items: [{ sheetRow: 2, status: 'INVALID' }, { sheetRow: 3, status: 'READY' }] });
   });
 

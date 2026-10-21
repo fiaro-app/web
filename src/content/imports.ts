@@ -44,7 +44,7 @@ export const IMPORTS_TEXT = {
   },
   done: {
     title: 'Importación terminada',
-    summary: (imported: number, failed: number) => `Se importaron ${imported} filas${failed > 0 ? ` y ${failed} fallaron` : ''}.`,
+    summary: (imported: number, failed: number) => (failed > 0 ? `Se importaron ${imported} filas y ${failed} fallaron.` : `Se importaron ${imported} filas.`),
     again: 'Importar otra hoja',
     goToClients: 'Ver clientes',
   },

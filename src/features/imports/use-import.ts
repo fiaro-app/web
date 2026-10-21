@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { IMPORT_CHUNK_SIZE, type ImportRow, type ImportRowStatus } from '@/features/imports/import-endpoints';
+import { IMPORT_CHUNK_SIZE, type ImportResponse, type ImportRow, type ImportRowStatus } from '@/features/imports/import-endpoints';
 import { runImport } from '@/features/imports/import-api';
 import { parseCsv, parseSheet, type Cell, type ParsedRow } from '@/features/imports/parse-sheet';
 import { IMPORTS_TEXT } from '@/content/imports';
@@ -39,6 +39,21 @@ async function readCells(file: File): Promise<Cell[][] | 'format'> {
   return (await readSheet(file)) as Cell[][];
 }
 
+/** Las filas que la API no ve: las que ya traen problemas de la hoja. */
+function localInvalid(parsed: readonly ParsedRow[]): ImportItem[] {
+  return parsed
+    .filter((entry) => entry.row === null)
+    .map((entry) => ({ sheetRow: entry.sheetRow, status: 'INVALID', problems: entry.problems }));
+}
+
+/** Lo que la API contestó de una tanda, con el número de fila de la hoja de cada resultado. */
+function itemsOf(chunk: readonly ParsedRow[], response: ImportResponse): ImportItem[] {
+  return response.rows.flatMap((result) => {
+    const sheetRow = chunk[result.row - 1]?.sheetRow;
+    return sheetRow === undefined ? [] : [{ sheetRow, status: result.status, problems: result.issues.map((issue) => issue.message) }];
+  });
+}
+
 /**
  * Manda las filas que se pueden mandar, en tandas, y las junta con las que ya venían con problemas.
  * Si una tanda falla después de que otras ya se crearon, las que faltan quedan como fallidas en vez de
@@ -46,26 +61,19 @@ async function readCells(file: File): Promise<Cell[][] | 'format'> {
  */
 async function send(parsed: readonly ParsedRow[], dryRun: boolean): Promise<readonly ImportItem[]> {
   const sendable = parsed.filter((entry): entry is ParsedRow & { row: ImportRow } => entry.row !== null);
-  const items = new Map<number, ImportItem>();
-  for (const entry of parsed) {
-    if (entry.row === null) items.set(entry.sheetRow, { sheetRow: entry.sheetRow, status: 'INVALID', problems: entry.problems });
-  }
+  const items = localInvalid(parsed);
   for (let offset = 0; offset < sendable.length; offset += IMPORT_CHUNK_SIZE) {
     const chunk = sendable.slice(offset, offset + IMPORT_CHUNK_SIZE);
-    let response;
     try {
-      response = await runImport(chunk.map((entry) => entry.row), dryRun);
-    } catch (failure) {
-      if (dryRun || offset === 0) throw failure;
-      for (const entry of sendable.slice(offset)) items.set(entry.sheetRow, { sheetRow: entry.sheetRow, status: 'FAILED', problems: [describeFailure(failure)] });
+      items.push(...itemsOf(chunk, await runImport(chunk.map((entry) => entry.row), dryRun)));
+    } catch (error_) {
+      if (dryRun || offset === 0) throw error_;
+      const problems = [describeFailure(error_)];
+      items.push(...sendable.slice(offset).map((entry): ImportItem => ({ sheetRow: entry.sheetRow, status: 'FAILED', problems })));
       break;
     }
-    for (const result of response.rows) {
-      const sheetRow = chunk[result.row - 1]?.sheetRow;
-      if (sheetRow !== undefined) items.set(sheetRow, { sheetRow, status: result.status, problems: result.issues.map((issue) => issue.message) });
-    }
   }
-  return [...items.values()].sort((a, b) => a.sheetRow - b.sheetRow);
+  return items.sort((a, b) => a.sheetRow - b.sheetRow);
 }
 
 /**
@@ -92,8 +100,8 @@ export function useImport() {
     setState({ phase: 'working', step: 'reviewing' });
     try {
       setState({ phase: 'review', parsed: parsedSheet.rows, items: await send(parsedSheet.rows, true) });
-    } catch (failure) {
-      setState({ phase: 'idle', error: describeFailure(failure) });
+    } catch (error_) {
+      setState({ phase: 'idle', error: describeFailure(error_) });
     }
   }, []);
 
@@ -102,8 +110,8 @@ export function useImport() {
     setState({ phase: 'working', step: 'importing' });
     try {
       setState({ phase: 'done', items: await send(state.parsed, false) });
-    } catch (failure) {
-      setState({ phase: 'idle', error: describeFailure(failure) });
+    } catch (error_) {
+      setState({ phase: 'idle', error: describeFailure(error_) });
     }
   }, [state]);
 
