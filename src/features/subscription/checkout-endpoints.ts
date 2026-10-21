@@ -43,6 +43,16 @@ export const CheckoutStatusSchema = z.object({
 });
 export type CheckoutStatus = z.infer<typeof CheckoutStatusSchema>;
 
+/** Una orden del historial: lo de {@link CheckoutStatusSchema} más los meses y el medio de pago. */
+export const PaymentHistoryItemSchema = CheckoutStatusSchema.extend({
+  months: z.int(),
+  paymentMethodType: z.string().nullable(),
+});
+export type PaymentHistoryItem = z.infer<typeof PaymentHistoryItemSchema>;
+
+/** Respuesta de `GET /subscription/payments`: de la orden más reciente a la más vieja. */
+export const PaymentHistorySchema = z.object({ items: z.array(PaymentHistoryItemSchema) });
+
 /**
  * Pago de la suscripción con Wompi (D-149 de la API). `@fiaro-app/contracts` aún no publica estos
  * endpoints: se declaran aquí (mismo plan de migración que `subscriptionEndpoints`).
@@ -61,5 +71,11 @@ export const checkoutEndpoints = {
     summary: 'En qué quedó una orden de pago (solo Owner).',
     params: z.object({ reference: z.string().min(1) }),
     response: CheckoutStatusSchema,
+  }),
+  payments: defineEndpoint({
+    method: 'GET',
+    path: '/subscription/payments',
+    summary: 'El historial de pagos del plan (solo Owner), de la orden más reciente a la más vieja.',
+    response: PaymentHistorySchema,
   }),
 } as const;

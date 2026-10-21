@@ -3,10 +3,12 @@ import type { Metadata } from 'next';
 import { Text } from '@/components/atoms/Text';
 import { Alert } from '@/components/molecules/Alert';
 import { EmptyState } from '@/components/molecules/EmptyState';
+import { PaymentHistory } from '@/components/organisms/PaymentHistory';
 import { PlanCheckout } from '@/components/organisms/PlanCheckout';
 import { PlanPanel } from '@/components/organisms/PlanPanel';
 import { PLANS_TEXT } from '@/content/plans';
 import { getAccess } from '@/features/app-shell/get-access.server';
+import { getPayments } from '@/features/subscription/get-payments.server';
 import { getSubscription } from '@/features/subscription/get-subscription.server';
 
 export const metadata: Metadata = { title: 'Plan y pagos' };
@@ -19,7 +21,7 @@ export default async function PlanPage() {
   if (!(await getAccess()).canManage) {
     return <EmptyState icon={<StateIcon name="lock" />} {...PLANS_TEXT.forbidden} />;
   }
-  const subscription = await getSubscription();
+  const [subscription, payments] = await Promise.all([getSubscription(), getPayments()]);
 
   return (
     <>
@@ -33,6 +35,7 @@ export default async function PlanPage() {
         </div>
       )}
       <PlanCheckout currentPlanName={subscription?.planName ?? null} />
+      {payments && <PaymentHistory payments={payments} />}
     </>
   );
 }
