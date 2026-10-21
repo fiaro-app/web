@@ -19,7 +19,6 @@ import {
   FEATURES,
   FOOTER_LINKS,
   HERO,
-  HERO_CHIPS,
   HOW_IT_WORKS,
   LANDING_ROUTES,
   LANDING_SECTION_IDS,
@@ -47,7 +46,6 @@ export default function Home() {
       >
         <HeroSection
           {...HERO}
-          chips={HERO_CHIPS}
           visual={<DashboardPreview kpis={PREVIEW_KPIS} chartTitle={PREVIEW_CHART_TITLE} bars={PREVIEW_BARS} />}
         />
         <ProofStrip items={PROOF_STRIP} />

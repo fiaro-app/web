@@ -18,11 +18,11 @@ export interface LandingNavProps {
 /** Barra superior de la landing: una píldora flotante con la marca, las anclas a las secciones y los accesos a iniciar sesión y registro. */
 export function LandingNav({ links, loginHref, signupHref, brandName = 'Fiaro' }: Readonly<LandingNavProps>) {
   return (
-    <header className="px-3 py-3 lg:px-6">
-      <div className="mx-auto flex max-w-7xl items-center justify-between rounded-full border border-foreground/8 bg-surface/85 py-2.5 pr-3 pl-6 shadow-sm backdrop-blur-md">
+    <header className="border-b border-foreground/8 bg-surface">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-16">
         <NextLink
           href="/"
-          className="rounded-full font-display text-[24px] font-bold text-primary focus-visible:outline-2 focus-visible:outline-dashed focus-visible:outline-offset-4 focus-visible:outline-ring"
+          className="rounded-sm font-display text-[24px] font-bold text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
         >
           {brandName}
         </NextLink>
@@ -33,12 +33,12 @@ export function LandingNav({ links, loginHref, signupHref, brandName = 'Fiaro' }
             </NavLink>
           ))}
         </nav>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-5">
           <Link href={loginHref} className="font-semibold">
             Iniciar sesión
           </Link>
           <span className="hidden sm:block">
-            <ButtonLink href={signupHref} className="w-40 rounded-full">
+            <ButtonLink href={signupHref} className="w-40">
               Comenzar gratis
             </ButtonLink>
           </span>
