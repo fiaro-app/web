@@ -17,8 +17,8 @@ export function HowItWorksSection({ id, title, steps }: Readonly<HowItWorksSecti
   const headingId = `${id}-title`;
 
   return (
-    <section id={id} aria-labelledby={headingId} className="flex flex-col items-center gap-12 bg-background px-6 py-16 lg:px-16 lg:py-24">
-      <Text id={headingId} variant="section" className="max-w-175 text-center">
+    <section id={id} aria-labelledby={headingId} className="flex flex-col items-center gap-12 px-6 py-16 lg:px-16 lg:py-24">
+      <Text id={headingId} variant="section" className="max-w-175 text-center text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.05] tracking-[-0.03em]">
         {title}
       </Text>
       <ol className="grid w-full gap-10 md:grid-cols-3">

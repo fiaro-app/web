@@ -21,11 +21,11 @@ export function FaqSection({ id, eyebrow, title, items }: Readonly<FaqSectionPro
   const headingId = `${id}-title`;
 
   return (
-    <section id={id} aria-labelledby={headingId} className="flex flex-col items-center gap-3 bg-background px-6 py-16 lg:px-16 lg:py-24">
-      <Text variant="caption" as="p" weight="semibold" className="tracking-wide text-primary uppercase">
+    <section id={id} aria-labelledby={headingId} className="flex flex-col items-center gap-3 px-6 py-16 lg:px-16 lg:py-24">
+      <Text variant="caption" as="p" weight="semibold" className="font-mono tracking-[0.06em] text-primary uppercase">
         {eyebrow}
       </Text>
-      <Text id={headingId} variant="section" className="max-w-150 text-center">
+      <Text id={headingId} variant="section" className="max-w-150 text-center text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.05] tracking-[-0.03em]">
         {title}
       </Text>
       <div className="mt-6 flex w-full max-w-3xl flex-col gap-3">

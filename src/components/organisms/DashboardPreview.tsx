@@ -34,7 +34,7 @@ export function DashboardPreview({ kpis, chartTitle, bars, className }: Readonly
       role="img"
       aria-label="Vista previa del panel de Fiaro con la cartera total, lo cobrado hoy y la mora por antigüedad"
       className={cn(
-        'overflow-hidden rounded-md bg-surface shadow-[0_20px_50px_-10px_rgb(28_27_46/0.25)]',
+        'overflow-hidden rounded-md bg-surface text-foreground shadow-[0_20px_50px_-10px_rgb(28_27_46/0.25)]',
         className,
       )}
     >

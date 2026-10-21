@@ -48,6 +48,20 @@ export const HERO = {
   footnote: 'Sin tarjeta de crédito · Configura tu financiera en 5 minutos',
 } as const;
 
+/** Avisos que flotan junto a la maqueta del panel: ejemplos de lo que ves en tu cartera. */
+export const HERO_CHIPS = [
+  { label: 'Cobrado hoy', value: '+$3,2M', className: '-top-2 left-2 sm:-left-6' },
+  { label: 'Cuadre', value: 'Aprobado ✓', className: 'right-0 -bottom-2 sm:-right-4' },
+  { label: 'Mora de Don Pedro', value: '12 días', className: 'top-1/2 -right-1 hidden sm:block lg:-right-8' },
+] as const;
+
+/** Tira de pruebas bajo la portada: lo que cambia en la práctica, sin cifras inventadas. */
+export const PROOF_STRIP = [
+  { value: '5 min', label: 'para dejar tu financiera lista' },
+  { value: '1 toque', label: 'para registrar cada visita' },
+  { value: '0 Excel', label: 'para saber cuánto te deben hoy' },
+] as const;
+
 export const PREVIEW_KPIS: readonly PreviewKpi[] = [
   { label: 'Cartera total', value: '$18.4M' },
   { label: 'Cobrado hoy', value: '$3.2M', valueClassName: 'text-success' },
@@ -149,28 +163,24 @@ export const FEATURES = {
   items: [
     {
       icon: '⏱',
-      tone: 'error',
       title: 'Mora en tiempo real',
       description:
         'Sabe exactamente qué clientes están atrasados, hace cuánto y cuánto dinero representan — sin esperar al cierre de mes.',
     },
     {
       icon: '✓',
-      tone: 'success',
       title: 'Efectividad por cobrador',
       description:
         'Compara el desempeño de cada cobrador y detecta a tiempo quién necesita apoyo o supervisión.',
     },
     {
       icon: '▦',
-      tone: 'info',
       title: 'Cuadre diario sin Excel',
       description:
         'Cada cobrador cierra su ruta desde el celular; tú apruebas o rechazas el cuadre en segundos.',
     },
     {
       icon: '◈',
-      tone: 'warning',
       title: 'Reportes para tu contador',
       description:
         'Estadísticas y exportes en PDF que le dan a tu negocio la seriedad que un cuaderno nunca tuvo.',
