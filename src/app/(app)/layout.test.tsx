@@ -16,7 +16,7 @@ vi.mock('next/navigation', () => ({ redirect, usePathname: () => '/resumen', use
 
 import AppLayout from './layout';
 
-const USER = { id: 'u1', name: 'Ana Pérez', mustChangePassword: false };
+const USER = { id: 'u1', name: 'Ana Pérez', mustChangePassword: false, contactEmailVerified: true };
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -64,5 +64,25 @@ describe('AppLayout', () => {
     requireUser.mockResolvedValue({ ...USER, mustChangePassword: true });
     await expect(AppLayout({ children: <p>contenido</p> })).rejects.toThrow('NEXT_REDIRECT:/cambiar-contrasena');
     expect(getShellContext).not.toHaveBeenCalled();
+  });
+
+  it('sends an owner without a verified email to verify it before using the panel', async () => {
+    requireUser.mockResolvedValue({ ...USER, contactEmailVerified: false });
+    getShellContext.mockResolvedValue({ businessName: 'Buen Vecino', roleLabel: 'Administrador', roles: ['OWNER', 'LENDER', 'COLLECTOR'] });
+    await expect(AppLayout({ children: <p>contenido</p> })).rejects.toThrow('NEXT_REDIRECT:/verificar-correo');
+  });
+
+  it('lets an owner with a verified email in', async () => {
+    requireUser.mockResolvedValue(USER);
+    getShellContext.mockResolvedValue({ businessName: 'Buen Vecino', roleLabel: 'Administrador', roles: ['OWNER'] });
+    render(await AppLayout({ children: <p>contenido</p> }));
+    expect(redirect).not.toHaveBeenCalled();
+  });
+
+  it('does not gate a collector without a verified email', async () => {
+    requireUser.mockResolvedValue({ ...USER, contactEmailVerified: false });
+    getShellContext.mockResolvedValue({ businessName: 'Buen Vecino', roleLabel: 'Cobrador', roles: ['COLLECTOR'] });
+    render(await AppLayout({ children: <p>contenido</p> }));
+    expect(redirect).not.toHaveBeenCalled();
   });
 });

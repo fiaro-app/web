@@ -28,12 +28,12 @@ const nationalId = z
   .transform(normalizeNationalId)
   .pipe(NationalIdSchema);
 
-/** El correo es opcional: vacío se omite; si se escribe, debe ser un correo. */
+/** El correo es obligatorio: recupera la contraseña y sirve para iniciar sesión una vez verificado. */
 const contactEmail = z
   .string()
   .trim()
-  .transform((value) => (value === '' ? undefined : value))
-  .pipe(z.email('Escribe un correo válido, por ejemplo tu@correo.com.').optional());
+  .min(1, 'Escribe tu correo.')
+  .pipe(z.email('Escribe un correo válido, por ejemplo tu@correo.com.'));
 
 const businessName = z
   .string()

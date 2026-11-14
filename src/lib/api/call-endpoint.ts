@@ -151,7 +151,7 @@ async function sendRequest(endpoint: EndpointDefinition, input: RawInput, accept
  * conexión (`NETWORK_ERROR`) o si la respuesta no cumple el contrato (`INVALID_RESPONSE`).
  *
  * @example
- * const { user } = await callEndpoint(authEndpoints.signIn, { body: { phoneNumber, password } });
+ * const { user } = await callEndpoint(authEndpoints.signIn, { body: { identifier, password } });
  */
 export async function callEndpoint<const TEndpoint extends EndpointDefinition>(
   endpoint: TEndpoint,

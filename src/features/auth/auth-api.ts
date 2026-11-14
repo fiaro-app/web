@@ -5,8 +5,8 @@ import type { AccountValues, CompanyValues } from '@/features/auth/register-sche
 import type { SignInFormValues } from '@/features/auth/schemas';
 
 /** Inicia sesión. La API deja la sesión en la cookie; devuelve la persona autenticada. */
-export async function signIn({ phone, password }: SignInFormValues) {
-  const { user } = await callEndpoint(authEndpoints.signIn, { body: { phoneNumber: phone, password } });
+export async function signIn({ identifier, password }: SignInFormValues) {
+  const { user } = await callEndpoint(authEndpoints.signIn, { body: { identifier, password } });
   return user;
 }
 
@@ -38,7 +38,7 @@ export async function registerOwner(
       acceptedCookies: true,
       marketingConsent,
       legalVersion: LEGAL_VERSION,
-      ...(contactEmail && { contactEmail }),
+      contactEmail,
       ...(turnstileToken && { turnstileToken }),
     },
   });

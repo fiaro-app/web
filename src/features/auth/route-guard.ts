@@ -3,6 +3,7 @@ export const DEFAULT_AUTHENTICATED_PATH = '/resumen';
 export const LOGIN_PATH = '/login';
 export const REGISTER_PATH = '/registro';
 export const CHANGE_PASSWORD_PATH = '/cambiar-contrasena';
+export const VERIFY_EMAIL_PATH = '/verificar-correo';
 
 /** Páginas y recursos abiertos a cualquiera, con o sin sesión. Todo lo demás exige sesión. */
 const PUBLIC_PATHS: readonly string[] = [

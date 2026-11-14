@@ -43,3 +43,6 @@ export const REGISTER_STEP_CONTENT: Record<
     submitLabel: 'Crear cuenta',
   },
 };
+
+/** Aviso bajo el botón del paso 2 mientras falte alguna autorización obligatoria. */
+export const REGISTER_CONSENTS_PENDING = 'Marca las cuatro autorizaciones obligatorias para poder crear tu cuenta.';

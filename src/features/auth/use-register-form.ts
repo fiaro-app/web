@@ -3,7 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useCallback, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { registerOwner, signIn } from '@/features/auth/auth-api';
-import { describeAuthError, issueFieldErrors } from '@/features/auth/error-messages';
+import { isApiRequestError } from '@/lib/api';
+import { EMAIL_TAKEN_VIEW, describeAuthError, issueFieldErrors } from '@/features/auth/error-messages';
 import {
   AccountStepSchema,
   EMPTY_CONSENTS,
@@ -86,7 +87,7 @@ export function useRegisterForm({ redirectTo }: UseRegisterFormOptions) {
   };
 
   const fail = (error: unknown) => {
-    const { message, field } = describeAuthError(error);
+    const { message, field } = isApiRequestError(error) && error.code === 'CONFLICT' ? EMAIL_TAKEN_VIEW : describeAuthError(error);
     const errors: FieldErrors<RegisterField> = issueFieldErrors(error);
     // Solo los campos que este formulario tiene (el mismo error en otro formulario apunta a otro campo).
     if (field && field in EMPTY_VALUES) errors[field as RegisterField] = message;
@@ -96,7 +97,7 @@ export function useRegisterForm({ redirectTo }: UseRegisterFormOptions) {
 
   const finish = async (phone: string, password: string) => {
     try {
-      await signIn({ phone, password });
+      await signIn({ identifier: phone, password });
       router.replace(redirectTo);
     } catch {
       // La cuenta ya existe: si no se pudo abrir la sesión sola, que la abra la persona.

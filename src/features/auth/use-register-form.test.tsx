@@ -33,6 +33,7 @@ const ACCOUNT = {
   fullName: 'Ana Pérez',
   phone: '300 123 4567',
   nationalId: '1.020.304.050',
+  contactEmail: 'ana@correo.com',
   password: 'una-contraseña-segura',
 };
 
@@ -124,7 +125,7 @@ describe('useRegisterForm — step 2 (company)', () => {
       false,
       undefined,
     );
-    expect(signInMock).toHaveBeenCalledWith({ phone: '+573001234567', password: 'una-contraseña-segura' });
+    expect(signInMock).toHaveBeenCalledWith({ identifier: '+573001234567', password: 'una-contraseña-segura' });
     expect(replace).toHaveBeenCalledWith('/resumen');
     expect(refresh).toHaveBeenCalled();
   });
@@ -154,6 +155,19 @@ describe('useRegisterForm — step 2 (company)', () => {
     expect(result.current.fieldErrors.phone).toContain('Ya existe una cuenta');
     expect(result.current.isSubmitting).toBe(false);
     expect(signInMock).not.toHaveBeenCalled();
+  });
+
+  it('returns to the account step with the error on the email when it is already taken', async () => {
+    registerMock.mockRejectedValue(new ApiRequestError({ statusCode: 409, code: 'CONFLICT', message: 'x' }));
+    const result = setup();
+    await reachCompanyStep(result);
+    type(result, { businessName: 'Préstamos Ana' });
+    accept(result);
+
+    await act(() => result.current.submit(submitEvent()));
+
+    expect(result.current.step).toBe('account');
+    expect(result.current.fieldErrors.contactEmail).toContain('Ya existe una cuenta con ese correo');
   });
 
   it('puts a weak password on the password field', async () => {

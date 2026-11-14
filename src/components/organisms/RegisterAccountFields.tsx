@@ -19,7 +19,7 @@ export function RegisterAccountFields({ values, fieldErrors, setField }: Readonl
       <FormField label="Cédula de ciudadanía" hint="Solo números, sin puntos." error={fieldErrors.nationalId}>
         <Input name="nationalId" inputMode="numeric" autoComplete="off" placeholder="Ej: 1020304050" value={values.nationalId} onChange={setField('nationalId')} />
       </FormField>
-      <FormField label="Correo electrónico (opcional)" hint="Sirve para recuperar tu contraseña." error={fieldErrors.contactEmail}>
+      <FormField label="Correo electrónico" hint="Sirve para entrar y para recuperar tu contraseña." error={fieldErrors.contactEmail}>
         <Input name="contactEmail" type="email" inputMode="email" autoComplete="email" placeholder="tu@correo.com" value={values.contactEmail} onChange={setField('contactEmail')} />
       </FormField>
       <FormField label="Contraseña" hint="Mínimo 15 caracteres. Sirve una frase fácil de recordar, como «la tienda abre a las seis»." error={fieldErrors.password}>

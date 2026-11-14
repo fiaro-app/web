@@ -25,7 +25,7 @@ describe('LoginForm', () => {
 
     expect(screen.getByRole('form', { name: 'Inicio de sesión' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 1, name: 'Inicia sesión' })).toBeInTheDocument();
-    expect(screen.getByLabelText('Celular')).toHaveAttribute('autocomplete', 'username');
+    expect(screen.getByLabelText('Correo o celular')).toHaveAttribute('autocomplete', 'username');
     expect(screen.getByLabelText('Contraseña')).toHaveAttribute('type', 'password');
     expect(screen.getByRole('link', { name: '¿Olvidaste tu contraseña?' })).toHaveAttribute('href', '/recuperar-contrasena');
   });
@@ -35,8 +35,8 @@ describe('LoginForm', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Iniciar sesión' }));
 
-    expect(screen.getByLabelText('Celular')).toHaveAttribute('aria-invalid', 'true');
-    expect(screen.getByText('Escribe tu celular.')).toBeInTheDocument();
+    expect(screen.getByLabelText('Correo o celular')).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByText('Escribe tu correo o celular.')).toBeInTheDocument();
     expect(screen.getByText('Escribe tu contraseña.')).toBeInTheDocument();
   });
 
@@ -44,12 +44,12 @@ describe('LoginForm', () => {
     signInMock.mockResolvedValue({} as never);
     setup();
 
-    await userEvent.type(screen.getByLabelText('Celular'), '300 123 4567');
+    await userEvent.type(screen.getByLabelText('Correo o celular'), '300 123 4567');
     await userEvent.type(screen.getByLabelText('Contraseña'), 'secreta-123');
     await userEvent.click(screen.getByRole('button', { name: 'Iniciar sesión' }));
 
     await waitFor(() => expect(replace).toHaveBeenCalledWith('/resumen'));
-    expect(signInMock).toHaveBeenCalledWith({ phone: '+573001234567', password: 'secreta-123' });
+    expect(signInMock).toHaveBeenCalledWith({ identifier: '+573001234567', password: 'secreta-123' });
   });
 
   it('announces a failed sign-in as an alert', async () => {
@@ -58,7 +58,7 @@ describe('LoginForm', () => {
     );
     setup();
 
-    await userEvent.type(screen.getByLabelText('Celular'), '3001234567');
+    await userEvent.type(screen.getByLabelText('Correo o celular'), '3001234567');
     await userEvent.type(screen.getByLabelText('Contraseña'), 'x');
     await userEvent.click(screen.getByRole('button', { name: 'Iniciar sesión' }));
 
