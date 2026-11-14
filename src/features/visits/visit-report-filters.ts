@@ -2,7 +2,7 @@ import { MAX_PAGE_SIZE, VisitOutcomeSchema, type VisitOutcome } from '@fiaro-app
 import type { VisitReport, VisitReportBody } from '@/features/visits/endpoints';
 import { parseSearchParam } from '@/lib/pagination';
 import { matchesSearch } from '@/lib/search-text';
-import { dateRangeParams, idParam, singleParam, type SearchParams } from '@/lib/search-params';
+import { DATE_RANGE_LIMITS, dateRangeParams, idParam, singleParam, type SearchParams } from '@/lib/search-params';
 
 /** Filtros de «Cobros del día», tal como viajan en la URL (`?desde=&hasta=&cobrador=&resultado=`). */
 export interface VisitReportFilters {
@@ -27,7 +27,7 @@ export const VISIT_OUTCOME_FILTERS: readonly VisitOutcome[] = ['PAID', 'RESCHEDU
  */
 export function parseVisitReportFilters(params: SearchParams): VisitReportFilters {
   const outcome = VisitOutcomeSchema.safeParse(singleParam(params.resultado));
-  return { ...dateRangeParams(params), collectorId: idParam(params.cobrador), outcome: outcome.success ? outcome.data : '', search: parseSearchParam(params.q) };
+  return { ...dateRangeParams(params, DATE_RANGE_LIMITS.visits), collectorId: idParam(params.cobrador), outcome: outcome.success ? outcome.data : '', search: parseSearchParam(params.q) };
 }
 
 /** Cuerpo de la consulta del reporte para unos filtros y una página; lo vacío no se envía. */

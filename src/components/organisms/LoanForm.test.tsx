@@ -3,8 +3,9 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LoanForm } from './LoanForm';
 
-const { useLoanForm } = vi.hoisted(() => ({ useLoanForm: vi.fn() }));
+const { useLoanForm, useClientRisk } = vi.hoisted(() => ({ useLoanForm: vi.fn(), useClientRisk: vi.fn() }));
 vi.mock('@/features/loans/use-loan-form', () => ({ useLoanForm }));
+vi.mock('@/features/risk/use-client-risk', () => ({ useClientRisk }));
 
 const submit = vi.fn((event: { preventDefault: () => void }) => event.preventDefault());
 const state = (overrides = {}) => ({
@@ -24,6 +25,7 @@ const COLLECTORS = [{ id: 'm1', name: 'Luis Gómez' }];
 beforeEach(() => {
   vi.clearAllMocks();
   useLoanForm.mockReturnValue(state());
+  useClientRisk.mockReturnValue(null);
 });
 
 describe('LoanForm', () => {
@@ -87,5 +89,42 @@ describe('LoanForm', () => {
   it('shows the total to pay as read-only information', () => {
     render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
     expect(screen.getByLabelText('Total a pagar')).toHaveAttribute('readonly');
+  });
+});
+
+const RISK = { score: 80, level: 'VERY_HIGH', levelLabel: 'muy alto', tone: 'error', ariaLabel: 'Riesgo muy alto: 80 de 100', factors: ['Tiene un préstamo con 40 días de atraso.'], hasHistory: true };
+
+describe('LoanForm risk', () => {
+  it('shows the risk card with its factors once a client is chosen', () => {
+    useClientRisk.mockReturnValue({ ...RISK, level: 'HIGH', levelLabel: 'alto' });
+    render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
+
+    expect(screen.getByRole('region', { name: 'Riesgo del cliente' })).toBeInTheDocument();
+    expect(screen.getByText('Tiene un préstamo con 40 días de atraso.')).toBeInTheDocument();
+    expect(screen.queryByText(/riesgo muy alto con tu negocio/i)).not.toBeInTheDocument();
+  });
+
+  it('also warns, without blocking, when the chosen client has very high risk', () => {
+    useClientRisk.mockReturnValue(RISK);
+    render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
+
+    expect(screen.getByText(/riesgo muy alto con tu negocio/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /registrar/i })).toBeEnabled();
+  });
+
+  it('puts the card in the right column, under the informative aside', () => {
+    useClientRisk.mockReturnValue(RISK);
+    render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
+
+    const aside = screen.getByRole('complementary', { hidden: true });
+    const card = screen.getByRole('region', { name: 'Riesgo del cliente' });
+    expect(aside.parentElement).toBe(card.parentElement);
+    expect(aside.compareDocumentPosition(card) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('shows no card while there is no risk to show', () => {
+    render(<LoanForm clients={CLIENTS} collectors={COLLECTORS} />);
+
+    expect(screen.queryByRole('region', { name: 'Riesgo del cliente' })).not.toBeInTheDocument();
   });
 });

@@ -1,8 +1,7 @@
 import 'server-only';
-import { MAX_PAGE_SIZE, type Role } from '@fiaro-app/contracts';
+import type { Role } from '@fiaro-app/contracts';
 import { cache } from 'react';
 import { roleLabel, canCollectPayments, canManageBusiness } from '@/features/app-shell/role-label';
-import type { AuthUser } from '@/features/auth/endpoints';
 import { getUnreadCount } from '@/features/notifications/get-unread-count.server';
 import { lenderEndpoints } from '@/features/lender/endpoints';
 import { membershipEndpoints } from '@/features/memberships/endpoints';
@@ -35,16 +34,12 @@ interface OwnMembership {
   readonly membershipId: string | null;
 }
 
-async function loadOwnMembership(user: AuthUser): Promise<OwnMembership> {
+/** La membresía propia (`GET /memberships/me`, D-124): sirve a cualquier rol, también al cobrador. */
+async function loadOwnMembership(): Promise<OwnMembership> {
   try {
-    const { data } = await callEndpointAsUser(membershipEndpoints.list, {
-      body: { page: 1, pageSize: MAX_PAGE_SIZE, status: 'ACTIVE' },
-    });
-    const own = data.find((membership) => membership.userId === user.id);
-    return own ? { roles: own.roles, membershipId: own.id } : { roles: null, membershipId: null };
+    const own = await callEndpointAsUser(membershipEndpoints.me, {});
+    return { roles: own.roles, membershipId: own.id };
   } catch (error) {
-    // Solo quien edita puede listar colaboradores: un 403 significa que es cobrador.
-    if (isApiRequestError(error) && error.hasCode('FORBIDDEN')) return { roles: ['COLLECTOR'], membershipId: null };
     if (isApiRequestError(error)) return { roles: null, membershipId: null };
     throw error;
   }
@@ -63,13 +58,13 @@ async function loadLenderBranding(): Promise<{ readonly businessName: string; re
 /**
  * Lo que necesita la barra lateral además de la persona: el nombre del negocio, su color de marca, su rol y las notificaciones sin leer. Es un
  * adorno de la pantalla: si la API falla al traerlos, el panel abre con valores de respaldo en vez
- * de quedar inservible. Se memoiza por petición (con la misma `user` que devuelve `requireUser`)
+ * de quedar inservible. Se memoiza por petición
  * para que el layout y una página que también necesite el rol no repitan las consultas.
  */
-export const getShellContext = cache(async (user: AuthUser): Promise<ShellContext> => {
+export const getShellContext = cache(async (): Promise<ShellContext> => {
   const [{ businessName, brandColor }, own, unreadNotifications] = await Promise.all([
     loadLenderBranding(),
-    loadOwnMembership(user),
+    loadOwnMembership(),
     getUnreadCount(),
   ]);
   return {

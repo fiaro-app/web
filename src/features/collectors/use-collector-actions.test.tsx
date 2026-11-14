@@ -1,15 +1,18 @@
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiRequestError } from '@/lib/api';
-import { changeCollectorPortfolio, deactivateCollector, resetCollectorPassword } from './collectors-api';
+import { changeCollectorPortfolio, deactivateCollector, deleteCollector, reactivateCollector, resetCollectorPassword } from './collectors-api';
 import { useCollectorActions } from './use-collector-actions';
 
 const refresh = vi.fn();
-vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh }) }));
+const push = vi.fn();
+vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh, push }) }));
 vi.mock('./collectors-api', () => ({
   changeCollectorPortfolio: vi.fn(),
   deactivateCollector: vi.fn(),
   resetCollectorPassword: vi.fn(),
+  reactivateCollector: vi.fn(),
+  deleteCollector: vi.fn(),
 }));
 
 const change = vi.mocked(changeCollectorPortfolio);
@@ -91,5 +94,36 @@ describe('useCollectorActions', () => {
     const { result } = renderHook(() => useCollectorActions({ ...COLLECTOR, roles: [...COLLECTOR.roles] }));
     await act(() => result.current.deactivate(''));
     expect(deactivate).toHaveBeenCalledWith('m1', []);
+  });
+
+  it('reactivates the collector and refreshes', async () => {
+    vi.mocked(reactivateCollector).mockResolvedValue({} as never);
+    const result = setup();
+    await act(() => result.current.reactivate());
+    expect(reactivateCollector).toHaveBeenCalledWith('m1');
+    expect(result.current.notice).toBe('Cobrador reactivado.');
+  });
+
+  it('explains when the plan has no room to reactivate', async () => {
+    vi.mocked(reactivateCollector).mockRejectedValue(new ApiRequestError({ statusCode: 403, code: 'PLAN_LIMIT_REACHED', message: 'x' }));
+    const result = setup();
+    await act(() => result.current.reactivate());
+    expect(result.current.error).toMatch(/cupos/);
+  });
+
+  it('deletes a collector registered by mistake and goes back to the list', async () => {
+    vi.mocked(deleteCollector).mockResolvedValue(undefined as never);
+    const result = setup();
+    await act(() => result.current.remove());
+    expect(deleteCollector).toHaveBeenCalledWith('m1');
+    expect(push).toHaveBeenCalledWith('/cobradores');
+  });
+
+  it('explains that a collector with history is deactivated instead', async () => {
+    vi.mocked(deleteCollector).mockRejectedValue(new ApiRequestError({ statusCode: 409, code: 'COLLECTOR_HAS_HISTORY', message: 'x' }));
+    const result = setup();
+    await act(() => result.current.remove());
+    expect(result.current.error).toMatch(/historial/);
+    expect(push).not.toHaveBeenCalled();
   });
 });

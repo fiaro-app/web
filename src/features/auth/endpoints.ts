@@ -47,6 +47,11 @@ export const RegisterBodySchema = z.strictObject({
   nationalId: NationalIdSchema,
   businessName: BusinessNameSchema,
   contactEmail: z.email().optional(),
+  acceptedTerms: z.literal(true),
+  acceptedPrivacy: z.literal(true),
+  acceptedDataResponsibility: z.literal(true),
+  marketingConsent: z.boolean(),
+  legalVersion: z.string().min(1),
   turnstileToken: TurnstileTokenSchema.optional(),
 });
 

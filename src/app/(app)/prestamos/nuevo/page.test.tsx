@@ -17,21 +17,12 @@ beforeEach(() => {
 });
 
 describe('New loan page', () => {
-  it('adds the informative aside when there are clients to lend to', async () => {
+  it('hands the clients to the loan form', async () => {
     getClientOptions.mockResolvedValue([{ id: 'c1', label: 'Ana' }]);
 
     render(await NewLoanPage(props));
 
     expect(screen.getByRole('form', { name: 'Registrar préstamo' })).toBeInTheDocument();
-    expect(screen.getByRole('complementary', { hidden: true })).toBeInTheDocument();
-  });
-
-  it('leaves the full-page empty state alone when there are no clients', async () => {
-    getClientOptions.mockResolvedValue([]);
-
-    render(await NewLoanPage(props));
-
-    expect(screen.queryByRole('complementary', { hidden: true })).not.toBeInTheDocument();
   });
 
   it('does not offer the form to someone who cannot register loans', async () => {

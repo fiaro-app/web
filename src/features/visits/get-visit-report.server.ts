@@ -4,6 +4,7 @@ import { visitEndpoints } from '@/features/visits/endpoints';
 import { SEARCH_SCAN_SIZE, searchVisitReport, toVisitReportBody, type VisitReportFilters } from '@/features/visits/visit-report-filters';
 import { toVisitReportViewModel, type VisitReportViewModel } from '@/features/visits/visits-view-model';
 import { isApiRequestError } from '@/lib/api';
+import { LIST_PAGE_SIZE } from '@/lib/pagination';
 import { callEndpointAsUser } from '@/lib/api/server-call';
 
 /** Cobradores entre los que se puede filtrar. */
@@ -17,7 +18,7 @@ export type VisitReportResult =
   /** La persona no puede ver los cobros del negocio (un cobrador recibe 403). */
   | { readonly status: 'forbidden' };
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = LIST_PAGE_SIZE;
 
 /**
  * Trae una página de «Cobros del día» con los filtros pedidos y los cobradores para el selector.

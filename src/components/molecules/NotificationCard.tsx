@@ -10,7 +10,9 @@ export interface NotificationCardProps {
   readonly notification: NotificationItem;
   /** Se llama al pulsar "Marcar como leída"; solo se ofrece mientras no esté leída. */
   readonly onMarkRead: (id: string) => void;
-  /** Deshabilita la acción mientras se marca esta (u otra) notificación. */
+  /** Se llama al pulsar «Borrar»; se ofrece siempre, leída o no. */
+  readonly onDelete: (id: string) => void;
+  /** Deshabilita las acciones mientras se marca o se borra esta (u otra) notificación. */
   readonly busy?: boolean;
 }
 
@@ -18,7 +20,7 @@ export interface NotificationCardProps {
  * Una notificación: franja del color de su importancia, título, texto, fecha y acciones. Las
  * no leídas llevan el título en negrita y una etiqueta "Sin leer" (el estado no depende del color).
  */
-export function NotificationCard({ notification, onMarkRead, busy = false }: Readonly<NotificationCardProps>) {
+export function NotificationCard({ notification, onMarkRead, onDelete, busy = false }: Readonly<NotificationCardProps>) {
   const { id, tone, title, body, date, read, href } = notification;
 
   return (
@@ -39,16 +41,17 @@ export function NotificationCard({ notification, onMarkRead, busy = false }: Rea
         <Text variant="label" className="text-foreground/75">
           {body}
         </Text>
-        {(href !== null || !read) && (
-          <div className="flex items-center gap-4">
-            {href !== null && <Link href={href}>{NOTIFICATIONS_TEXT.view}</Link>}
-            {!read && (
-              <Button variant="text" size="sm" disabled={busy} onClick={() => onMarkRead(id)}>
-                {NOTIFICATIONS_TEXT.markRead}
-              </Button>
-            )}
-          </div>
-        )}
+        <div className="flex items-center gap-4">
+          {href !== null && <Link href={href}>{NOTIFICATIONS_TEXT.view}</Link>}
+          {!read && (
+            <Button variant="text" size="sm" disabled={busy} onClick={() => onMarkRead(id)}>
+              {NOTIFICATIONS_TEXT.markRead}
+            </Button>
+          )}
+          <Button variant="text" size="sm" disabled={busy} onClick={() => onDelete(id)} aria-label={NOTIFICATIONS_TEXT.removeFor(title)} className="ml-auto">
+            {NOTIFICATIONS_TEXT.remove}
+          </Button>
+        </div>
       </div>
     </article>
   );

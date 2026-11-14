@@ -15,32 +15,34 @@ export interface LandingNavProps {
   readonly brandName?: string;
 }
 
-/** Barra superior de la landing: marca, anclas a las secciones y accesos a iniciar sesión / registro. */
+/** Barra superior de la landing: una píldora flotante con la marca, las anclas a las secciones y los accesos a iniciar sesión y registro. */
 export function LandingNav({ links, loginHref, signupHref, brandName = 'Fiaro' }: Readonly<LandingNavProps>) {
   return (
-    <header className="flex items-center justify-between border-b border-foreground/8 bg-surface px-6 py-5 lg:px-16">
-      <NextLink
-        href="/"
-        className="rounded-sm font-display text-[24px] font-bold text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
-      >
-        {brandName}
-      </NextLink>
-      <nav aria-label="Secciones" className="hidden items-center gap-8 md:flex">
-        {links.map((link) => (
-          <NavLink key={link.label} href={link.href} muted={false}>
-            {link.label}
-          </NavLink>
-        ))}
-      </nav>
-      <div className="flex items-center gap-5">
-        <Link href={loginHref} className="font-semibold">
-          Iniciar sesión
-        </Link>
-        <span className="hidden sm:block">
-          <ButtonLink href={signupHref} className="w-40">
-            Comenzar gratis
-          </ButtonLink>
-        </span>
+    <header className="border-b border-foreground/8 bg-surface">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-16">
+        <NextLink
+          href="/"
+          className="rounded-sm font-display text-[24px] font-bold text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+        >
+          {brandName}
+        </NextLink>
+        <nav aria-label="Secciones" className="hidden items-center gap-8 md:flex">
+          {links.map((link) => (
+            <NavLink key={link.label} href={link.href} muted={false}>
+              {link.label}
+            </NavLink>
+          ))}
+        </nav>
+        <div className="flex items-center gap-5">
+          <Link href={loginHref} className="font-semibold">
+            Iniciar sesión
+          </Link>
+          <span className="hidden sm:block">
+            <ButtonLink href={signupHref} className="w-40">
+              Comenzar gratis
+            </ButtonLink>
+          </span>
+        </div>
       </div>
     </header>
   );

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dateRangeParams, idParam, isCalendarDate, singleParam } from './search-params';
+import { DATE_RANGE_LIMITS, dateRangeParams, idParam, isCalendarDate, singleParam } from './search-params';
 
 const ID = '0190f7a0-0000-7000-8000-000000000001';
 
@@ -41,5 +41,12 @@ describe('dateRangeParams', () => {
     expect(dateRangeParams({ desde: '2026-10-09', hasta: '2026-10-01' })).toEqual({ from: '', to: '' });
     expect(dateRangeParams({ desde: 'x', hasta: '2026-02-30' })).toEqual({ from: '', to: '' });
     expect(dateRangeParams({})).toEqual({ from: '', to: '' });
+  });
+
+  it('is empty when the range ends after today or is longer than the screen allows', () => {
+    expect(dateRangeParams({ desde: '2026-10-01', hasta: '2999-01-01' })).toEqual({ from: '', to: '' });
+    expect(dateRangeParams({ desde: '2024-01-01', hasta: '2025-12-31' })).toEqual({ from: '', to: '' });
+    expect(dateRangeParams({ desde: '2026-01-01', hasta: '2026-06-30' }, DATE_RANGE_LIMITS.visits)).toEqual({ from: '', to: '' });
+    expect(dateRangeParams({ desde: '2026-06-01', hasta: '2026-06-30' }, DATE_RANGE_LIMITS.visits)).toEqual({ from: '2026-06-01', to: '2026-06-30' });
   });
 });

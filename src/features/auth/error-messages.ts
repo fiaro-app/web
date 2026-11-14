@@ -66,7 +66,7 @@ export function describeAuthError(error: unknown): AuthErrorView {
     case 'PASSWORD_TOO_WEAK':
       return { message: 'Esa contraseña es muy fácil de adivinar. Elige una más larga o menos común.', field: 'password' };
     case 'INVALID_PASSWORD_LENGTH':
-      return { message: 'La contraseña debe tener entre 8 y 128 caracteres.', field: 'password' };
+      return { message: 'La contraseña debe tener entre 15 y 128 caracteres.', field: 'password' };
     case 'PASSWORD_RESET_CODE_INVALID':
       return { message: 'El código no es correcto o ya se usó. Pide uno nuevo.', field: 'code' };
     case 'PASSWORD_RESET_CODE_EXPIRED':

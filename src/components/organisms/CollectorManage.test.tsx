@@ -26,6 +26,8 @@ const actions = {
   savePortfolio: vi.fn(),
   resetPassword: vi.fn(),
   deactivate: vi.fn(),
+  reactivate: vi.fn(),
+  remove: vi.fn(),
 };
 
 beforeEach(() => {
@@ -47,6 +49,15 @@ describe('CollectorManage', () => {
     expect(screen.getByRole('button', { name: 'Guardar cartera' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Restablecer contraseña' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Desactivar cobrador' })).toBeInTheDocument();
+  });
+
+  it('does not offer managing yourself, and says why', () => {
+    render(<CollectorManage collector={COLLECTOR} portfolios={PORTFOLIOS} isSelf />);
+    expect(screen.getByText(/Eres tú/)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Guardar cartera' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Restablecer contraseña' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Desactivar cobrador' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Borrar cobrador' })).not.toBeInTheDocument();
   });
 
   it('saves the portfolio through the hook', async () => {
@@ -107,9 +118,22 @@ describe('CollectorManage', () => {
     expect(screen.getByText('Listo')).toBeInTheDocument();
   });
 
-  it('offers no actions for an inactive collector', () => {
+  it('offers to reactivate an inactive collector, after confirming', async () => {
     render(<CollectorManage collector={{ ...COLLECTOR, active: false }} portfolios={PORTFOLIOS} />);
     expect(screen.getByText(/está desactivado/)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Desactivar cobrador' })).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Reactivar cobrador' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Reactivar' }));
+    expect(actions.reactivate).toHaveBeenCalledTimes(1);
+  });
+
+  it('asks for confirmation before deleting, and never offers it for the owner', async () => {
+    const { unmount } = render(<CollectorManage collector={COLLECTOR} portfolios={PORTFOLIOS} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Borrar cobrador' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Borrar' }));
+    expect(actions.remove).toHaveBeenCalledTimes(1);
+    unmount();
+    render(<CollectorManage collector={{ ...COLLECTOR, roles: ['OWNER', 'LENDER', 'COLLECTOR'] as never }} portfolios={PORTFOLIOS} />);
+    expect(screen.queryByRole('button', { name: 'Borrar cobrador' })).not.toBeInTheDocument();
   });
 });

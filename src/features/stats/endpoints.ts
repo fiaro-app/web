@@ -1,4 +1,13 @@
-import { DateRangeSchema, IdSchema, LenderPeriodStatsSchema, defineEndpoint } from '@fiaro-app/contracts';
+import {
+  DateRangeSchema,
+  IdSchema,
+  LenderPeriodStatsSchema,
+  LenderStatsCollectorPerformanceSchema,
+  PageQuerySchema,
+  TopArrearsEntrySchema,
+  defineEndpoint,
+  paginated,
+} from '@fiaro-app/contracts';
 
 // Estadísticas del período (con tendencias, D-111): viven en `@fiaro-app/contracts`.
 export {
@@ -18,6 +27,18 @@ export const LenderStatsBodySchema = z.strictObject({
 });
 export type LenderStatsBody = z.infer<typeof LenderStatsBodySchema>;
 
+/** Cuerpo de `QUERY /lenders/me/stats/top-arrears`: la mora es la de hoy, así que no lleva período. */
+export const TopArrearsBodySchema = PageQuerySchema.extend({
+  collectorMembershipId: IdSchema.optional(),
+  portfolioId: IdSchema.optional(),
+});
+
+/** Cuerpo de `QUERY /lenders/me/stats/collector-performance`. */
+export const CollectorPerformanceBodySchema = PageQuerySchema.extend({
+  dateRange: DateRangeSchema.optional(),
+  portfolioId: IdSchema.optional(),
+});
+
 /** Cuerpo de `QUERY /lenders/me/stats/export`: los mismos filtros y el formato (por ahora solo PDF). */
 export const LenderStatsExportBodySchema = LenderStatsBodySchema.extend({ format: z.literal('pdf') });
 
@@ -33,6 +54,20 @@ export const statsEndpoints = {
     summary: 'Estadísticas del período: cartera en riesgo, mora por antigüedad y desempeño por cobrador.',
     body: LenderStatsBodySchema,
     response: LenderPeriodStatsSchema,
+  }),
+  topArrears: defineEndpoint({
+    method: 'QUERY',
+    path: '/lenders/me/stats/top-arrears',
+    summary: 'El ranking completo de mayor mora, paginado (las estadísticas traen solo los 5 primeros, D-117).',
+    body: TopArrearsBodySchema,
+    response: paginated(TopArrearsEntrySchema),
+  }),
+  collectorPerformance: defineEndpoint({
+    method: 'QUERY',
+    path: '/lenders/me/stats/collector-performance',
+    summary: 'El desempeño de todos los cobradores, paginado (las estadísticas traen solo los 5 primeros, D-117).',
+    body: CollectorPerformanceBodySchema,
+    response: paginated(LenderStatsCollectorPerformanceSchema),
   }),
   exportPdf: defineEndpoint({
     method: 'QUERY',

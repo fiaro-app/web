@@ -19,6 +19,8 @@ export interface DatePickerProps {
   readonly id?: string;
   readonly invalid?: boolean;
   readonly disabled?: boolean;
+  /** Última fecha que se puede elegir (`AAAA-MM-DD`); los días posteriores salen deshabilitados. */
+  readonly max?: string;
   readonly 'aria-describedby'?: string;
   readonly className?: string;
 }
@@ -28,7 +30,7 @@ export interface DatePickerProps {
  * calendario propio con el mes, los días en semanas de lunes a domingo, «Borrar» y «Hoy». El valor
  * viaja en un campo oculto con la fecha ISO. Teclado: flechas entre días, RePág/AvPág entre meses y Esc.
  */
-export function DatePicker({ name, value, defaultValue = '', onValueChange, id, invalid = false, disabled, 'aria-describedby': describedBy, className }: Readonly<DatePickerProps>) {
+export function DatePicker({ name, value, defaultValue = '', onValueChange, id, invalid = false, disabled, max, 'aria-describedby': describedBy, className }: Readonly<DatePickerProps>) {
   const text = COMMON_TEXT.calendar;
   const dialogId = useId();
   const containerRef = useRef<HTMLSpanElement>(null);
@@ -150,6 +152,7 @@ export function DatePicker({ name, value, defaultValue = '', onValueChange, id, 
                 {week.map((day) => {
                   const inMonth = day.slice(0, 7) === month.slice(0, 7);
                   const isSelected = day === selected;
+                  const isAfterMax = max !== undefined && day > max;
                   return (
                     <button
                       key={day}
@@ -163,6 +166,7 @@ export function DatePicker({ name, value, defaultValue = '', onValueChange, id, 
                       aria-selected={isSelected}
                       aria-current={day === today ? 'date' : undefined}
                       tabIndex={day === focusedDay ? 0 : -1}
+                      disabled={isAfterMax}
                       onClick={() => commit(day)}
                       onKeyDown={onDayKeyDown}
                       className={cn(
@@ -170,6 +174,7 @@ export function DatePicker({ name, value, defaultValue = '', onValueChange, id, 
                         inMonth ? 'text-foreground' : 'text-foreground/65',
                         day === today && !isSelected && 'ring-1 ring-primary',
                         isSelected ? 'bg-primary font-semibold text-primary-foreground' : 'hover:bg-foreground/8',
+                        isAfterMax && 'cursor-not-allowed text-foreground/30 hover:bg-transparent',
                       )}
                     >
                       {Number(day.slice(8, 10))}
@@ -183,7 +188,7 @@ export function DatePicker({ name, value, defaultValue = '', onValueChange, id, 
             <button type="button" onClick={() => commit('')} className={footerButton}>
               {text.clear}
             </button>
-            <button type="button" onClick={() => commit(today)} className={footerButton}>
+            <button type="button" disabled={max !== undefined && today > max} onClick={() => commit(today)} className={footerButton}>
               {text.today}
             </button>
           </div>

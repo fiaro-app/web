@@ -12,6 +12,9 @@ describe('describeCollectorError', () => {
     ['NOT_FOUND', /ya no existe/, null],
     ['CONFLICT', /ya trabaja/, 'phone'],
     ['PHONE_ALREADY_REGISTERED', /Ya existe una cuenta/, 'phone'],
+    ['COLLABORATOR_NATIONAL_ID_TAKEN', /misma cédula|esa cédula/, 'nationalId'],
+    ['PLAN_LIMIT_REACHED', /cupos/, null],
+    ['COLLECTOR_HAS_HISTORY', /historial/, null],
   ])('maps %s', (code, message, field) => {
     expect(describeCollectorError(apiError(code))).toMatchObject({ message: expect.stringMatching(message), field });
   });

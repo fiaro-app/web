@@ -22,7 +22,7 @@ export const ACCOUNT_TEXT = {
     title: 'Contraseña',
     description: 'Cámbiala cuando quieras. Necesitas tu contraseña actual.',
     currentPassword: { label: 'Contraseña actual' },
-    newPassword: { label: 'Contraseña nueva', hint: 'Mínimo 8 caracteres.' },
+    newPassword: { label: 'Contraseña nueva', hint: 'Mínimo 15 caracteres. Sirve una frase fácil de recordar, como «la tienda abre a las seis».' },
     confirmPassword: { label: 'Repite la contraseña nueva' },
     submit: 'Cambiar contraseña',
     done: 'Contraseña cambiada.',

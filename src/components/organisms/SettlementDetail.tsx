@@ -1,4 +1,4 @@
-import { Link } from '@/components/atoms/Link';
+import { BackLink } from '@/components/molecules/BackLink';
 import { Text } from '@/components/atoms/Text';
 import { InfoRow } from '@/components/molecules/InfoRow';
 import { SettlementReviewForm } from '@/components/organisms/SettlementReviewForm';
@@ -13,7 +13,7 @@ export function SettlementDetail({ settlement, canManage = true }: Readonly<{ se
 
   return (
     <section aria-labelledby="settlement-title" className="flex max-w-lg flex-col gap-5">
-      <Link href="/cuadres">{text.back}</Link>
+      <BackLink href="/cuadres">{text.back}</BackLink>
       <Text variant="title" as="h1" weight="bold" id="settlement-title" className="text-foreground">
         {text.title(settlement.collectorName)}
       </Text>

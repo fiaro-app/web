@@ -2,18 +2,35 @@ import { describe, expect, it } from 'vitest';
 import {
   ChangeMembershipRolesBodySchema,
   InviteMembershipBodySchema,
+  InvitedMembershipSchema,
   ListMembershipsBodySchema,
   membershipEndpoints,
 } from './endpoints';
 
 describe('membership endpoints', () => {
+  it('reads the invite response exactly as the API sends it: { membership, tempPassword }', () => {
+    const membership = {
+      id: '0198f8e0-0000-7000-8000-000000000001',
+      userId: '0198f8e0-0000-7000-8000-000000000002',
+      lenderId: '0198f8e0-0000-7000-8000-000000000003',
+      roles: ['COLLECTOR'],
+      status: 'ACTIVE',
+      portfolioId: null,
+      createdAt: '2026-10-15T12:00:00.000Z',
+      deactivatedAt: null,
+    };
+
+    expect(InvitedMembershipSchema.parse({ membership, tempPassword: 'abc-123' }).tempPassword).toBe('abc-123');
+    expect(InvitedMembershipSchema.parse({ membership, tempPassword: null }).tempPassword).toBeNull();
+  });
+
   it('declares the list as a QUERY with a body, as the API does', () => {
     expect(membershipEndpoints.list).toMatchObject({ method: 'QUERY', path: '/memberships' });
   });
 
   it('defaults the page and accepts the status and role filters', () => {
-    expect(ListMembershipsBodySchema.parse({})).toEqual({ page: 1, pageSize: 20 });
-    expect(ListMembershipsBodySchema.parse({ role: 'COLLECTOR', status: 'ACTIVE', pageSize: 100 })).toMatchObject({
+    expect(ListMembershipsBodySchema.parse({})).toEqual({ page: 1, pageSize: 10 });
+    expect(ListMembershipsBodySchema.parse({ role: 'COLLECTOR', status: 'ACTIVE', pageSize: 50 })).toMatchObject({
       role: 'COLLECTOR',
       status: 'ACTIVE',
     });

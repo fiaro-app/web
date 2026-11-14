@@ -27,3 +27,17 @@ const TIME_FORMAT = new Intl.DateTimeFormat('es-CO', { timeZone: 'America/Bogota
 export function formatInstantTime(instant: string): string {
   return TIME_FORMAT.format(new Date(instant));
 }
+
+const WEEKDAYS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'] as const;
+
+/**
+ * Una fecha de calendario como `lun 12`: el día de la semana y el número, para leer una gráfica sin contar días. Se arma
+ * a mediodía UTC sobre el texto de la fecha para que una zona horaria no corra el día; devuelve el texto tal cual si no
+ * tiene el formato de fecha.
+ */
+export function formatWeekdayDay(value: string): string {
+  const match = BUSINESS_DATE.exec(value);
+  if (!match) return value;
+  const weekday = new Date(`${value}T12:00:00Z`).getUTCDay();
+  return `${WEEKDAYS[weekday] ?? ''} ${String(Number(match[3]))}`;
+}

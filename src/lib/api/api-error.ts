@@ -16,6 +16,9 @@ export interface ApiRequestErrorInit {
   readonly message: string;
   readonly issues?: readonly ValidationIssue[] | null;
   readonly retryAfterSeconds?: number | null;
+  /** Código único del error (`L003A`) y el `requestId` para soporte; llegan en el cuerpo de la API. */
+  readonly errorCode?: string | null;
+  readonly requestId?: string | null;
 }
 
 /**
@@ -28,14 +31,18 @@ export class ApiRequestError extends Error {
   readonly issues: readonly ValidationIssue[];
   /** Segundos que pidió esperar la API (`Retry-After`), o `null` si no lo envió. */
   readonly retryAfterSeconds: number | null;
+  readonly errorCode: string | null;
+  readonly requestId: string | null;
 
-  constructor({ statusCode, code, message, issues, retryAfterSeconds }: ApiRequestErrorInit) {
+  constructor({ statusCode, code, message, issues, retryAfterSeconds, errorCode, requestId }: ApiRequestErrorInit) {
     super(message);
     this.name = 'ApiRequestError';
     this.statusCode = statusCode;
     this.code = code;
     this.issues = issues ?? [];
     this.retryAfterSeconds = retryAfterSeconds ?? null;
+    this.errorCode = errorCode ?? null;
+    this.requestId = requestId ?? null;
   }
 
   /** Si el error trae alguno de esos códigos. */

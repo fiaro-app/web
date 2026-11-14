@@ -58,3 +58,13 @@ describe('ClientsTable', () => {
     expect(screen.getAllByRole('columnheader')).toHaveLength(7);
   });
 });
+
+describe('ClientsTable risk', () => {
+  it('shows the risk level under the name only when the row has one', () => {
+    const risk = { score: 80, level: 'VERY_HIGH', levelLabel: 'muy alto', tone: 'error', ariaLabel: 'x', factors: [], hasHistory: true } as const;
+    render(<ClientsTable rows={[{ ...ROWS[0]!, risk }, ROWS[1]!]} />);
+
+    expect(screen.getAllByText('Riesgo muy alto')).toHaveLength(1);
+  });
+});
+

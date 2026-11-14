@@ -5,6 +5,7 @@ import { ClientsView } from '@/components/organisms/ClientsView';
 import { CLIENTS_TEXT } from '@/content/clients';
 import { getAccess } from '@/features/app-shell/get-access.server';
 import { getClients } from '@/features/clients/get-clients.server';
+import { getClientsRisk } from '@/features/risk/get-clients-risk.server';
 import { parsePageParam, parseSearchParam } from '@/lib/pagination';
 
 export const metadata: Metadata = { title: 'Clientes' };
@@ -17,5 +18,7 @@ export default async function ClientsPage({ searchParams }: PageProps<'/clientes
   if (result.status === 'forbidden') {
     return <EmptyState icon={<StateIcon name="lock" />} {...CLIENTS_TEXT.forbidden} />;
   }
-  return <ClientsView clients={result.clients} canManage={canManage} />;
+  const risks = canManage ? await getClientsRisk(result.clients.rows.map((row) => row.id)) : new Map();
+  const rows = result.clients.rows.map((row) => ({ ...row, risk: risks.get(row.id) }));
+  return <ClientsView clients={{ ...result.clients, rows }} canManage={canManage} />;
 }

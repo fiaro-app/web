@@ -6,6 +6,9 @@ import { NotificationsView } from './NotificationsView';
 vi.mock('@/features/notifications/use-mark-notification-read', () => ({
   useMarkNotificationRead: () => ({ pendingId: null, error: null, markRead: vi.fn() }),
 }));
+vi.mock('@/features/notifications/use-delete-notifications', () => ({
+  useDeleteNotifications: () => ({ pendingId: null, isClearing: false, error: null, remove: vi.fn(), clear: vi.fn() }),
+}));
 
 const ITEM = { id: 'n1', tone: 'info' as const, title: 'Hola', body: 'texto', date: '09/10/2026', read: false, href: null };
 const view = (overrides: Partial<NotificationsViewModel> = {}): NotificationsViewModel => ({

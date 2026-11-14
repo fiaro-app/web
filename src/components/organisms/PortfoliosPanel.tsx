@@ -15,12 +15,15 @@ import { usePortfolioForm } from '@/features/lender/use-settings-forms';
 export interface PortfoliosPanelProps {
   readonly portfolios: SettingsView['portfolios'];
   readonly canEdit: boolean;
+  /** Cuántas carteras admite el plan; `null` si no se pudo leer (la API lo aplica igual). */
+  readonly maxPortfolios: number | null;
 }
 
 /** "Carteras": las que existen (renombrables y borrables) y, para quien administra, un formulario para crear otra. */
-export function PortfoliosPanel({ portfolios, canEdit }: Readonly<PortfoliosPanelProps>) {
+export function PortfoliosPanel({ portfolios, canEdit, maxPortfolios }: Readonly<PortfoliosPanelProps>) {
   const form = usePortfolioForm();
   const text = SETTINGS_TEXT.portfolios;
+  const atLimit = maxPortfolios !== null && portfolios.length >= maxPortfolios;
 
   return (
     <SettingsSection title={text.title} description={text.description}>
@@ -32,7 +35,8 @@ export function PortfoliosPanel({ portfolios, canEdit }: Readonly<PortfoliosPane
           <PortfolioItem key={portfolio.id} portfolio={portfolio} canEdit={canEdit} />
         ))}
       </ul>
-      {canEdit && (
+      {canEdit && atLimit && <Alert tone="info">{text.limitReached(maxPortfolios)}</Alert>}
+      {canEdit && !atLimit && (
         <ConfirmForm
           confirmation={COMMON_TEXT.confirm.create} onSubmit={form.submit} noValidate aria-label={text.create} className="flex flex-col gap-4">
           <FormField label={text.nameLabel} error={form.fieldError}>

@@ -37,6 +37,36 @@ beforeEach(() => {
   callEndpointAsUser.mockReset();
 });
 
+describe('getStats with a full list open', () => {
+  it('swaps the first rows for the asked page of each long list, with the same filters', async () => {
+    routeApi({
+      '/lenders/me/stats': STATS,
+      '/memberships': { data: [COLLECTOR] },
+      '/portfolios': [],
+      '/lenders/me/stats/top-arrears': {
+        data: [{ clientId: ID, clientFullName: 'Ana', overdueDays: 3, overdueAmount: 30_000 }],
+        meta: { page: 2, pageSize: 10, total: 11 },
+      },
+      '/lenders/me/stats/collector-performance': {
+        data: STATS.collectorPerformance,
+        meta: { page: 1, pageSize: 10, total: 1 },
+      },
+    });
+    const filters = { from: '2026-10-01', to: '2026-10-09', collectorId: '', portfolioId: ID };
+    const result = await getStats(filters, { arrears: 2, collectors: 1 });
+
+    expect(result.status === 'ok' && result.stats.topArrears.map((row) => row.name)).toEqual(['Ana']);
+    expect(result.status === 'ok' && result.stats.topArrearsPage).toEqual({ page: 2, pages: 2, total: 11 });
+    expect(result.status === 'ok' && result.stats.collectorsPage).toEqual({ page: 1, pages: 1, total: 1 });
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/lenders/me/stats/top-arrears' }), {
+      body: { page: 2, pageSize: 10, collectorMembershipId: undefined, portfolioId: ID },
+    });
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/lenders/me/stats/collector-performance' }), {
+      body: { page: 1, pageSize: 10, dateRange: { from: '2026-10-01', to: '2026-10-09' }, portfolioId: ID },
+    });
+  });
+});
+
 describe('getStats', () => {
   it('returns the view with the collector portfolio and sends only the active filters', async () => {
     routeApi({ '/lenders/me/stats': STATS, '/memberships': { data: [COLLECTOR] }, '/portfolios': [{ id: 'p1', name: 'Zona Norte' }] });

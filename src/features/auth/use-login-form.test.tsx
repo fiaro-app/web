@@ -62,11 +62,11 @@ describe('useLoginForm', () => {
   it('signs in with the E.164 phone and goes to the redirect route', async () => {
     signInMock.mockResolvedValue({} as Awaited<ReturnType<typeof signIn>>);
     const { result } = renderHook(() => useLoginForm({ redirectTo: '/clientes' }));
-    fill(result, '300 123 4567', 'una-contraseña');
+    fill(result, '300 123 4567', 'una-contraseña-segura');
 
     await act(() => result.current.submit(submitEvent()));
 
-    expect(signInMock).toHaveBeenCalledWith({ phone: '+573001234567', password: 'una-contraseña' });
+    expect(signInMock).toHaveBeenCalledWith({ phone: '+573001234567', password: 'una-contraseña-segura' });
     expect(replace).toHaveBeenCalledWith('/clientes');
     expect(refresh).toHaveBeenCalled();
     // Sigue "enviando" mientras navega: así no se puede enviar dos veces.

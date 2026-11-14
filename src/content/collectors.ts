@@ -10,6 +10,16 @@ export const COLLECTORS_TEXT = {
     title: 'Aún no tienes cobradores',
     description: 'Registra a tu primer cobrador para asignarle una cartera y empezar a repartir cobros.',
   },
+  emptyFiltered: {
+    title: 'Sin cobradores con este estado',
+    description: 'Prueba con otro estado para ver a los demás cobradores.',
+  },
+  statusFilter: {
+    label: 'Filtrar cobradores por estado',
+    activos: 'Activos',
+    inactivos: 'Inactivos',
+    todos: 'Todos',
+  },
   forbidden: {
     title: 'No tienes acceso a esta sección',
     description: 'Solo quienes administran el negocio pueden ver y registrar cobradores.',
@@ -18,6 +28,18 @@ export const COLLECTORS_TEXT = {
     previous: 'Anterior',
     next: 'Siguiente',
     summary: (page: number, pages: number, total: number) => `Página ${String(page)} de ${String(pages)} · ${String(total)} cobradores`,
+  },
+  manageAside: {
+    title: 'Qué puedes hacer desde aquí',
+    steps: [
+      'Cambia su cartera o su celular cuando lo necesite.',
+      'Genera una contraseña temporal si la olvidó.',
+      'Si deja el trabajo, desactívalo pasando antes sus préstamos a otro cobrador.',
+    ],
+    tip: {
+      title: 'Un consejo',
+      body: 'Revisa su desempeño aquí al lado antes de reasignarle clientes: el porcentaje de cobro dice quién rinde mejor.',
+    },
   },
   form: {
     aside: {
@@ -48,8 +70,8 @@ export const COLLECTORS_TEXT = {
       placeholder: '300 123 4567',
     },
     contactEmail: {
-      label: 'Correo electrónico (opcional)',
-      hint: 'Sirve para recuperar su contraseña.',
+      label: 'Correo electrónico',
+      hint: 'Ahí le llegan su contraseña temporal y los avisos de la app.',
       placeholder: 'cobrador@correo.com',
     },
     portfolio: { label: 'Cartera asignada', placeholder: 'Elige una cartera' },
@@ -87,6 +109,7 @@ export const COLLECTORS_TEXT = {
       confirmLabel: 'Restablecer',
       result: 'Contraseña temporal nueva',
     },
+    selfNotice: 'Eres tú. Tu contraseña la cambias en «Mi cuenta», y tu cartera o tu baja, otra persona que administre el negocio.',
     deactivate: {
       action: 'Desactivar cobrador',
       confirmTitle: '¿Desactivar al cobrador?',
@@ -101,6 +124,19 @@ export const COLLECTORS_TEXT = {
       destinationPlaceholder: 'Elige un cobrador',
       noDestinations: 'No hay otro cobrador activo que pueda recibir sus préstamos. Registra o activa uno antes de darlo de baja.',
       handoverUnavailable: 'No pudimos revisar los préstamos de este cobrador. Recarga la página para intentarlo de nuevo.',
+    },
+    reactivate: {
+      action: 'Reactivar cobrador',
+      confirmTitle: '¿Reactivar al cobrador?',
+      confirmDescription: 'Vuelve a ingresar con su misma cartera y ocupa un cupo de tu plan. Sus préstamos se le asignan aparte.',
+      confirmLabel: 'Reactivar',
+      done: 'Cobrador reactivado.',
+    },
+    remove: {
+      action: 'Borrar cobrador',
+      confirmTitle: '¿Borrar al cobrador?',
+      confirmDescription: 'Solo se puede si nunca tuvo préstamos asignados, cobros ni cuadres (un registro por error). No se puede deshacer.',
+      confirmLabel: 'Borrar',
     },
   },
 } as const;

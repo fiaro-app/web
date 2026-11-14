@@ -5,6 +5,7 @@ import { describeAuthError, issueFieldErrors } from '@/features/auth/error-messa
 import { ContactFormSchema, type ContactField } from '@/features/leads/lead-schemas';
 import { sendLead } from '@/features/leads/leads-api';
 import { toFieldErrors, type FieldErrors } from '@/lib/forms';
+import { fieldInput } from '@/lib/phone-input';
 import { turnstileEnabled } from '@/components/molecules/TurnstileWidget';
 
 const EMPTY_VALUES: Record<ContactField, string> = { name: '', phone: '', email: '', message: '' };
@@ -35,7 +36,7 @@ export function useContactForm() {
   );
 
   const setField = (field: ContactField) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setValues((current) => ({ ...current, [field]: event.target.value }));
+    setValues((current) => ({ ...current, [field]: fieldInput(field, event.target.value) }));
     setFieldErrors((current) => ({ ...current, [field]: undefined }));
   };
 

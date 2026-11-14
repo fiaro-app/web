@@ -33,7 +33,7 @@ export function SettingsView({ settings }: Readonly<{ settings: SettingsData }>)
         </div>
         <div className="flex flex-col gap-7">
           <CollectionDaysForm nonWorkingWeekdays={nonWorkingWeekdays} skipNationalHolidays={skipNationalHolidays} canEdit={canEdit} />
-          <PortfoliosPanel portfolios={portfolios} canEdit={canEdit} />
+          <PortfoliosPanel portfolios={portfolios} canEdit={canEdit} maxPortfolios={subscription?.maxPortfolios ?? null} />
         </div>
       </div>
     </>

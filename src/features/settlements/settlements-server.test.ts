@@ -41,24 +41,24 @@ beforeEach(() => {
 describe('getSettlements', () => {
   it('returns rows with collector names and sends the status filter only when set', async () => {
     routeApi({
-      '/daily-settlements': { data: [SETTLEMENT], meta: { page: 1, pageSize: 20, total: 1 } },
+      '/daily-settlements': { data: [SETTLEMENT], meta: { page: 1, pageSize: 10, total: 1 } },
       '/memberships': { data: [COLLECTOR] },
       '/portfolios': [],
     });
     const result = await getSettlements(1, 'PENDING');
     expect(result.status === 'ok' && result.settlements.rows[0]?.collectorName).toBe('Luis Gómez');
     expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/daily-settlements' }), {
-      body: { page: 1, pageSize: 20, status: 'PENDING' },
+      body: { page: 1, pageSize: 10, status: 'PENDING' },
     });
     await getSettlements(2, null);
     expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/daily-settlements' }), {
-      body: { page: 2, pageSize: 20 },
+      body: { page: 2, pageSize: 10 },
     });
   });
 
   it('sends the date range, collector and portfolio filters and offers them as options', async () => {
     routeApi({
-      '/daily-settlements': { data: [SETTLEMENT], meta: { page: 1, pageSize: 20, total: 1 } },
+      '/daily-settlements': { data: [SETTLEMENT], meta: { page: 1, pageSize: 10, total: 1 } },
       '/memberships': { data: [COLLECTOR] },
       '/portfolios': [{ id: 'p1', name: 'Zona Norte' }],
     });
@@ -69,7 +69,7 @@ describe('getSettlements', () => {
     expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/daily-settlements' }), {
       body: {
         page: 1,
-        pageSize: 20,
+        pageSize: 10,
         status: 'APPROVED',
         dateRange: { from: '2026-10-01', to: '2026-10-09' },
         collectorMembershipId: 'm1',

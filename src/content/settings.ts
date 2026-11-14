@@ -5,7 +5,7 @@ export const SETTINGS_TEXT = {
   title: 'Configuración',
   forbidden: {
     title: 'No tienes acceso a esta sección',
-    description: 'Tu cuenta no tiene un negocio activo desde el que ver la configuración.',
+    description: 'La configuración del negocio es de quien lo administra. Tus datos y tu contraseña están en «Cuenta».',
   },
   readOnly: 'Solo quien administra el negocio puede cambiar la configuración.',
   business: {
@@ -52,6 +52,7 @@ export const SETTINGS_TEXT = {
     nameLabel: 'Nueva cartera',
     namePlaceholder: 'Ej: Zona Norte',
     create: 'Crear cartera',
+    limitReached: (max: number) => `Llegaste al máximo de ${String(max)} carteras. Borra una que no uses para poder crear otra.`,
     rename: {
       action: 'Renombrar',
       actionFor: (name: string) => `Renombrar la cartera ${name}`,

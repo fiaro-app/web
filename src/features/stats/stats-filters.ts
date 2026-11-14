@@ -1,4 +1,5 @@
 import type { LenderStatsBody } from '@/features/stats/endpoints';
+import { pageHref, parsePageParam } from '@/lib/pagination';
 import { dateRangeParams, idParam, isCalendarDate, singleParam, type SearchParams } from '@/lib/search-params';
 
 /** Filtros de la pantalla de Estadísticas, tal como viajan en la URL (`?desde=&hasta=&cobrador=&cartera=`). */
@@ -31,4 +32,31 @@ export function toStatsBody(filters: StatsFilters): LenderStatsBody {
     ...(filters.collectorId !== '' && { collectorMembershipId: filters.collectorId }),
     ...(filters.portfolioId !== '' && { portfolioId: filters.portfolioId }),
   };
+}
+
+/** Qué lista larga se ve completa (paginada) en lugar de sus 5 primeras filas, y en qué página. */
+export interface StatsListPages {
+  /** `?mora=`: página del ranking de mayor mora. */
+  readonly arrears: number | null;
+  /** `?desempeno=`: página del desempeño por cobrador. */
+  readonly collectors: number | null;
+}
+
+/** Páginas de las listas largas a partir de la URL; sin el parámetro, la lista muestra sus 5 primeras filas. */
+export function parseStatsListPages(params: SearchParams): StatsListPages {
+  return {
+    arrears: params.mora === undefined ? null : parsePageParam(params.mora),
+    collectors: params.desempeno === undefined ? null : parsePageParam(params.desempeno),
+  };
+}
+
+/** Dirección de Estadísticas con los filtros activos y, opcionalmente, una lista larga en una página. */
+export function statsHref(filters: StatsFilters, list?: { readonly name: 'mora' | 'desempeno'; readonly page: number }): string {
+  return pageHref('/estadisticas', 1, {
+    desde: filters.from,
+    hasta: filters.from === '' ? '' : filters.to,
+    cobrador: filters.collectorId,
+    cartera: filters.portfolioId,
+    ...(list && { [list.name]: String(list.page) }),
+  });
 }

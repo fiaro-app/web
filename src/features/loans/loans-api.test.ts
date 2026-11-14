@@ -52,6 +52,7 @@ describe('describeLoanError', () => {
     ['LOAN_NOT_CANCELABLE', /ya no se puede anular/],
     ['FORBIDDEN', /permiso/],
     ['SUBSCRIPTION_READ_ONLY', /solo lectura/],
+    ['PLAN_LIMIT_REACHED', /préstamos activos/],
     ['NOT_FOUND', /ya no existe/],
   ])('maps %s', (code, message) => {
     expect(describeLoanError(apiError(code)).message).toMatch(message);

@@ -4,16 +4,16 @@ import { FeatureCard } from './FeatureCard';
 
 describe('FeatureCard', () => {
   it('shows a titled description and hides the decorative icon from assistive tech', () => {
-    render(<FeatureCard icon="⏱" tone="error" title="Mora en tiempo real" description="Sabe qué clientes están atrasados." />);
+    render(<FeatureCard icon="⏱" title="Mora en tiempo real" description="Sabe qué clientes están atrasados." />);
 
     expect(screen.getByRole('heading', { level: 3, name: 'Mora en tiempo real' })).toBeInTheDocument();
     expect(screen.getByText('Sabe qué clientes están atrasados.')).toBeInTheDocument();
     expect(screen.getByText('⏱')).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it('tints the icon with the tone', () => {
-    render(<FeatureCard icon="✓" tone="success" title="T" description="D" />);
+  it('takes its color from the class it receives', () => {
+    render(<FeatureCard icon="✓" title="T" description="D" className="bg-[#ffe9a8]" />);
 
-    expect(screen.getByText('✓')).toHaveClass('bg-success/12', 'text-success');
+    expect(screen.getByRole('article')).toHaveClass('bg-[#ffe9a8]');
   });
 });

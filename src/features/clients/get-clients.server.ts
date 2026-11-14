@@ -2,6 +2,7 @@ import 'server-only';
 import { toClientsViewModel, type ClientsViewModel } from '@/features/clients/clients-view-model';
 import { clientEndpoints } from '@/features/clients/endpoints';
 import { isApiRequestError } from '@/lib/api';
+import { LIST_PAGE_SIZE } from '@/lib/pagination';
 import { callEndpointAsUser } from '@/lib/api/server-call';
 
 export type ClientsResult =
@@ -13,7 +14,7 @@ export type ClientsResult =
 export async function getClients(page: number, search: string): Promise<ClientsResult> {
   try {
     const result = await callEndpointAsUser(clientEndpoints.list, {
-      body: { page, pageSize: 20, ...(search !== '' && { search }) },
+      body: { page, pageSize: LIST_PAGE_SIZE, ...(search !== '' && { search }) },
     });
     return { status: 'ok', clients: toClientsViewModel(result.data, result.meta, search) };
   } catch (error) {

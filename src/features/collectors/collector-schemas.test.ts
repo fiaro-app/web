@@ -7,7 +7,7 @@ const valid = {
   fullName: 'Luis Gómez',
   nationalId: '1.030.405.060',
   phone: '310 999 8877',
-  contactEmail: '',
+  contactEmail: 'luis@correo.com',
   portfolioId: PORTFOLIO_ID,
 };
 
@@ -16,7 +16,7 @@ describe('CollectorFormSchema', () => {
     const result = CollectorFormSchema.parse(valid);
     expect(result.phone).toBe('+573109998877');
     expect(result.nationalId).toBe('1030405060');
-    expect(result.contactEmail).toBeUndefined();
+    expect(result.contactEmail).toBe('luis@correo.com');
   });
 
   it('reports a message per invalid field', () => {
@@ -24,6 +24,11 @@ describe('CollectorFormSchema', () => {
     expect(result.success).toBe(false);
     const fields = result.error?.issues.map((issue) => issue.path[0]);
     expect(fields).toEqual(expect.arrayContaining(['fullName', 'nationalId', 'portfolioId']));
+  });
+
+  it('requires the email: it is where the collector gets the password and the notices', () => {
+    const result = CollectorFormSchema.safeParse({ ...valid, contactEmail: '  ' });
+    expect(result.error?.issues[0]?.path).toEqual(['contactEmail']);
   });
 
   it('rejects a malformed email but accepts a real one', () => {
@@ -37,11 +42,6 @@ describe('toInviteCollectorBody', () => {
     const body = toInviteCollectorBody(CollectorFormSchema.parse(valid));
     expect(body.roles).toEqual(['COLLECTOR']);
     expect(InviteMembershipBodySchema.safeParse(body).success).toBe(true);
-    expect('contactEmail' in body).toBe(false);
-  });
-
-  it('includes the email when given', () => {
-    const body = toInviteCollectorBody(CollectorFormSchema.parse({ ...valid, contactEmail: 'a@b.co' }));
-    expect(body.contactEmail).toBe('a@b.co');
+    expect(body.contactEmail).toBe('luis@correo.com');
   });
 });

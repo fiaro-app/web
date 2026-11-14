@@ -73,7 +73,7 @@ export const VISITS_TEXT = {
       clear: 'Limpiar filtros',
       search: 'Cliente o cobrador',
       searchPlaceholder: 'Buscar por nombre...',
-      periodHint: 'Sin fechas se muestra solo hoy. Con una sola fecha, ese día.',
+      periodHint: 'Sin fechas se muestra solo hoy. Con una sola fecha, ese día. Hasta 93 días, sin fechas futuras.',
     },
     empty: {
       title: 'Todavía no hay cobros hoy',

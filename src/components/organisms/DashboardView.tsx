@@ -3,6 +3,8 @@ import { Text } from '@/components/atoms/Text';
 import { Alert } from '@/components/molecules/Alert';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { StatTile } from '@/components/molecules/StatTile';
+import { CollectorsTodaySection } from '@/components/organisms/CollectorsTodaySection';
+import type { CollectorsTodayViewModel } from '@/features/collectors-today/collectors-today-view-model';
 import { DashboardPeriodFilter } from '@/components/organisms/DashboardPeriodFilter';
 import { PendingSettlementsTable } from '@/components/organisms/PendingSettlementsTable';
 import type { DashboardViewModel } from '@/features/dashboard/dashboard-view-model';
@@ -12,10 +14,12 @@ export interface DashboardViewProps {
   readonly dashboard: DashboardViewModel;
   /** Período pedido en la URL; vacío es solo hoy. */
   readonly range?: DashboardRange;
+  /** Cómo va hoy la ruta de cada cobrador; `null` si no se pudo traer (el resumen se pinta igual). */
+  readonly collectorsToday?: CollectorsTodayViewModel | null;
 }
 
 /** Resumen del negocio (`Screen / Web / Resumen`): indicadores, alertas y cuadres pendientes. Solo presentación. */
-export function DashboardView({ dashboard, range = EMPTY_DASHBOARD_RANGE }: Readonly<DashboardViewProps>) {
+export function DashboardView({ dashboard, range = EMPTY_DASHBOARD_RANGE, collectorsToday = null }: Readonly<DashboardViewProps>) {
   const { kpis, alerts, pendingSettlements, isEmpty, periodLabel } = dashboard;
 
   return (
@@ -44,6 +48,8 @@ export function DashboardView({ dashboard, range = EMPTY_DASHBOARD_RANGE }: Read
               <StatTile key={kpi.id} label={kpi.label} value={kpi.value} tone={kpi.tone} />
             ))}
           </section>
+
+          {collectorsToday && <CollectorsTodaySection today={collectorsToday} />}
 
           {alerts.length > 0 && (
             <section aria-labelledby="alerts-title" className="flex flex-col gap-3">

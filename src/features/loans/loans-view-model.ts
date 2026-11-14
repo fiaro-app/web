@@ -6,8 +6,6 @@ import { formatBusinessDate, formatInstantDate } from '@/lib/dates';
 import { formatCop } from '@/lib/amount';
 import type { Tone } from '@/lib/tone';
 
-/** Nombres de cliente por id, para completar las filas del listado. */
-export type ClientNames = ReadonlyMap<string, string>;
 
 /** Color del estado de un préstamo: activo en tinta, pagado en verde y anulado atenuado. */
 export type LoanStatusTone = Extract<Tone, 'success' | 'info'> | 'muted';
@@ -70,7 +68,6 @@ function describeOverdue(loan: LoanListItem): string {
 /** Convierte una página de préstamos de la API (con saldo y mora ya calculados) en filas de la tabla. */
 export function toLoansViewModel(
   loans: readonly LoanListItem[],
-  clientNames: ClientNames,
   pageInfo: {
     readonly total: number;
     readonly page: number;
@@ -84,7 +81,7 @@ export function toLoansViewModel(
     const isOverdue = loan.status === 'ACTIVE' && loan.overdueDays > 0;
     return {
       id: loan.id,
-      clientName: clientNames.get(loan.clientId) ?? LOANS_TEXT.unknownClient,
+      clientName: loan.clientFullName === '' ? LOANS_TEXT.unknownClient : loan.clientFullName,
       collectorName: loan.collector?.fullName ?? '—',
       principal: formatCop(loan.principalAmount),
       installments: describeInstallments(loan.installmentCount, loan.installmentValue),

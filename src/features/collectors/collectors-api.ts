@@ -17,6 +17,16 @@ export function deactivateCollector(collectorId: string, reassignments: Deactiva
   return callEndpoint(collectorEndpoints.deactivate, { params: { id: collectorId }, body: { reassignments } });
 }
 
+/** Devuelve el acceso a un cobrador dado de baja, con su cartera; ocupa un cupo del plan. */
+export function reactivateCollector(membershipId: string) {
+  return callEndpoint(membershipEndpoints.reactivate, { params: { id: membershipId } });
+}
+
+/** Borra a un cobrador registrado por error. La API lo rechaza si ya tiene historial. */
+export function deleteCollector(membershipId: string) {
+  return callEndpoint(membershipEndpoints.remove, { params: { id: membershipId } });
+}
+
 /** Genera una contraseña temporal nueva para el cobrador (se muestra una sola vez). */
 export function resetCollectorPassword(membershipId: string) {
   return callEndpoint(membershipEndpoints.resetPassword, { params: { id: membershipId } });

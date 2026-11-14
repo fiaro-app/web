@@ -9,9 +9,14 @@ describe('APP_NAV_ITEMS', () => {
       'Clientes',
       'Préstamos',
       'Cobros',
+      'Solicitudes',
+      'Rutas',
       'Cuadres',
       'Notificaciones',
       'Estadísticas',
+      'Importar',
+      'Administradores',
+      'Plan y pagos',
       'Configuración',
     ]);
     expect(APP_NAV_ITEMS.filter((item) => item.available).map((item) => item.href)).toEqual([
@@ -20,9 +25,14 @@ describe('APP_NAV_ITEMS', () => {
       '/clientes',
       '/prestamos',
       '/cobros',
+      '/solicitudes',
+      '/rutas',
       '/cuadres',
       '/notificaciones',
       '/estadisticas',
+      '/importar',
+      '/administradores',
+      '/plan',
       '/configuracion',
     ]);
   });
@@ -42,7 +52,7 @@ describe('isNavItemActive', () => {
 
 describe('visibleNavItems', () => {
   it('gives a collector only the modules that are not administration', () => {
-    expect(visibleNavItems(true).map((item) => item.label)).toEqual(['Clientes', 'Préstamos', 'Cuadres', 'Notificaciones', 'Configuración']);
+    expect(visibleNavItems(true).map((item) => item.label)).toEqual(['Clientes', 'Préstamos', 'Cuadres', 'Notificaciones']);
   });
 
   it('gives everyone else the whole menu', () => {

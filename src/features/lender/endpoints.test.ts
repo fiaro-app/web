@@ -38,8 +38,16 @@ describe('lender write endpoints', () => {
 
   it('rejects an unknown weekday and an unsupported logo type', () => {
     expect(UpdateLenderBodySchema.safeParse({ nonWorkingWeekdays: ['FUNDAY'] }).success).toBe(false);
-    expect(LogoUploadUrlBodySchema.safeParse({ contentType: 'image/gif' }).success).toBe(false);
-    expect(LogoUploadUrlBodySchema.safeParse({ contentType: 'image/png' }).success).toBe(true);
+    expect(LogoUploadUrlBodySchema.safeParse({ contentType: 'image/gif', sizeBytes: 100 }).success).toBe(false);
+    expect(LogoUploadUrlBodySchema.safeParse({ contentType: 'image/png', sizeBytes: 100 }).success).toBe(true);
+  });
+
+  it('requires the logo size, between 1 byte and 2 MB', () => {
+    const parse = (sizeBytes?: number) => LogoUploadUrlBodySchema.safeParse({ contentType: 'image/png', sizeBytes }).success;
+    expect(parse()).toBe(false);
+    expect(parse(0)).toBe(false);
+    expect(parse(2 * 1024 * 1024)).toBe(true);
+    expect(parse(2 * 1024 * 1024 + 1)).toBe(false);
   });
 
   it('requires a name to create a portfolio', () => {

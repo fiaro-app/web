@@ -24,9 +24,10 @@ const VALID = {
   fullName: 'Luis Gómez',
   nationalId: '1030405060',
   phone: '310 999 8877',
+  contactEmail: 'luis@correo.com',
   portfolioId: '0192f0a4-7c3e-7000-8000-0000000000aa',
 };
-const INVITED = { id: 'm', fullName: 'Luis Gómez', phone: '+573109998877', tempPassword: 'abc-123' };
+const INVITED = { membership: { id: 'm' }, tempPassword: 'abc-123' };
 
 beforeEach(() => {
   vi.clearAllMocks();

@@ -3,11 +3,11 @@ import { describe, expect, it } from 'vitest';
 import { SubscriptionBanner } from './SubscriptionBanner';
 
 describe('SubscriptionBanner', () => {
-  it('shows the notice with a way to reach sales', () => {
+  it('shows the notice with a way to renew', () => {
     render(<SubscriptionBanner notice={{ tone: 'warning', message: 'Tu prueba gratis termina en 3 días.' }} />);
 
     expect(screen.getByRole('status')).toHaveTextContent('Tu prueba gratis termina en 3 días.');
-    expect(screen.getByRole('link', { name: 'Contactar ventas' })).toHaveAttribute('href', '/contacto');
+    expect(screen.getByRole('link', { name: 'Renovar plan' })).toHaveAttribute('href', '/plan');
   });
 
   it('announces a read-only business immediately', () => {

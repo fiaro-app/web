@@ -7,6 +7,7 @@ export const CLIENTS_TEXT = {
   onTime: 'Al día',
   overdueDays: (days: number) => (days === 1 ? '1 día' : `${String(days)} días`),
   edit: 'Editar',
+  riskLabel: (level: string) => `Riesgo ${level}`,
   search: {
     placeholder: 'Buscar por nombre o cédula...',
     submit: 'Buscar',
@@ -40,6 +41,18 @@ export const CLIENTS_TEXT = {
     summary: (page: number, pages: number, total: number) => `Página ${String(page)} de ${String(pages)} · ${String(total)} clientes`,
   },
   form: {
+    editAside: {
+      title: 'Qué puedes hacer desde aquí',
+      steps: [
+        'Corrige el celular o la dirección: tus cobradores los ven al instante.',
+        'Sube una foto para reconocer al cliente en la calle.',
+        'Mira cómo paga y registra un préstamo nuevo desde sus préstamos.',
+      ],
+      tip: {
+        title: 'Un consejo',
+        body: 'La cédula no se cambia: identifica al cliente en todo su historial.',
+      },
+    },
     aside: {
       title: '¿Qué pasa después?',
       steps: [

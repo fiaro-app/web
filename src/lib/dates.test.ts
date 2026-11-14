@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatBusinessDate, formatInstantDate, formatInstantTime } from './dates';
+import { formatBusinessDate, formatInstantDate, formatInstantTime, formatWeekdayDay } from './dates';
 
 describe('formatBusinessDate', () => {
   it('writes the day first, as in Colombia', () => {
@@ -28,5 +28,22 @@ describe('formatInstantDate', () => {
 describe('formatInstantTime', () => {
   it('reads the hour in Bogotá, not in UTC', () => {
     expect(formatInstantTime('2026-10-01T20:05:00.000Z')).toMatch(/^0?3:05\s?p\.\s?m\.$/i);
+  });
+});
+
+describe('formatWeekdayDay', () => {
+  it('writes the weekday and the day number', () => {
+    expect(formatWeekdayDay('2026-10-12')).toBe('lun 12');
+    expect(formatWeekdayDay('2026-10-04')).toBe('dom 4');
+    expect(formatWeekdayDay('2026-10-14')).toBe('mié 14');
+  });
+
+  it('never shifts the day because of the time zone', () => {
+    expect(formatWeekdayDay('2026-01-01')).toBe('jue 1');
+    expect(formatWeekdayDay('2026-12-31')).toBe('jue 31');
+  });
+
+  it('returns anything that is not a calendar date untouched', () => {
+    expect(formatWeekdayDay('ayer')).toBe('ayer');
   });
 });

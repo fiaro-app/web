@@ -1,4 +1,4 @@
-import { IdSchema } from '@fiaro-app/contracts';
+import { IdSchema, boundedDateRange, type DateRangeLimits } from '@fiaro-app/contracts';
 
 /** Parámetros de búsqueda de una página, tal como los entrega Next. */
 export type SearchParams = Readonly<Record<string, string | string[] | undefined>>;
@@ -24,14 +24,27 @@ export function idParam(value: string | string[] | undefined): string {
 }
 
 /**
- * Período de `?desde=&hasta=`. Con una sola fecha válida se usa para ambas (un solo día); el rango
- * debe estar en orden. Si algo no cuadra devuelve el período vacío (`''`).
+ * Cuántos días puede abarcar el período de cada pantalla: los mismos topes de la API (D-117). El
+ * reporte de cobros recorre una fila por visita, por eso es más corto.
  */
-export function dateRangeParams(params: SearchParams): { readonly from: string; readonly to: string } {
+export const DATE_RANGE_LIMITS = {
+  visits: { maxDays: 93 },
+  history: { maxDays: 366 },
+} as const satisfies Record<string, DateRangeLimits>;
+
+/**
+ * Período de `?desde=&hasta=`. Con una sola fecha válida se usa para ambas (un solo día). El rango
+ * debe estar en orden, no pasar de hoy y no ser más largo que `limits`: si algo no cuadra devuelve
+ * el período vacío (`''`), así la URL nunca produce una consulta que la API rechace.
+ */
+export function dateRangeParams(
+  params: SearchParams,
+  limits: DateRangeLimits = DATE_RANGE_LIMITS.history,
+): { readonly from: string; readonly to: string } {
   const rawFrom = singleParam(params.desde);
   const rawTo = singleParam(params.hasta);
   const validTo = isCalendarDate(rawTo) ? rawTo : '';
   const from = isCalendarDate(rawFrom) ? rawFrom : validTo;
   const to = validTo === '' ? from : validTo;
-  return from !== '' && from <= to ? { from, to } : { from: '', to: '' };
+  return from !== '' && boundedDateRange(limits).safeParse({ from, to }).success ? { from, to } : { from: '', to: '' };
 }

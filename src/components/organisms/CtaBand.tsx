@@ -12,7 +12,7 @@ export interface CtaBandProps {
 export function CtaBand({ title, description, ctaLabel, ctaHref }: Readonly<CtaBandProps>) {
   return (
     <section className="flex flex-col items-center gap-5 bg-primary px-6 py-20 text-center text-primary-foreground lg:px-16">
-      <Text variant="price" as="h2" className="max-w-175">
+      <Text variant="price" as="h2" className="max-w-175 tracking-[-0.02em]">
         {title}
       </Text>
       <Text variant="lead" className="max-w-150 text-primary-foreground/85">

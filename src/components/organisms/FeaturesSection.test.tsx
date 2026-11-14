@@ -10,8 +10,8 @@ describe('FeaturesSection', () => {
         title="Todo lo que tu cuaderno no puede mostrar"
         subtitle="Visibilidad."
         features={[
-          { icon: '⏱', tone: 'error', title: 'Mora', description: 'a' },
-          { icon: '✓', tone: 'success', title: 'Efectividad', description: 'b' },
+          { icon: '⏱', title: 'Mora', description: 'a' },
+          { icon: '✓', title: 'Efectividad', description: 'b' },
         ]}
       />,
     );

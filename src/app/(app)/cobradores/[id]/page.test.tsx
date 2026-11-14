@@ -11,6 +11,7 @@ vi.mock('@/features/collectors/get-collector-handover.server', () => ({ getColle
 vi.mock('@/features/collectors/get-collector.server', () => ({ getCollector }));
 vi.mock('@/features/collectors/get-collector-stats.server', () => ({ getCollectorStats }));
 vi.mock('@/features/collectors/get-portfolio-options.server', () => ({ getPortfolioOptions: vi.fn().mockResolvedValue([]) }));
+vi.mock('@/features/app-shell/get-access.server', () => ({ getAccess: vi.fn().mockResolvedValue({ canManage: true, canCollect: false, membershipId: 'm-own' }) }));
 vi.mock('@/components/organisms/CollectorManage', () => ({ CollectorManage: () => <section aria-label="Gestión" /> }));
 
 const props = { params: Promise.resolve({ id: 'm1' }) } as Parameters<typeof ManageCollectorPage>[0];

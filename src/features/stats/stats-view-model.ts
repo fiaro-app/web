@@ -49,6 +49,13 @@ export interface CollectorPerformanceView {
   readonly overdue: string;
 }
 
+/** Página de una lista larga de las estadísticas (`?mora=` o `?desempeno=`). */
+export interface StatsListPage {
+  readonly page: number;
+  readonly pages: number;
+  readonly total: number;
+}
+
 export interface StatsViewModel {
   /** "01/10/2026 – 09/10/2026". */
   readonly period: string;
@@ -56,6 +63,10 @@ export interface StatsViewModel {
   readonly arrearsByAge: readonly ArrearsBucketView[];
   readonly topArrears: readonly TopArrearsView[];
   readonly collectors: readonly CollectorPerformanceView[];
+  /** Si el ranking de mora muestra una página completa en lugar de los 5 primeros. */
+  readonly topArrearsPage?: StatsListPage;
+  /** Si el desempeño muestra una página completa en lugar de los 5 primeros. */
+  readonly collectorsPage?: StatsListPage;
   /** Sin cartera ni cobradores en el período: para pintar un estado vacío. */
   readonly isEmpty: boolean;
 }
@@ -68,6 +79,31 @@ function arrearsRateTone(rate: number | null): FigureTone {
 
 function plural(count: number, singular: string, pluralForm: string): string {
   return `${String(count)} ${count === 1 ? singular : pluralForm}`;
+}
+
+/** Una fila del ranking de mayor mora, lista para pintar. */
+export function toTopArrearsView(entry: LenderStats['topArrears'][number]): TopArrearsView {
+  return {
+    clientId: entry.clientId,
+    name: entry.clientFullName,
+    days: `${plural(entry.overdueDays, 'día', 'días')} en mora`,
+    amount: formatCop(entry.overdueAmount),
+  };
+}
+
+/** Una fila del desempeño por cobrador, con el nombre de su cartera. */
+export function toCollectorPerformanceView(
+  collector: LenderStats['collectorPerformance'][number],
+  lookup: SettlementLookup = EMPTY_LOOKUP,
+): CollectorPerformanceView {
+  return {
+    collectorId: collector.collectorMembershipId,
+    name: collector.fullName,
+    portfolioName: lookup.collectorPortfolioNames.get(collector.collectorMembershipId) ?? NO_PORTFOLIO,
+    effectiveness: formatPercent(collector.effectiveness),
+    effectivenessTone: effectivenessTone(collector.effectiveness),
+    overdue: formatCop(collector.overdueAmount),
+  };
 }
 
 /**
@@ -123,20 +159,8 @@ export function toStatsViewModel(stats: LenderStats, lookup: SettlementLookup = 
       clients: plural(bucket.clientsCount, 'cliente', 'clientes'),
       barPercent: largest === 0 ? 0 : Math.round((bucket.amount / largest) * 100),
     })),
-    topArrears: stats.topArrears.map((entry) => ({
-      clientId: entry.clientId,
-      name: entry.clientFullName,
-      days: `${plural(entry.overdueDays, 'día', 'días')} en mora`,
-      amount: formatCop(entry.overdueAmount),
-    })),
-    collectors: stats.collectorPerformance.map((collector) => ({
-      collectorId: collector.collectorMembershipId,
-      name: collector.fullName,
-      portfolioName: lookup.collectorPortfolioNames.get(collector.collectorMembershipId) ?? NO_PORTFOLIO,
-      effectiveness: formatPercent(collector.effectiveness),
-      effectivenessTone: effectivenessTone(collector.effectiveness),
-      overdue: formatCop(collector.overdueAmount),
-    })),
+    topArrears: stats.topArrears.map(toTopArrearsView),
+    collectors: stats.collectorPerformance.map((collector) => toCollectorPerformanceView(collector, lookup)),
     isEmpty: stats.totalPortfolio === 0 && stats.collectorPerformance.length === 0,
   };
 }

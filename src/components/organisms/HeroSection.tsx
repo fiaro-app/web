@@ -13,39 +13,33 @@ export interface HeroSectionProps {
   readonly visual: ReactNode;
 }
 
-/** Portada de la landing: propuesta de valor con dos llamados a la acción y una ilustración. */
-export function HeroSection({
-  eyebrow,
-  title,
-  description,
-  primaryCta,
-  secondaryCta,
-  footnote,
-  visual,
-}: Readonly<HeroSectionProps>) {
+/** Portada de la landing: propuesta de valor en tipografía grande, dos llamados a la acción y la maqueta del panel. Sobria, sin adornos. */
+export function HeroSection({ eyebrow, title, description, primaryCta, secondaryCta, footnote, visual }: Readonly<HeroSectionProps>) {
   return (
-    <section className="flex flex-col items-center gap-16 bg-background px-6 py-16 lg:flex-row lg:px-16 lg:py-20">
-      <div className="flex flex-col items-start gap-5 lg:w-150 lg:shrink-0">
-        <Text variant="caption" as="p" weight="semibold" className="tracking-wide text-primary uppercase">
-          {eyebrow}
-        </Text>
-        <Text variant="hero">{title}</Text>
-        <Text variant="body" className="text-foreground/75">
-          {description}
-        </Text>
-        <div className="flex flex-wrap items-center gap-4">
-          <ButtonLink href={primaryCta.href} className="w-45">
-            {primaryCta.label}
-          </ButtonLink>
-          <ButtonLink href={secondaryCta.href} variant="text" className="w-45">
-            {secondaryCta.label}
-          </ButtonLink>
+    <section className="border-b border-foreground/8 bg-surface px-6 py-16 lg:px-16 lg:py-24">
+      <div className="mx-auto flex max-w-7xl flex-col items-center gap-14 lg:flex-row lg:gap-16">
+        <div className="flex flex-col items-start gap-6 lg:w-1/2 lg:shrink-0">
+          <p className="font-mono text-caption font-medium tracking-[0.08em] text-primary uppercase">{eyebrow}</p>
+          <Text variant="hero" className="text-[clamp(2.25rem,4.6vw,3.75rem)] leading-[1.05] tracking-[-0.025em]">
+            {title}
+          </Text>
+          <Text variant="body" className="max-w-xl text-[17px] text-foreground/75">
+            {description}
+          </Text>
+          <div className="flex flex-wrap items-center gap-3">
+            <ButtonLink href={primaryCta.href} className="px-7">
+              {primaryCta.label}
+            </ButtonLink>
+            <ButtonLink href={secondaryCta.href} variant="outline" className="px-7">
+              {secondaryCta.label}
+            </ButtonLink>
+          </div>
+          <Text variant="caption" className="text-foreground/65">
+            {footnote}
+          </Text>
         </div>
-        <Text variant="caption" className="text-foreground/65">
-          {footnote}
-        </Text>
+        <div className="w-full min-w-0 flex-1">{visual}</div>
       </div>
-      <div className="w-full min-w-0 flex-1">{visual}</div>
     </section>
   );
 }

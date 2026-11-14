@@ -5,6 +5,7 @@ import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { signIn } from '@/features/auth/auth-api';
 import { describeAuthError } from '@/features/auth/error-messages';
 import { SignInFormSchema, type SignInField, type SignInFormInput } from '@/features/auth/schemas';
+import { fieldInput } from '@/lib/phone-input';
 import { toFieldErrors, type FieldErrors } from '@/lib/forms';
 
 const EMPTY_VALUES: SignInFormInput = { phone: '', password: '' };
@@ -27,7 +28,7 @@ export function useLoginForm({ redirectTo }: UseLoginFormOptions) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const setField = (field: SignInField) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues((current) => ({ ...current, [field]: event.target.value }));
+    setValues((current) => ({ ...current, [field]: fieldInput(field, event.target.value) }));
     // Corregir un campo le quita su error, sin esperar al siguiente envío.
     setFieldErrors((current) => ({ ...current, [field]: undefined }));
   };

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/atoms/Button';
-import { Link } from '@/components/atoms/Link';
+import { BackLink } from '@/components/molecules/BackLink';
 import { Text } from '@/components/atoms/Text';
 import { Alert } from '@/components/molecules/Alert';
 import { ConfirmDialog } from '@/components/molecules/ConfirmDialog';
@@ -35,7 +35,7 @@ export function LoanDetail({ loan, collectors, canManage = true }: Readonly<Loan
 
   return (
     <section aria-labelledby="loan-title" className="flex max-w-lg flex-col gap-5">
-      <Link href="/prestamos">{text.back}</Link>
+      <BackLink href="/prestamos">{text.back}</BackLink>
       <Text variant="title" as="h1" weight="bold" id="loan-title" className="text-foreground">
         {loan.clientName}
       </Text>

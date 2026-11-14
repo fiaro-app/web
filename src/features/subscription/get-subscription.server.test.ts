@@ -16,8 +16,8 @@ const SUBSCRIPTION = {
   daysRemaining: 30,
   graceDaysRemaining: 0,
   isReadOnly: false,
-  limits: { maxActiveLenders: 1, maxCollectors: 5 },
-  usage: { activeLenders: 1, activeCollectors: 2 },
+  limits: { maxActiveLenders: 1, maxCollectors: 5, maxAdmins: 3, maxPortfolios: 4, maxActiveLoans: null },
+  usage: { activeLenders: 1, activeCollectors: 2, activeAdmins: 1, activeLoans: 0 },
   createdAt: '2026-10-09T17:00:00.000Z',
 };
 
@@ -29,7 +29,7 @@ describe('getSubscription', () => {
   it('returns the plan ready to paint', async () => {
     callEndpointAsUser.mockResolvedValue(SUBSCRIPTION);
 
-    await expect(getSubscription()).resolves.toMatchObject({ planName: 'Prueba gratis', collectors: '2 de 5' });
+    await expect(getSubscription()).resolves.toMatchObject({ planName: 'Prueba gratis', maxPortfolios: 4 });
     expect(callEndpointAsUser.mock.calls[0]?.[0]).toMatchObject({ method: 'GET', path: '/subscription' });
   });
 

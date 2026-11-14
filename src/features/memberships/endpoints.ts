@@ -43,9 +43,8 @@ export const ChangeMembershipRolesBodySchema = z.strictObject({
  * Respuesta de invitar: la membresía y, solo si la persona no tenía cuenta, la contraseña
  * temporal en claro. Se muestra una sola vez (la API no la vuelve a entregar).
  */
-export const InvitedMembershipSchema = MembershipSchema.extend({
-  fullName: z.string(),
-  phone: z.string(),
+export const InvitedMembershipSchema = z.object({
+  membership: MembershipSchema,
   tempPassword: z.string().nullable(),
 });
 export type InvitedMembership = z.infer<typeof InvitedMembershipSchema>;
@@ -60,6 +59,12 @@ const MembershipParamsSchema = z.object({ id: IdSchema });
  * un cobrador recibe 403. Los schemas son del contrato; los endpoints se declaran aquí hasta que el paquete los publique.
  */
 export const membershipEndpoints = {
+  me: defineEndpoint({
+    method: 'GET',
+    path: '/memberships/me',
+    summary: 'La membresía de quien llama, con sus roles; la puede pedir cualquier rol (D-124).',
+    response: MembershipSchema,
+  }),
   list: defineEndpoint({
     method: 'QUERY',
     path: '/memberships',
@@ -95,6 +100,20 @@ export const membershipEndpoints = {
     summary: 'Quita el acceso de inmediato y conserva todo el historial.',
     params: MembershipParamsSchema,
     response: MembershipSchema,
+  }),
+  reactivate: defineEndpoint({
+    method: 'POST',
+    path: '/memberships/:id/reactivate',
+    summary: 'Devuelve el acceso con los mismos roles y cartera; si cobra, ocupa un cupo del plan (D-116).',
+    params: MembershipParamsSchema,
+    response: MembershipSchema,
+  }),
+  remove: defineEndpoint({
+    method: 'DELETE',
+    path: '/memberships/:id',
+    summary: 'Borra un registro por error: solo sin asignaciones, visitas ni cuadres (D-116).',
+    params: MembershipParamsSchema,
+    response: z.undefined(),
   }),
   resetPassword: defineEndpoint({
     method: 'POST',

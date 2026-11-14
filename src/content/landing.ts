@@ -1,3 +1,5 @@
+import { PLAN_OFFERS } from '@/content/plans';
+import { formatCop } from '@/lib/amount';
 import type { LandingNavLink } from '@/components/organisms/LandingNav';
 import type { PreviewBar, PreviewKpi } from '@/components/organisms/DashboardPreview';
 import type { FeatureItem } from '@/components/organisms/FeaturesSection';
@@ -7,6 +9,7 @@ import type { FaqItem } from '@/components/organisms/FaqSection';
 
 /** Ids de las secciones, usados como ancla por la navegación. */
 export const LANDING_SECTION_IDS = {
+  day: 'un-dia',
   product: 'producto',
   howItWorks: 'como-funciona',
   pricing: 'precios',
@@ -21,6 +24,7 @@ export const LANDING_ROUTES = {
 } as const;
 
 export const NAV_LINKS: readonly LandingNavLink[] = [
+  { label: 'Un día con Fiaro', href: `#${LANDING_SECTION_IDS.day}` },
   { label: 'Producto', href: `#${LANDING_SECTION_IDS.product}` },
   { label: 'Cómo funciona', href: `#${LANDING_SECTION_IDS.howItWorks}` },
   { label: 'Precios', href: `#${LANDING_SECTION_IDS.pricing}` },
@@ -31,6 +35,9 @@ export const FOOTER_LINKS: readonly LandingNavLink[] = [
   { label: 'Producto', href: `#${LANDING_SECTION_IDS.product}` },
   { label: 'Precios', href: `#${LANDING_SECTION_IDS.pricing}` },
   { label: 'Contacto', href: LANDING_ROUTES.contact },
+  { label: 'Términos', href: '/terminos' },
+  { label: 'Privacidad', href: '/privacidad' },
+  { label: 'Cookies', href: '/cookies' },
 ];
 
 export const HERO = {
@@ -39,9 +46,16 @@ export const HERO = {
   description:
     'Fiaro le da a cada prestamista la visibilidad que hoy le falta: mora en tiempo real, efectividad por cobrador y el cuadre del día sin depender de una hoja de Excel.',
   primaryCta: { label: 'Comenzar gratis', href: LANDING_ROUTES.signup },
-  secondaryCta: { label: 'Ver cómo funciona →', href: `#${LANDING_SECTION_IDS.howItWorks}` },
+  secondaryCta: { label: 'Ver un día de cobro →', href: `#${LANDING_SECTION_IDS.day}` },
   footnote: 'Sin tarjeta de crédito · Configura tu financiera en 5 minutos',
 } as const;
+
+/** Tira de pruebas bajo la portada: lo que cambia en la práctica, sin cifras inventadas. */
+export const PROOF_STRIP = [
+  { value: '5 min', label: 'para dejar tu financiera lista' },
+  { value: '1 toque', label: 'para registrar cada visita' },
+  { value: '0 Excel', label: 'para saber cuánto te deben hoy' },
+] as const;
 
 export const PREVIEW_KPIS: readonly PreviewKpi[] = [
   { label: 'Cartera total', value: '$18.4M' },
@@ -57,6 +71,86 @@ export const PREVIEW_BARS: readonly PreviewBar[] = [
 
 export const PREVIEW_CHART_TITLE = 'Mora por antigüedad';
 
+/** «Un día con Fiaro»: el mismo día con el cuaderno y con Fiaro, para ver por qué cambia el negocio. Datos de ejemplo. */
+export const DAY_FLOW = {
+  title: 'Mira un día de cobro, con y sin Fiaro',
+  subtitle: 'Es el mismo negocio y el mismo día. Cambia lo que sabes de tu plata mientras todavía puedes actuar.',
+  modes: { notebook: 'Con el cuaderno', fiaro: 'Con Fiaro' },
+  notebook: {
+    heading: 'Tu cuaderno, a las 7 de la noche',
+    lines: [
+      { text: 'Don Pedro — ¿pagó? ¿cuánto?', note: 'letra borrosa' },
+      { text: 'María — 35.000 (¿o 30.000?)', note: 'sin comprobante' },
+      { text: 'Luis — no estaba, volver', note: 'nadie lo recordará mañana' },
+    ],
+    problems: [
+      'No sabes cuánto se cobró hasta que el cobrador regresa.',
+      'La mora se descubre cuando ya es tarde para cobrarla.',
+      'Si algo no cuadra, no hay a quién ni cómo demostrarle.',
+    ],
+  },
+  stepsLabel: 'Pasos del día con Fiaro',
+  steps: [
+    {
+      tab: 'La ruta',
+      title: 'El cobrador sale con la ruta lista',
+      description: 'Cada mañana ve a quién visitar y cuánto cobrar, ordenado, desde su celular. Tú no tienes que dictarle nada.',
+      mock: {
+        heading: 'Ruta de hoy · 3 visitas',
+        rows: [
+          { name: 'María Pérez', detail: 'Cuota $35.000', tag: 'Pendiente', tone: 'muted' },
+          { name: 'Luis Gómez', detail: 'Cuota $20.000', tag: 'Pendiente', tone: 'muted' },
+          { name: 'Don Pedro', detail: 'Cuota $50.000', tag: 'Pendiente', tone: 'muted' },
+        ],
+        footer: { label: 'Por cobrar', value: '$105.000' },
+      },
+    },
+    {
+      tab: 'El cobro',
+      title: 'Cada visita queda registrada al instante',
+      description: 'Pagó, no estaba o prometió pagar otro día: el cobrador lo marca y tú lo ves en tu panel, con la hora y la persona.',
+      mock: {
+        heading: 'Visitas · en vivo',
+        rows: [
+          { name: 'María Pérez', detail: 'Efectivo $35.000', tag: 'Pagó', tone: 'success' },
+          { name: 'Luis Gómez', detail: 'Promete pagar el viernes', tag: 'Reprogramado', tone: 'warning' },
+          { name: 'Don Pedro', detail: 'No estaba', tag: 'No pagó', tone: 'error' },
+        ],
+        footer: { label: 'Cobrado', value: '$35.000' },
+      },
+    },
+    {
+      tab: 'El cuadre',
+      title: 'El cuadre se hace solo, tú solo apruebas',
+      description: 'Al cerrar, Fiaro compara lo esperado con lo que el cobrador entrega. Si cuadra, lo apruebas en segundos; si no, ves exactamente la diferencia.',
+      mock: {
+        heading: 'Cuadre del día',
+        rows: [
+          { name: 'Esperado', detail: 'Según la ruta', tag: '$105.000', tone: 'muted' },
+          { name: 'Cobrado', detail: 'Registrado por el cobrador', tag: '$35.000', tone: 'muted' },
+          { name: 'Diferencia', detail: 'Visitas sin pago', tag: '$70.000', tone: 'warning' },
+        ],
+        footer: { label: 'Estado', value: 'Por revisar' },
+      },
+    },
+    {
+      tab: 'La decisión',
+      title: 'Ves la mora mientras todavía se puede cobrar',
+      description: 'Don Pedro lleva días sin pagar y te lo mostramos hoy, no a fin de mes. Decides a quién reforzar, a quién llamar y a quién no prestarle más.',
+      mock: {
+        heading: 'Mora por antigüedad',
+        rows: [
+          { name: '1 a 5 días', detail: '4 clientes', tag: '$180.000', tone: 'warning' },
+          { name: '6 a 15 días', detail: '2 clientes', tag: '$210.000', tone: 'error' },
+          { name: 'Más de 15 días', detail: '1 cliente', tag: '$150.000', tone: 'error' },
+        ],
+        footer: { label: 'En mora', value: '18%' },
+      },
+    },
+  ],
+  cta: { label: 'Probar con mi cartera', href: LANDING_ROUTES.signup },
+} as const;
+
 export const FEATURES = {
   title: 'Todo lo que tu cuaderno no te puede mostrar',
   subtitle:
@@ -64,28 +158,24 @@ export const FEATURES = {
   items: [
     {
       icon: '⏱',
-      tone: 'error',
       title: 'Mora en tiempo real',
       description:
         'Sabe exactamente qué clientes están atrasados, hace cuánto y cuánto dinero representan — sin esperar al cierre de mes.',
     },
     {
       icon: '✓',
-      tone: 'success',
       title: 'Efectividad por cobrador',
       description:
         'Compara el desempeño de cada cobrador y detecta a tiempo quién necesita apoyo o supervisión.',
     },
     {
       icon: '▦',
-      tone: 'info',
       title: 'Cuadre diario sin Excel',
       description:
         'Cada cobrador cierra su ruta desde el celular; tú apruebas o rechazas el cuadre en segundos.',
     },
     {
       icon: '◈',
-      tone: 'warning',
       title: 'Reportes para tu contador',
       description:
         'Estadísticas y exportes en PDF que le dan a tu negocio la seriedad que un cuaderno nunca tuvo.',
@@ -113,50 +203,21 @@ export const HOW_IT_WORKS = {
   ],
 } satisfies { title: string; steps: readonly StepItem[] };
 
+/** Los planes de la portada salen de `PLAN_OFFERS`, la misma lista que ve quien paga en «Plan y pagos»: un solo lugar para precios y topes. */
 export const PRICING = {
   eyebrow: 'Precios',
   title: 'Un plan para cada tamaño de negocio',
-  note: 'Precios de referencia — se confirman antes del lanzamiento.',
-  plans: [
-    {
-      name: 'Básico',
-      price: '$79.000',
-      period: '/mes',
-      description: 'Para prestamistas con 1 financiera y hasta 3 cobradores.',
-      features: ['1 financiera', 'Hasta 3 cobradores', 'App móvil de cobro', 'Cuadre diario'],
-      ctaLabel: 'Comenzar gratis',
-      ctaHref: LANDING_ROUTES.signup,
-    },
-    {
-      name: 'Profesional',
-      price: '$149.000',
-      period: '/mes',
-      description: 'Para negocios que ya necesitan estadísticas y varios cobradores.',
-      features: [
-        '1 financiera',
-        'Hasta 10 cobradores',
-        'Estadísticas y mora por antigüedad',
-        'Exportes en PDF',
-        'Soporte prioritario',
-      ],
-      ctaLabel: 'Comenzar gratis',
-      ctaHref: LANDING_ROUTES.signup,
-      highlighted: true,
-    },
-    {
-      name: 'Empresarial',
-      price: 'Hablemos',
-      description: 'Para quienes operan varias financieras o carteras grandes.',
-      features: [
-        'Financieras ilimitadas',
-        'Cobradores ilimitados',
-        'Soporte dedicado',
-        'Onboarding asistido',
-      ],
-      ctaLabel: 'Contactar ventas',
-      ctaHref: LANDING_ROUTES.contact,
-    },
-  ],
+  note: 'Pesos colombianos por mes. Empiezas con 30 días de prueba y pagas un mes a la vez.',
+  plans: PLAN_OFFERS.map((offer) => ({
+    name: offer.name,
+    price: formatCop(offer.monthlyPrice),
+    period: '/mes',
+    description: offer.tagline,
+    features: offer.features,
+    ctaLabel: 'Comenzar gratis',
+    ctaHref: LANDING_ROUTES.signup,
+    highlighted: offer.code === 'PRO',
+  })),
 } satisfies { eyebrow: string; title: string; note: string; plans: readonly PlanCardProps[] };
 
 export const CTA_BAND = {

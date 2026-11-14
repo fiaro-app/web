@@ -7,11 +7,7 @@ vi.mock('@/lib/api/server-call', () => ({ callEndpointAsUser }));
 
 import { getCollectorHandover } from './get-collector-handover.server';
 
-const loan = (id: string, collectorId: string | null, clientId = 'c1') => ({
-  id,
-  clientId,
-  collector: collectorId ? { membershipId: collectorId, fullName: 'X' } : null,
-});
+const loan = (id: string, clientFullName = 'Carlos') => ({ id, clientFullName });
 const member = (id: string, fullName: string) => ({ id, fullName });
 
 function routeApi(routes: Record<string, unknown>) {
@@ -30,9 +26,8 @@ beforeEach(() => {
 describe('getCollectorHandover', () => {
   it('gives the active loans the collector has today and the other active collectors', async () => {
     routeApi({
-      '/loans': { data: [loan('l1', 'm1'), loan('l2', 'm9'), loan('l3', null), loan('l4', 'm1', 'c2')], meta: { page: 1, pageSize: 100, total: 4 } },
-      '/memberships': { data: [member('m1', 'Luis'), member('m2', 'Ana')], meta: { page: 1, pageSize: 100, total: 2 } },
-      '/clients': { data: [{ id: 'c1', fullName: 'Carlos' }] },
+      '/loans': { data: [loan('l1'), loan('l4', '')], meta: { page: 1, pageSize: 50, total: 2 } },
+      '/memberships': { data: [member('m1', 'Luis'), member('m2', 'Ana')], meta: { page: 1, pageSize: 50, total: 2 } },
     });
 
     expect(await getCollectorHandover('m1')).toEqual({
@@ -43,23 +38,26 @@ describe('getCollectorHandover', () => {
       destinations: [{ id: 'm2', name: 'Ana' }],
     });
     expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/memberships' }), {
-      body: { page: 1, pageSize: 100, role: 'COLLECTOR', status: 'ACTIVE' },
+      body: { page: 1, pageSize: 50, role: 'COLLECTOR', status: 'ACTIVE' },
     });
+    expect(callEndpointAsUser).toHaveBeenCalledWith(expect.objectContaining({ path: '/loans' }), {
+      body: { page: 1, pageSize: 50, status: 'ACTIVE', collectorMembershipId: 'm1' },
+    });
+    expect(callEndpointAsUser.mock.calls.map((call) => call[0].path)).not.toContain('/clients');
   });
 
   it('walks every page of active loans', async () => {
     routeApi({
-      '/loans': (page: number) => ({ data: [loan(`l${String(page)}`, 'm1')], meta: { page, pageSize: 100, total: 150 } }),
-      '/memberships': { data: [], meta: { page: 1, pageSize: 100, total: 0 } },
-      '/clients': { data: [] },
+      '/loans': (page: number) => ({ data: [loan(`l${String(page)}`)], meta: { page, pageSize: 50, total: 150 } }),
+      '/memberships': { data: [], meta: { page: 1, pageSize: 50, total: 0 } },
     });
 
     const result = await getCollectorHandover('m1');
-    expect(result?.loans.map((entry) => entry.id)).toEqual(['l1', 'l2']);
+    expect(result?.loans.map((entry) => entry.id)).toEqual(['l1', 'l2', 'l3']);
   });
 
   it('is null when the API fails and propagates unknown failures', async () => {
-    routeApi({ '/loans': new ApiRequestError({ statusCode: 500, code: 'INTERNAL_ERROR', message: 'x' } as never), '/memberships': { data: [] }, '/clients': { data: [] } });
+    routeApi({ '/loans': new ApiRequestError({ statusCode: 500, code: 'INTERNAL_ERROR', message: 'x' } as never), '/memberships': { data: [] } });
     expect(await getCollectorHandover('m1')).toBeNull();
 
     callEndpointAsUser.mockRejectedValue(new Error('boom'));

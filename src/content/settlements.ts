@@ -5,6 +5,18 @@ export const SETTLEMENTS_TEXT = {
   title: 'Cuadres',
   tableCaption: 'Cuadres de los cobradores',
   headers: ['Cobrador', 'Cartera', 'Fecha', 'Esperado', 'Cobrado', 'Diferencia', 'Estado'] as const,
+  detailAside: {
+    title: 'Cómo se revisa un cuadre',
+    steps: [
+      'Compara lo esperado con lo que el cobrador entrega.',
+      'Si coincide, apruébalo: el día queda cerrado.',
+      'Si no, recházalo con el motivo y el cobrador lo corrige.',
+    ],
+    tip: {
+      title: 'Un consejo',
+      body: 'Una diferencia pequeña casi siempre es un pago sin registrar: revisa los cobros del día antes de rechazar.',
+    },
+  },
   review: 'Revisar',
   view: 'Ver',
   status: {
@@ -24,11 +36,11 @@ export const SETTLEMENTS_TEXT = {
     allPortfolios: 'Todas las carteras',
     apply: 'Aplicar',
     clear: 'Limpiar filtros',
-    dateHint: 'La fecha es la del cuadre. Con una sola fecha se muestra ese día.',
+    dateHint: 'La fecha es la del cuadre. Con una sola fecha se muestra ese día. Hasta un año, sin fechas futuras.',
   },
   empty: {
-    title: 'Aún no hay cuadres',
-    description: 'Cuando tus cobradores cierren el día, sus cuadres aparecerán aquí para que los revises.',
+    title: 'No hay cuadres por revisar',
+    description: 'Cuando tus cobradores cierren el día, sus cuadres aparecerán aquí. Elige «Todos» para ver los ya revisados.',
   },
   emptyFiltered: {
     title: 'Sin cuadres con estos filtros',

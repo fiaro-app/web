@@ -23,7 +23,7 @@ function type(result: Hook, values: Partial<Record<ChangePasswordField, string>>
   }
 }
 
-const VALID = { currentPassword: 'temporal-1', newPassword: 'nueva-clave-1', confirmPassword: 'nueva-clave-1' };
+const VALID = { currentPassword: 'temporal-1', newPassword: 'nueva-clave-segura-1', confirmPassword: 'nueva-clave-segura-1' };
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -48,7 +48,7 @@ describe('useChangePasswordForm', () => {
 
     await act(() => result.current.submit(submitEvent()));
 
-    expect(changeMock).toHaveBeenCalledWith({ currentPassword: 'temporal-1', newPassword: 'nueva-clave-1' });
+    expect(changeMock).toHaveBeenCalledWith({ currentPassword: 'temporal-1', newPassword: 'nueva-clave-segura-1' });
     expect(replace).toHaveBeenCalledWith('/resumen');
     expect(refresh).toHaveBeenCalled();
   });

@@ -1,6 +1,5 @@
 import 'server-only';
 import { MAX_PAGE_SIZE } from '@fiaro-app/contracts';
-import { getClientNames } from '@/features/loans/get-client-names.server';
 import { loanEndpoints } from '@/features/loans/endpoints';
 import { membershipEndpoints } from '@/features/memberships/endpoints';
 import { isApiRequestError } from '@/lib/api';
@@ -23,15 +22,17 @@ export interface CollectorHandover {
   readonly destinations: readonly HandoverDestination[];
 }
 
-/** Tope de páginas de préstamos que se recorren (50 × 100 = 5.000 préstamos activos): evita un ciclo sin fin. */
+/** Tope de páginas que se recorren (50 × 50 = 2.500 préstamos de un cobrador): evita un ciclo sin fin. */
 const MAX_LOAN_PAGES = 50;
 
-/** Préstamos activos que el cobrador tiene asignados hoy (la API entrega el cobrador vigente en cada fila). */
-async function loadActiveLoans(collectorId: string): Promise<readonly { readonly id: string; readonly clientId: string }[]> {
-  const loans: { id: string; clientId: string }[] = [];
+/** Préstamos activos que el cobrador tiene asignados hoy: la API los filtra y trae el nombre del cliente. */
+async function loadActiveLoans(collectorId: string): Promise<readonly HandoverLoan[]> {
+  const loans: HandoverLoan[] = [];
   for (let page = 1; page <= MAX_LOAN_PAGES; page += 1) {
-    const result = await callEndpointAsUser(loanEndpoints.list, { body: { page, pageSize: MAX_PAGE_SIZE, status: 'ACTIVE' } });
-    for (const loan of result.data) if (loan.collector?.membershipId === collectorId) loans.push({ id: loan.id, clientId: loan.clientId });
+    const result = await callEndpointAsUser(loanEndpoints.list, {
+      body: { page, pageSize: MAX_PAGE_SIZE, status: 'ACTIVE', collectorMembershipId: collectorId },
+    });
+    for (const loan of result.data) loans.push({ id: loan.id, clientName: loan.clientFullName === '' ? '—' : loan.clientFullName });
     if (page * MAX_PAGE_SIZE >= result.meta.total) break;
   }
   return loans;
@@ -44,13 +45,12 @@ async function loadActiveLoans(collectorId: string): Promise<readonly { readonly
  */
 export async function getCollectorHandover(collectorId: string): Promise<CollectorHandover | null> {
   try {
-    const [loans, collectors, names] = await Promise.all([
+    const [loans, collectors] = await Promise.all([
       loadActiveLoans(collectorId),
       callEndpointAsUser(membershipEndpoints.list, { body: { page: 1, pageSize: MAX_PAGE_SIZE, role: 'COLLECTOR', status: 'ACTIVE' } }),
-      getClientNames(),
     ]);
     return {
-      loans: loans.map((loan) => ({ id: loan.id, clientName: names.get(loan.clientId) ?? '—' })),
+      loans,
       destinations: collectors.data.filter((entry) => entry.id !== collectorId).map((entry) => ({ id: entry.id, name: entry.fullName })),
     };
   } catch (error) {

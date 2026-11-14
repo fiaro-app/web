@@ -1,36 +1,34 @@
 import type { ReactNode } from 'react';
 import { Text } from '@/components/atoms/Text';
 import { cn } from '@/lib/cn';
-import { TONE_SURFACE_CLASSES, type Tone } from '@/lib/tone';
 
 export interface FeatureCardProps {
   readonly icon: ReactNode;
-  /** Color del círculo del icono: su intención semántica (error, éxito, info, aviso). */
-  readonly tone: Tone;
   readonly title: string;
   readonly description: string;
   readonly className?: string;
 }
 
 /** Una característica del producto: icono en círculo tintado, título y descripción corta. */
-export function FeatureCard({ icon, tone, title, description, className }: Readonly<FeatureCardProps>) {
+export function FeatureCard({ icon, title, description, className }: Readonly<FeatureCardProps>) {
   return (
-    <article className={cn('flex flex-col items-start gap-3', className)}>
+    <article className={cn('flex flex-col items-start gap-4 bg-surface p-7', className)}>
       <span
         aria-hidden="true"
         className={cn(
-          'grid size-12 place-items-center rounded-full text-lead font-semibold',
-          TONE_SURFACE_CLASSES[tone],
+          'grid size-10 place-items-center rounded-sm bg-primary/10 text-lead font-semibold text-primary',
         )}
       >
         {icon}
       </span>
-      <Text variant="body" as="h3" weight="semibold">
-        {title}
-      </Text>
-      <Text variant="small" className="text-foreground/70">
-        {description}
-      </Text>
+      <div className="flex flex-col gap-2">
+        <Text variant="body" as="h3" weight="semibold" className="tracking-[-0.01em]">
+          {title}
+        </Text>
+        <Text variant="small" className="text-foreground/70">
+          {description}
+        </Text>
+      </div>
     </article>
   );
 }
