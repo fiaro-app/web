@@ -1,4 +1,5 @@
 import { Text } from '@/components/atoms/Text';
+import { PlainTable } from '@/components/molecules/PlainTable';
 import { PLANS_TEXT } from '@/content/plans';
 import type { PaymentHistoryItem } from '@/features/subscription/checkout-endpoints';
 import { formatCop } from '@/lib/amount';
@@ -19,18 +20,7 @@ export function PaymentHistory({ payments }: Readonly<{ payments: readonly Payme
           {text.empty}
         </Text>
       ) : (
-        <div className="overflow-x-auto rounded-md bg-surface">
-          <table className="w-full text-left text-body">
-            <thead>
-              <tr className="text-foreground/70">
-                {Object.values(text.columns).map((label) => (
-                  <th key={label} scope="col" className="px-4 py-3 font-medium">
-                    {label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-foreground/8">
+        <PlainTable columns={Object.values(text.columns)}>
               {payments.map((payment) => (
                 <tr key={payment.reference}>
                   <td className="px-4 py-3">{formatInstantDate(payment.createdAt)}</td>
@@ -40,9 +30,7 @@ export function PaymentHistory({ payments }: Readonly<{ payments: readonly Payme
                   <td className="px-4 py-3">{text.status[payment.status]}</td>
                 </tr>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </PlainTable>
       )}
     </section>
   );

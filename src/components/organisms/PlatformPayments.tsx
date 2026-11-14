@@ -3,6 +3,7 @@
 import { Fragment, useState } from 'react';
 import { Button } from '@/components/atoms/Button';
 import { Text } from '@/components/atoms/Text';
+import { PlainTable } from '@/components/molecules/PlainTable';
 import { RefundForm } from '@/components/organisms/RefundForm';
 import { PLATFORM_PAYMENTS_TEXT } from '@/content/platform-payments';
 import type { PlatformPayment } from '@/features/platform-payments/endpoints';
@@ -30,18 +31,7 @@ export function PlatformPayments({ payments }: Readonly<{ payments: readonly Pla
           {text.empty}
         </Text>
       ) : (
-        <div className="overflow-x-auto rounded-md bg-surface">
-          <table className="w-full text-left text-body">
-            <thead>
-              <tr className="text-foreground/70">
-                {Object.values(text.columns).map((label) => (
-                  <th key={label} scope="col" className="px-4 py-3 font-medium">
-                    {label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-foreground/8">
+        <PlainTable columns={Object.values(text.columns)}>
               {payments.map((payment) => (
                 <Fragment key={payment.reference}>
                   <tr>
@@ -79,9 +69,7 @@ export function PlatformPayments({ payments }: Readonly<{ payments: readonly Pla
                   )}
                 </Fragment>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </PlainTable>
       )}
     </section>
   );
