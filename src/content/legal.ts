@@ -1,3 +1,5 @@
+import { CLAIMS_POLICY, REFUND_POLICY, SUBSCRIPTION_TERMS } from '@/content/legal-subscription';
+
 /**
  * Versión vigente de los documentos legales: la fecha en que se publicó el texto. Debe ser igual a `CURRENT_LEGAL_VERSION` de la API
  * (si no, el registro responde `P930V`). Al cambiar un texto, se sube aquí, en la API y en la app móvil.
@@ -255,8 +257,8 @@ export const COOKIES: LegalDocument = {
   ],
 };
 
-/** Los documentos que se muestran en el registro y el pie de página, en orden. */
-export const LEGAL_DOCUMENTS = [TERMS, PRIVACY, COOKIES] as const;
+/** Los documentos públicos, en orden: se publican en el sitio y en el mapa del sitio. */
+export const LEGAL_DOCUMENTS = [TERMS, PRIVACY, COOKIES, SUBSCRIPTION_TERMS, REFUND_POLICY, CLAIMS_POLICY] as const;
 
 /** Textos de las casillas de aceptación del registro. */
 export const CONSENT_TEXT = {
