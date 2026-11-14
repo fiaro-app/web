@@ -42,22 +42,9 @@ describe('SettingsView', () => {
     expect(screen.getByText(/Solo quien administra/)).toBeInTheDocument();
   });
 
-  it('shows the plan block only when the subscription could be loaded', () => {
-    const subscription = {
-      planName: 'Prueba gratis',
-  advancedStats: true,
-  excelImport: true,
-      statusLabel: 'Activo',
-      endsOn: '08/11/2026',
-      daysRemaining: '30',
-      usage: [{ key: 'collectors' as const, label: 'Cobradores activos', value: '1 de 5', percent: 20 }],
-      maxPortfolios: 4,
-      notice: null,
-    };
-    const { rerender } = render(<SettingsView settings={SETTINGS} />);
-    expect(screen.queryByRole('heading', { level: 2, name: 'Tu plan' })).not.toBeInTheDocument();
+  it('does not repeat the plan: it lives only in Plan y pagos', () => {
+    render(<SettingsView settings={SETTINGS} />);
 
-    rerender(<SettingsView settings={{ ...SETTINGS, subscription }} />);
-    expect(screen.getByRole('heading', { level: 2, name: 'Tu plan' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { level: 2, name: 'Tu plan' })).not.toBeInTheDocument();
   });
 });
