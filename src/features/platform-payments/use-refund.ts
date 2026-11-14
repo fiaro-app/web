@@ -41,8 +41,8 @@ export function useRefund(reference: string) {
     try {
       await refundPayment(reference, parsed.data);
       router.refresh();
-    } catch (failure) {
-      setError(describeFailure(failure));
+    } catch (error_) {
+      setError(describeFailure(error_));
       setIsSubmitting(false);
     }
   };

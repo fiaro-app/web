@@ -50,6 +50,6 @@ export const platformPaymentEndpoints = {
     summary: 'Devuelve por completo un pago aprobado y le resta sus meses al plan.',
     params: z.object({ reference: z.string().min(1) }),
     body: RefundBodySchema,
-    response: z.object({ reference: z.string(), status: z.enum(STATUSES) }).passthrough(),
+    response: z.object({ reference: z.string(), status: z.enum(STATUSES) }).catchall(z.unknown()),
   }),
 } as const;
