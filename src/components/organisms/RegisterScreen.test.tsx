@@ -90,16 +90,26 @@ describe('RegisterScreen', () => {
     expect(screen.getByLabelText(/^Celular/)).toHaveAttribute('aria-invalid', 'true');
   });
 
-  it('asks to accept the required authorizations before creating the account', async () => {
+  it('keeps «Crear cuenta» disabled, and says why, until the four required authorizations are checked', async () => {
     render(<RegisterScreen redirectTo="/resumen" />);
     await fillAccount();
     await userEvent.click(screen.getByRole('button', { name: 'Continuar' }));
     await userEvent.type(screen.getByLabelText(/Nombre de la financiera/), 'Préstamos Ana');
-    await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }));
 
-    expect(await screen.findAllByText('Debes aceptar esto para crear tu cuenta.')).toHaveLength(4);
-    expect(registerMock).not.toHaveBeenCalled();
+    const submit = screen.getByRole('button', { name: 'Crear cuenta' });
+    expect(submit).toBeDisabled();
+    expect(submit).toHaveAccessibleDescription(/cuatro autorizaciones obligatorias/);
     expect(screen.getByRole('link', { name: 'Términos y Condiciones' })).toHaveAttribute('href', '/terminos');
     expect(screen.getByRole('link', { name: 'Política de Privacidad' })).toHaveAttribute('href', '/privacidad');
+
+    await userEvent.click(screen.getByLabelText(/Leí y acepto los/));
+    await userEvent.click(screen.getByLabelText(/Autorizo el tratamiento/));
+    await userEvent.click(screen.getByLabelText(/Declaro que tengo la autorización/));
+    expect(submit).toBeDisabled();
+    expect(registerMock).not.toHaveBeenCalled();
+
+    await userEvent.click(screen.getByLabelText(/cookies/i));
+    expect(submit).toBeEnabled();
+    expect(screen.queryByText(/cuatro autorizaciones obligatorias/)).not.toBeInTheDocument();
   });
 });

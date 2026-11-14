@@ -7,8 +7,8 @@ import { Stepper } from '@/components/molecules/Stepper';
 import { TurnstileWidget } from '@/components/molecules/TurnstileWidget';
 import { RegisterAccountFields } from '@/components/organisms/RegisterAccountFields';
 import { RegisterCompanyFields } from '@/components/organisms/RegisterCompanyFields';
-import { REGISTER_STEP_CONTENT, REGISTER_STEP_LABELS } from '@/content/register';
-import { REGISTER_STEPS } from '@/features/auth/register-schemas';
+import { REGISTER_CONSENTS_PENDING, REGISTER_STEP_CONTENT, REGISTER_STEP_LABELS } from '@/content/register';
+import { REGISTER_STEPS, missingConsents } from '@/features/auth/register-schemas';
 import type { useRegisterForm } from '@/features/auth/use-register-form';
 
 type RegisterState = ReturnType<typeof useRegisterForm>;
@@ -24,8 +24,10 @@ export function RegisterForm({ form }: Readonly<{ form: RegisterState }>) {
     turnstileResetKey,
     setTurnstileToken,
     turnstileError,
+    consents,
   } = form;
   const content = REGISTER_STEP_CONTENT[step];
+  const consentsPending = step === 'company' && missingConsents(consents).length > 0;
 
   return (
     <form onSubmit={(event) => void submit(event)} noValidate aria-label="Registro" className="flex flex-col gap-5">
@@ -52,13 +54,19 @@ export function RegisterForm({ form }: Readonly<{ form: RegisterState }>) {
 
       {formError && <Alert tone="error">{formError}</Alert>}
 
+      {consentsPending && (
+        <Text id="consents-pending" variant="caption" role="status" className="text-destructive">
+          {REGISTER_CONSENTS_PENDING}
+        </Text>
+      )}
+
       <div className="flex gap-3">
         {step === 'company' && (
           <Button type="button" variant="outline" disabled={isSubmitting} onClick={goBack} className="flex-1">
             Atrás
           </Button>
         )}
-        <Button type="submit" loading={isSubmitting} className="flex-1">
+        <Button type="submit" loading={isSubmitting} disabled={consentsPending} aria-describedby={consentsPending ? 'consents-pending' : undefined} className="flex-1">
           {content.submitLabel}
         </Button>
       </div>
