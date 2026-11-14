@@ -16,7 +16,7 @@ describe('useAttachment', () => {
 
   it('loads the url and ends ready', async () => {
     api.getAttachmentUrl.mockResolvedValue('https://s/x');
-    const { result } = renderHook(() => useAttachment('clientPhoto', 'c1'));
+    const { result } = renderHook(() => useAttachment('paymentProof', 'c1'));
     expect(result.current.status).toBe('loading');
     await waitFor(() => expect(result.current.status).toBe('ready'));
     expect(result.current.url).toBe('https://s/x');
@@ -24,14 +24,14 @@ describe('useAttachment', () => {
 
   it('shows an error and retries', async () => {
     api.getAttachmentUrl.mockRejectedValueOnce(new Error('x'));
-    const { result } = renderHook(() => useAttachment('clientPhoto', 'c1'));
+    const { result } = renderHook(() => useAttachment('paymentProof', 'c1'));
     await waitFor(() => expect(result.current.status).toBe('error'));
     act(() => result.current.retry());
     await waitFor(() => expect(result.current.status).toBe('ready'));
   });
 
   it('rejects a file that is not an image without calling the api', async () => {
-    const { result } = renderHook(() => useAttachment('clientPhoto', 'c1'));
+    const { result } = renderHook(() => useAttachment('paymentProof', 'c1'));
     await waitFor(() => expect(result.current.status).toBe('ready'));
     await act(() => result.current.chooseFile(pick(file('application/pdf'))));
     expect(result.current.error).toMatch(/PNG o JPG/);
@@ -50,7 +50,7 @@ describe('useAttachment', () => {
   });
 
   it('shows a storage failure as a friendly message', async () => {
-    const { result } = renderHook(() => useAttachment('clientPhoto', 'c1'));
+    const { result } = renderHook(() => useAttachment('paymentProof', 'c1'));
     await waitFor(() => expect(result.current.status).toBe('ready'));
     api.uploadAttachment.mockRejectedValue(new Error('boom'));
     await act(() => result.current.chooseFile(pick(file('image/jpeg'))));
@@ -59,7 +59,7 @@ describe('useAttachment', () => {
 
   it('removes the image', async () => {
     api.getAttachmentUrl.mockResolvedValue('https://s/x');
-    const { result } = renderHook(() => useAttachment('clientPhoto', 'c1'));
+    const { result } = renderHook(() => useAttachment('paymentProof', 'c1'));
     await waitFor(() => expect(result.current.url).toBe('https://s/x'));
     api.removeAttachment.mockResolvedValue(undefined);
     api.getAttachmentUrl.mockResolvedValue(null);

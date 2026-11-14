@@ -25,7 +25,7 @@ async function reachCompanyStep() {
   for (const [field, value] of Object.entries(values)) act(() => result.current.setField(field as RegisterField)(change(value)));
   await act(() => result.current.submit(submitEvent()));
   act(() => result.current.setField('businessName')(change('Préstamos Ana')));
-  for (const key of ['terms', 'privacy', 'responsibility'] as const) act(() => result.current.setConsent(key)({ target: { checked: true } } as ChangeEvent<HTMLInputElement>));
+  for (const key of ['terms', 'privacy', 'responsibility', 'cookies'] as const) act(() => result.current.setConsent(key)({ target: { checked: true } } as ChangeEvent<HTMLInputElement>));
   return result;
 }
 

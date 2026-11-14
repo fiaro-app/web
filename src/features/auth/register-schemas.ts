@@ -73,12 +73,13 @@ export interface RegisterConsents {
   readonly terms: boolean;
   readonly privacy: boolean;
   readonly responsibility: boolean;
+  readonly cookies: boolean;
   readonly marketing: boolean;
 }
 
-export const EMPTY_CONSENTS: RegisterConsents = { terms: false, privacy: false, responsibility: false, marketing: false };
+export const EMPTY_CONSENTS: RegisterConsents = { terms: false, privacy: false, responsibility: false, cookies: false, marketing: false };
 
 /** Casillas obligatorias que faltan por marcar. */
-export function missingConsents(consents: RegisterConsents): readonly ('terms' | 'privacy' | 'responsibility')[] {
-  return (['terms', 'privacy', 'responsibility'] as const).filter((key) => !consents[key]);
+export function missingConsents(consents: RegisterConsents): readonly ('terms' | 'privacy' | 'responsibility' | 'cookies')[] {
+  return (['terms', 'privacy', 'responsibility', 'cookies'] as const).filter((key) => !consents[key]);
 }

@@ -6,10 +6,10 @@ const UploadBodySchema = z.strictObject({ contentType: z.enum(['image/png', 'ima
 const UploadUrlSchema = z.object({ uploadUrl: z.url(), key: z.string(), expiresAt: z.string() });
 const ViewSchema = z.object({ url: z.url().nullable(), expiresAt: z.string().nullable() });
 
-/** Lo que se adjunta: la foto de un cliente o el comprobante de un pago (D-145 de la API). */
-export type AttachmentTarget = 'clientPhoto' | 'paymentProof';
+/** Lo que se adjunta: el comprobante de un pago (D-145 de la API). */
+export type AttachmentTarget = 'paymentProof';
 
-/** Los cuatro endpoints de un archivo privado que cuelga de `base` (`/clients/:id/photo`). */
+/** Los cuatro endpoints de un archivo privado que cuelga de `base` (`/payments/:id/proof`). */
 function endpointsFor<Upload extends `/${string}`, Base extends `/${string}`>(uploadPath: Upload, base: Base) {
   return {
     uploadUrl: defineEndpoint({ method: 'POST', path: uploadPath, summary: 'URL firmada para subir la imagen.', params: ParamsSchema, body: UploadBodySchema, response: UploadUrlSchema }),
@@ -20,6 +20,5 @@ function endpointsFor<Upload extends `/${string}`, Base extends `/${string}`>(up
 }
 
 export const attachmentEndpoints = {
-  clientPhoto: endpointsFor('/clients/:id/photo/upload-url', '/clients/:id/photo'),
   paymentProof: endpointsFor('/payments/:id/proof/upload-url', '/payments/:id/proof'),
 } as const;

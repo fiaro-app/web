@@ -12,7 +12,7 @@ describe('attachments-api', () => {
 
   it('returns the signed url', async () => {
     call.mockResolvedValue({ url: 'https://s/x', expiresAt: 'e' });
-    expect(await getAttachmentUrl('clientPhoto', 'c1')).toBe('https://s/x');
+    expect(await getAttachmentUrl('paymentProof', 'c1')).toBe('https://s/x');
   });
 
   it('uploads straight to storage and then saves the key', async () => {
@@ -26,12 +26,12 @@ describe('attachments-api', () => {
   it('throws when storage refuses the upload', async () => {
     call.mockResolvedValueOnce({ uploadUrl: 'https://s/put', key: 'k', expiresAt: 'e' });
     vi.mocked(fetch).mockResolvedValue({ ok: false, status: 403 } as Response);
-    await expect(uploadAttachment('clientPhoto', 'c1', new File(['x'], 'a.jpg', { type: 'image/jpeg' }))).rejects.toThrow('403');
+    await expect(uploadAttachment('paymentProof', 'c1', new File(['x'], 'a.jpg', { type: 'image/jpeg' }))).rejects.toThrow('403');
   });
 
   it('removes the image', async () => {
     call.mockResolvedValue(undefined);
-    await removeAttachment('clientPhoto', 'c1');
+    await removeAttachment('paymentProof', 'c1');
     expect(call).toHaveBeenCalledWith(expect.anything(), { params: { id: 'c1' } });
   });
 });

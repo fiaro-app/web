@@ -45,7 +45,6 @@ export const CLIENTS_TEXT = {
       title: 'Qué puedes hacer desde aquí',
       steps: [
         'Corrige el celular o la dirección: tus cobradores los ven al instante.',
-        'Sube una foto para reconocer al cliente en la calle.',
         'Mira cómo paga y registra un préstamo nuevo desde sus préstamos.',
       ],
       tip: {

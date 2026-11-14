@@ -1,4 +1,4 @@
-/** Tipos de imagen que acepta la API para la foto de un cliente o un comprobante. */
+/** Tipos de imagen que acepta la API para un comprobante. */
 export const IMAGE_CONTENT_TYPES = ['image/png', 'image/jpeg'] as const;
 
 /** Tamaño máximo: 5 MB. */
