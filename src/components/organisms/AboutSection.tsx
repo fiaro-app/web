@@ -1,6 +1,16 @@
 import { Text } from '@/components/atoms/Text';
 
+/** `do` lo que hace, `dont` lo que no hace y `care` el cuidado de los datos: cambia la marca de cada punto. */
+export type AboutTone = 'do' | 'dont' | 'care';
+
+const MARKS: Record<AboutTone, { readonly glyph: string; readonly className: string }> = {
+  do: { glyph: '✓', className: 'bg-success/15 text-success' },
+  dont: { glyph: '✕', className: 'bg-foreground/10 text-foreground/70' },
+  care: { glyph: '●', className: 'bg-primary/12 text-primary' },
+};
+
 export interface AboutColumn {
+  readonly tone?: AboutTone;
   readonly title: string;
   readonly items: readonly string[];
 }
@@ -13,7 +23,7 @@ export interface AboutSectionProps {
   readonly columns: readonly AboutColumn[];
 }
 
-/** «Qué es Fiaro»: lo que hace, lo que no hace y cómo cuida los datos, en tres columnas sobrias. */
+/** Sección de confianza «Qué es Fiaro»: lo que hace, lo que no hace y cómo cuida los datos, en tres tarjetas con marca propia por columna. */
 export function AboutSection({ id, eyebrow, title, subtitle, columns }: Readonly<AboutSectionProps>) {
   const headingId = `${id}-title`;
 
@@ -28,20 +38,25 @@ export function AboutSection({ id, eyebrow, title, subtitle, columns }: Readonly
           {subtitle}
         </Text>
       </div>
-      <div className="mx-auto grid w-full max-w-7xl gap-px overflow-hidden rounded-md border border-foreground/10 bg-foreground/10 lg:grid-cols-3">
-        {columns.map((column) => (
-          <div key={column.title} className="flex flex-col gap-4 bg-surface p-8">
-            <Text variant="h3">{column.title}</Text>
-            <ul className="flex flex-col gap-3 text-foreground/75">
-              {column.items.map((item) => (
-                <li key={item} className="flex gap-3">
-                  <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+      <div className="mx-auto grid w-full max-w-7xl gap-4 lg:grid-cols-3">
+        {columns.map((column) => {
+          const mark = MARKS[column.tone ?? 'care'];
+          return (
+            <div key={column.title} className="flex flex-col gap-4 rounded-lg border border-foreground/10 bg-background p-8">
+              <Text variant="h3">{column.title}</Text>
+              <ul className="flex flex-col gap-3 text-foreground/75">
+                {column.items.map((item) => (
+                  <li key={item} className="flex gap-3">
+                    <span aria-hidden="true" className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-full text-[11px] font-semibold ${mark.className}`}>
+                      {mark.glyph}
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

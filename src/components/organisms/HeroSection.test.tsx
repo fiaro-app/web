@@ -12,6 +12,7 @@ describe('HeroSection', () => {
         primaryCta={{ label: 'Comenzar gratis', href: '/registro' }}
         secondaryCta={{ label: 'Ver cómo funciona →', href: '#como-funciona' }}
         footnote="Sin tarjeta de crédito"
+        assurances={['IVA incluido', 'Datos separados']}
         visual={<div data-testid="visual" />}
       />,
     );
@@ -21,5 +22,6 @@ describe('HeroSection', () => {
     expect(screen.getByRole('link', { name: 'Ver cómo funciona →' })).toHaveAttribute('href', '#como-funciona');
     expect(screen.getByText('Sin tarjeta de crédito')).toBeInTheDocument();
     expect(screen.getByTestId('visual')).toBeInTheDocument();
+    expect(screen.getByRole('list', { name: 'Garantías' }).children).toHaveLength(2);
   });
 });

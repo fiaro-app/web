@@ -12,7 +12,7 @@ export function LandingFooter({ links, copyright, brandName = 'Fiaro' }: Readonl
   return (
     <footer className="flex flex-col items-center justify-between gap-4 bg-surface px-6 py-8 sm:flex-row lg:px-16">
       <span className="font-display text-[18px] font-bold text-primary">{brandName}</span>
-      <nav aria-label="Pie de página" className="flex items-center gap-6">
+      <nav aria-label="Pie de página" className="flex flex-wrap items-center justify-center gap-x-6">
         {links.map((link) => (
           <NextLink
             key={link.label}

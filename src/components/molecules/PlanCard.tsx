@@ -36,12 +36,17 @@ export function PlanCard({
         'flex h-full flex-col gap-4 rounded-lg border-2 px-6 py-7',
         highlighted
           ? 'border-primary bg-primary text-primary-foreground'
-          : 'border-transparent bg-background text-foreground',
+          : 'border-foreground/10 bg-surface text-foreground',
       )}
     >
-      <Text variant="lead" as="h3" weight="semibold">
-        {name}
-      </Text>
+      <div className="flex items-center justify-between gap-2">
+        <Text variant="lead" as="h3" weight="semibold">
+          {name}
+        </Text>
+        {highlighted && (
+          <span className="rounded-full bg-primary-foreground/15 px-2.5 py-0.5 text-caption font-medium">Recomendado</span>
+        )}
+      </div>
       <p className="flex items-end gap-1">
         <Text variant="price" as="span">
           {price}
