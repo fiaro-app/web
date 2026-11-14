@@ -16,7 +16,7 @@ export interface LoginFormProps {
   readonly forgotPasswordHref: string;
 }
 
-/** Formulario de inicio de sesión (celular + contraseña). Solo diseño: la lógica vive en `useLoginForm`. */
+/** Formulario de inicio de sesión (correo o celular + contraseña). Solo diseño: la lógica vive en `useLoginForm`. */
 export function LoginForm({ redirectTo, forgotPasswordHref }: Readonly<LoginFormProps>) {
   const { values, fieldErrors, formError, isSubmitting, setField, submit } = useLoginForm({ redirectTo });
 
@@ -31,15 +31,16 @@ export function LoginForm({ redirectTo, forgotPasswordHref }: Readonly<LoginForm
         </Text>
       </div>
 
-      <FormField label="Celular" error={fieldErrors.phone}>
+      <FormField label="Correo o celular" error={fieldErrors.identifier}>
         <Input
-          name="phone"
-          type="tel"
-          inputMode="tel"
+          name="identifier"
+          type="text"
+          inputMode="email"
           autoComplete="username"
-          placeholder="300 123 4567"
-          value={values.phone}
-          onChange={setField('phone')}
+          autoCapitalize="none"
+          placeholder="tu@correo.com o 300 123 4567"
+          value={values.identifier}
+          onChange={setField('identifier')}
         />
       </FormField>
 

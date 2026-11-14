@@ -9,7 +9,7 @@ import { visibleNavItems } from '@/content/app-nav';
 import { COLLECTOR_LABEL } from '@/features/app-shell/role-label';
 import { brandThemeStyle } from '@/features/app-shell/brand-theme';
 import { getShellContext } from '@/features/app-shell/get-shell-context.server';
-import { CHANGE_PASSWORD_PATH } from '@/features/auth/route-guard';
+import { CHANGE_PASSWORD_PATH, VERIFY_EMAIL_PATH } from '@/features/auth/route-guard';
 import { requireUser } from '@/features/auth/session.server';
 import { getSubscription } from '@/features/subscription/get-subscription.server';
 
@@ -19,16 +19,18 @@ export const metadata: Metadata = { robots: { index: false, follow: false } };
 /**
  * Esqueleto del panel privado. Valida la sesión **en el servidor** (el `proxy` solo mira la
  * cookie): sin sesión válida manda a iniciar sesión antes de pintar nada, y con una contraseña
- * temporal manda a cambiarla.
+ * temporal manda a cambiarla, y a la dueña sin correo verificado, a agregarlo y verificarlo.
  */
 export default async function AppLayout({ children }: Readonly<{ children: ReactNode }>) {
   const user = await requireUser();
   // Quien entró con una contraseña temporal debe cambiarla antes de usar el panel (la API también lo exige).
   if (user.mustChangePassword) redirect(CHANGE_PASSWORD_PATH);
-  const [{ businessName, brandColor, roleLabel, unreadNotifications }, subscription] = await Promise.all([
+  const [{ businessName, brandColor, roleLabel, unreadNotifications, roles }, subscription] = await Promise.all([
     getShellContext(),
     getSubscription(),
   ]);
+  // La dueña necesita un correo verificado (recupera la contraseña y sirve para entrar): sin él no usa el panel.
+  if (roles?.includes('OWNER') && user.contactEmailVerified !== true) redirect(VERIFY_EMAIL_PATH);
 
   return (
     // `contents`: el contenedor solo lleva las variables de color de marca, sin alterar el diseño.

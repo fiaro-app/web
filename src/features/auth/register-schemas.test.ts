@@ -5,7 +5,7 @@ const VALID_ACCOUNT = {
   fullName: '  Ana Pérez ',
   phone: '300 123 4567',
   nationalId: '1.020.304.050',
-  contactEmail: '',
+  contactEmail: 'ana@correo.com',
   password: 'una-contraseña-segura',
 };
 
@@ -21,12 +21,12 @@ describe('AccountStepSchema', () => {
       fullName: 'Ana Pérez',
       phone: '+573001234567',
       nationalId: '1020304050',
-      contactEmail: undefined,
+      contactEmail: 'ana@correo.com',
       password: 'una-contraseña-segura',
     });
   });
 
-  it('keeps a typed email', () => {
+  it('trims the typed email', () => {
     const result = AccountStepSchema.safeParse({ ...VALID_ACCOUNT, contactEmail: ' ana@correo.com ' });
 
     expect(result.success && result.data.contactEmail).toBe('ana@correo.com');
@@ -39,9 +39,9 @@ describe('AccountStepSchema', () => {
       fullName: 'Escribe tu nombre completo.',
       phone: 'Escribe tu celular.',
       nationalId: 'Escribe tu cédula.',
+      contactEmail: 'Escribe tu correo.',
       password: 'Usa al menos 15 caracteres.',
     });
-    expect(messages(result)).not.toHaveProperty('contactEmail');
   });
 
   it('rejects a bad phone, national id and email with the contract or a clear message', () => {

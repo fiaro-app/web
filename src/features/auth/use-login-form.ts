@@ -8,7 +8,7 @@ import { SignInFormSchema, type SignInField, type SignInFormInput } from '@/feat
 import { fieldInput } from '@/lib/phone-input';
 import { toFieldErrors, type FieldErrors } from '@/lib/forms';
 
-const EMPTY_VALUES: SignInFormInput = { phone: '', password: '' };
+const EMPTY_VALUES: SignInFormInput = { identifier: '', password: '' };
 
 export interface UseLoginFormOptions {
   /** Ruta interna a la que se va tras iniciar sesión (ya saneada por quien llama). */
@@ -54,7 +54,7 @@ export function useLoginForm({ redirectTo }: UseLoginFormOptions) {
     } catch (error) {
       const { message, field } = describeAuthError(error);
       if (field === 'phone' || field === 'password') {
-        setFieldErrors({ [field]: message });
+        setFieldErrors({ [field === 'phone' ? 'identifier' : field]: message });
       } else {
         setFormError(message);
       }
