@@ -1,17 +1,21 @@
 import { CookieNotice } from '@/components/organisms/CookieNotice';
 import type { Metadata, Viewport } from "next";
-import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { Bricolage_Grotesque, Figtree, IBM_Plex_Mono } from "next/font/google";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
-// font.display / font.body / font.mono del diseño.
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+/**
+ * font.display / font.body / font.mono. `next/font/google` descarga los archivos al compilar y los
+ * sirve desde nuestro dominio: el navegador nunca habla con Google (ver `THIRD_PARTY.md`).
+ */
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
+  weight: ["600", "700", "800"],
 });
 
-const plexSans = IBM_Plex_Sans({
-  variable: "--font-plex-sans",
+const figtree = Figtree({
+  variable: "--font-figtree",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
@@ -92,7 +96,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       data-scroll-behavior="smooth"
       lang={SITE.language}
-      className={`${fraunces.variable} ${plexSans.variable} ${plexMono.variable} h-full scroll-smooth antialiased`}
+      className={`${bricolage.variable} ${figtree.variable} ${plexMono.variable} h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full flex flex-col">
         {/* Salto al contenido: el primer tabulador lo muestra, para no recorrer el menú en cada página. */}

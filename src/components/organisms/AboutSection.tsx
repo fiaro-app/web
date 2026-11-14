@@ -28,7 +28,7 @@ export function AboutSection({ id, eyebrow, title, subtitle, columns }: Readonly
   const headingId = `${id}-title`;
 
   return (
-    <section id={id} aria-labelledby={headingId} className="flex flex-col items-center gap-12 border-b border-foreground/8 bg-surface px-6 py-16 lg:px-16 lg:py-24">
+    <section id={id} aria-labelledby={headingId} className="flex flex-col items-center gap-8 border-b border-foreground/8 bg-surface px-6 py-12 lg:px-16 lg:py-16">
       <div className="flex max-w-175 flex-col items-center gap-3 text-center">
         <p className="font-mono text-caption font-medium tracking-[0.08em] text-primary uppercase">{eyebrow}</p>
         <Text id={headingId} variant="section" className="text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.1] tracking-[-0.02em]">
@@ -38,11 +38,11 @@ export function AboutSection({ id, eyebrow, title, subtitle, columns }: Readonly
           {subtitle}
         </Text>
       </div>
-      <div className="mx-auto grid w-full max-w-7xl gap-4 lg:grid-cols-3">
+      <div className="mx-auto grid w-full max-w-288 reveal gap-4 lg:grid-cols-3">
         {columns.map((column) => {
           const mark = MARKS[column.tone ?? 'care'];
           return (
-            <div key={column.title} className="flex flex-col gap-4 rounded-lg border border-foreground/10 bg-background p-8">
+            <div key={column.title} className="flex flex-col gap-4 lift rounded-lg border border-foreground/10 bg-surface p-6 shadow-card">
               <Text variant="h3">{column.title}</Text>
               <ul className="flex flex-col gap-3 text-foreground/75">
                 {column.items.map((item) => (

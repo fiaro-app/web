@@ -20,7 +20,7 @@ export function AppShellTemplate({ sidebar, banner, children }: Readonly<AppShel
       {/* Fija a la altura de la pantalla: la barra lateral siempre queda visible aunque la página haga scroll. */}
       <div className="hidden lg:sticky lg:top-0 lg:flex lg:h-screen lg:self-start">{sidebar}</div>
       <MobileNav>{sidebar}</MobileNav>
-      <main id="contenido" tabIndex={-1} className="focus:outline-none flex min-w-0 flex-1 flex-col gap-7 p-5 sm:p-8">
+      <main id="contenido" tabIndex={-1} className="enter focus:outline-none flex min-w-0 flex-1 flex-col gap-7 p-5 sm:p-8">
         {banner}
         {children}
       </main>

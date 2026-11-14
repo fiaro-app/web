@@ -20,7 +20,7 @@ const SIZE_CLASSES: Record<ButtonSize, string> = {
 /** Clases de un botón; las comparten `Button` (acción) y `ButtonLink` (navegación) para verse idénticos. */
 export function buttonClasses(variant: ButtonVariant, size: ButtonSize): string {
   return cn(
-    'relative inline-flex items-center justify-center rounded-md px-6 text-label font-medium whitespace-nowrap transition-opacity',
+    'relative inline-flex items-center justify-center rounded-md px-6 text-label font-medium whitespace-nowrap press',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     SIZE_CLASSES[size],
     VARIANT_CLASSES[variant],

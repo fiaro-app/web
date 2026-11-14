@@ -24,4 +24,16 @@ describe('Alert', () => {
 
     expect(screen.getByRole('status')).toHaveClass('text-primary');
   });
+
+  it('draws an icon and an optional title above the message', () => {
+    render(
+      <Alert tone="success" title="Listo">
+        Guardado.
+      </Alert>,
+    );
+
+    const alert = screen.getByRole('status');
+    expect(alert.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+    expect(alert).toHaveTextContent('ListoGuardado.');
+  });
 });

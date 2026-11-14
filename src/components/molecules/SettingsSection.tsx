@@ -13,7 +13,7 @@ export interface SettingsSectionProps {
 export function SettingsSection({ title, description, children, className }: Readonly<SettingsSectionProps>) {
   const titleId = useId();
   return (
-    <section aria-labelledby={titleId} className={cn('flex max-w-lg flex-col gap-4 rounded-md bg-surface p-6', className)}>
+    <section aria-labelledby={titleId} className={cn('flex max-w-lg flex-col gap-4 rounded-md bg-surface p-6 shadow-card', className)}>
       <div className="flex flex-col gap-1">
         <Text as="h2" variant="h3" id={titleId}>
           {title}

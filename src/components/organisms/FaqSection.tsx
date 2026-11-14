@@ -21,8 +21,8 @@ export function FaqSection({ id, eyebrow, title, items }: Readonly<FaqSectionPro
   const headingId = `${id}-title`;
 
   return (
-    <section id={id} aria-labelledby={headingId} className="px-6 py-16 lg:px-16 lg:py-24">
-     <div className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[2fr_3fr] lg:gap-16">
+    <section id={id} aria-labelledby={headingId} className="px-6 py-12 lg:px-16 lg:py-16">
+     <div className="mx-auto grid w-full max-w-288 gap-8 lg:grid-cols-[2fr_3fr] lg:gap-14">
       <div className="flex flex-col gap-3">
       <Text variant="caption" as="p" weight="semibold" className="font-mono tracking-[0.06em] text-primary uppercase">
         {eyebrow}
@@ -31,9 +31,9 @@ export function FaqSection({ id, eyebrow, title, items }: Readonly<FaqSectionPro
         {title}
       </Text>
       </div>
-      <div className="flex w-full flex-col gap-3">
+      <div className="reveal flex w-full flex-col gap-3">
         {items.map((item) => (
-          <details key={item.question} className="group rounded-md border border-foreground/10 bg-surface px-6 py-4 open:border-primary/40 open:shadow-sm">
+          <details key={item.question} className="group rounded-md border border-foreground/10 bg-surface px-6 py-3 shadow-card transition-shadow hover:shadow-lift open:border-primary/40">
             <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 rounded-sm text-label font-semibold focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
               {item.question}
               <span aria-hidden="true" className="text-primary transition-transform group-open:rotate-45">

@@ -4,6 +4,14 @@ import { describe, expect, it, vi } from 'vitest';
 import { Toast } from './Toast';
 
 describe('Toast', () => {
+  it('is a polite live region with an icon for its tone', () => {
+    render(<Toast message="Listo" tone="success" />);
+
+    const toast = screen.getByRole('status');
+    expect(toast).toHaveAttribute('aria-live', 'polite');
+    expect(toast.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+  });
+
   it('shows the message', () => {
     render(<Toast message="Guardado, pendiente de sync" />);
 

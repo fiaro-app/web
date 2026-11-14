@@ -12,7 +12,7 @@ export interface FeatureCardProps {
 /** Una característica del producto: icono en círculo tintado, título y descripción corta. */
 export function FeatureCard({ icon, title, description, className }: Readonly<FeatureCardProps>) {
   return (
-    <article className={cn('flex flex-col items-start gap-4 bg-surface p-7', className)}>
+    <article className={cn('lift flex flex-col items-start gap-4 bg-surface p-6 shadow-card', className)}>
       <span
         aria-hidden="true"
         className={cn(

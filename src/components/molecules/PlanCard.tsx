@@ -33,7 +33,7 @@ export function PlanCard({
   return (
     <article
       className={cn(
-        'flex h-full flex-col gap-4 rounded-lg border-2 px-6 py-7',
+        'lift flex h-full flex-col gap-4 rounded-lg border-2 px-6 py-6 shadow-card',
         highlighted
           ? 'border-primary bg-primary text-primary-foreground'
           : 'border-foreground/10 bg-surface text-foreground',

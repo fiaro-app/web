@@ -37,6 +37,12 @@ describe('ConfirmDialog', () => {
     expect(dialog).toHaveAccessibleDescription('Esta acción no se puede deshacer.');
   });
 
+  it('opts into the fade in/out animation', () => {
+    setup();
+
+    expect(screen.getByRole('dialog')).toHaveClass('dialog-anim');
+  });
+
   it('is not shown while closed', () => {
     setup({ open: false });
 
