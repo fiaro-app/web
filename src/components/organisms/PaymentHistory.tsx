@@ -1,15 +1,9 @@
 import { Text } from '@/components/atoms/Text';
-import { PLAN_OFFERS, PLANS_TEXT } from '@/content/plans';
+import { PLANS_TEXT } from '@/content/plans';
 import type { PaymentHistoryItem } from '@/features/subscription/checkout-endpoints';
 import { formatCop } from '@/lib/amount';
 import { formatInstantDate } from '@/lib/dates';
-
-/** El nombre de un plan, o su código si el catálogo no lo conoce. */
-const planName = (code: string) => PLAN_OFFERS.find((offer) => offer.code === code)?.name ?? code;
-
-/** El medio de pago legible; el que no conocemos se muestra como llegó, y el pendiente como guion. */
-const methodName = (type: string | null) =>
-  type === null ? '—' : (PLANS_TEXT.history.method as Readonly<Record<string, string>>)[type] ?? type;
+import { methodName, planName } from '@/lib/payment-labels';
 
 /** «Historial de pagos» de «Plan y pagos»: una fila por orden, de la más reciente a la más vieja. */
 export function PaymentHistory({ payments }: Readonly<{ payments: readonly PaymentHistoryItem[] }>) {

@@ -4,14 +4,11 @@ import { Fragment, useState } from 'react';
 import { Button } from '@/components/atoms/Button';
 import { Text } from '@/components/atoms/Text';
 import { RefundForm } from '@/components/organisms/RefundForm';
-import { PLAN_OFFERS, PLANS_TEXT } from '@/content/plans';
 import { PLATFORM_PAYMENTS_TEXT } from '@/content/platform-payments';
 import type { PlatformPayment } from '@/features/platform-payments/endpoints';
 import { formatCop } from '@/lib/amount';
 import { formatInstantDate } from '@/lib/dates';
-
-const planName = (code: string) => PLAN_OFFERS.find((offer) => offer.code === code)?.name ?? code;
-const methodName = (type: string | null) => (type === null ? '—' : ((PLANS_TEXT.history.method as Readonly<Record<string, string>>)[type] ?? type));
+import { methodName, planName } from '@/lib/payment-labels';
 
 /** «Pagos de la plataforma»: una fila por pago de cualquier negocio; los aprobados se pueden reembolsar con un formulario bajo la fila. */
 export function PlatformPayments({ payments }: Readonly<{ payments: readonly PlatformPayment[] }>) {
