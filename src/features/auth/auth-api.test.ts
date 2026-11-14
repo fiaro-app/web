@@ -68,8 +68,9 @@ describe('registerOwner', () => {
       acceptedTerms: true,
       acceptedPrivacy: true,
       acceptedDataResponsibility: true,
+      acceptedCookies: true,
       marketingConsent: false,
-      legalVersion: '2026-10-16',
+      legalVersion: '2026-11-14',
     });
   });
 });

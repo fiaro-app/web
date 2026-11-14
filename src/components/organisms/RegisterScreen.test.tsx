@@ -29,6 +29,7 @@ async function fillAccount() {
 async function acceptRequired() {
   await userEvent.click(screen.getByLabelText(/Leí y acepto los/));
   await userEvent.click(screen.getByLabelText(/Autorizo el tratamiento/));
+  await userEvent.click(screen.getByLabelText(/Acepto la/));
   await userEvent.click(screen.getByLabelText(/Declaro que tengo la autorización/));
 }
 
@@ -96,7 +97,7 @@ describe('RegisterScreen', () => {
     await userEvent.type(screen.getByLabelText(/Nombre de la financiera/), 'Préstamos Ana');
     await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }));
 
-    expect(await screen.findAllByText('Debes aceptar esto para crear tu cuenta.')).toHaveLength(3);
+    expect(await screen.findAllByText('Debes aceptar esto para crear tu cuenta.')).toHaveLength(4);
     expect(registerMock).not.toHaveBeenCalled();
     expect(screen.getByRole('link', { name: 'Términos y Condiciones' })).toHaveAttribute('href', '/terminos');
     expect(screen.getByRole('link', { name: 'Política de Privacidad' })).toHaveAttribute('href', '/privacidad');

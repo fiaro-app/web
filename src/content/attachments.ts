@@ -1,11 +1,5 @@
-/** Textos de la foto del cliente y del comprobante de un pago. */
+/** Textos del comprobante de un pago. */
 export const ATTACHMENTS_TEXT = {
-  clientPhoto: {
-    title: 'Foto del cliente',
-    description: 'La ven solo quienes administran el negocio y el cobrador de este cliente. PNG o JPG, máximo 5 MB.',
-    alt: (name: string) => `Foto de ${name}`,
-    none: 'Todavía no hay foto.',
-  },
   paymentProof: {
     title: 'Comprobante del pago',
     description: 'La captura de Nequi o de la transferencia. La ven quienes administran el negocio y quien hizo el cobro. PNG o JPG, máximo 5 MB.',

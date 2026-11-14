@@ -50,6 +50,7 @@ export const RegisterBodySchema = z.strictObject({
   acceptedTerms: z.literal(true),
   acceptedPrivacy: z.literal(true),
   acceptedDataResponsibility: z.literal(true),
+  acceptedCookies: z.literal(true),
   marketingConsent: z.boolean(),
   legalVersion: z.string().min(1),
   turnstileToken: TurnstileTokenSchema.optional(),

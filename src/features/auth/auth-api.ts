@@ -35,6 +35,7 @@ export async function registerOwner(
       acceptedTerms: true,
       acceptedPrivacy: true,
       acceptedDataResponsibility: true,
+      acceptedCookies: true,
       marketingConsent,
       legalVersion: LEGAL_VERSION,
       contactEmail,
