@@ -1,7 +1,7 @@
 import type { LegalDocument } from '@/content/legal';
 
 /** Marcador de los datos de la empresa que aún no existen; se llena antes de salir a producción. */
-const COMPANY = '[NOMBRE COMPLETO DEL TITULAR, persona natural, identificado con cédula de ciudadanía n.º ______ — pendiente]';
+const COMPANY = 'Jhoan Alejandro Valencia Zuleta, persona natural, identificado con cédula de ciudadanía n.º 1092851497';
 
 /** Cómo se contrata, se paga y vence un plan. */
 export const SUBSCRIPTION_TERMS: LegalDocument = {
