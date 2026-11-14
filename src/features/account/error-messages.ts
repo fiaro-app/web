@@ -1,4 +1,4 @@
-import { describeAuthError, type AuthErrorView } from '@/features/auth/error-messages';
+import { EMAIL_TAKEN_VIEW, describeAuthError, type AuthErrorView } from '@/features/auth/error-messages';
 import { isApiRequestError } from '@/lib/api';
 
 /**
@@ -8,6 +8,8 @@ import { isApiRequestError } from '@/lib/api';
 export function describeAccountError(error: unknown): AuthErrorView {
   if (isApiRequestError(error)) {
     switch (error.code) {
+      case 'CONFLICT':
+        return EMAIL_TAKEN_VIEW;
       case 'CONTACT_EMAIL_NOT_SET':
         return { message: 'Primero agrega un correo de contacto.', field: 'contactEmail' };
       case 'CONTACT_EMAIL_ALREADY_VERIFIED':

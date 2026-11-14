@@ -3,7 +3,7 @@ import { Checkbox } from '@/components/atoms/Checkbox';
 import { Input } from '@/components/atoms/Input';
 import { FormField } from '@/components/molecules/FormField';
 import { FormFieldset } from '@/components/molecules/FormFieldset';
-import { CONSENT_TEXT, PRIVACY, TERMS } from '@/content/legal';
+import { CONSENT_TEXT, COOKIES, PRIVACY, TERMS } from '@/content/legal';
 import type { RegisterConsents } from '@/features/auth/register-schemas';
 import type { useRegisterForm } from '@/features/auth/use-register-form';
 
@@ -70,6 +70,13 @@ export function RegisterCompanyFields({
             {CONSENT_TEXT.privacy.link}
           </NextLink>
           {CONSENT_TEXT.privacy.after}
+        </ConsentRow>
+        <ConsentRow name="cookies" checked={consents.cookies} invalid={consentErrors.includes('cookies')} onChange={setConsent('cookies')}>
+          {CONSENT_TEXT.cookies.before}
+          <NextLink href={COOKIES.path} target="_blank" className={LINK_CLASS}>
+            {CONSENT_TEXT.cookies.link}
+          </NextLink>
+          {CONSENT_TEXT.cookies.after}
         </ConsentRow>
         <ConsentRow name="responsibility" checked={consents.responsibility} invalid={consentErrors.includes('responsibility')} onChange={setConsent('responsibility')}>
           {CONSENT_TEXT.responsibility}

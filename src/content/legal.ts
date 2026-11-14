@@ -1,8 +1,10 @@
+import { CLAIMS_POLICY, REFUND_POLICY, SUBSCRIPTION_TERMS } from '@/content/legal-subscription';
+
 /**
  * Versión vigente de los documentos legales: la fecha en que se publicó el texto. Debe ser igual a `CURRENT_LEGAL_VERSION` de la API
  * (si no, el registro responde `P930V`). Al cambiar un texto, se sube aquí, en la API y en la app móvil.
  */
-export const LEGAL_VERSION = '2026-10-16';
+export const LEGAL_VERSION = '2026-11-14';
 
 /** Una parte de un documento legal: su título y sus párrafos o puntos. */
 export interface LegalSection {
@@ -21,7 +23,7 @@ export interface LegalDocument {
 }
 
 /** Aviso que acompaña a todos los documentos: son un borrador a la espera de revisión legal. */
-export const LEGAL_NOTICE = 'Última actualización: 16 de octubre de 2026.';
+export const LEGAL_NOTICE = 'Última actualización: 14 de noviembre de 2026.';
 
 export const TERMS: LegalDocument = {
   path: '/terminos',
@@ -68,7 +70,7 @@ export const TERMS: LegalDocument = {
       heading: '5. Los datos de tus clientes',
       paragraphs: [
         'Tú eres el Responsable del tratamiento de los datos de tus clientes y Fiaro actúa como Encargado: los trata únicamente por tu cuenta, para prestarte el servicio, siguiendo tus instrucciones y esta cláusula, que hace de contrato de transmisión de datos. Fiaro no vende esos datos, no los usa para otros fines y aplica medidas de seguridad razonables (acceso por roles, sesiones cifradas, archivos privados con enlaces que vencen).',
-        'Si un cliente tuyo ejerce un derecho (consultar, corregir o suprimir sus datos), tú respondes; Fiaro te ayuda con las herramientas del servicio. La foto de un cliente es opcional y puede ser dato sensible: súbela solo con autorización expresa. No subas fotos de cédulas.',
+        'Si un cliente tuyo ejerce un derecho (consultar, corregir o suprimir sus datos), tú respondes; Fiaro te ayuda con las herramientas del servicio. Fiaro no guarda fotos de personas: no subas fotos de clientes ni de cédulas.',
       ],
     },
     {
@@ -155,7 +157,7 @@ export const PRIVACY: LegalDocument = {
       heading: '2. Qué datos tratamos',
       items: [
         'De tu cuenta: nombre, cédula, celular, correo (opcional), contraseña (solo guardamos su huella cifrada), nombre de tu negocio y rol.',
-        'De tus clientes, que registras tú: nombre, cédula, celular, dirección, ocupación, foto (opcional), préstamos, pagos, visitas de cobro y puntaje de riesgo calculado.',
+        'De tus clientes, que registras tú: nombre, cédula, celular, dirección, ocupación, préstamos, pagos, visitas de cobro y puntaje de riesgo calculado.',
         'Comprobantes de pago que adjuntes (capturas de Nequi o transferencias).',
         'Técnicos: dirección IP, tipo de dispositivo, fechas de acceso y registros de seguridad.',
         'Evidencia de tus autorizaciones: qué aceptaste, en qué versión, cuándo y desde qué IP y dispositivo.',
@@ -174,7 +176,7 @@ export const PRIVACY: LegalDocument = {
     {
       heading: '4. Datos sensibles',
       paragraphs: [
-        'Una fotografía puede ser dato sensible (biométrico) cuando sirve para identificar a una persona. La foto del cliente es opcional: nadie está obligado a darla ni a permitirla, y solo debes subirla con su autorización expresa. No pedimos ni guardamos fotos de cédulas.',
+        'Fiaro no pide ni guarda fotos de personas ni de cédulas, así que no trata datos biométricos. Los comprobantes de pago que adjuntes son capturas de Nequi o de transferencias y se guardan en privado.',
       ],
     },
     {
@@ -255,8 +257,8 @@ export const COOKIES: LegalDocument = {
   ],
 };
 
-/** Los documentos que se muestran en el registro y el pie de página, en orden. */
-export const LEGAL_DOCUMENTS = [TERMS, PRIVACY, COOKIES] as const;
+/** Los documentos públicos, en orden: se publican en el sitio y en el mapa del sitio. */
+export const LEGAL_DOCUMENTS = [TERMS, PRIVACY, COOKIES, SUBSCRIPTION_TERMS, REFUND_POLICY, CLAIMS_POLICY] as const;
 
 /** Textos de las casillas de aceptación del registro. */
 export const CONSENT_TEXT = {
@@ -267,6 +269,7 @@ export const CONSENT_TEXT = {
     link: 'Política de Privacidad',
     after: '.',
   },
+  cookies: { before: 'Acepto la ', link: 'Política de Cookies', after: ' (solo usamos cookies necesarias).' },
   responsibility:
     'Declaro que tengo la autorización de mis clientes para tratar sus datos, que mi cobranza cumple la ley (incluida la Ley 2300 de 2023) y que no cobraré por encima de la tasa de usura. Entiendo que Fiaro es solo una herramienta y no presta ni cobra dinero.',
   marketing: 'Quiero recibir novedades y ofertas de Fiaro (opcional).',

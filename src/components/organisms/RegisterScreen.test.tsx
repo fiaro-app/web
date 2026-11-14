@@ -22,12 +22,14 @@ async function fillAccount() {
   await userEvent.type(screen.getByLabelText(/Nombre completo/), 'Ana Pérez');
   await userEvent.type(screen.getByLabelText(/^Celular/), '300 123 4567');
   await userEvent.type(screen.getByLabelText(/Cédula/), '1020304050');
+  await userEvent.type(screen.getByLabelText(/^Correo electrónico/), 'ana@correo.com');
   await userEvent.type(screen.getByLabelText(/^Contraseña/), 'una-contraseña-segura');
 }
 
 async function acceptRequired() {
   await userEvent.click(screen.getByLabelText(/Leí y acepto los/));
   await userEvent.click(screen.getByLabelText(/Autorizo el tratamiento/));
+  await userEvent.click(screen.getByLabelText(/Acepto la/));
   await userEvent.click(screen.getByLabelText(/Declaro que tengo la autorización/));
 }
 
@@ -38,7 +40,7 @@ describe('RegisterScreen', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Tus datos personales' })).toBeInTheDocument();
     expect(screen.getByText('Paso 1 de 2')).toBeInTheDocument();
     expect(screen.getByText('Crea tu cuenta en Fiaro')).toBeInTheDocument();
-    expect(screen.getByLabelText(/Correo electrónico \(opcional\)/)).not.toBeRequired();
+    expect(screen.getByLabelText(/^Correo electrónico/)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Atrás' })).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Inicia sesión' })).toHaveAttribute('href', '/login');
   });
@@ -50,6 +52,7 @@ describe('RegisterScreen', () => {
 
     expect(screen.getByText('Escribe tu nombre completo.')).toBeInTheDocument();
     expect(screen.getByText('Escribe tu celular.')).toBeInTheDocument();
+    expect(screen.getByText('Escribe tu correo.')).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 1, name: 'Tus datos personales' })).toBeInTheDocument();
   });
 
@@ -71,7 +74,7 @@ describe('RegisterScreen', () => {
 
     await waitFor(() => expect(replace).toHaveBeenCalledWith('/resumen'));
     expect(registerMock).toHaveBeenCalledOnce();
-    expect(signInMock).toHaveBeenCalledWith({ phone: '+573001234567', password: 'una-contraseña-segura' });
+    expect(signInMock).toHaveBeenCalledWith({ identifier: '+573001234567', password: 'una-contraseña-segura' });
   });
 
   it('brings the person back to step 1 when the phone is already registered', async () => {
@@ -87,16 +90,26 @@ describe('RegisterScreen', () => {
     expect(screen.getByLabelText(/^Celular/)).toHaveAttribute('aria-invalid', 'true');
   });
 
-  it('asks to accept the required authorizations before creating the account', async () => {
+  it('keeps «Crear cuenta» disabled, and says why, until the four required authorizations are checked', async () => {
     render(<RegisterScreen redirectTo="/resumen" />);
     await fillAccount();
     await userEvent.click(screen.getByRole('button', { name: 'Continuar' }));
     await userEvent.type(screen.getByLabelText(/Nombre de la financiera/), 'Préstamos Ana');
-    await userEvent.click(screen.getByRole('button', { name: 'Crear cuenta' }));
 
-    expect(await screen.findAllByText('Debes aceptar esto para crear tu cuenta.')).toHaveLength(3);
-    expect(registerMock).not.toHaveBeenCalled();
+    const submit = screen.getByRole('button', { name: 'Crear cuenta' });
+    expect(submit).toBeDisabled();
+    expect(submit).toHaveAccessibleDescription(/cuatro autorizaciones obligatorias/);
     expect(screen.getByRole('link', { name: 'Términos y Condiciones' })).toHaveAttribute('href', '/terminos');
     expect(screen.getByRole('link', { name: 'Política de Privacidad' })).toHaveAttribute('href', '/privacidad');
+
+    await userEvent.click(screen.getByLabelText(/Leí y acepto los/));
+    await userEvent.click(screen.getByLabelText(/Autorizo el tratamiento/));
+    await userEvent.click(screen.getByLabelText(/Declaro que tengo la autorización/));
+    expect(submit).toBeDisabled();
+    expect(registerMock).not.toHaveBeenCalled();
+
+    await userEvent.click(screen.getByLabelText(/cookies/i));
+    expect(submit).toBeEnabled();
+    expect(screen.queryByText(/cuatro autorizaciones obligatorias/)).not.toBeInTheDocument();
   });
 });

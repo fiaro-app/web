@@ -21,7 +21,7 @@ export interface PrivateImageProps {
   readonly canEdit: boolean;
 }
 
-/** Una imagen privada (foto de cliente, comprobante): carga, error, vacío, subir, cambiar y quitar. Lógica en `useAttachment`. */
+/** Una imagen privada (comprobante): carga, error, vacío, subir, cambiar y quitar. Lógica en `useAttachment`. */
 export function PrivateImage({ target, id, title, description, alt, none, canEdit }: Readonly<PrivateImageProps>) {
   const { status, url, isBusy, error, notice, chooseFile, remove, retry } = useAttachment(target, id);
   const text = ATTACHMENTS_TEXT;

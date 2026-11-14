@@ -36,6 +36,12 @@ function waitText(seconds: number | null): string {
   return minutes <= 1 ? '1 minuto' : `${minutes} minutos`;
 }
 
+/** El correo de contacto ya es de otra cuenta: la API lo responde con el código genérico `CONFLICT`. */
+export const EMAIL_TAKEN_VIEW: AuthErrorView = {
+  message: 'Ya existe una cuenta con ese correo. Usa otro o inicia sesión.',
+  field: 'contactEmail',
+};
+
 /**
  * Traduce un error de la API al mensaje que ve la persona. Se reacciona al `code` del contrato,
  * nunca al texto que mande el servidor; los códigos que no se conocen caen en un mensaje genérico.
@@ -49,7 +55,7 @@ export function describeAuthError(error: unknown): AuthErrorView {
 
   switch (error.code) {
     case 'INVALID_PHONE_NUMBER_OR_PASSWORD':
-      return { message: 'El celular o la contraseña no son correctos.', field: null };
+      return { message: 'El correo, el celular o la contraseña no son correctos.', field: null };
     case 'SIGN_IN_LOCKED':
       return {
         message: `Demasiados intentos fallidos. Vuelve a intentarlo en ${waitText(error.retryAfterSeconds)}.`,

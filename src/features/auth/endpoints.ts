@@ -32,9 +32,9 @@ export const AuthUserSchema = z.looseObject({
 });
 export type AuthUser = z.infer<typeof AuthUserSchema>;
 
-/** Cuerpo de `POST /auth/sign-in/phone-number`. */
+/** Cuerpo de `POST /auth/sign-in`: `identifier` es el celular (E.164) o el correo de contacto verificado. */
 export const SignInBodySchema = z.strictObject({
-  phoneNumber: MobilePhoneSchema,
+  identifier: z.union([MobilePhoneSchema, z.email()]),
   password: z.string().min(1).max(PASSWORD_MAX_LENGTH),
   rememberMe: z.boolean().optional(),
 });
@@ -46,10 +46,11 @@ export const RegisterBodySchema = z.strictObject({
   password: z.string().min(1).max(PASSWORD_MAX_LENGTH),
   nationalId: NationalIdSchema,
   businessName: BusinessNameSchema,
-  contactEmail: z.email().optional(),
+  contactEmail: z.email(),
   acceptedTerms: z.literal(true),
   acceptedPrivacy: z.literal(true),
   acceptedDataResponsibility: z.literal(true),
+  acceptedCookies: z.literal(true),
   marketingConsent: z.boolean(),
   legalVersion: z.string().min(1),
   turnstileToken: TurnstileTokenSchema.optional(),
@@ -111,8 +112,8 @@ export const authEndpoints = {
   }),
   signIn: defineEndpoint({
     method: 'POST',
-    path: '/auth/sign-in/phone-number',
-    summary: 'Inicia sesión con celular y contraseña; la sesión viaja en una cookie.',
+    path: '/auth/sign-in',
+    summary: 'Inicia sesión con celular o correo verificado y contraseña; la sesión viaja en una cookie.',
     body: SignInBodySchema,
     response: z.object({ user: AuthUserSchema }),
   }),

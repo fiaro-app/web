@@ -19,16 +19,16 @@ afterEach(() => {
 });
 
 describe('signIn', () => {
-  it('posts the phone and password to the sign-in endpoint and returns the user', async () => {
+  it('posts the identifier and password to the sign-in endpoint and returns the user', async () => {
     fetchMock.mockResolvedValue(new Response(JSON.stringify({ user: USER }), { status: 200 }));
 
-    const user = await signIn({ phone: '+573001234567', password: 'secreta-123' });
+    const user = await signIn({ identifier: '+573001234567', password: 'secreta-123' });
 
     expect(user).toMatchObject({ name: 'Ana Pérez', phoneNumber: '+573001234567' });
     const [url, init] = fetchMock.mock.calls[0]!;
-    expect(url).toBe('/api/auth/sign-in/phone-number');
+    expect(url).toBe('/api/auth/sign-in');
     expect(init).toMatchObject({ method: 'POST' });
-    expect(JSON.parse(init?.body as string)).toEqual({ phoneNumber: '+573001234567', password: 'secreta-123' });
+    expect(JSON.parse(init?.body as string)).toEqual({ identifier: '+573001234567', password: 'secreta-123' });
   });
 });
 
@@ -45,7 +45,7 @@ describe('signOut', () => {
 });
 
 describe('registerOwner', () => {
-  const ACCOUNT = { fullName: 'Ana Pérez', phone: '+573001234567', nationalId: '1020304050', contactEmail: undefined, password: 'una-contraseña-segura' };
+  const ACCOUNT = { fullName: 'Ana Pérez', phone: '+573001234567', nationalId: '1020304050', contactEmail: 'ana@correo.com', password: 'una-contraseña-segura' };
   const CREATED = {
     user: { id: USER.id, phone: '+573001234567' },
     tenant: { id: '0192f0a4-7c3e-7000-8000-000000000002', name: 'Préstamos Ana' },
@@ -63,21 +63,15 @@ describe('registerOwner', () => {
       fullName: 'Ana Pérez',
       password: 'una-contraseña-segura',
       nationalId: '1020304050',
+      contactEmail: 'ana@correo.com',
       businessName: 'Préstamos Ana',
       acceptedTerms: true,
       acceptedPrivacy: true,
       acceptedDataResponsibility: true,
+      acceptedCookies: true,
       marketingConsent: false,
-      legalVersion: '2026-10-16',
+      legalVersion: '2026-11-14',
     });
-  });
-
-  it('sends the email when there is one', async () => {
-    fetchMock.mockResolvedValue(new Response(JSON.stringify(CREATED), { status: 201 }));
-
-    await registerOwner({ ...ACCOUNT, contactEmail: 'ana@correo.com' }, { businessName: 'X Y' }, true);
-
-    expect(JSON.parse(fetchMock.mock.calls[0]![1]?.body as string)).toMatchObject({ contactEmail: 'ana@correo.com' });
   });
 });
 

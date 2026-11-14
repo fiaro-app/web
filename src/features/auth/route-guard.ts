@@ -1,8 +1,11 @@
+import { LEGAL_DOCUMENTS } from '@/content/legal';
+
 /** A dónde va una persona con sesión cuando entra a una página que solo es para quien no la tiene. */
 export const DEFAULT_AUTHENTICATED_PATH = '/resumen';
 export const LOGIN_PATH = '/login';
 export const REGISTER_PATH = '/registro';
 export const CHANGE_PASSWORD_PATH = '/cambiar-contrasena';
+export const VERIFY_EMAIL_PATH = '/verificar-correo';
 
 /** Páginas y recursos abiertos a cualquiera, con o sin sesión. Todo lo demás exige sesión. */
 const PUBLIC_PATHS: readonly string[] = [
@@ -14,6 +17,7 @@ const PUBLIC_PATHS: readonly string[] = [
   '/apple-icon',
   '/opengraph-image',
   '/twitter-image',
+  ...LEGAL_DOCUMENTS.map((document) => document.path),
 ];
 
 /** Páginas que solo tienen sentido sin sesión: con una, se manda a la persona a su panel. */

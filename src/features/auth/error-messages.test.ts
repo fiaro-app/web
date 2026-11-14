@@ -9,7 +9,7 @@ function errorWith(code: string, retryAfterSeconds?: number) {
 describe('describeAuthError', () => {
   it('explains bad credentials without saying which one is wrong', () => {
     expect(describeAuthError(errorWith('INVALID_PHONE_NUMBER_OR_PASSWORD'))).toEqual({
-      message: 'El celular o la contraseña no son correctos.',
+      message: 'El correo, el celular o la contraseña no son correctos.',
       field: null,
     });
   });

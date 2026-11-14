@@ -2,6 +2,7 @@ import { PLAN_OFFERS } from '@/content/plans';
 import { formatCop } from '@/lib/amount';
 import type { LandingNavLink } from '@/components/organisms/LandingNav';
 import type { PreviewBar, PreviewKpi } from '@/components/organisms/DashboardPreview';
+import type { AboutColumn } from '@/components/organisms/AboutSection';
 import type { FeatureItem } from '@/components/organisms/FeaturesSection';
 import type { StepItem } from '@/components/organisms/HowItWorksSection';
 import type { PlanCardProps } from '@/components/molecules/PlanCard';
@@ -9,6 +10,7 @@ import type { FaqItem } from '@/components/organisms/FaqSection';
 
 /** Ids de las secciones, usados como ancla por la navegación. */
 export const LANDING_SECTION_IDS = {
+  about: 'que-es-fiaro',
   day: 'un-dia',
   product: 'producto',
   howItWorks: 'como-funciona',
@@ -38,6 +40,9 @@ export const FOOTER_LINKS: readonly LandingNavLink[] = [
   { label: 'Términos', href: '/terminos' },
   { label: 'Privacidad', href: '/privacidad' },
   { label: 'Cookies', href: '/cookies' },
+  { label: 'Devoluciones', href: '/devoluciones' },
+  { label: 'Suscripción', href: '/suscripcion' },
+  { label: 'PQR', href: '/pqr' },
 ];
 
 export const HERO = {
@@ -49,6 +54,42 @@ export const HERO = {
   secondaryCta: { label: 'Ver un día de cobro →', href: `#${LANDING_SECTION_IDS.day}` },
   footnote: 'Sin tarjeta de crédito · Configura tu financiera en 5 minutos',
 } as const;
+
+/** «Qué es Fiaro»: lo que hace, lo que no hace y cómo cuida los datos. */
+export const ABOUT = {
+  eyebrow: 'Qué es Fiaro',
+  title: 'Un cuaderno de cobros hecho software, con reglas claras',
+  subtitle: 'Fiaro es la herramienta con la que un prestamista lleva su cartera. Esto es lo que hace, lo que no y cómo cuida la información.',
+  columns: [
+    {
+      title: 'Lo que hace',
+      items: [
+        'Lleva tus clientes, préstamos, cuotas y visitas de cobro en un solo lugar.',
+        'Cada cobrador ve su ruta y registra cada visita desde el celular.',
+        'Te muestra la mora, la efectividad de cada cobrador y el cuadre del día.',
+        'Genera reportes y PDF para tu contador.',
+      ],
+    },
+    {
+      title: 'Lo que no hace',
+      items: [
+        'No presta dinero ni cobra a tus clientes.',
+        'No recibe ni mueve la plata de los préstamos: solo la registra.',
+        'No reporta a centrales de riesgo ni es una entidad financiera.',
+        'Lo único que pagas a Fiaro es tu suscripción, con IVA incluido.',
+      ],
+    },
+    {
+      title: 'Tus datos',
+      items: [
+        'Cada negocio ve únicamente su propia cartera.',
+        'Eres el responsable de los datos de tus clientes y Fiaro los trata solo por tu cuenta (Ley 1581 de 2012).',
+        'Las fotos y comprobantes son privados, con enlaces que vencen.',
+        'Puedes pedir tus datos o su supresión cuando quieras.',
+      ],
+    },
+  ],
+} satisfies { eyebrow: string; title: string; subtitle: string; columns: readonly AboutColumn[] };
 
 /** Tira de pruebas bajo la portada: lo que cambia en la práctica, sin cifras inventadas. */
 export const PROOF_STRIP = [
@@ -207,7 +248,7 @@ export const HOW_IT_WORKS = {
 export const PRICING = {
   eyebrow: 'Precios',
   title: 'Un plan para cada tamaño de negocio',
-  note: 'Pesos colombianos por mes. Empiezas con 30 días de prueba y pagas un mes a la vez.',
+  note: 'Pesos colombianos por mes, IVA incluido. Empiezas con 30 días de prueba y pagas un mes a la vez.',
   plans: PLAN_OFFERS.map((offer) => ({
     name: offer.name,
     price: formatCop(offer.monthlyPrice),
