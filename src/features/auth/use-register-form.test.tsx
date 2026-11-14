@@ -25,7 +25,7 @@ function type(result: Hook, values: Partial<Record<RegisterField, string>>) {
   }
 }
 
-function accept(result: Hook, keys: readonly ('terms' | 'privacy' | 'responsibility' | 'marketing')[] = ['terms', 'privacy', 'responsibility']) {
+function accept(result: Hook, keys: readonly ('terms' | 'privacy' | 'responsibility' | 'cookies' | 'marketing')[] = ['terms', 'privacy', 'responsibility', 'cookies']) {
   for (const key of keys) act(() => result.current.setConsent(key)({ target: { checked: true } } as ChangeEvent<HTMLInputElement>));
 }
 
@@ -232,18 +232,18 @@ describe('useRegisterForm — step 2 (company)', () => {
 
     await act(() => result.current.submit(submitEvent()));
 
-    expect(result.current.consentErrors).toEqual(['privacy', 'responsibility']);
+    expect(result.current.consentErrors).toEqual(['privacy', 'responsibility', 'cookies']);
     expect(registerMock).not.toHaveBeenCalled();
 
     accept(result, ['privacy']);
-    expect(result.current.consentErrors).toEqual(['responsibility']);
+    expect(result.current.consentErrors).toEqual(['responsibility', 'cookies']);
   });
 
   it('sends the optional marketing authorization only when checked', async () => {
     const result = setup();
     await reachCompanyStep(result);
     type(result, { businessName: 'Préstamos Ana' });
-    accept(result, ['terms', 'privacy', 'responsibility', 'marketing']);
+    accept(result, ['terms', 'privacy', 'responsibility', 'cookies', 'marketing']);
 
     await act(() => result.current.submit(submitEvent()));
 

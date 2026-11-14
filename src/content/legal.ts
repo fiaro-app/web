@@ -2,7 +2,7 @@
  * Versión vigente de los documentos legales: la fecha en que se publicó el texto. Debe ser igual a `CURRENT_LEGAL_VERSION` de la API
  * (si no, el registro responde `P930V`). Al cambiar un texto, se sube aquí, en la API y en la app móvil.
  */
-export const LEGAL_VERSION = '2026-10-16';
+export const LEGAL_VERSION = '2026-11-14';
 
 /** Una parte de un documento legal: su título y sus párrafos o puntos. */
 export interface LegalSection {
@@ -21,7 +21,7 @@ export interface LegalDocument {
 }
 
 /** Aviso que acompaña a todos los documentos: son un borrador a la espera de revisión legal. */
-export const LEGAL_NOTICE = 'Última actualización: 16 de octubre de 2026.';
+export const LEGAL_NOTICE = 'Última actualización: 14 de noviembre de 2026.';
 
 export const TERMS: LegalDocument = {
   path: '/terminos',
@@ -267,6 +267,7 @@ export const CONSENT_TEXT = {
     link: 'Política de Privacidad',
     after: '.',
   },
+  cookies: { before: 'Acepto la ', link: 'Política de Cookies', after: ' (solo usamos cookies necesarias).' },
   responsibility:
     'Declaro que tengo la autorización de mis clientes para tratar sus datos, que mi cobranza cumple la ley (incluida la Ley 2300 de 2023) y que no cobraré por encima de la tasa de usura. Entiendo que Fiaro es solo una herramienta y no presta ni cobra dinero.',
   marketing: 'Quiero recibir novedades y ofertas de Fiaro (opcional).',
