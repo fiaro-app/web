@@ -63,7 +63,7 @@ export const PLANS_TEXT = {
     title: 'Historial de pagos',
     empty: 'Todavía no has pagado ningún plan.',
     columns: { date: 'Fecha', plan: 'Plan', amount: 'Valor', method: 'Medio', status: 'Estado' },
-    status: { PENDING: 'En proceso', APPROVED: 'Pagado', DECLINED: 'Rechazado', VOIDED: 'Anulado', ERROR: 'Con error' },
+    status: { PENDING: 'En proceso', APPROVED: 'Pagado', DECLINED: 'Rechazado', VOIDED: 'Anulado', ERROR: 'Con error', REFUNDED: 'Reembolsado' },
     method: { PSE: 'PSE', CARD: 'Tarjeta', NEQUI: 'Nequi', BANCOLOMBIA_TRANSFER: 'Bancolombia' },
   },
   result: {

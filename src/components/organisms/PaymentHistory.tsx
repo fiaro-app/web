@@ -1,15 +1,10 @@
 import { Text } from '@/components/atoms/Text';
-import { PLAN_OFFERS, PLANS_TEXT } from '@/content/plans';
+import { PlainTable } from '@/components/molecules/PlainTable';
+import { PLANS_TEXT } from '@/content/plans';
 import type { PaymentHistoryItem } from '@/features/subscription/checkout-endpoints';
 import { formatCop } from '@/lib/amount';
 import { formatInstantDate } from '@/lib/dates';
-
-/** El nombre de un plan, o su código si el catálogo no lo conoce. */
-const planName = (code: string) => PLAN_OFFERS.find((offer) => offer.code === code)?.name ?? code;
-
-/** El medio de pago legible; el que no conocemos se muestra como llegó, y el pendiente como guion. */
-const methodName = (type: string | null) =>
-  type === null ? '—' : (PLANS_TEXT.history.method as Readonly<Record<string, string>>)[type] ?? type;
+import { methodName, planName } from '@/lib/payment-labels';
 
 /** «Historial de pagos» de «Plan y pagos»: una fila por orden, de la más reciente a la más vieja. */
 export function PaymentHistory({ payments }: Readonly<{ payments: readonly PaymentHistoryItem[] }>) {
@@ -25,18 +20,7 @@ export function PaymentHistory({ payments }: Readonly<{ payments: readonly Payme
           {text.empty}
         </Text>
       ) : (
-        <div className="overflow-x-auto rounded-md bg-surface">
-          <table className="w-full text-left text-body">
-            <thead>
-              <tr className="text-foreground/70">
-                {Object.values(text.columns).map((label) => (
-                  <th key={label} scope="col" className="px-4 py-3 font-medium">
-                    {label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-foreground/8">
+        <PlainTable columns={Object.values(text.columns)}>
               {payments.map((payment) => (
                 <tr key={payment.reference}>
                   <td className="px-4 py-3">{formatInstantDate(payment.createdAt)}</td>
@@ -46,9 +30,7 @@ export function PaymentHistory({ payments }: Readonly<{ payments: readonly Payme
                   <td className="px-4 py-3">{text.status[payment.status]}</td>
                 </tr>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </PlainTable>
       )}
     </section>
   );

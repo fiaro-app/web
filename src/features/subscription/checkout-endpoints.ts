@@ -28,7 +28,7 @@ export const CheckoutSchema = z.object({
 export type Checkout = z.infer<typeof CheckoutSchema>;
 
 /** Cómo va una orden de pago: `PENDING` hasta que Wompi avisa a la API. */
-export const CHECKOUT_STATUSES = ['PENDING', 'APPROVED', 'DECLINED', 'VOIDED', 'ERROR'] as const;
+export const CHECKOUT_STATUSES = ['PENDING', 'APPROVED', 'DECLINED', 'VOIDED', 'ERROR', 'REFUNDED'] as const;
 
 /** Respuesta de `GET /subscription/checkout/:reference`. */
 export const CheckoutStatusSchema = z.object({
