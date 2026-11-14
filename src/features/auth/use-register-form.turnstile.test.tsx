@@ -20,6 +20,7 @@ async function reachCompanyStep() {
     fullName: 'Ana Pérez',
     phone: '300 123 4567',
     nationalId: '1020304050',
+    contactEmail: 'ana@correo.com',
     password: 'una-contraseña-segura',
   };
   for (const [field, value] of Object.entries(values)) act(() => result.current.setField(field as RegisterField)(change(value)));

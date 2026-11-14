@@ -3,7 +3,7 @@ function daysLabel(days: number): string {
   return days === 1 ? '1 día' : `${String(days)} días`;
 }
 
-/** Textos del plan del negocio (aviso del panel y bloque «Tu plan» de Configuración). */
+/** Textos del plan del negocio (aviso del panel y bloque «Tu plan» de Plan y pagos). */
 export const SUBSCRIPTION_TEXT = {
   plan: { TRIAL: 'Prueba gratis', INDIVIDUAL: 'Individual', PRO: 'Pro', TEAM: 'Team' },
   status: { ACTIVE: 'Activo', GRACE_PERIOD: 'En gracia', READ_ONLY: 'Solo lectura' },

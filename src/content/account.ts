@@ -7,7 +7,7 @@ export const ACCOUNT_TEXT = {
     description: 'Tu nombre y el correo donde recibes los códigos de seguridad.',
     fullName: { label: 'Nombre completo', placeholder: 'Ej: Daniel Rojas' },
     phone: { label: 'Celular', hint: 'Con este celular inicias sesión. No se puede cambiar desde aquí.' },
-    contactEmail: { label: 'Correo electrónico (opcional)', hint: 'Sirve para recuperar tu contraseña.', placeholder: 'tu@correo.com' },
+    contactEmail: { label: 'Correo electrónico', hint: 'Sirve para recuperar tu contraseña y, ya verificado, para iniciar sesión.', placeholder: 'tu@correo.com' },
     save: 'Guardar cambios',
   },
   verification: {

@@ -17,7 +17,7 @@ const change = (value: string) => ({ target: { value } }) as ChangeEvent<HTMLInp
 const submitEvent = () => ({ preventDefault: vi.fn() }) as unknown as SubmitEvent<HTMLFormElement>;
 
 function fill(result: ReturnType<typeof renderHook<ReturnType<typeof useLoginForm>, unknown>>['result'], phone: string, password: string) {
-  act(() => result.current.setField('phone')(change(phone)));
+  act(() => result.current.setField('identifier')(change(phone)));
   act(() => result.current.setField('password')(change(password)));
 }
 
@@ -29,7 +29,7 @@ describe('useLoginForm', () => {
   it('starts empty and idle', () => {
     const { result } = renderHook(() => useLoginForm({ redirectTo: '/resumen' }));
 
-    expect(result.current.values).toEqual({ phone: '', password: '' });
+    expect(result.current.values).toEqual({ identifier: '', password: '' });
     expect(result.current.fieldErrors).toEqual({});
     expect(result.current.formError).toBeNull();
     expect(result.current.isSubmitting).toBe(false);
@@ -43,7 +43,7 @@ describe('useLoginForm', () => {
 
     expect(event.preventDefault).toHaveBeenCalled();
     expect(result.current.fieldErrors).toEqual({
-      phone: 'Escribe tu celular.',
+      identifier: 'Escribe tu correo o celular.',
       password: 'Escribe tu contraseña.',
     });
     expect(signInMock).not.toHaveBeenCalled();
@@ -53,9 +53,9 @@ describe('useLoginForm', () => {
     const { result } = renderHook(() => useLoginForm({ redirectTo: '/resumen' }));
     await act(() => result.current.submit(submitEvent()));
 
-    act(() => result.current.setField('phone')(change('3')));
+    act(() => result.current.setField('identifier')(change('3')));
 
-    expect(result.current.fieldErrors.phone).toBeUndefined();
+    expect(result.current.fieldErrors.identifier).toBeUndefined();
     expect(result.current.fieldErrors.password).toBeDefined();
   });
 
@@ -66,7 +66,7 @@ describe('useLoginForm', () => {
 
     await act(() => result.current.submit(submitEvent()));
 
-    expect(signInMock).toHaveBeenCalledWith({ phone: '+573001234567', password: 'una-contraseña-segura' });
+    expect(signInMock).toHaveBeenCalledWith({ identifier: '+573001234567', password: 'una-contraseña-segura' });
     expect(replace).toHaveBeenCalledWith('/clientes');
     expect(refresh).toHaveBeenCalled();
     // Sigue "enviando" mientras navega: así no se puede enviar dos veces.
@@ -82,7 +82,7 @@ describe('useLoginForm', () => {
 
     await act(() => result.current.submit(submitEvent()));
 
-    expect(result.current.formError).toBe('El celular o la contraseña no son correctos.');
+    expect(result.current.formError).toBe('El correo, el celular o la contraseña no son correctos.');
     expect(result.current.isSubmitting).toBe(false);
     expect(replace).not.toHaveBeenCalled();
   });
@@ -94,7 +94,7 @@ describe('useLoginForm', () => {
 
     await act(() => result.current.submit(submitEvent()));
 
-    expect(result.current.fieldErrors.phone).toContain('celular colombiano');
+    expect(result.current.fieldErrors.identifier).toContain('celular colombiano');
     expect(result.current.formError).toBeNull();
   });
 
