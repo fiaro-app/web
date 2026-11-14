@@ -29,5 +29,6 @@ describe('PricingSection', () => {
     expect(screen.getByText('Precios de referencia.')).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 3, name: 'Básico' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 3, name: 'Profesional' })).toBeInTheDocument();
+    expect(screen.getAllByText('Recomendado')).toHaveLength(1);
   });
 });

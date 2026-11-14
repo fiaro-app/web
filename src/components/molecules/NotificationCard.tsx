@@ -24,7 +24,7 @@ export function NotificationCard({ notification, onMarkRead, onDelete, busy = fa
   const { id, tone, title, body, date, read, href } = notification;
 
   return (
-    <article className="flex overflow-hidden rounded-md bg-surface">
+    <article className="flex lift overflow-hidden rounded-md bg-surface shadow-card">
       <span aria-hidden="true" className={cn('w-1.5 shrink-0', TONE_FILL_CLASSES[tone])} />
       <div className="flex flex-1 flex-col gap-2 px-5 py-4">
         <div className="flex flex-wrap items-center gap-2">

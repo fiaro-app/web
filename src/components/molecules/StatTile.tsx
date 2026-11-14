@@ -15,7 +15,7 @@ export interface StatTileProps {
 /** Indicador del resumen: una etiqueta y una cifra grande en Fraunces, con el color de su tono. */
 export function StatTile({ label, value, tone = 'neutral', trend = null, className }: Readonly<StatTileProps>) {
   return (
-    <div className={cn('flex flex-col gap-2 rounded-md bg-surface p-5', className)}>
+    <div className={cn('flex flex-col gap-2 rounded-md bg-surface p-5 shadow-card', className)}>
       <span className="text-small font-medium text-foreground/70">{label}</span>
       <Text variant="title" as="span" className={FIGURE_TEXT_CLASSES[tone]}>
         {value}

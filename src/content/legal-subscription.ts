@@ -1,13 +1,13 @@
 import type { LegalDocument } from '@/content/legal';
 
-/** Marcador de los datos de la empresa que aún no existen; se llena antes de salir a producción. */
-const COMPANY = '[RAZÓN SOCIAL, NIT Y DOMICILIO DE FIARO — pendiente]';
+/** Quién presta el servicio: el titular, como persona natural. Si se registra empresa, cambiar aquí. */
+const COMPANY = 'Jhoan Alejandro Valencia Zuleta, persona natural, identificado con cédula de ciudadanía n.º 1092851497';
 
 /** Cómo se contrata, se paga y vence un plan. */
 export const SUBSCRIPTION_TERMS: LegalDocument = {
   path: '/suscripcion',
   title: 'Condiciones de Suscripción y Pagos',
-  description: 'Cómo funcionan los planes de Fiaro: prueba gratis, precios con IVA incluido, pago con Wompi, vencimiento y modo de solo lectura.',
+  description: 'Cómo funcionan los planes de Fiaro: prueba gratis, precios sin IVA, pago con Wompi, vencimiento y modo de solo lectura.',
   intro:
     'Estas condiciones complementan los Términos y Condiciones y explican cómo se contrata y se paga un plan de Fiaro. La información de esta página cumple el deber de informar antes de contratar a distancia (Ley 1480 de 2011).',
   sections: [
@@ -26,8 +26,8 @@ export const SUBSCRIPTION_TERMS: LegalDocument = {
     {
       heading: '3. Precios e impuestos',
       paragraphs: [
-        'Los precios están en pesos colombianos, son por mes y se muestran con el IVA incluido. Lo que ves en la página de pago de Wompi es el total que se te cobra: no se suma ningún impuesto ni costo adicional de Fiaro.',
-        'Cuando el pago se confirma, te enviamos un recibo por correo. La factura electrónica se emite conforme a la normativa de la DIAN una vez Fiaro cumpla los requisitos de facturación [pendiente de confirmar con un contador].',
+        'Los precios están en pesos colombianos y son por mes. El servicio no causa IVA porque el titular no es responsable de IVA; si eso cambia, te avisaremos con anticipación. Lo que ves en la página de pago de Wompi es el total que se te cobra: no se suma ningún impuesto ni costo adicional de Fiaro.',
+        'Cuando el pago se confirma, te enviamos un recibo por correo. En lugar de factura de venta con IVA, se expide un documento de cobro o recibo conforme a la normativa aplicable a quienes no son responsables de IVA [pendiente de confirmar con un contador].',
       ],
     },
     {

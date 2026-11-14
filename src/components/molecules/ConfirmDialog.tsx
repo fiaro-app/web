@@ -22,7 +22,7 @@ export interface ConfirmDialogProps {
 }
 
 /**
- * Modal de confirmación para acciones importantes: grande, con un icono y el fondo desenfocado. Usa el `<dialog>` nativo en modo modal:
+ * Modal de confirmación para acciones importantes: grande, con un icono y el fondo desenfocado. Entra y sale con un fundido corto (CSS, sin movimiento si la persona lo pidió). Usa el `<dialog>` nativo en modo modal:
  * el navegador atrapa el foco, bloquea el fondo y maneja Esc. No se cierra al hacer clic fuera,
  * para que una confirmación no se descarte por accidente.
  */
@@ -59,7 +59,7 @@ export function ConfirmDialog({
         event.preventDefault();
         if (!loading) onCancel();
       }}
-      className="m-auto w-[30rem] max-w-[calc(100%-2rem)] rounded-xl bg-surface p-8 text-foreground shadow-[0_24px_64px_-8px_rgb(28_27_46/0.4)] backdrop:bg-foreground/45 backdrop:backdrop-blur-sm open:flex open:flex-col open:gap-5"
+      className="dialog-anim m-auto w-[30rem] max-w-[calc(100%-2rem)] rounded-xl bg-surface p-8 text-foreground shadow-[0_2px_4px_rgb(28_27_46/0.08),0_16px_32px_-8px_rgb(28_27_46/0.25),0_40px_80px_-16px_rgb(28_27_46/0.35)] backdrop:bg-foreground/45 backdrop:backdrop-blur-sm open:flex open:flex-col open:gap-5"
     >
       <span aria-hidden="true" className="grid size-12 place-items-center rounded-full bg-primary/10 text-primary">
         <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

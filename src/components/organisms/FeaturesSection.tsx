@@ -20,20 +20,22 @@ export function FeaturesSection({ id, title, subtitle, features }: Readonly<Feat
   const headingId = `${id}-title`;
 
   return (
-    <section id={id} aria-labelledby={headingId} className="flex flex-col items-center gap-12 bg-surface px-6 py-16 lg:px-16 lg:py-24">
-      <div className="flex max-w-175 flex-col items-center gap-3 text-center">
+    <section id={id} aria-labelledby={headingId} className="border-y border-foreground/8 bg-background px-6 py-12 lg:px-16 lg:py-16">
+     <div className="mx-auto grid w-full max-w-288 gap-8 lg:grid-cols-[2fr_3fr] lg:gap-16">
+      <div className="flex flex-col gap-3 lg:sticky lg:top-28 lg:self-start">
         <Text id={headingId} variant="section" className="text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.1] tracking-[-0.02em]">
           {title}
         </Text>
-        <Text variant="lead" className="max-w-150 text-foreground/70">
+        <Text variant="lead" className="max-w-md text-foreground/70">
           {subtitle}
         </Text>
       </div>
-      <div className="mx-auto grid w-full max-w-7xl gap-px overflow-hidden rounded-md border border-foreground/10 bg-foreground/10 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="reveal grid gap-4 sm:grid-cols-2">
         {features.map((feature) => (
-          <FeatureCard key={feature.title} {...feature} />
+          <FeatureCard key={feature.title} {...feature} className="rounded-lg border border-foreground/10" />
         ))}
       </div>
+     </div>
     </section>
   );
 }

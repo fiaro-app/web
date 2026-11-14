@@ -53,6 +53,7 @@ export const HERO = {
   primaryCta: { label: 'Comenzar gratis', href: LANDING_ROUTES.signup },
   secondaryCta: { label: 'Ver un día de cobro →', href: `#${LANDING_SECTION_IDS.day}` },
   footnote: 'Sin tarjeta de crédito · Configura tu financiera en 5 minutos',
+  assurances: ['Precio claro, sin IVA', 'No toca la plata de tus préstamos', 'Cada negocio ve solo lo suyo'],
 } as const;
 
 /** «Qué es Fiaro»: lo que hace, lo que no hace y cómo cuida los datos. */
@@ -62,6 +63,7 @@ export const ABOUT = {
   subtitle: 'Fiaro es la herramienta con la que un prestamista lleva su cartera. Esto es lo que hace, lo que no y cómo cuida la información.',
   columns: [
     {
+      tone: 'do',
       title: 'Lo que hace',
       items: [
         'Lleva tus clientes, préstamos, cuotas y visitas de cobro en un solo lugar.',
@@ -71,15 +73,17 @@ export const ABOUT = {
       ],
     },
     {
+      tone: 'dont',
       title: 'Lo que no hace',
       items: [
         'No presta dinero ni cobra a tus clientes.',
         'No recibe ni mueve la plata de los préstamos: solo la registra.',
         'No reporta a centrales de riesgo ni es una entidad financiera.',
-        'Lo único que pagas a Fiaro es tu suscripción, con IVA incluido.',
+        'Lo único que pagas a Fiaro es tu suscripción mensual, sin IVA.',
       ],
     },
     {
+      tone: 'care',
       title: 'Tus datos',
       items: [
         'Cada negocio ve únicamente su propia cartera.',
@@ -248,7 +252,7 @@ export const HOW_IT_WORKS = {
 export const PRICING = {
   eyebrow: 'Precios',
   title: 'Un plan para cada tamaño de negocio',
-  note: 'Pesos colombianos por mes, IVA incluido. Empiezas con 30 días de prueba y pagas un mes a la vez.',
+  note: 'Precios en pesos colombianos por mes. Sin IVA: el titular no es responsable de IVA. Empiezas con 30 días de prueba y pagas un mes a la vez.',
   plans: PLAN_OFFERS.map((offer) => ({
     name: offer.name,
     price: formatCop(offer.monthlyPrice),
@@ -276,6 +280,10 @@ export const FAQ = {
       question: '¿Fiaro presta dinero o cobra a mis clientes?',
       answer:
         'No. Fiaro es el software con el que controlas tu cartera: tú prestas, tus cobradores cobran y Fiaro te muestra la mora, la efectividad y el cuadre del día.',
+    },
+    {
+      question: '¿Los precios llevan IVA?',
+      answer: 'No. El titular de Fiaro no es responsable de IVA, así que el precio que ves es el que pagas: Individual $49.000, Pro $69.000 y Team $149.000 al mes. Si eso cambia, te avisaremos con anticipación. Pagas un mes a la vez y no hay permanencia.',
     },
     {
       question: '¿Necesito tarjeta de crédito para empezar?',

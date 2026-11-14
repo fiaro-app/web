@@ -11,8 +11,8 @@ describe('AboutSection', () => {
         title="Reglas claras"
         subtitle="Lo que hace y lo que no."
         columns={[
-          { title: 'Lo que hace', items: ['a', 'b'] },
-          { title: 'Lo que no hace', items: ['c'] },
+          { tone: 'do', title: 'Lo que hace', items: ['a', 'b'] },
+          { tone: 'dont', title: 'Lo que no hace', items: ['c'] },
         ]}
       />,
     );
@@ -20,5 +20,6 @@ describe('AboutSection', () => {
     expect(screen.getByRole('region', { name: 'Reglas claras' })).toHaveAttribute('id', 'que-es-fiaro');
     expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(2);
     expect(screen.getAllByRole('listitem')).toHaveLength(3);
+    expect(screen.getByText('✕')).toBeInTheDocument();
   });
 });

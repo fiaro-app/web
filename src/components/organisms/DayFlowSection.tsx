@@ -63,7 +63,7 @@ export function DayFlowSection({ id, content }: Readonly<DayFlowSectionProps>) {
   };
 
   return (
-    <section id={id} aria-labelledby={headingId} className="flex flex-col items-center gap-10 border-y border-foreground/8 bg-background px-6 py-16 lg:px-16 lg:py-24">
+    <section id={id} aria-labelledby={headingId} className="flex flex-col items-center gap-10 border-y border-foreground/8 bg-background px-6 py-12 lg:px-16 lg:py-16">
       <div className="flex max-w-175 flex-col items-center gap-3 text-center">
         <Text id={headingId} variant="section" className="text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.1] tracking-[-0.02em]">
           {content.title}

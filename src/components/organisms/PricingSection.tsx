@@ -14,17 +14,17 @@ export function PricingSection({ id, eyebrow, title, note, plans }: Readonly<Pri
   const headingId = `${id}-title`;
 
   return (
-    <section id={id} aria-labelledby={headingId} className="flex flex-col items-center gap-3 px-6 py-16 lg:px-16 lg:py-24">
+    <section id={id} aria-labelledby={headingId} className="flex flex-col items-center gap-3 bg-background px-6 py-12 lg:px-16 lg:py-16">
       <Text variant="caption" as="p" weight="semibold" className="font-mono tracking-[0.06em] text-primary uppercase">
         {eyebrow}
       </Text>
       <Text id={headingId} variant="section" className="max-w-150 text-center text-[clamp(1.75rem,3.4vw,2.5rem)] leading-[1.1] tracking-[-0.02em]">
         {title}
       </Text>
-      <Text variant="small" className="text-center text-foreground/65">
+      <Text variant="small" className="rounded-full border border-foreground/12 bg-surface px-4 py-1.5 text-center text-foreground/70">
         {note}
       </Text>
-      <div className="mt-6 grid w-full items-stretch gap-6 lg:grid-cols-3">
+      <div className="reveal mx-auto mt-4 grid w-full max-w-288 items-stretch gap-6 lg:grid-cols-3">
         {plans.map((plan) => (
           <PlanCard key={plan.name} {...plan} />
         ))}

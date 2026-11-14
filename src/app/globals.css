@@ -67,8 +67,8 @@
   --radius-lg: 16px;
 
   /* font.display / font.body / font.mono; las variables --font-* las define next/font en layout.tsx. */
-  --font-display: var(--font-fraunces);
-  --font-sans: var(--font-plex-sans);
+  --font-display: var(--font-bricolage);
+  --font-sans: var(--font-figtree);
   --font-mono: var(--font-plex-mono);
 
   /* size.display / h2 / h3 / body / label / caption (size.mono es `text-label` + `font-mono`). */
@@ -113,5 +113,139 @@ body {
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* Sombras en capas: una de contacto, una media y una difusa, para dar profundidad sin oscurecer. */
+@theme inline {
+  --shadow-card: 0 1px 2px rgb(28 27 46 / 0.06), 0 4px 8px -2px rgb(28 27 46 / 0.06), 0 12px 24px -8px rgb(28 27 46 / 0.08);
+  --shadow-lift: 0 2px 4px rgb(28 27 46 / 0.06), 0 8px 16px -4px rgb(28 27 46 / 0.1), 0 24px 40px -12px rgb(28 27 46 / 0.16);
+  --shadow-bar: 0 1px 0 rgb(28 27 46 / 0.04), 0 8px 24px -12px rgb(28 27 46 / 0.2);
+}
+
+@keyframes enter-pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes bar-shadow {
+  from {
+    box-shadow: 0 0 0 rgb(28 27 46 / 0);
+  }
+  to {
+    box-shadow: var(--shadow-bar);
+  }
+}
+
+/* Movimiento: solo opacity y transform (no mueven el diseño, así no suman CLS), y nada si la
+   persona pidió menos movimiento. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Entrada de la portada al cargar. */
+  .enter {
+    animation: fade-up 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: var(--enter-delay, 0ms);
+  }
+
+  /* Tarjetas y botones se elevan al pasar el cursor o enfocarlos. */
+  .lift {
+    transition:
+      transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1),
+      box-shadow 0.2s ease;
+  }
+  .lift:hover,
+  .lift:focus-within {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+  }
+  .press {
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease,
+      opacity 0.15s ease;
+  }
+  .press:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-card);
+  }
+  .press:active {
+    transform: translateY(0);
+  }
+
+  /* La maqueta del panel flota apenas al pasar el cursor. */
+  .tilt {
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .tilt:hover {
+    transform: translateY(-4px) scale(1.01);
+  }
+
+  .pop-in {
+    animation: enter-pop 0.18s ease-out both;
+  }
+
+  /* Aparición suave al entrar en pantalla y sombra del menú al hacer scroll: solo donde el
+     navegador soporta animaciones ligadas al scroll; en los demás todo queda visible y quieto. */
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: fade-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+    .bar-scroll {
+      animation: bar-shadow linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 80px;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar-scroll {
+    box-shadow: var(--shadow-bar);
+  }
+}
+
+/* Diálogos modales: fundido de entrada y de salida. `allow-discrete` deja animar el paso a
+   `display: none` y a la capa superior al cerrar; donde no se soporta, simplemente aparece y desaparece. */
+@media (prefers-reduced-motion: no-preference) {
+  dialog.dialog-anim {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1),
+      overlay 0.2s allow-discrete,
+      display 0.2s allow-discrete;
+  }
+  dialog.dialog-anim[open] {
+    opacity: 1;
+    transform: none;
+  }
+  @starting-style {
+    dialog.dialog-anim[open] {
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+    }
+  }
+  dialog.dialog-anim::backdrop {
+    opacity: 0;
+    transition:
+      opacity 0.2s ease,
+      overlay 0.2s allow-discrete,
+      display 0.2s allow-discrete;
+  }
+  dialog.dialog-anim[open]::backdrop {
+    opacity: 1;
+  }
+  @starting-style {
+    dialog.dialog-anim[open]::backdrop {
+      opacity: 0;
+    }
   }
 }

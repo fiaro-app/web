@@ -45,7 +45,7 @@ describe('PlanCard', () => {
   it('is a plain card with a primary button by default', () => {
     const { container } = render(<PlanCard {...BASE} />);
 
-    expect(container.firstElementChild).toHaveClass('bg-background');
+    expect(container.firstElementChild).toHaveClass('bg-surface');
     expect(screen.getByRole('link')).toHaveClass('bg-primary');
   });
 });

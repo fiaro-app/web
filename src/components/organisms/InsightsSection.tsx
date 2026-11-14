@@ -13,7 +13,7 @@ function Card({
   return (
     <section
       aria-labelledby={id}
-      className="flex flex-col gap-3 rounded-md bg-surface p-5"
+      className="flex flex-col gap-3 rounded-md bg-surface p-5 shadow-card"
     >
       <h3 id={id} className="text-lg font-semibold text-foreground">
         {title}
