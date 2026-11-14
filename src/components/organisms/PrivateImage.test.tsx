@@ -6,7 +6,7 @@ const hook = vi.hoisted(() => vi.fn());
 vi.mock('@/features/attachments/use-attachment', () => ({ useAttachment: hook }));
 
 const base = { status: 'ready', url: null, isBusy: false, error: null, notice: null, chooseFile: vi.fn(), remove: vi.fn(), retry: vi.fn() };
-const props = { target: 'clientPhoto', id: 'c1', title: 'Foto', description: 'd', alt: 'Foto de Ana', none: 'Sin foto', canEdit: true } as const;
+const props = { target: 'paymentProof', id: 'c1', title: 'Foto', description: 'd', alt: 'Foto de Ana', none: 'Sin foto', canEdit: true } as const;
 
 describe('PrivateImage', () => {
   it('shows the loading state', () => {
