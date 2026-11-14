@@ -68,7 +68,7 @@ export const TERMS: LegalDocument = {
       heading: '5. Los datos de tus clientes',
       paragraphs: [
         'Tú eres el Responsable del tratamiento de los datos de tus clientes y Fiaro actúa como Encargado: los trata únicamente por tu cuenta, para prestarte el servicio, siguiendo tus instrucciones y esta cláusula, que hace de contrato de transmisión de datos. Fiaro no vende esos datos, no los usa para otros fines y aplica medidas de seguridad razonables (acceso por roles, sesiones cifradas, archivos privados con enlaces que vencen).',
-        'Si un cliente tuyo ejerce un derecho (consultar, corregir o suprimir sus datos), tú respondes; Fiaro te ayuda con las herramientas del servicio. La foto de un cliente es opcional y puede ser dato sensible: súbela solo con autorización expresa. No subas fotos de cédulas.',
+        'Si un cliente tuyo ejerce un derecho (consultar, corregir o suprimir sus datos), tú respondes; Fiaro te ayuda con las herramientas del servicio. Fiaro no guarda fotos de personas: no subas fotos de clientes ni de cédulas.',
       ],
     },
     {
@@ -155,7 +155,7 @@ export const PRIVACY: LegalDocument = {
       heading: '2. Qué datos tratamos',
       items: [
         'De tu cuenta: nombre, cédula, celular, correo (opcional), contraseña (solo guardamos su huella cifrada), nombre de tu negocio y rol.',
-        'De tus clientes, que registras tú: nombre, cédula, celular, dirección, ocupación, foto (opcional), préstamos, pagos, visitas de cobro y puntaje de riesgo calculado.',
+        'De tus clientes, que registras tú: nombre, cédula, celular, dirección, ocupación, préstamos, pagos, visitas de cobro y puntaje de riesgo calculado.',
         'Comprobantes de pago que adjuntes (capturas de Nequi o transferencias).',
         'Técnicos: dirección IP, tipo de dispositivo, fechas de acceso y registros de seguridad.',
         'Evidencia de tus autorizaciones: qué aceptaste, en qué versión, cuándo y desde qué IP y dispositivo.',
@@ -174,7 +174,7 @@ export const PRIVACY: LegalDocument = {
     {
       heading: '4. Datos sensibles',
       paragraphs: [
-        'Una fotografía puede ser dato sensible (biométrico) cuando sirve para identificar a una persona. La foto del cliente es opcional: nadie está obligado a darla ni a permitirla, y solo debes subirla con su autorización expresa. No pedimos ni guardamos fotos de cédulas.',
+        'Fiaro no pide ni guarda fotos de personas ni de cédulas, así que no trata datos biométricos. Los comprobantes de pago que adjuntes son capturas de Nequi o de transferencias y se guardan en privado.',
       ],
     },
     {
