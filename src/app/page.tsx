@@ -1,3 +1,4 @@
+import { AboutSection } from '@/components/organisms/AboutSection';
 import { DayFlowSection } from '@/components/organisms/DayFlowSection';
 import { ProofStrip } from '@/components/organisms/ProofStrip';
 import { JsonLd } from '@/components/atoms/JsonLd';
@@ -13,6 +14,7 @@ import { PricingSection } from '@/components/organisms/PricingSection';
 import { LandingTemplate } from '@/components/templates/LandingTemplate';
 import { faqJsonLd, organizationJsonLd, softwareApplicationJsonLd, websiteJsonLd } from '@/lib/seo/json-ld';
 import {
+  ABOUT,
   CTA_BAND,
   DAY_FLOW,
   FAQ,
@@ -49,6 +51,7 @@ export default function Home() {
           visual={<DashboardPreview kpis={PREVIEW_KPIS} chartTitle={PREVIEW_CHART_TITLE} bars={PREVIEW_BARS} />}
         />
         <ProofStrip items={PROOF_STRIP} />
+        <AboutSection id={LANDING_SECTION_IDS.about} {...ABOUT} />
         <DayFlowSection id={LANDING_SECTION_IDS.day} content={DAY_FLOW} />
         <FeaturesSection id={LANDING_SECTION_IDS.product} title={FEATURES.title} subtitle={FEATURES.subtitle} features={FEATURES.items} />
         <HowItWorksSection id={LANDING_SECTION_IDS.howItWorks} {...HOW_IT_WORKS} />
