@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_AUTHENTICATED_PATH, resolveAccess, sanitizeNextPath } from './route-guard';
 
 describe('resolveAccess', () => {
-  it.each(['/', '/contacto', '/design-system', '/recuperar-contrasena', '/icon', '/opengraph-image'])(
+  it.each(['/', '/contacto', '/design-system', '/recuperar-contrasena', '/icon', '/opengraph-image', '/terminos', '/privacidad', '/cookies', '/suscripcion', '/devoluciones', '/pqr'])(
     'lets anyone into the public page %s',
     (pathname) => {
       expect(resolveAccess({ pathname, hasSession: false })).toEqual({ action: 'next' });
