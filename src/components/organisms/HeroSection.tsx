@@ -9,7 +9,7 @@ export interface HeroSectionProps {
   readonly primaryCta: { readonly label: string; readonly href: string };
   readonly secondaryCta: { readonly label: string; readonly href: string };
   readonly footnote: string;
-  /** Garantías cortas bajo los botones (p. ej. «IVA incluido»). Opcional. */
+  /** Garantías cortas bajo los botones (p. ej. «Sin IVA»). Opcional. */
   readonly assurances?: readonly string[];
   /** La ilustración de la derecha (p. ej. `DashboardPreview`). */
   readonly visual: ReactNode;

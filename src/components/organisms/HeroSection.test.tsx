@@ -12,7 +12,7 @@ describe('HeroSection', () => {
         primaryCta={{ label: 'Comenzar gratis', href: '/registro' }}
         secondaryCta={{ label: 'Ver cómo funciona →', href: '#como-funciona' }}
         footnote="Sin tarjeta de crédito"
-        assurances={['IVA incluido', 'Datos separados']}
+        assurances={['Sin IVA', 'Datos separados']}
         visual={<div data-testid="visual" />}
       />,
     );
