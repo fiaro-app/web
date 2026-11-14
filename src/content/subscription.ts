@@ -41,5 +41,8 @@ export const SUBSCRIPTION_TEXT = {
     unlimitedUsage: (used: number) => `${String(used)} (sin tope)`,
     upTo: (max: number) => `Hasta ${String(max)}`,
     contact: 'Renovar o cambiar de plan',
+    support: 'Soporte',
+    prioritySupport: 'Prioritario',
+    supportAction: 'Escribir a soporte prioritario',
   },
 } as const;

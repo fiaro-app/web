@@ -8,8 +8,14 @@ const { getInsights } = vi.hoisted(() => ({ getInsights: vi.fn() }));
 vi.mock('@/features/insights/get-insights.server', () => ({ getInsights }));
 const { getSubscription } = vi.hoisted(() => ({ getSubscription: vi.fn() }));
 vi.mock('@/features/subscription/get-subscription.server', () => ({ getSubscription }));
+const { getConsolidated } = vi.hoisted(() => ({ getConsolidated: vi.fn() }));
+vi.mock('@/features/consolidated/get-consolidated.server', () => ({ getConsolidated }));
 vi.mock('@/components/organisms/StatsView', () => ({
-  StatsView: ({ advanced }: { advanced: boolean }) => <p>estadísticas:{advanced ? 'completas' : 'basicas'}</p>,
+  StatsView: ({ advanced, consolidated }: { advanced: boolean; consolidated: unknown }) => (
+    <p>
+      estadísticas:{advanced ? 'completas' : 'basicas'}:{consolidated ? 'consolidado' : 'solo'}
+    </p>
+  ),
 }));
 
 const RESULT = { status: 'ok', stats: {}, options: { collectors: [], portfolios: [] } };
@@ -26,7 +32,7 @@ describe('Stats page', () => {
   it('with advanced stats it loads the long lists and the business insights', async () => {
     render(await StatsPage(props({ mora: '2' })));
 
-    expect(screen.getByText('estadísticas:completas')).toBeInTheDocument();
+    expect(screen.getByText('estadísticas:completas:solo')).toBeInTheDocument();
     expect(getInsights).toHaveBeenCalledOnce();
     expect(getStats.mock.calls[0]?.[1]).toMatchObject({ arrears: 2 });
   });
@@ -36,7 +42,7 @@ describe('Stats page', () => {
 
     render(await StatsPage(props({ mora: '2' })));
 
-    expect(screen.getByText('estadísticas:basicas')).toBeInTheDocument();
+    expect(screen.getByText('estadísticas:basicas:solo')).toBeInTheDocument();
     expect(getInsights).not.toHaveBeenCalled();
     expect(getStats.mock.calls[0]).toHaveLength(1);
   });
@@ -46,7 +52,7 @@ describe('Stats page', () => {
 
     render(await StatsPage(props()));
 
-    expect(screen.getByText('estadísticas:completas')).toBeInTheDocument();
+    expect(screen.getByText('estadísticas:completas:solo')).toBeInTheDocument();
   });
 
   it('shows the access state when the person cannot see statistics', async () => {
@@ -55,5 +61,19 @@ describe('Stats page', () => {
     render(await StatsPage(props()));
 
     expect(screen.getByText('No tienes acceso a esta sección')).toBeInTheDocument();
+  });
+
+  it('asks for the consolidated view only when the plan brings it', async () => {
+    getConsolidated.mockResolvedValue({ rows: [] });
+    getSubscription.mockResolvedValue({ advancedStats: true, consolidatedStats: true });
+
+    render(await StatsPage(props()));
+
+    expect(screen.getByText('estadísticas:completas:consolidado')).toBeInTheDocument();
+
+    getConsolidated.mockClear();
+    getSubscription.mockResolvedValue({ advancedStats: true, consolidatedStats: false });
+    await StatsPage(props());
+    expect(getConsolidated).not.toHaveBeenCalled();
   });
 });

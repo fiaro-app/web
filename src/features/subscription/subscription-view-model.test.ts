@@ -10,6 +10,8 @@ const SUBSCRIPTION: Subscription = {
   daysRemaining: 30,
   graceDaysRemaining: 0,
   isReadOnly: false,
+  features: [],
+  prioritySupportUrl: null,
   limits: { maxActiveLenders: 1, maxCollectors: 5, maxAdmins: 3, maxPortfolios: 4, maxActiveLoans: null },
   usage: { activeLenders: 1, activeCollectors: 2, activeAdmins: 1, activeLoans: 7 },
   createdAt: '2026-10-09T17:00:00.000Z',
@@ -21,6 +23,8 @@ describe('toSubscriptionView', () => {
       planName: 'Prueba gratis',
       advancedStats: true,
       excelImport: true,
+      consolidatedStats: false,
+      prioritySupport: null,
       statusLabel: 'Activo',
       endsOn: '08/11/2026',
       daysRemaining: '30',
@@ -95,5 +99,12 @@ describe('toSubscriptionView', () => {
 
     expect(collectorsPercent({ ...SUBSCRIPTION, usage: { ...SUBSCRIPTION.usage, activeCollectors: 9 } })).toBe(100);
     expect(collectorsPercent({ ...SUBSCRIPTION, limits: { ...SUBSCRIPTION.limits, maxCollectors: 0 } })).toBe(0);
+  });
+
+  it('reads the Team functions from the features the API sends', () => {
+    const view = toSubscriptionView({ ...SUBSCRIPTION, features: ['CONSOLIDATED_STATS', 'PRIORITY_SUPPORT'], prioritySupportUrl: 'https://wa.me/57300' });
+
+    expect(view.consolidatedStats).toBe(true);
+    expect(view.prioritySupport).toEqual({ url: 'https://wa.me/57300' });
   });
 });

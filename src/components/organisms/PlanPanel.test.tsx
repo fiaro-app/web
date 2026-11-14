@@ -7,6 +7,8 @@ const SUBSCRIPTION: SubscriptionView = {
   planName: 'Prueba gratis',
   advancedStats: true,
   excelImport: true,
+  consolidatedStats: false,
+  prioritySupport: null,
   statusLabel: 'Activo',
   endsOn: '08/11/2026',
   daysRemaining: '30',
@@ -39,5 +41,17 @@ describe('PlanPanel', () => {
     render(<PlanPanel subscription={SUBSCRIPTION} />);
 
     expect(screen.getByRole('link', { name: 'Renovar o cambiar de plan' })).toHaveAttribute('href', '/plan');
+  });
+
+  it('shows the priority support badge and its link only when the plan brings them', () => {
+    const { rerender } = render(<PlanPanel subscription={SUBSCRIPTION} />);
+    expect(screen.queryByText('Prioritario')).not.toBeInTheDocument();
+
+    rerender(<PlanPanel subscription={{ ...SUBSCRIPTION, prioritySupport: { url: null } }} />);
+    expect(screen.getByText('Prioritario')).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Escribir a soporte prioritario' })).not.toBeInTheDocument();
+
+    rerender(<PlanPanel subscription={{ ...SUBSCRIPTION, prioritySupport: { url: 'https://wa.me/573000000000' } }} />);
+    expect(screen.getByRole('link', { name: 'Escribir a soporte prioritario' })).toHaveAttribute('href', 'https://wa.me/573000000000');
   });
 });

@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { StatsView } from '@/components/organisms/StatsView';
 import { STATS_TEXT } from '@/content/stats';
+import { getConsolidated } from '@/features/consolidated/get-consolidated.server';
 import { getInsights } from '@/features/insights/get-insights.server';
 import { getSubscription } from '@/features/subscription/get-subscription.server';
 import { getStats } from '@/features/stats/get-stats.server';
@@ -16,14 +17,16 @@ export const metadata: Metadata = { title: 'Estadísticas' };
 export default async function StatsPage({ searchParams }: PageProps<'/estadisticas'>) {
   const params = await searchParams;
   const filters = parseStatsFilters(params);
-  const advanced = (await getSubscription())?.advancedStats ?? true;
-  const [result, insights] = await Promise.all([
+  const subscription = await getSubscription();
+  const advanced = subscription?.advancedStats ?? true;
+  const [result, insights, consolidated] = await Promise.all([
     advanced ? getStats(filters, parseStatsListPages(params)) : getStats(filters),
     advanced ? getInsights(filters) : null,
+    subscription?.consolidatedStats ? getConsolidated(filters) : null,
   ]);
 
   if (result.status === 'forbidden') {
     return <EmptyState icon={<StateIcon name="lock" />} {...STATS_TEXT.forbidden} />;
   }
-  return <StatsView stats={result.stats} filters={filters} options={result.options} insights={insights} advanced={advanced} />;
+  return <StatsView stats={result.stats} filters={filters} options={result.options} insights={insights} advanced={advanced} consolidated={consolidated} />;
 }
