@@ -1,6 +1,6 @@
 import type { LegalDocument } from '@/content/legal';
 
-/** Marcador de los datos de la empresa que aún no existen; se llena antes de salir a producción. */
+/** Quién presta el servicio: el titular, como persona natural. Si se registra empresa, cambiar aquí. */
 const COMPANY = 'Jhoan Alejandro Valencia Zuleta, persona natural, identificado con cédula de ciudadanía n.º 1092851497';
 
 /** Cómo se contrata, se paga y vence un plan. */
