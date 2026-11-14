@@ -26,6 +26,10 @@ export interface SubscriptionView {
   readonly advancedStats: boolean;
   /** Si el plan trae la importación desde Excel. */
   readonly excelImport: boolean;
+  /** Si el plan trae las cifras de todos los negocios juntas (Team y la prueba). */
+  readonly consolidatedStats: boolean;
+  /** El soporte prioritario del plan (Team y la prueba), con su enlace si está configurado; `null` si el plan no lo trae. */
+  readonly prioritySupport: { readonly url: string | null } | null;
   readonly statusLabel: string;
   readonly endsOn: string;
   readonly daysRemaining: string;
@@ -92,6 +96,8 @@ export function toSubscriptionView(subscription: Subscription): SubscriptionView
     planName: SUBSCRIPTION_TEXT.plan[subscription.planCode],
     advancedStats: hasAdvancedStats(subscription.planCode),
     excelImport: hasExcelImport(subscription.planCode),
+    consolidatedStats: subscription.features.includes('CONSOLIDATED_STATS'),
+    prioritySupport: subscription.features.includes('PRIORITY_SUPPORT') ? { url: subscription.prioritySupportUrl } : null,
     statusLabel: SUBSCRIPTION_TEXT.status[subscription.status],
     endsOn: formatInstantDate(subscription.currentPeriodEndsAt),
     daysRemaining: String(subscription.daysRemaining),

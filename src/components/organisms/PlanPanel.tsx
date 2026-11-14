@@ -18,6 +18,7 @@ export function PlanPanel({ subscription }: Readonly<{ subscription: Subscriptio
         {subscription.usage.map((row) => (
           <InfoRow key={row.key} label={row.label} value={row.value} />
         ))}
+        {subscription.prioritySupport && <InfoRow label={text.support} value={text.prioritySupport} />}
       </div>
       {subscription.usage.map(
         (row) =>
@@ -35,9 +36,16 @@ export function PlanPanel({ subscription }: Readonly<{ subscription: Subscriptio
             </div>
           ),
       )}
-      <ButtonLink href="/plan" variant="outline" className="self-start">
-        {text.contact}
-      </ButtonLink>
+      <div className="flex flex-wrap gap-3">
+        <ButtonLink href="/plan" variant="outline" className="self-start">
+          {text.contact}
+        </ButtonLink>
+        {subscription.prioritySupport?.url && (
+          <ButtonLink href={subscription.prioritySupport.url} target="_blank" rel="noopener noreferrer" className="self-start">
+            {text.supportAction}
+          </ButtonLink>
+        )}
+      </div>
     </SettingsSection>
   );
 }

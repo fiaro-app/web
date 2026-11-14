@@ -16,6 +16,8 @@ const SUBSCRIPTION = {
   daysRemaining: 30,
   graceDaysRemaining: 0,
   isReadOnly: false,
+  features: [],
+  prioritySupportUrl: null,
   limits: { maxActiveLenders: 1, maxCollectors: 5, maxAdmins: 3, maxPortfolios: 4, maxActiveLoans: null },
   usage: { activeLenders: 1, activeCollectors: 2, activeAdmins: 1, activeLoans: 0 },
   createdAt: '2026-10-09T17:00:00.000Z',

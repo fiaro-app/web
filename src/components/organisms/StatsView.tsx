@@ -10,6 +10,8 @@ import { PaginationNav } from '@/components/molecules/PaginationNav';
 import { Link } from '@/components/atoms/Link';
 import { StatTile } from '@/components/molecules/StatTile';
 import { StatsBucketRow } from '@/components/molecules/StatsBucketRow';
+import { ConsolidatedSection } from '@/components/organisms/ConsolidatedSection';
+import type { ConsolidatedView } from '@/features/consolidated/consolidated-view-model';
 import { InsightsSection } from '@/components/organisms/InsightsSection';
 import type { InsightsViewModel } from '@/features/insights/insights-view-model';
 import { StatsExportButton } from '@/components/organisms/StatsExportButton';
@@ -29,6 +31,8 @@ export interface StatsViewProps {
   readonly insights?: InsightsViewModel | null;
   /** Si el plan trae las estadísticas avanzadas; sin ellas solo se ven los indicadores y se ofrece subir de plan. */
   readonly advanced?: boolean;
+  /** «Todos tus negocios» (plan Team, con varios negocios); `null` en cualquier otro caso. */
+  readonly consolidated?: ConsolidatedView | null;
 }
 
 function Section({ id, title, children }: Readonly<{ id: string; title: string; children: ReactNode }>) {
@@ -98,7 +102,7 @@ function UpgradeNotice() {
 }
 
 /** Estadísticas: filtros, indicadores, mora por antigüedad, mayor mora y desempeño por cobrador. Solo presentación. */
-export function StatsView({ stats, filters, options, insights = null, advanced = true }: Readonly<StatsViewProps>) {
+export function StatsView({ stats, filters, options, insights = null, advanced = true, consolidated = null }: Readonly<StatsViewProps>) {
   return (
     <>
       <header className="flex flex-wrap items-center justify-between gap-3 max-sm:flex-col max-sm:items-stretch max-sm:[&>a]:w-full">
@@ -116,6 +120,8 @@ export function StatsView({ stats, filters, options, insights = null, advanced =
       <StatsFilters filters={filters} options={options} />
 
       {!advanced && <UpgradeNotice />}
+
+      {consolidated && <ConsolidatedSection view={consolidated} />}
 
       {advanced && insights && <InsightsSection insights={insights} />}
 
